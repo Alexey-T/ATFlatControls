@@ -16,14 +16,11 @@
 *.tds
 *.dcu
 *.dof
-*.deb
-*.zip
 *.ppu
 *.bak
 
 lib/
 backup/
 *.lps
-*.copy
 project?
 demo
