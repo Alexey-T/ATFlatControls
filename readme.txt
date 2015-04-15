@@ -1,0 +1,1 @@
+This is control for Lazarus - button, not OS themed, it paints as rectangle with 1pix frame. Btns have "pressed", "mouseover", "checked" styles. if Checkable is true, then click toggles Checked, so buttons have "checked" style. Colors of bg and 1pix frame - set them in record, global var "ATButtonTheme".
