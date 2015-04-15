@@ -42,6 +42,7 @@ type
     FChecked,
     FCheckable: boolean;
     FCaption: string;
+    FBitmap: TBitmap;
     FOnClick: TNotifyEvent;
     procedure SetCaption(AValue: string);
     procedure SetChecked(AValue: boolean);
@@ -53,8 +54,10 @@ type
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
   public
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
   published
     property Caption: string read FCaption write SetCaption;
+    property Bitmap: TBitmap read FBitmap write FBitmap;
     property Checked: boolean read FChecked write SetChecked;
     property Checkable: boolean read FCheckable write FCheckable;
     property OnClick: TNotifyEvent read FOnClick write FOnClick;
@@ -114,16 +117,29 @@ begin
   Canvas.Brush.Style:= bsSolid;
 
   //----draw caption
-  Canvas.Font.Name:= ATButtonTheme.FontName;
-  Canvas.Font.Color:= ATButtonTheme.ColorFont;
-  Canvas.Font.Size:= ATButtonTheme.FontSize;
-  Canvas.Font.Style:= ATButtonTheme.FontStyles;
+  if FCaption<>'' then
+  begin
+    Canvas.Font.Name:= ATButtonTheme.FontName;
+    Canvas.Font.Color:= ATButtonTheme.ColorFont;
+    Canvas.Font.Size:= ATButtonTheme.FontSize;
+    Canvas.Font.Style:= ATButtonTheme.FontStyles;
 
-  p.x:= (ClientWidth - Canvas.TextWidth(FCaption)) div 2 +
-    IfThen(FPressed, ATButtonTheme.PressedCaptionShiftX);
-  p.y:= (ClientHeight - Canvas.TextHeight(FCaption)) div 2 +
-    IfThen(FPressed, ATButtonTheme.PressedCaptionShiftY);
-  Canvas.TextOut(p.x, p.y, FCaption);
+    p.x:= (ClientWidth - Canvas.TextWidth(FCaption)) div 2 +
+      IfThen(FPressed, ATButtonTheme.PressedCaptionShiftX);
+    p.y:= (ClientHeight - Canvas.TextHeight(FCaption)) div 2 +
+      IfThen(FPressed, ATButtonTheme.PressedCaptionShiftY);
+    Canvas.TextOut(p.x, p.y, FCaption);
+  end;
+
+  //----draw bitmap
+  if Assigned(FBitmap) then
+  begin
+    p.x:= (ClientWidth-FBitmap.Width) div 2 +
+      IfThen(FPressed, ATButtonTheme.PressedCaptionShiftX);
+    p.y:= (ClientHeight-FBitmap.Height) div 2 +
+      IfThen(FPressed, ATButtonTheme.PressedCaptionShiftY);
+    Canvas.Draw(p.x, p.y, FBitmap);
+  end;
 end;
 
 procedure TATSimpleButton.MouseEnter;
@@ -135,7 +151,7 @@ end;
 
 procedure TATSimpleButton.MouseLeave;
 begin
-  inherited MouseLeave;
+  inherited;
   FOver:= false;
   Invalidate;
 end;
@@ -177,11 +193,20 @@ begin
   Height:= 25;
 
   FCaption:= 'Btn';
+  FBitmap:= nil;
   FPressed:= false;
   FOver:= false;
   FChecked:= false;
   FCheckable:= false;
   FOnClick:= nil;
+end;
+
+destructor TATSimpleButton.Destroy;
+begin
+  if Assigned(FBitmap) then
+    FreeAndNil(FBitmap);
+
+  inherited;
 end;
 
 initialization
@@ -198,7 +223,7 @@ initialization
     ColorBorderPassive:= $a0a0a0;
     ColorBorderOver:= $d0d0d0;
     MouseoverBorderWidth:= 1;
-    PressedBorderWidth:= 2;
+    PressedBorderWidth:= 3;
     PressedCaptionShiftX:= 0;
     PressedCaptionShiftY:= 1;
   end;

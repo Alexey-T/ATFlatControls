@@ -16,7 +16,7 @@ begin
   Application.Title:= 'Demo';
   RequireDerivedFormResource:= True;
   Application.Initialize;
-  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TfmMain, fmMain);
   Application.Run;
 end.
 

@@ -8,34 +8,47 @@ uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ATButtons;
 
 type
-  { TForm1 }
+  { TfmMain }
 
-  TForm1 = class(TForm)
+  TfmMain = class(TForm)
     procedure FormCreate(Sender: TObject);
   private
     { private declarations }
   public
     { public declarations }
-    b, b2, b3: TATSimpleButton;
+    b, bi, b2, b3: TATSimpleButton;
     procedure FClick(Snd: TObject);
+    procedure ImgClick(Snd: TObject);
   end;
 
 var
-  Form1: TForm1;
+  fmMain: TfmMain;
 
 implementation
 
 {$R *.lfm}
 
-{ TForm1 }
+{ TfmMain }
 
-procedure TForm1.FormCreate(Sender: TObject);
+procedure TfmMain.FormCreate(Sender: TObject);
+var
+  bmp: TBitmap;
 begin
+  bmp:= TBitmap.Create;
+  bmp.LoadFromFile(ExtractFilepath(Application.Exename)+'bmp1.bmp');
+
   b:= TATSimpleButton.create(self);
   b.parent:= self;
   b.SetBounds(50, 100, 180, 40);
   b.Caption:= 'Toggle chk';
   b.OnClick:= @FClick;
+
+  bi:= TATSimpleButton.create(self);
+  bi.parent:= self;
+  bi.SetBounds(350, 100, 80, 40);
+  bi.Caption:= '';
+  bi.Bitmap:= bmp;
+  bi.OnClick:= @ImgClick;
 
   b2:= TATSimpleButton.create(self);
   b2.parent:= self;
@@ -50,10 +63,22 @@ begin
   b3.Checkable:= true;
 end;
 
-procedure TForm1.FClick(Snd: TObject);
+procedure TfmMain.FClick(Snd: TObject);
 begin
   with b2 do Checked:= not Checked;
   with b3 do Checked:= not Checked;
+end;
+
+procedure TfmMain.ImgClick(Snd: TObject);
+begin
+  with ATButtonTheme do
+  begin
+    ColorFont:= $e0e0e0;
+    ColorBgPassive:= $00a000;
+    ColorBgOver:= $00d000;
+    ColorBgChecked:= clYellow;
+  end;
+  Invalidate;
 end;
 
 end.
