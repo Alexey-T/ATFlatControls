@@ -169,7 +169,7 @@ procedure TATSimpleButton.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y
 begin
   inherited;
 
-  if FPressed then
+  if FPressed and PtInRect(ClientRect, Point(X, Y)) then
   begin
     if Assigned(FOnClick) then
       FOnClick(Self);
