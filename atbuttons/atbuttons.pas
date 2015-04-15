@@ -44,12 +44,14 @@ type
     FCaption: string;
     FBitmap: TBitmap;
     FOnClick: TNotifyEvent;
+    function IsPressed: boolean;
     procedure SetCaption(AValue: string);
     procedure SetChecked(AValue: boolean);
   protected
     procedure Paint; override;
-    procedure MouseEnter; override;
+    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseLeave; override;
+    procedure MouseEnter; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
   public
@@ -83,6 +85,11 @@ begin
   Invalidate;
 end;
 
+function TATSimpleButton.IsPressed: boolean;
+begin
+  Result:= FPressed and FOver;
+end;
+
 procedure TATSimpleButton.Paint;
 var
   r: TRect;
@@ -105,7 +112,7 @@ begin
   Canvas.Rectangle(r);
 
   size:= 1;
-  if FPressed then size:= ATButtonTheme.PressedBorderWidth else
+  if IsPressed then size:= ATButtonTheme.PressedBorderWidth else
   if FOver then size:= ATButtonTheme.MouseoverBorderWidth;
 
   for i:= 1 to size-1 do
@@ -125,9 +132,9 @@ begin
     Canvas.Font.Style:= ATButtonTheme.FontStyles;
 
     p.x:= (ClientWidth - Canvas.TextWidth(FCaption)) div 2 +
-      IfThen(FPressed, ATButtonTheme.PressedCaptionShiftX);
+      IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
     p.y:= (ClientHeight - Canvas.TextHeight(FCaption)) div 2 +
-      IfThen(FPressed, ATButtonTheme.PressedCaptionShiftY);
+      IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
     Canvas.TextOut(p.x, p.y, FCaption);
   end;
 
@@ -135,24 +142,38 @@ begin
   if Assigned(FBitmap) then
   begin
     p.x:= (ClientWidth-FBitmap.Width) div 2 +
-      IfThen(FPressed, ATButtonTheme.PressedCaptionShiftX);
+      IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
     p.y:= (ClientHeight-FBitmap.Height) div 2 +
-      IfThen(FPressed, ATButtonTheme.PressedCaptionShiftY);
+      IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
     Canvas.Draw(p.x, p.y, FBitmap);
   end;
 end;
 
-procedure TATSimpleButton.MouseEnter;
+procedure TATSimpleButton.MouseMove(Shift: TShiftState; X, Y: Integer);
+var
+  bOver: boolean;
 begin
   inherited;
-  FOver:= true;
-  Invalidate;
+
+  bOver:= PtInRect(ClientRect, Point(X, Y));
+  if bOver<>FOver then
+  begin
+    FOver:= bOver;
+    Invalidate;
+  end;
 end;
 
 procedure TATSimpleButton.MouseLeave;
 begin
   inherited;
   FOver:= false;
+  Invalidate;
+end;
+
+procedure TATSimpleButton.MouseEnter;
+begin
+  inherited;
+  FOver:= true;
   Invalidate;
 end;
 
@@ -169,7 +190,7 @@ procedure TATSimpleButton.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y
 begin
   inherited;
 
-  if FPressed and PtInRect(ClientRect, Point(X, Y)) then
+  if IsPressed then
   begin
     if Assigned(FOnClick) then
       FOnClick(Self);
@@ -192,7 +213,7 @@ begin
   Width:= 100;
   Height:= 25;
 
-  FCaption:= 'Btn';
+  FCaption:= 'Button';
   FBitmap:= nil;
   FPressed:= false;
   FOver:= false;
