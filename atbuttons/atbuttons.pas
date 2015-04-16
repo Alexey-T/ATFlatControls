@@ -22,7 +22,8 @@ type
     ColorBgOver,
     ColorBgChecked,
     ColorBorderPassive,
-    ColorBorderOver: TColor;
+    ColorBorderOver,
+    ColorBorderFocused: TColor;
     MouseoverBorderWidth: integer;
     PressedBorderWidth: integer;
     PressedCaptionShiftY: integer;
@@ -40,13 +41,16 @@ type
     FPressed,
     FOver,
     FChecked,
-    FCheckable: boolean;
+    FCheckable,
+    FFocusable: boolean;
     FCaption: string;
     FBitmap: TBitmap;
     FOnClick: TNotifyEvent;
+    procedure DoClick;
     function IsPressed: boolean;
     procedure SetCaption(AValue: string);
     procedure SetChecked(AValue: boolean);
+    procedure SetFocusable(AValue: boolean);
   protected
     procedure Paint; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
@@ -54,6 +58,9 @@ type
     procedure MouseEnter; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure KeyPress(var Key: char); override;
+    procedure DoEnter; override;
+    procedure DoExit; override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -62,6 +69,7 @@ type
     property Bitmap: TBitmap read FBitmap write FBitmap;
     property Checked: boolean read FChecked write SetChecked;
     property Checkable: boolean read FCheckable write FCheckable;
+    property Focusable: boolean read FFocusable write SetFocusable;
     property OnClick: TNotifyEvent read FOnClick write FOnClick;
   end;
 
@@ -76,6 +84,13 @@ begin
   if FChecked= AValue then Exit;
   FChecked:= AValue;
   Invalidate;
+end;
+
+procedure TATSimpleButton.SetFocusable(AValue: boolean);
+begin
+  if FFocusable= AValue then Exit;
+  FFocusable:= AValue;
+  TabStop:= AValue;
 end;
 
 procedure TATSimpleButton.SetCaption(AValue: string);
@@ -108,7 +123,9 @@ begin
   //----draw border
   Canvas.Brush.Style:= bsClear;
 
-  Canvas.Pen.Color:= IfThen(FOver, ATButtonTheme.ColorBorderOver, ATButtonTheme.ColorBorderPassive);
+  Canvas.Pen.Color:=
+    IfThen(FOver, ATButtonTheme.ColorBorderOver,
+      IfThen(Focused, ATButtonTheme.ColorBorderFocused, ATButtonTheme.ColorBorderPassive));
   Canvas.Rectangle(r);
 
   size:= 1;
@@ -182,7 +199,12 @@ begin
   inherited;
 
   if Shift=[ssLeft] then
+  begin
     FPressed:= true;
+    if FFocusable then
+      SetFocus;
+  end;
+
   Invalidate;
 end;
 
@@ -191,14 +213,38 @@ begin
   inherited;
 
   if IsPressed then
-  begin
-    if Assigned(FOnClick) then
-      FOnClick(Self);
-    if FCheckable then
-      FChecked:= not FChecked;
-  end;
+    DoClick;
 
   FPressed:= false;
+  Invalidate;
+end;
+
+procedure TATSimpleButton.DoClick;
+begin
+  if Assigned(FOnClick) then
+    FOnClick(Self);
+  if FCheckable then
+    FChecked:= not FChecked;
+  Invalidate;
+end;
+
+
+procedure TATSimpleButton.KeyPress(var Key: char);
+begin
+  inherited;
+  if (Key=' ') then
+    DoClick;
+end;
+
+procedure TATSimpleButton.DoEnter;
+begin
+  inherited;
+  Invalidate;
+end;
+
+procedure TATSimpleButton.DoExit;
+begin
+  inherited;
   Invalidate;
 end;
 
@@ -207,9 +253,10 @@ begin
   inherited;
 
   ControlStyle:= ControlStyle
-    +[csOpaque, csNoFocus]
+    +[csOpaque]
     -[csDoubleClicks, csTripleClicks];
 
+  TabStop:= true;
   Width:= 100;
   Height:= 25;
 
@@ -219,6 +266,7 @@ begin
   FOver:= false;
   FChecked:= false;
   FCheckable:= false;
+  FFocusable:= true;
   FOnClick:= nil;
 end;
 
@@ -243,6 +291,7 @@ initialization
     ColorBgChecked:= $b0b0b0;
     ColorBorderPassive:= $a0a0a0;
     ColorBorderOver:= $d0d0d0;
+    ColorBorderFocused:= clNavy;
     MouseoverBorderWidth:= 1;
     PressedBorderWidth:= 3;
     PressedCaptionShiftX:= 0;

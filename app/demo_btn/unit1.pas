@@ -5,12 +5,15 @@ unit Unit1;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ATButtons;
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
+  ATButtons;
 
 type
   { TfmMain }
 
   TfmMain = class(TForm)
+    chkFocus: TCheckBox;
+    procedure chkFocusChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
     { private declarations }
@@ -61,6 +64,17 @@ begin
   b3.SetBounds(130, 150, 80, 30);
   b3.Caption:= 'Check2';
   b3.Checkable:= true;
+end;
+
+procedure TfmMain.chkFocusChange(Sender: TObject);
+var
+  en: boolean;
+begin
+  en:= chkFocus.Checked;
+  b.Focusable:= en;
+  bi.Focusable:= en;
+  b2.Focusable:= en;
+  b3.Focusable:= en;
 end;
 
 procedure TfmMain.FClick(Snd: TObject);

@@ -46,7 +46,6 @@
         <ComponentName Value="fmMain"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="Unit1"/>
       </Unit1>
       <Unit2>
         <Filename Value="..\..\atbuttons\atbuttons.pas"/>
