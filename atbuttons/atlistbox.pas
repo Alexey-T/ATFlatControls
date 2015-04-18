@@ -26,8 +26,8 @@ type
     FItemCount,
     FItemIndex,
     FItemHeight,
-    FItemTop,
-    FItemBottom: integer;
+    FItemTop: integer;
+    function ItemBottom: integer;
     procedure SetItemCount(AValue: integer);
     procedure SetItemIndex(AValue: integer);
     procedure SetItemTop(AValue: integer);
@@ -97,9 +97,6 @@ begin
     r.Right:= ClientWidth;
     if r.Top>=ClientHeight then Break;
 
-    if r.Bottom<ClientHeight then
-      FItemBottom:= index;
-
     if Assigned(FOnDrawItem) then
       FOnDrawItem(Self, index, r);
   end;
@@ -116,6 +113,11 @@ begin
 
   if Assigned(FOnClick) then
     FOnClick(Self);
+end;
+
+function TATListbox.ItemBottom: integer;
+begin
+  Result:= Min(ItemCount-1, FItemTop+GetVisibleItems-1);
 end;
 
 procedure TATListbox.SetItemCount(AValue: integer);
@@ -135,8 +137,8 @@ begin
   if FItemIndex<FItemTop then
     FItemTop:= FItemIndex
   else
-  if FItemIndex>FItemBottom then
-    FItemTop:= FItemIndex-GetVisibleItems+1;
+  if FItemIndex>ItemBottom then
+    FItemTop:= Max(0, FItemIndex-GetVisibleItems+1);
 
   Invalidate;
 end;
