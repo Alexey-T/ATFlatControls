@@ -51,7 +51,6 @@
       <Unit2>
         <Filename Value="..\..\atbuttons\atlistbox.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ATListbox"/>
       </Unit2>
     </Units>
   </ProjectOptions>
@@ -63,7 +62,6 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="..\..\atbuttons"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Parsing>

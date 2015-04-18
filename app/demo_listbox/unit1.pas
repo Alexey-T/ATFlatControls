@@ -13,7 +13,7 @@ type
 
   TfmMain = class(TForm)
     ed: TEdit;
-    procedure edKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure edKeyDown(Sender: TObject; var Key: Word; Shift{%H-}: TShiftState);
     procedure FormCreate(Sender: TObject);
   private
     { private declarations }
@@ -69,30 +69,26 @@ procedure TfmMain.edKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
   if (key=vk_up) then
   begin
-    if b.ItemIndex>0 then
-      b.ItemIndex:= b.ItemIndex-1;
+    b.ItemIndex:= b.ItemIndex-1;
     key:= 0;
     Exit
   end;
   if (key=vk_down) then
   begin
-    if b.ItemIndex<b.ItemCount-1 then
-      b.ItemIndex:= b.ItemIndex+1;
+    b.ItemIndex:= b.ItemIndex+1;
     key:= 0;
     Exit
   end;
 
   if (key=vk_prior) then
   begin
-    if b.ItemIndex>0 then
-      b.ItemIndex:= Max(0, b.ItemIndex-(b.VisibleItems-1));
+    b.ItemIndex:= Max(0, b.ItemIndex-(b.VisibleItems-1));
     key:= 0;
     Exit
   end;
   if (key=vk_next) then
   begin
-    if b.ItemIndex<b.ItemCount-1 then
-      b.ItemIndex:= Min(b.ItemCount-1, b.ItemIndex+(b.VisibleItems-1));
+    b.ItemIndex:= Min(b.ItemCount-1, b.ItemIndex+(b.VisibleItems-1));
     key:= 0;
     Exit
   end;
