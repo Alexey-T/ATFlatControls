@@ -48,12 +48,13 @@ begin
 end;
 
 procedure TfmMain.ListDraw(Sender: TObject; AIndex: integer; const ARect: TRect);
-var
-  cl: TColor;
 begin
-  cl:= IfThen(AIndex=b.ItemIndex, clMedGray, b.Color);
-  b.Canvas.Brush.Color:= cl;
+  b.Canvas.Brush.Color:= IfThen(AIndex=b.ItemIndex, clMedGray, b.Color);
   b.Canvas.FillRect(ARect);
+
+  b.Canvas.Pen.Color:= clMedGray;
+  b.Canvas.Line(ARect.Left, ARect.Bottom-1, ARect.Right, ARect.Bottom-1);
+
   b.Canvas.TextOut(ARect.Left+4, ARect.Top+2, 'item '+inttostr(AIndex));
 end;
 
