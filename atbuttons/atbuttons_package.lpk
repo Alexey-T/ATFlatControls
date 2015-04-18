@@ -15,7 +15,7 @@
     <Description Value="ATButtons"/>
     <License Value="MPL 2.0"/>
     <Version Major="1"/>
-    <Files Count="2">
+    <Files Count="3">
       <Item1>
         <Filename Value="atbuttons.pas"/>
         <UnitName Value="ATButtons"/>
@@ -25,6 +25,10 @@
         <HasRegisterProc Value="True"/>
         <UnitName Value="atbuttons_register"/>
       </Item2>
+      <Item3>
+        <Filename Value="atlistbox.pas"/>
+        <UnitName Value="ATListbox"/>
+      </Item3>
     </Files>
     <RequiredPkgs Count="1">
       <Item1>

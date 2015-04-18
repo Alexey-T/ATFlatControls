@@ -40,7 +40,6 @@ type
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure LMVScroll(var Msg: TLMVScroll); message LM_VSCROLL;
   public
-    ColorBg: TColor;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     property ItemIndex: integer read FItemIndex write SetItemIndex;
@@ -87,7 +86,7 @@ begin
   UpdateScrollbar;
 
   r:= ClientRect;
-  Canvas.Brush.Color:= ColorBg;
+  Canvas.Brush.Color:= Color;
   Canvas.FillRect(r);
 
   for index:= FItemTop to FItemCount-1 do
@@ -172,7 +171,7 @@ begin
   FOnClick:= nil;
   FOnDrawItem:= nil;
 
-  ColorBg:= clLtGray;
+  Color:= clLtGray;
   FItemCount:= 0;
   FItemIndex:= 0;
   FItemHeight:= 28;

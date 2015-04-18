@@ -43,6 +43,7 @@ begin
   b.OnDrawItem:= @ListDraw;
   b.OnClick:= @ListClick;
 
+  b.Color:= $e0e0e0;
   b.ItemCount:= 20;
 end;
 
@@ -50,7 +51,7 @@ procedure TfmMain.ListDraw(Sender: TObject; AIndex: integer; const ARect: TRect)
 var
   cl: TColor;
 begin
-  cl:= IfThen(AIndex=b.ItemIndex, clGray, b.ColorBg);
+  cl:= IfThen(AIndex=b.ItemIndex, clMedGray, b.Color);
   b.Canvas.Brush.Color:= cl;
   b.Canvas.FillRect(ARect);
   b.Canvas.TextOut(ARect.Left+4, ARect.Top+2, 'item '+inttostr(AIndex));
