@@ -44,7 +44,7 @@ begin
   b.OnClick:= @ListClick;
 
   b.Color:= $e0e0e0;
-  b.ItemCount:= 20;
+  b.ItemCount:= 21;
 end;
 
 procedure TfmMain.ListDraw(Sender: TObject; AIndex: integer; const ARect: TRect);
@@ -59,7 +59,8 @@ end;
 
 procedure TfmMain.ListClick(Sender: TObject);
 begin
-  Caption:= 'Selected: '+IntToStr(b.ItemIndex);
+  Beep;
+  Caption:= 'Selected item: '+IntToStr(b.ItemIndex);
 end;
 
 procedure TfmMain.edKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -67,18 +68,18 @@ begin
   if (key=vk_down) then
   begin
     if b.ItemIndex<b.ItemCount-1 then
-      b.ItemIndex:= b.ItemIndex+1
-    else
-      b.ItemIndex:= 0;
+      b.ItemIndex:= b.ItemIndex+1;
+    //else
+    //  b.ItemIndex:= 0;
     key:= 0;
     Exit
   end;
   if (key=vk_up) then
   begin
     if b.ItemIndex>0 then
-      b.ItemIndex:= b.ItemIndex-1
-    else
-      b.ItemIndex:= b.ItemCount-1;
+      b.ItemIndex:= b.ItemIndex-1;
+    //else
+    //  b.ItemIndex:= b.ItemCount-1;
     key:= 0;
     Exit
   end;

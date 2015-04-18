@@ -28,21 +28,21 @@ type
     FItemHeight,
     FItemTop,
     FItemBottom: integer;
-    procedure DoClickEvent;
     procedure SetItemCount(AValue: integer);
     procedure SetItemIndex(AValue: integer);
+    procedure SetItemTop(AValue: integer);
     procedure UpdateFromScrollbarMsg(const Msg: TLMScroll);
     procedure UpdateScrollbar;
     function GetVisibleItems: integer;
   protected
     procedure Paint; override;
     procedure Click; override;
-    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure LMVScroll(var Msg: TLMVScroll); message LM_VSCROLL;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     property ItemIndex: integer read FItemIndex write SetItemIndex;
+    property ItemTop: integer read FItemTop write SetItemTop;
     property ItemCount: integer read FItemCount write SetItemCount;
   published
     property ItemHeight: integer read FItemHeight write FItemHeight;
@@ -113,22 +113,7 @@ begin
 
   P:= ScreenToClient(Mouse.CursorPos);
   ItemIndex:= P.Y div FItemHeight + FItemTop;
-  DoClickEvent;
-end;
 
-procedure TATListbox.KeyDown(var Key: Word; Shift: TShiftState);
-begin
-  inherited;
-
-  if (Key=vk_return) then
-  begin
-    DoClickEvent;
-    Key:= 0;
-  end;
-end;
-
-procedure TATListbox.DoClickEvent;
-begin
   if Assigned(FOnClick) then
     FOnClick(Self);
 end;
@@ -153,6 +138,13 @@ begin
   if FItemIndex>FItemBottom then
     FItemTop:= FItemIndex-GetVisibleItems+1;
 
+  Invalidate;
+end;
+
+procedure TATListbox.SetItemTop(AValue: integer);
+begin
+  if FItemTop=AValue then Exit;
+  FItemTop:= AValue;
   Invalidate;
 end;
 
