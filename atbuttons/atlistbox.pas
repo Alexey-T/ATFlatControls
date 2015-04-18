@@ -34,6 +34,7 @@ type
     procedure UpdateFromScrollbarMsg(const Msg: TLMScroll);
     procedure UpdateScrollbar;
     function GetVisibleItems: integer;
+    function IsIndexValid(N: integer): boolean;
   protected
     procedure Paint; override;
     procedure Click; override;
@@ -60,6 +61,11 @@ uses
 function TATListbox.GetVisibleItems: integer;
 begin
   Result:= ClientHeight div FItemHeight;
+end;
+
+function TATListbox.IsIndexValid(N: integer): boolean;
+begin
+  Result:= (N>=0) and (N<ItemCount);
 end;
 
 procedure TATListbox.UpdateScrollbar;
@@ -98,7 +104,19 @@ begin
     if r.Top>=ClientHeight then Break;
 
     if Assigned(FOnDrawItem) then
-      FOnDrawItem(Self, index, r);
+      FOnDrawItem(Self, index, r)
+    else
+    begin
+      Canvas.Pen.Color:= clGray;
+      Canvas.Line(r.Left, r.Bottom, r.Right, r.Bottom);
+      Canvas.Brush.Color:= Color;
+      if index=FItemIndex then
+      begin
+        Canvas.Brush.Color:= clMedGray;
+        Canvas.FillRect(r);
+      end;
+      Canvas.TextOut(r.Left+6, r.Top+2, '('+IntToStr(index)+')');
+    end;
   end;
 end;
 
@@ -131,9 +149,10 @@ end;
 procedure TATListbox.SetItemIndex(AValue: integer);
 begin
   if FItemIndex=AValue then Exit;
-  if (AValue<0) or (AValue>=FItemCount) then Exit;
+  if not IsIndexValid(AValue) then Exit;
   FItemIndex:= AValue;
 
+  //scroll if needed
   if FItemIndex<FItemTop then
     FItemTop:= FItemIndex
   else
@@ -146,6 +165,7 @@ end;
 procedure TATListbox.SetItemTop(AValue: integer);
 begin
   if FItemTop=AValue then Exit;
+  if not IsIndexValid(AValue) then Exit;
   FItemTop:= AValue;
   Invalidate;
 end;
@@ -159,8 +179,8 @@ begin
     +[csOpaque, csNoFocus]
     -[csDoubleClicks, csTripleClicks];
 
-  Width:= 150;
-  Height:= 120;
+  Width:= 180;
+  Height:= 150;
 
   FOnClick:= nil;
   FOnDrawItem:= nil;

@@ -55,7 +55,7 @@ begin
   b.Canvas.Pen.Color:= clMedGray;
   b.Canvas.Line(ARect.Left, ARect.Bottom-1, ARect.Right, ARect.Bottom-1);
 
-  b.Canvas.TextOut(ARect.Left+4, ARect.Top+2, 'item '+inttostr(AIndex));
+  b.Canvas.TextOut(ARect.Left+6, ARect.Top+2, 'item '+inttostr(AIndex));
 end;
 
 procedure TfmMain.ListClick(Sender: TObject);
