@@ -1,11 +1,11 @@
-object Form1: TForm1
+object fmMain: TfmMain
   Left = 428
-  Height = 268
+  Height = 251
   Top = 349
   Width = 448
   ActiveControl = ed
   Caption = 'ATListbox demo'
-  ClientHeight = 268
+  ClientHeight = 251
   ClientWidth = 448
   OnCreate = FormCreate
   Position = poScreenCenter
@@ -17,6 +17,8 @@ object Form1: TForm1
     Width = 448
     Align = alTop
     OnKeyDown = edKeyDown
+    ReadOnly = True
     TabOrder = 0
+    Text = 'use keys: up, down, home, end'
   end
 end

@@ -9,22 +9,23 @@ uses
   ATListbox;
 
 type
-  { TForm1 }
+  { TfmMain }
 
-  TForm1 = class(TForm)
+  TfmMain = class(TForm)
     ed: TEdit;
     procedure edKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
   private
     { private declarations }
-    procedure DrawItem(Sender: TObject; AIndex: integer; const ARect: TRect);
+    procedure ListDraw(Sender: TObject; AIndex: integer; const ARect: TRect);
+    procedure ListClick(Sender: TObject);
   public
     { public declarations }
     b: TATListbox;
   end;
 
 var
-  Form1: TForm1;
+  fmMain: TfmMain;
 
 implementation
 
@@ -32,19 +33,20 @@ uses Math, LCLProc, LCLType;
 
 {$R *.lfm}
 
-{ TForm1 }
+{ TfmMain }
 
-procedure TForm1.FormCreate(Sender: TObject);
+procedure TfmMain.FormCreate(Sender: TObject);
 begin
   b:= TATListbox.Create(Self);
   b.Parent:= Self;
   b.Align:= alClient;
-  b.OnDrawItem:= @DrawItem;
+  b.OnDrawItem:= @ListDraw;
+  b.OnClick:= @ListClick;
 
   b.ItemCount:= 20;
 end;
 
-procedure TForm1.DrawItem(Sender: TObject; AIndex: integer; const ARect: TRect);
+procedure TfmMain.ListDraw(Sender: TObject; AIndex: integer; const ARect: TRect);
 var
   cl: TColor;
 begin
@@ -54,19 +56,28 @@ begin
   b.Canvas.TextOut(ARect.Left+4, ARect.Top+2, 'item '+inttostr(AIndex));
 end;
 
-procedure TForm1.edKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+procedure TfmMain.ListClick(Sender: TObject);
+begin
+  Caption:= 'Selected: '+IntToStr(b.ItemIndex);
+end;
+
+procedure TfmMain.edKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
   if (key=vk_down) then
   begin
     if b.ItemIndex<b.ItemCount-1 then
-      b.ItemIndex:= b.ItemIndex+1;
+      b.ItemIndex:= b.ItemIndex+1
+    else
+      b.ItemIndex:= 0;
     key:= 0;
     Exit
   end;
   if (key=vk_up) then
   begin
     if b.ItemIndex>0 then
-      b.ItemIndex:= b.ItemIndex-1;
+      b.ItemIndex:= b.ItemIndex-1
+    else
+      b.ItemIndex:= b.ItemCount-1;
     key:= 0;
     Exit
   end;
@@ -79,6 +90,12 @@ begin
   if (key=vk_end) then
   begin
     b.ItemIndex:= b.ItemCount-1;
+    key:= 0;
+    Exit
+  end;
+  if (key=vk_return) then
+  begin
+    ListClick(nil);
     key:= 0;
     Exit
   end;

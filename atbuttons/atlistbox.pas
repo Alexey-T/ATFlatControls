@@ -10,7 +10,8 @@ unit ATListbox;
 interface
 
 uses
-  Classes, SysUtils, Graphics, Controls;
+  Classes, SysUtils, Graphics, Controls,
+  LMessages;
 
 type
   TATListboxDrawItemEvent = procedure(Sender: TObject; AIndex: integer; const ARect: TRect) of object;
@@ -27,12 +28,17 @@ type
     FItemHeight,
     FItemTop,
     FItemBottom: integer;
-    procedure DoClick;
+    procedure DoClickEvent;
     procedure SetItemCount(AValue: integer);
     procedure SetItemIndex(AValue: integer);
+    procedure UpdateFromScrollbarMsg(const Msg: TLMScroll);
     procedure UpdateScrollbar;
+    function GetVisibleItems: integer;
   protected
     procedure Paint; override;
+    procedure Click; override;
+    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
+    procedure LMVScroll(var Msg: TLMVScroll); message LM_VSCROLL;
   public
     ColorBg: TColor;
     constructor Create(AOwner: TComponent); override;
@@ -52,6 +58,11 @@ uses
 
 { TATListbox }
 
+function TATListbox.GetVisibleItems: integer;
+begin
+  Result:= ClientHeight div FItemHeight;
+end;
+
 procedure TATListbox.UpdateScrollbar;
 var
   si: TScrollInfo;
@@ -61,8 +72,8 @@ begin
   si.fMask:= SIF_ALL;
   si.nMin:= 0;
   si.nMax:= FItemCount;
-  si.nPage:= ClientHeight div FItemHeight;
-  si.nPos:= FItemIndex;
+  si.nPage:= GetVisibleItems;
+  si.nPos:= FItemTop;
   SetScrollInfo(Handle, SB_VERT, si, True);
 end;
 
@@ -95,7 +106,29 @@ begin
   end;
 end;
 
-procedure TATListbox.DoClick;
+procedure TATListbox.Click;
+var
+  P: TPoint;
+begin
+  inherited;
+
+  P:= ScreenToClient(Mouse.CursorPos);
+  ItemIndex:= P.Y div FItemHeight + FItemTop;
+  DoClickEvent;
+end;
+
+procedure TATListbox.KeyDown(var Key: Word; Shift: TShiftState);
+begin
+  inherited;
+
+  if (Key=vk_return) then
+  begin
+    DoClickEvent;
+    Key:= 0;
+  end;
+end;
+
+procedure TATListbox.DoClickEvent;
 begin
   if Assigned(FOnClick) then
     FOnClick(Self);
@@ -103,21 +136,23 @@ end;
 
 procedure TATListbox.SetItemCount(AValue: integer);
 begin
-  if FItemCount= AValue then Exit;
+  if FItemCount=AValue then Exit;
+  if AValue<0 then Exit;
   FItemCount:= AValue;
   Invalidate;
 end;
 
 procedure TATListbox.SetItemIndex(AValue: integer);
 begin
-  if FItemIndex= AValue then Exit;
+  if FItemIndex=AValue then Exit;
+  if (AValue<0) or (AValue>=FItemCount) then Exit;
   FItemIndex:= AValue;
 
   if FItemIndex<FItemTop then
     FItemTop:= FItemIndex
   else
   if FItemIndex>FItemBottom then
-    FItemTop:= FItemIndex-(ClientHeight div FItemHeight)+1;
+    FItemTop:= FItemIndex-GetVisibleItems+1;
 
   Invalidate;
 end;
@@ -140,13 +175,40 @@ begin
   ColorBg:= clLtGray;
   FItemCount:= 0;
   FItemIndex:= 0;
-  FItemHeight:= 25;
+  FItemHeight:= 28;
   FItemTop:= 0;
 end;
 
 destructor TATListbox.Destroy;
 begin
   inherited;
+end;
+
+procedure TATListbox.UpdateFromScrollbarMsg(const Msg: TLMScroll);
+var
+  NMax: integer;
+begin
+  NMax:= Max(0, FItemCount-GetVisibleItems);
+
+  case Msg.ScrollCode of
+    SB_TOP:        FItemTop:= 0;
+    SB_BOTTOM:     FItemTop:= Max(0, FItemCount-GetVisibleItems);
+
+    SB_LINEUP:     FItemTop:= Max(0, FItemTop-1);
+    SB_LINEDOWN:   FItemTop:= Min(NMax, FItemTop+1);
+
+    SB_PAGEUP:     FItemTop:= Max(0, FItemTop-GetVisibleItems);
+    SB_PAGEDOWN:   FItemTop:= Min(NMax, FItemTop+GetVisibleItems);
+
+    SB_THUMBPOSITION,
+    SB_THUMBTRACK: FItemTop:= Msg.Pos;
+  end;
+end;
+
+procedure TATListbox.LMVScroll(var Msg: TLMVScroll);
+begin
+  UpdateFromScrollbarMsg(Msg);
+  Invalidate;
 end;
 
 initialization
