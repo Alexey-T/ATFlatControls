@@ -40,6 +40,7 @@ begin
   b:= TATListbox.Create(Self);
   b.Parent:= Self;
   b.Align:= alClient;
+
   b.OnDrawItem:= @ListDraw;
   b.OnClick:= @ListClick;
 
@@ -53,7 +54,7 @@ begin
   b.Canvas.FillRect(ARect);
 
   b.Canvas.Pen.Color:= clMedGray;
-  b.Canvas.Line(ARect.Left, ARect.Bottom-1, ARect.Right, ARect.Bottom-1);
+  b.Canvas.Line(ARect.Left+2, ARect.Bottom-1, ARect.Right-2, ARect.Bottom-1);
 
   b.Canvas.TextOut(ARect.Left+6, ARect.Top+2, 'item '+inttostr(AIndex));
 end;
@@ -61,29 +62,41 @@ end;
 procedure TfmMain.ListClick(Sender: TObject);
 begin
   Beep;
-  Caption:= 'Selected item: '+IntToStr(b.ItemIndex);
+  Caption:= 'Clicked: '+IntToStr(b.ItemIndex);
 end;
 
 procedure TfmMain.edKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
-  if (key=vk_down) then
-  begin
-    if b.ItemIndex<b.ItemCount-1 then
-      b.ItemIndex:= b.ItemIndex+1;
-    //else
-    //  b.ItemIndex:= 0;
-    key:= 0;
-    Exit
-  end;
   if (key=vk_up) then
   begin
     if b.ItemIndex>0 then
       b.ItemIndex:= b.ItemIndex-1;
-    //else
-    //  b.ItemIndex:= b.ItemCount-1;
     key:= 0;
     Exit
   end;
+  if (key=vk_down) then
+  begin
+    if b.ItemIndex<b.ItemCount-1 then
+      b.ItemIndex:= b.ItemIndex+1;
+    key:= 0;
+    Exit
+  end;
+
+  if (key=vk_prior) then
+  begin
+    if b.ItemIndex>0 then
+      b.ItemIndex:= Max(0, b.ItemIndex-(b.VisibleItems-1));
+    key:= 0;
+    Exit
+  end;
+  if (key=vk_next) then
+  begin
+    if b.ItemIndex<b.ItemCount-1 then
+      b.ItemIndex:= Min(b.ItemCount-1, b.ItemIndex+(b.VisibleItems-1));
+    key:= 0;
+    Exit
+  end;
+
   if (key=vk_home) then
   begin
     b.ItemIndex:= 0;
@@ -96,6 +109,7 @@ begin
     key:= 0;
     Exit
   end;
+
   if (key=vk_return) then
   begin
     ListClick(nil);

@@ -45,6 +45,7 @@ type
     property ItemIndex: integer read FItemIndex write SetItemIndex;
     property ItemTop: integer read FItemTop write SetItemTop;
     property ItemCount: integer read FItemCount write SetItemCount;
+    property VisibleItems: integer read GetVisibleItems;
   published
     property ItemHeight: integer read FItemHeight write FItemHeight;
     property OnClick: TNotifyEvent read FOnClick write FOnClick;
@@ -85,7 +86,7 @@ end;
 procedure TATListbox.Paint;
 var
   r: TRect;
-  index: integer;
+  Index: integer;
 begin
   inherited;
 
@@ -95,39 +96,40 @@ begin
   Canvas.Brush.Color:= Color;
   Canvas.FillRect(r);
 
-  for index:= FItemTop to FItemCount-1 do
+  for Index:= FItemTop to FItemCount-1 do
   begin
-    r.Top:= (index-FItemTop)*FItemHeight;
+    r.Top:= (Index-FItemTop)*FItemHeight;
     r.Bottom:= r.Top+FItemHeight;
     r.Left:= 0;
     r.Right:= ClientWidth;
     if r.Top>=ClientHeight then Break;
 
     if Assigned(FOnDrawItem) then
-      FOnDrawItem(Self, index, r)
+      FOnDrawItem(Self, Index, r)
     else
     begin
+      //default paint useless
       Canvas.Pen.Color:= clGray;
       Canvas.Line(r.Left, r.Bottom, r.Right, r.Bottom);
       Canvas.Brush.Color:= Color;
-      if index=FItemIndex then
+      if Index=FItemIndex then
       begin
         Canvas.Brush.Color:= clMedGray;
         Canvas.FillRect(r);
       end;
-      Canvas.TextOut(r.Left+6, r.Top+2, '('+IntToStr(index)+')');
+      Canvas.TextOut(r.Left+6, r.Top+2, '('+IntToStr(Index)+')');
     end;
   end;
 end;
 
 procedure TATListbox.Click;
 var
-  P: TPoint;
+  Pnt: TPoint;
 begin
   inherited;
 
-  P:= ScreenToClient(Mouse.CursorPos);
-  ItemIndex:= P.Y div FItemHeight + FItemTop;
+  Pnt:= ScreenToClient(Mouse.CursorPos);
+  ItemIndex:= Pnt.Y div FItemHeight + FItemTop;
 
   if Assigned(FOnClick) then
     FOnClick(Self);
