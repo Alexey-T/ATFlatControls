@@ -47,6 +47,10 @@ type
     property ItemCount: integer read FItemCount write SetItemCount;
     property VisibleItems: integer read GetVisibleItems;
   published
+    property Align;
+    property BorderStyle;
+    property Color;
+    property Font;
     property ItemHeight: integer read FItemHeight write FItemHeight;
     property OnClick: TNotifyEvent read FOnClick write FOnClick;
     property OnDrawItem: TATListboxDrawItemEvent read FOnDrawItem write FOnDrawItem;
