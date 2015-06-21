@@ -49,6 +49,7 @@ type
   published
     property Align;
     property BorderStyle;
+    property BorderSpacing;
     property Color;
     property Font;
     property ItemHeight: integer read FItemHeight write FItemHeight;
