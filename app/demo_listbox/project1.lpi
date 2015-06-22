@@ -51,6 +51,7 @@
       <Unit2>
         <Filename Value="..\..\atbuttons\atlistbox.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="ATListbox"/>
       </Unit2>
     </Units>
   </ProjectOptions>

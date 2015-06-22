@@ -14,7 +14,7 @@ uses
   LMessages;
 
 type
-  TATListboxDrawItemEvent = procedure(Sender: TObject; AIndex: integer; const ARect: TRect) of object;
+  TATListboxDrawItemEvent = procedure(Sender: TObject; C: TCanvas; AIndex: integer; const ARect: TRect) of object;
 
 type
   { TATListbox }
@@ -27,6 +27,8 @@ type
     FItemIndex,
     FItemHeight,
     FItemTop: integer;
+    FBitmap: TBitmap;
+    procedure DoPaintTo(C: TCanvas; r: TRect);
     function ItemBottom: integer;
     procedure SetItemCount(AValue: integer);
     procedure SetItemIndex(AValue: integer);
@@ -88,18 +90,13 @@ begin
   SetScrollInfo(Handle, SB_VERT, si, True);
 end;
 
-procedure TATListbox.Paint;
+
+procedure TATListbox.DoPaintTo(C: TCanvas; r: TRect);
 var
-  r: TRect;
   Index: integer;
 begin
-  inherited;
-
-  UpdateScrollbar;
-
-  r:= ClientRect;
-  Canvas.Brush.Color:= Color;
-  Canvas.FillRect(r);
+  C.Brush.Color:= Color;
+  C.FillRect(r);
 
   for Index:= FItemTop to FItemCount-1 do
   begin
@@ -110,21 +107,34 @@ begin
     if r.Top>=ClientHeight then Break;
 
     if Assigned(FOnDrawItem) then
-      FOnDrawItem(Self, Index, r)
+      FOnDrawItem(Self, C, Index, r)
     else
     begin
       //default paint useless
-      Canvas.Pen.Color:= clGray;
-      Canvas.Line(r.Left, r.Bottom, r.Right, r.Bottom);
-      Canvas.Brush.Color:= Color;
+      C.Pen.Color:= clGray;
+      C.Line(r.Left, r.Bottom, r.Right, r.Bottom);
+      C.Brush.Color:= Color;
       if Index=FItemIndex then
       begin
-        Canvas.Brush.Color:= clMedGray;
-        Canvas.FillRect(r);
+        C.Brush.Color:= clMedGray;
+        C.FillRect(r);
       end;
-      Canvas.TextOut(r.Left+6, r.Top+2, '('+IntToStr(Index)+')');
+      C.TextOut(r.Left+6, r.Top+2, '('+IntToStr(Index)+')');
     end;
   end;
+end;
+
+procedure TATListbox.Paint;
+var
+  R: TRect;
+begin
+  inherited;
+  UpdateScrollbar;
+
+  R:= ClientRect;
+  FBitmap.Canvas.Font.Assign(Self.Font);
+  DoPaintTo(FBitmap.Canvas, R);
+  Canvas.CopyRect(R, FBitmap.Canvas, R);
 end;
 
 procedure TATListbox.Click;
@@ -197,10 +207,14 @@ begin
   FItemIndex:= 0;
   FItemHeight:= 28;
   FItemTop:= 0;
+
+  FBitmap:= TBitmap.Create;
+  FBitmap.SetSize(1600, 1200);
 end;
 
 destructor TATListbox.Destroy;
 begin
+  FreeAndNil(FBitmap);
   inherited;
 end;
 

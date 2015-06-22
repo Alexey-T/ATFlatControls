@@ -17,7 +17,7 @@ type
     procedure FormCreate(Sender: TObject);
   private
     { private declarations }
-    procedure ListDraw(Sender: TObject; AIndex: integer; const ARect: TRect);
+    procedure ListDraw(Sender: TObject; C: TCanvas; AIndex: integer; const ARect: TRect);
     procedure ListClick(Sender: TObject);
   public
     { public declarations }
@@ -48,15 +48,16 @@ begin
   b.ItemCount:= 21;
 end;
 
-procedure TfmMain.ListDraw(Sender: TObject; AIndex: integer; const ARect: TRect);
+procedure TfmMain.ListDraw(Sender: TObject; C: TCanvas; AIndex: integer;
+  const ARect: TRect);
 begin
-  b.Canvas.Brush.Color:= IfThen(AIndex=b.ItemIndex, clMedGray, b.Color);
-  b.Canvas.FillRect(ARect);
+  C.Brush.Color:= IfThen(AIndex=b.ItemIndex, clMedGray, b.Color);
+  C.FillRect(ARect);
 
-  b.Canvas.Pen.Color:= clMedGray;
-  b.Canvas.Line(ARect.Left+2, ARect.Bottom-1, ARect.Right-2, ARect.Bottom-1);
+  C.Pen.Color:= clMedGray;
+  C.Line(ARect.Left+2, ARect.Bottom-1, ARect.Right-2, ARect.Bottom-1);
 
-  b.Canvas.TextOut(ARect.Left+6, ARect.Top+2, 'item '+inttostr(AIndex));
+  C.TextOut(ARect.Left+6, ARect.Top+2, 'item '+inttostr(AIndex));
 end;
 
 procedure TfmMain.ListClick(Sender: TObject);
