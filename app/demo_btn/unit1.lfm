@@ -3,21 +3,32 @@ object fmMain: TfmMain
   Height = 299
   Top = 353
   Width = 515
-  Caption = 'ATSimpleButton demo'
+  Caption = 'ATButton demo'
   ClientHeight = 299
   ClientWidth = 515
   OnCreate = FormCreate
   Position = poScreenCenter
   LCLVersion = '1.5'
   object chkFocus: TCheckBox
-    Left = 344
-    Height = 19
-    Top = 244
-    Width = 115
+    Left = 336
+    Height = 24
+    Top = 240
+    Width = 148
     Caption = 'buttons focusable'
     Checked = True
     OnChange = chkFocusChange
     State = cbChecked
     TabOrder = 0
+  end
+  object chkEn: TCheckBox
+    Left = 336
+    Height = 24
+    Top = 264
+    Width = 136
+    Caption = 'buttons enabled'
+    Checked = True
+    OnChange = chkEnChange
+    State = cbChecked
+    TabOrder = 1
   end
 end

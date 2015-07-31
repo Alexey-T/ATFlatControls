@@ -36,9 +36,9 @@ var
   ATButtonTheme: TATButtonTheme;
 
 type
-  { TATSimpleButton }
+  { TATButton }
 
-  TATSimpleButton = class(TCustomControl)
+  TATButton = class(TCustomControl)
   private
     FPressed,
     FOver,
@@ -79,35 +79,35 @@ implementation
 
 uses Math, Types;
 
-{ TATSimpleButton }
+{ TATButton }
 
-procedure TATSimpleButton.SetChecked(AValue: boolean);
+procedure TATButton.SetChecked(AValue: boolean);
 begin
   if FChecked= AValue then Exit;
   FChecked:= AValue;
   Invalidate;
 end;
 
-procedure TATSimpleButton.SetFocusable(AValue: boolean);
+procedure TATButton.SetFocusable(AValue: boolean);
 begin
   if FFocusable= AValue then Exit;
   FFocusable:= AValue;
   TabStop:= AValue;
 end;
 
-procedure TATSimpleButton.SetCaption(AValue: string);
+procedure TATButton.SetCaption(AValue: string);
 begin
   if FCaption= AValue then Exit;
   FCaption:= AValue;
   Invalidate;
 end;
 
-function TATSimpleButton.IsPressed: boolean;
+function TATButton.IsPressed: boolean;
 begin
   Result:= FPressed and FOver;
 end;
 
-procedure TATSimpleButton.Paint;
+procedure TATButton.Paint;
 var
   r: TRect;
   p: TPoint;
@@ -169,7 +169,7 @@ begin
   end;
 end;
 
-procedure TATSimpleButton.MouseMove(Shift: TShiftState; X, Y: Integer);
+procedure TATButton.MouseMove(Shift: TShiftState; X, Y: Integer);
 var
   bOver: boolean;
 begin
@@ -183,21 +183,21 @@ begin
   end;
 end;
 
-procedure TATSimpleButton.MouseLeave;
+procedure TATButton.MouseLeave;
 begin
   inherited;
   FOver:= false;
   Invalidate;
 end;
 
-procedure TATSimpleButton.MouseEnter;
+procedure TATButton.MouseEnter;
 begin
   inherited;
   FOver:= true;
   Invalidate;
 end;
 
-procedure TATSimpleButton.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+procedure TATButton.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
 
@@ -211,7 +211,7 @@ begin
   Invalidate;
 end;
 
-procedure TATSimpleButton.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+procedure TATButton.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
 
@@ -222,7 +222,7 @@ begin
   Invalidate;
 end;
 
-procedure TATSimpleButton.DoClick;
+procedure TATButton.DoClick;
 begin
   if FCheckable then
     FChecked:= not FChecked;
@@ -232,26 +232,26 @@ begin
 end;
 
 
-procedure TATSimpleButton.KeyPress(var Key: char);
+procedure TATButton.KeyPress(var Key: char);
 begin
   inherited;
   if (Key=' ') then
     DoClick;
 end;
 
-procedure TATSimpleButton.DoEnter;
+procedure TATButton.DoEnter;
 begin
   inherited;
   Invalidate;
 end;
 
-procedure TATSimpleButton.DoExit;
+procedure TATButton.DoExit;
 begin
   inherited;
   Invalidate;
 end;
 
-constructor TATSimpleButton.Create(AOwner: TComponent);
+constructor TATButton.Create(AOwner: TComponent);
 begin
   inherited;
 
@@ -273,7 +273,7 @@ begin
   FOnClick:= nil;
 end;
 
-destructor TATSimpleButton.Destroy;
+destructor TATButton.Destroy;
 begin
   if Assigned(FBitmap) then
     FreeAndNil(FBitmap);

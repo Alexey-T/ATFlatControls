@@ -12,14 +12,16 @@ type
   { TfmMain }
 
   TfmMain = class(TForm)
+    chkEn: TCheckBox;
     chkFocus: TCheckBox;
+    procedure chkEnChange(Sender: TObject);
     procedure chkFocusChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
     { private declarations }
   public
     { public declarations }
-    b, bi, b2, b3: TATSimpleButton;
+    b, bi, b2, b3: TATButton;
     procedure FClick(Snd: TObject);
     procedure ImgClick(Snd: TObject);
   end;
@@ -40,26 +42,26 @@ begin
   bmp:= TBitmap.Create;
   bmp.LoadFromFile(ExtractFilepath(Application.Exename)+'bmp1.bmp');
 
-  b:= TATSimpleButton.create(self);
+  b:= TATButton.create(self);
   b.parent:= self;
   b.SetBounds(50, 100, 180, 40);
   b.Caption:= 'Toggle chk';
   b.OnClick:= @FClick;
 
-  bi:= TATSimpleButton.create(self);
+  bi:= TATButton.create(self);
   bi.parent:= self;
   bi.SetBounds(350, 100, 80, 40);
   bi.Caption:= '';
   bi.Bitmap:= bmp;
   bi.OnClick:= @ImgClick;
 
-  b2:= TATSimpleButton.create(self);
+  b2:= TATButton.create(self);
   b2.parent:= self;
   b2.SetBounds(50, 150, 80, 30);
   b2.Caption:= 'Check1';
   b2.Checkable:= true;
 
-  b3:= TATSimpleButton.create(self);
+  b3:= TATButton.create(self);
   b3.parent:= self;
   b3.SetBounds(130, 150, 80, 30);
   b3.Caption:= 'Check2';
@@ -75,6 +77,17 @@ begin
   bi.Focusable:= en;
   b2.Focusable:= en;
   b3.Focusable:= en;
+end;
+
+procedure TfmMain.chkEnChange(Sender: TObject);
+var
+  en: boolean;
+begin
+  en:= chkEn.Checked;
+  b.Enabled:= en;
+  bi.Enabled:= en;
+  b2.Enabled:= en;
+  b3.Enabled:= en;
 end;
 
 procedure TfmMain.FClick(Snd: TObject);

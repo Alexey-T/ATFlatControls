@@ -4,7 +4,7 @@
     <PathDelim Value="\"/>
     <Name Value="atbuttons_package"/>
     <Type Value="RunAndDesignTime"/>
-    <Author Value="A. Torgashin"/>
+    <Author Value="Alexey Torgashin"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
@@ -13,7 +13,7 @@
       </SearchPaths>
     </CompilerOptions>
     <Description Value="ATButtons"/>
-    <License Value="MPL 2.0"/>
+    <License Value="MPL 2.0, LGPL"/>
     <Version Major="1"/>
     <Files Count="3">
       <Item1>
