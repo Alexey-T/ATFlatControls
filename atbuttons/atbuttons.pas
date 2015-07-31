@@ -221,11 +221,11 @@ end;
 
 procedure TATSimpleButton.DoClick;
 begin
-  if Assigned(FOnClick) then
-    FOnClick(Self);
   if FCheckable then
     FChecked:= not FChecked;
   Invalidate;
+  if Assigned(FOnClick) then
+    FOnClick(Self);
 end;
 
 
