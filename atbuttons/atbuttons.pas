@@ -18,6 +18,7 @@ type
     FontSize: integer;
     FontStyles: TFontStyles;
     ColorFont,
+    ColorFontDisabled,
     ColorBgPassive,
     ColorBgOver,
     ColorBgChecked,
@@ -146,7 +147,7 @@ begin
   if FCaption<>'' then
   begin
     Canvas.Font.Name:= ATButtonTheme.FontName;
-    Canvas.Font.Color:= ATButtonTheme.ColorFont;
+    Canvas.Font.Color:= IfThen(Enabled, ATButtonTheme.ColorFont, ATButtonTheme.ColorFontDisabled);
     Canvas.Font.Size:= ATButtonTheme.FontSize;
     Canvas.Font.Style:= ATButtonTheme.FontStyles;
 
@@ -288,6 +289,7 @@ initialization
     FontSize:= 10;
     FontStyles:= [];
     ColorFont:= $303030;
+    ColorFontDisabled:= $8080b0;
     ColorBgPassive:= $e0e0e0;
     ColorBgOver:= $e0e0e0;
     ColorBgChecked:= $b0b0b0;
