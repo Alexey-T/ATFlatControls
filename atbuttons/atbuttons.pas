@@ -21,6 +21,7 @@ type
     ColorBgPassive,
     ColorBgOver,
     ColorBgChecked,
+    ColorBgDisabled,
     ColorBorderPassive,
     ColorBorderOver,
     ColorBorderFocused: TColor;
@@ -116,8 +117,9 @@ begin
   //----draw bg
   r:= ClientRect;
   Canvas.Brush.Color:=
-    IfThen(FChecked, ATButtonTheme.ColorBgChecked,
-      IfThen(FOver, ATButtonTheme.ColorBgOver, ATButtonTheme.ColorBgPassive));
+    IfThen(not Enabled, ATButtonTheme.ColorBgDisabled,
+     IfThen(FChecked, ATButtonTheme.ColorBgChecked,
+      IfThen(FOver, ATButtonTheme.ColorBgOver, ATButtonTheme.ColorBgPassive)));
   Canvas.FillRect(r);
 
   //----draw border
@@ -289,6 +291,7 @@ initialization
     ColorBgPassive:= $e0e0e0;
     ColorBgOver:= $e0e0e0;
     ColorBgChecked:= $b0b0b0;
+    ColorBgDisabled:= $c0c0e0;
     ColorBorderPassive:= $a0a0a0;
     ColorBorderOver:= $d0d0d0;
     ColorBorderFocused:= clNavy;
