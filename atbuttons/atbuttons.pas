@@ -67,6 +67,12 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
+    property TabStop;
+    property TabOrder;
+    property Enabled;
+    property Visible;
+    property ShowHint;
+    property ParentShowHint;
     property Caption: string read FCaption write SetCaption;
     property Bitmap: TBitmap read FBitmap write FBitmap;
     property Checked: boolean read FChecked write SetChecked;
@@ -289,11 +295,11 @@ initialization
     FontSize:= 10;
     FontStyles:= [];
     ColorFont:= $303030;
-    ColorFontDisabled:= $8080b0;
+    ColorFontDisabled:= $808088;
     ColorBgPassive:= $e0e0e0;
     ColorBgOver:= $e0e0e0;
     ColorBgChecked:= $b0b0b0;
-    ColorBgDisabled:= $c0c0e0;
+    ColorBgDisabled:= $c0c0d0;
     ColorBorderPassive:= $a0a0a0;
     ColorBorderOver:= $d0d0d0;
     ColorBorderFocused:= clNavy;
