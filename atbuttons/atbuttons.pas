@@ -67,6 +67,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
+    property Align;
     property TabStop;
     property TabOrder;
     property Enabled;
