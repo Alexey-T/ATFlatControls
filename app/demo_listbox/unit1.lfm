@@ -3,22 +3,8 @@ object fmMain: TfmMain
   Height = 251
   Top = 349
   Width = 448
-  ActiveControl = ed
   Caption = 'ATListbox demo'
-  ClientHeight = 251
-  ClientWidth = 448
   OnCreate = FormCreate
   Position = poScreenCenter
   LCLVersion = '1.5'
-  object ed: TEdit
-    Left = 0
-    Height = 23
-    Top = 0
-    Width = 448
-    Align = alTop
-    OnKeyDown = edKeyDown
-    ReadOnly = True
-    TabOrder = 0
-    Text = 'use keys: up, down, home, end'
-  end
 end

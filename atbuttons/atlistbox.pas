@@ -28,8 +28,10 @@ type
     FItemHeight,
     FItemTop: integer;
     FBitmap: TBitmap;
+    FCanGetFocus: boolean;
     procedure DoPaintTo(C: TCanvas; r: TRect);
     function ItemBottom: integer;
+    procedure SetCanBeFocused(AValue: boolean);
     procedure SetItemCount(AValue: integer);
     procedure SetItemIndex(AValue: integer);
     procedure SetItemTop(AValue: integer);
@@ -41,6 +43,9 @@ type
     procedure Paint; override;
     procedure Click; override;
     procedure LMVScroll(var Msg: TLMVScroll); message LM_VSCROLL;
+    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
+    function CanFocus: boolean; override;
+    function CanSetFocus: boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -52,11 +57,16 @@ type
     property Align;
     property BorderStyle;
     property BorderSpacing;
+    property CanGetFocus: boolean read FCanGetFocus write SetCanBeFocused;
     property Color;
     property Font;
     property ItemHeight: integer read FItemHeight write FItemHeight;
     property OnClick: TNotifyEvent read FOnClick write FOnClick;
+    property OnDblClick;
     property OnDrawItem: TATListboxDrawItemEvent read FOnDrawItem write FOnDrawItem;
+    property OnKeyPress;
+    property OnKeyDown;
+    property OnKeyUp;
   end;
 
 implementation
@@ -143,6 +153,9 @@ var
 begin
   inherited;
 
+  if FCanGetFocus then
+    LCLIntf.SetFocus(Handle);
+
   Pnt:= ScreenToClient(Mouse.CursorPos);
   ItemIndex:= Pnt.Y div FItemHeight + FItemTop;
 
@@ -153,6 +166,16 @@ end;
 function TATListbox.ItemBottom: integer;
 begin
   Result:= Min(ItemCount-1, FItemTop+GetVisibleItems-1);
+end;
+
+procedure TATListbox.SetCanBeFocused(AValue: boolean);
+begin
+  if FCanGetFocus=AValue then Exit;
+  FCanGetFocus:= AValue;
+  if AValue then
+    ControlStyle:= ControlStyle-[csNoFocus]
+  else
+    ControlStyle:= ControlStyle+[csNoFocus];
 end;
 
 procedure TATListbox.SetItemCount(AValue: integer);
@@ -192,9 +215,7 @@ constructor TATListbox.Create(AOwner: TComponent);
 begin
   inherited;
 
-  ControlStyle:= ControlStyle
-    +[csOpaque, csNoFocus]
-    -[csDoubleClicks, csTripleClicks];
+  ControlStyle:= ControlStyle+[csOpaque]-[csDoubleClicks, csTripleClicks];
 
   Width:= 180;
   Height:= 150;
@@ -203,6 +224,7 @@ begin
   FOnDrawItem:= nil;
 
   Color:= clLtGray;
+  CanGetFocus:= false;
   FItemCount:= 0;
   FItemIndex:= 0;
   FItemHeight:= 28;
@@ -244,6 +266,69 @@ begin
   UpdateFromScrollbarMsg(Msg);
   Invalidate;
 end;
+
+function TATListbox.CanFocus: boolean;
+begin
+  Result:= FCanGetFocus;
+end;
+
+function TATListbox.CanSetFocus: boolean;
+begin
+  Result:= FCanGetFocus;
+end;
+
+procedure TATListbox.KeyDown(var Key: Word; Shift: TShiftState);
+begin
+  inherited;
+
+  if (key=vk_up) then
+  begin
+    ItemIndex:= ItemIndex-1;
+    key:= 0;
+    Exit
+  end;
+  if (key=vk_down) then
+  begin
+    ItemIndex:= ItemIndex+1;
+    key:= 0;
+    Exit
+  end;
+
+  if (key=vk_prior) then
+  begin
+    ItemIndex:= Max(0, ItemIndex-(VisibleItems-1));
+    key:= 0;
+    Exit
+  end;
+  if (key=vk_next) then
+  begin
+    ItemIndex:= Min(ItemCount-1, ItemIndex+(VisibleItems-1));
+    key:= 0;
+    Exit
+  end;
+
+  if (key=vk_home) then
+  begin
+    ItemIndex:= 0;
+    key:= 0;
+    Exit
+  end;
+  if (key=vk_end) then
+  begin
+    ItemIndex:= ItemCount-1;
+    key:= 0;
+    Exit
+  end;
+
+  if (key=vk_return) then
+  begin
+    if Assigned(FOnClick) then
+      FOnClick(Self);
+    key:= 0;
+    Exit
+  end;
+end;
+
 
 initialization
 
