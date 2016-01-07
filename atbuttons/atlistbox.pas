@@ -232,6 +232,8 @@ begin
 
   FBitmap:= TBitmap.Create;
   FBitmap.SetSize(1600, 1200);
+
+  DoubleBuffered:= true; //user reported it helps on Win xp
 end;
 
 destructor TATListbox.Destroy;
