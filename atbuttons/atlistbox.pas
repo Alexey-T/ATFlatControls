@@ -317,7 +317,7 @@ begin
 
   if (key=vk_return) then
   begin
-    Click;
+    DblClick;
     key:= 0;
     Exit
   end;
