@@ -150,13 +150,13 @@ procedure TATListbox.Click;
 var
   Pnt: TPoint;
 begin
-  inherited;
-
   if FCanGetFocus then
     LCLIntf.SetFocus(Handle);
 
   Pnt:= ScreenToClient(Mouse.CursorPos);
   ItemIndex:= Pnt.Y div FItemHeight + FItemTop;
+
+  inherited; //OnClick must be after ItemIndex set
 end;
 
 function TATListbox.ItemBottom: integer;
