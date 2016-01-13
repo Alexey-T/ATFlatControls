@@ -21,7 +21,6 @@ type
 
   TATListbox = class(TCustomControl)
   private
-    FOnClick: TNotifyEvent;
     FOnDrawItem: TATListboxDrawItemEvent;
     FItemCount,
     FItemIndex,
@@ -61,7 +60,7 @@ type
     property Color;
     property Font;
     property ItemHeight: integer read FItemHeight write FItemHeight;
-    property OnClick: TNotifyEvent read FOnClick write FOnClick;
+    property OnClick;
     property OnDblClick;
     property OnDrawItem: TATListboxDrawItemEvent read FOnDrawItem write FOnDrawItem;
     property OnKeyPress;
@@ -158,9 +157,6 @@ begin
 
   Pnt:= ScreenToClient(Mouse.CursorPos);
   ItemIndex:= Pnt.Y div FItemHeight + FItemTop;
-
-  if Assigned(FOnClick) then
-    FOnClick(Self);
 end;
 
 function TATListbox.ItemBottom: integer;
@@ -215,12 +211,9 @@ constructor TATListbox.Create(AOwner: TComponent);
 begin
   inherited;
 
-  ControlStyle:= ControlStyle+[csOpaque]-[csDoubleClicks, csTripleClicks];
-
+  ControlStyle:= ControlStyle+[csOpaque]-[csTripleClicks];
   Width:= 180;
   Height:= 150;
-
-  FOnClick:= nil;
   FOnDrawItem:= nil;
 
   Color:= clLtGray;
@@ -324,8 +317,7 @@ begin
 
   if (key=vk_return) then
   begin
-    if Assigned(FOnClick) then
-      FOnClick(Self);
+    Click;
     key:= 0;
     Exit
   end;

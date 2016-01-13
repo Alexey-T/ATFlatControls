@@ -17,6 +17,7 @@ type
     { private declarations }
     procedure ListDraw(Sender: TObject; C: TCanvas; AIndex: integer; const ARect: TRect);
     procedure ListClick(Sender: TObject);
+    procedure ListDblClick(Sender: TObject);
   public
     { public declarations }
     list: TATListbox;
@@ -38,10 +39,11 @@ begin
   list:= TATListbox.Create(Self);
   list.Parent:= Self;
   list.Align:= alClient;
-  //list.CanGetFocus:= true;
+  list.CanGetFocus:= true;
 
   list.OnDrawItem:= @ListDraw;
   list.OnClick:= @ListClick;
+  list.OnDblClick:= @ListDblClick;
 
   list.Color:= $e0e0e0;
   list.ItemCount:= 21;
@@ -63,6 +65,11 @@ procedure TfmMain.ListClick(Sender: TObject);
 begin
   Beep;
   Caption:= 'Clicked: '+IntToStr(list.ItemIndex);
+end;
+
+procedure TfmMain.ListDblClick(Sender: TObject);
+begin
+  Caption:= 'Dbl-clicked: '+IntToStr(list.ItemIndex);
 end;
 
 

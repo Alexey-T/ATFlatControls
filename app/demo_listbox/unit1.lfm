@@ -6,5 +6,5 @@ object fmMain: TfmMain
   Caption = 'ATListbox demo'
   OnCreate = FormCreate
   Position = poScreenCenter
-  LCLVersion = '1.5'
+  LCLVersion = '1.7'
 end
