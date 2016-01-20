@@ -15,7 +15,7 @@
     <Description Value="ATButtons"/>
     <License Value="MPL 2.0, LGPL"/>
     <Version Major="1"/>
-    <Files Count="3">
+    <Files Count="4">
       <Item1>
         <Filename Value="atbuttons.pas"/>
         <UnitName Value="ATButtons"/>
@@ -29,6 +29,10 @@
         <Filename Value="atlistbox.pas"/>
         <UnitName Value="ATListbox"/>
       </Item3>
+      <Item4>
+        <Filename Value="atlinklabel.pas"/>
+        <UnitName Value="ATLinkLabel"/>
+      </Item4>
     </Files>
     <RequiredPkgs Count="1">
       <Item1>
