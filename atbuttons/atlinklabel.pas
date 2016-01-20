@@ -14,6 +14,8 @@ type
   TLinkLabel = class(TLabel)
   private
     FLink: string;
+    FColorLinkNormal: TColor;
+    FColorLinkMouseover: TColor;
     procedure SetLink(AValue: string);
   public
     constructor Create(AOwner: TComponent); override;
@@ -23,27 +25,27 @@ type
     procedure MouseLeave; override;
   published
     property Link: string read FLink write SetLink;
+    property ColorLinkNormal: TColor read FColorLinkNormal write FColorLinkNormal;
+    property ColorLinkMouseover: TColor read FColorLinkMouseover write FColorLinkMouseover;
   end;
 
 implementation
 
-const
-  ColorLinkPassive = clHighlight;
-  ColorLinkActive = clRed;
+constructor TLinkLabel.Create(AOwner: TComponent);
+begin
+  inherited;
+  Cursor:= crHandPoint;
+  ShowHint:= true;
+  ColorLinkNormal:= clBlue;
+  ColorLinkMouseover:= clRed;
+  Font.Color:= ColorLinkNormal;
+end;
 
 procedure TLinkLabel.SetLink(AValue: string);
 begin
   if FLink=AValue then Exit;
   FLink:= AValue;
   Hint:= AValue;
-end;
-
-constructor TLinkLabel.Create(AOwner: TComponent);
-begin
-  inherited;
-  Font.Color:= ColorLinkPassive;
-  Cursor:= crHandPoint;
-  ShowHint:= true;
 end;
 
 procedure TLinkLabel.Click;
@@ -54,13 +56,13 @@ end;
 
 procedure TLinkLabel.MouseEnter;
 begin
-  Font.Color:= ColorLinkActive;
+  Font.Color:= ColorLinkMouseover;
   Font.Style:= Font.Style+[fsUnderline];
 end;
 
 procedure TLinkLabel.MouseLeave;
 begin
-  Font.Color:= ColorLinkPassive;
+  Font.Color:= ColorLinkNormal;
   Font.Style:= Font.Style-[fsUnderline];
 end;
 
