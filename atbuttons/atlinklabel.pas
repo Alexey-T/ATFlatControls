@@ -1,3 +1,8 @@
+{
+Copyright (C) Alexey Torgashin, uvviewsoft.com
+License: MPL 2.0 or LGPL
+}
+
 unit ATLinkLabel;
 
 {$mode objfpc}{$H+}
