@@ -28,6 +28,7 @@ type
     FItemTop: integer;
     FBitmap: TBitmap;
     FCanGetFocus: boolean;
+    FList: TStringList;
     procedure DoPaintTo(C: TCanvas; r: TRect);
     function ItemBottom: integer;
     procedure SetCanBeFocused(AValue: boolean);
@@ -48,6 +49,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    property Items: TStringList read FList;
     property ItemIndex: integer read FItemIndex write SetItemIndex;
     property ItemTop: integer read FItemTop write SetItemTop;
     property ItemCount: integer read FItemCount write SetItemCount;
@@ -214,10 +216,11 @@ begin
   ControlStyle:= ControlStyle+[csOpaque]-[csTripleClicks];
   Width:= 180;
   Height:= 150;
-  FOnDrawItem:= nil;
 
   Color:= clLtGray;
   CanGetFocus:= false;
+  FOnDrawItem:= nil;
+  FList:= TStringList.Create;
   FItemCount:= 0;
   FItemIndex:= 0;
   FItemHeight:= 28;
@@ -231,6 +234,7 @@ end;
 
 destructor TATListbox.Destroy;
 begin
+  FreeAndNil(FList);
   FreeAndNil(FBitmap);
   inherited;
 end;
