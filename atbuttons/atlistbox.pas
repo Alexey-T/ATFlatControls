@@ -29,6 +29,7 @@ type
     FBitmap: TBitmap;
     FCanGetFocus: boolean;
     FList: TStringList;
+    FShowScrollbar: boolean;
     procedure DoPaintTo(C: TCanvas; r: TRect);
     function ItemBottom: integer;
     procedure SetCanBeFocused(AValue: boolean);
@@ -42,6 +43,7 @@ type
   protected
     procedure Paint; override;
     procedure Click; override;
+    procedure DoScrolled; virtual;
     procedure LMVScroll(var Msg: TLMVScroll); message LM_VSCROLL;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     function CanFocus: boolean; override;
@@ -62,6 +64,7 @@ type
     property Color;
     property Font;
     property ItemHeight: integer read FItemHeight write FItemHeight;
+    property ShowScrollbar: boolean read FShowScrollbar write FShowScrollbar;
     property OnClick;
     property OnDblClick;
     property OnDrawItem: TATListboxDrawItemEvent read FOnDrawItem write FOnDrawItem;
@@ -95,6 +98,15 @@ begin
   si.cbSize:= SizeOf(si);
   si.fMask:= SIF_ALL;
   si.nMin:= 0;
+
+  if not FShowScrollbar then
+  begin
+    si.nMax:= 1;
+    si.nPage:= 2;
+    SetScrollInfo(Handle, SB_VERT, si, True);
+    exit
+  end;
+
   si.nMax:= FItemCount;
   si.nPage:= GetVisibleItems;
   si.nPos:= FItemTop;
@@ -161,6 +173,11 @@ begin
   inherited; //OnClick must be after ItemIndex set
 end;
 
+procedure TATListbox.DoScrolled;
+begin
+  //
+end;
+
 function TATListbox.ItemBottom: integer;
 begin
   Result:= Min(ItemCount-1, FItemTop+GetVisibleItems-1);
@@ -197,6 +214,7 @@ begin
   if FItemIndex>ItemBottom then
     FItemTop:= Max(0, FItemIndex-GetVisibleItems+1);
 
+  DoScrolled;
   Invalidate;
 end;
 
@@ -205,6 +223,7 @@ begin
   if FItemTop=AValue then Exit;
   if not IsIndexValid(AValue) then Exit;
   FItemTop:= AValue;
+  DoScrolled;
   Invalidate;
 end;
 
@@ -225,6 +244,7 @@ begin
   FItemIndex:= 0;
   FItemHeight:= 28;
   FItemTop:= 0;
+  FShowScrollbar:= true;
 
   FBitmap:= TBitmap.Create;
   FBitmap.SetSize(1600, 1200);
