@@ -43,7 +43,6 @@ type
   protected
     procedure Paint; override;
     procedure Click; override;
-    procedure DoScrolled; virtual;
     procedure LMVScroll(var Msg: TLMVScroll); message LM_VSCROLL;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     function CanFocus: boolean; override;
@@ -173,11 +172,6 @@ begin
   inherited; //OnClick must be after ItemIndex set
 end;
 
-procedure TATListbox.DoScrolled;
-begin
-  //
-end;
-
 function TATListbox.ItemBottom: integer;
 begin
   Result:= Min(ItemCount-1, FItemTop+GetVisibleItems-1);
@@ -198,6 +192,7 @@ begin
   if FItemCount=AValue then Exit;
   if AValue<0 then Exit;
   FItemCount:= AValue;
+  Changed;
   Invalidate;
 end;
 
@@ -214,7 +209,7 @@ begin
   if FItemIndex>ItemBottom then
     FItemTop:= Max(0, FItemIndex-GetVisibleItems+1);
 
-  DoScrolled;
+  Changed;
   Invalidate;
 end;
 
@@ -223,7 +218,7 @@ begin
   if FItemTop=AValue then Exit;
   if not IsIndexValid(AValue) then Exit;
   FItemTop:= AValue;
-  DoScrolled;
+  Changed;
   Invalidate;
 end;
 
