@@ -217,7 +217,7 @@ procedure TATListbox.SetItemTop(AValue: integer);
 begin
   if FItemTop=AValue then Exit;
   if not IsIndexValid(AValue) then Exit;
-  FItemTop:= AValue;
+  FItemTop:= Max(0, AValue);
   Changed;
   Invalidate;
 end;
@@ -271,7 +271,7 @@ begin
     SB_PAGEDOWN:   FItemTop:= Min(NMax, FItemTop+GetVisibleItems);
 
     SB_THUMBPOSITION,
-    SB_THUMBTRACK: FItemTop:= Msg.Pos;
+    SB_THUMBTRACK: FItemTop:= Max(0, Msg.Pos);
   end;
 end;
 
