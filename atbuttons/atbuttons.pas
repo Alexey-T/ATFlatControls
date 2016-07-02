@@ -46,7 +46,7 @@ type
     FCheckable,
     FFocusable: boolean;
     FCaption: string;
-    FBitmap: TBitmap;
+    FBitmap: TPicture;
     FOnClick: TNotifyEvent;
     procedure DoClick;
     function IsPressed: boolean;
@@ -75,7 +75,7 @@ type
     property ShowHint;
     property ParentShowHint;
     property Caption: string read FCaption write SetCaption;
-    property Bitmap: TBitmap read FBitmap write FBitmap;
+    property Bitmap: TPicture read FBitmap write FBitmap;
     property Checked: boolean read FChecked write SetChecked;
     property Checkable: boolean read FCheckable write FCheckable;
     property Focusable: boolean read FFocusable write SetFocusable;
@@ -172,7 +172,7 @@ begin
       IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
     p.y:= (ClientHeight-FBitmap.Height) div 2 +
       IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
-    Canvas.Draw(p.x, p.y, FBitmap);
+    Canvas.Draw(p.x, p.y, FBitmap.Graphic);
   end;
 end;
 
@@ -271,7 +271,7 @@ begin
   Height:= 25;
 
   FCaption:= 'Button';
-  FBitmap:= nil;
+  FBitmap:= TPicture.Create;
   FPressed:= false;
   FOver:= false;
   FChecked:= false;
@@ -282,8 +282,7 @@ end;
 
 destructor TATButton.Destroy;
 begin
-  if Assigned(FBitmap) then
-    FreeAndNil(FBitmap);
+  FBitmap.Free;
 
   inherited;
 end;
