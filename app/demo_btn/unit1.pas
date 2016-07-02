@@ -52,7 +52,7 @@ begin
   bi.parent:= self;
   bi.SetBounds(350, 100, 80, 40);
   bi.Caption:= '';
-  bi.Bitmap:= bmp;
+  bi.Bitmap.Assign(bmp);
   bi.OnClick:= @ImgClick;
 
   b2:= TATButton.create(self);
@@ -97,13 +97,17 @@ begin
 end;
 
 procedure TfmMain.ImgClick(Snd: TObject);
+  function SomeColor: TColor;
+  begin
+    Result:= $a00000+Random($fffff);
+  end;
 begin
   with ATButtonTheme do
   begin
-    ColorFont:= $e0e0e0;
-    ColorBgPassive:= $00a000;
-    ColorBgOver:= $00d000;
-    ColorBgChecked:= clYellow;
+    ColorFont:= SomeColor;
+    ColorBgPassive:= SomeColor;
+    ColorBgOver:= SomeColor;
+    ColorBgChecked:= SomeColor;
   end;
   Invalidate;
 end;
