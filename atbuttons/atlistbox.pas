@@ -61,6 +61,7 @@ type
     property BorderSpacing;
     property CanGetFocus: boolean read FCanGetFocus write SetCanBeFocused;
     property Color;
+    property DoubleBuffered;
     property Font;
     property ItemHeight: integer read FItemHeight write FItemHeight;
     property ShowScrollbar: boolean read FShowScrollbar write FShowScrollbar;
@@ -76,6 +77,23 @@ implementation
 
 uses
   Math, Types, LCLType, LCLIntf;
+
+function IsDoubleBufferedNeeded: boolean;
+begin
+  Result:= false;
+
+  {$ifdef windows}
+  exit(true);
+  {$endif}
+
+  {$ifdef darwin}
+  exit(false);
+  {$endif}
+
+  {$ifdef linux}
+  exit(false);
+  {$endif}
+end;
 
 { TATListbox }
 
@@ -154,9 +172,14 @@ begin
   UpdateScrollbar;
 
   R:= ClientRect;
-  FBitmap.Canvas.Font.Assign(Self.Font);
-  DoPaintTo(FBitmap.Canvas, R);
-  Canvas.CopyRect(R, FBitmap.Canvas, R);
+  if DoubleBuffered then
+  begin
+    FBitmap.Canvas.Font.Assign(Self.Font);
+    DoPaintTo(FBitmap.Canvas, R);
+    Canvas.CopyRect(R, FBitmap.Canvas, R);
+  end
+  else
+    DoPaintTo(Canvas, R);
 end;
 
 procedure TATListbox.Click;
@@ -228,6 +251,7 @@ begin
   inherited;
 
   ControlStyle:= ControlStyle+[csOpaque]-[csTripleClicks];
+  DoubleBuffered:= IsDoubleBufferedNeeded;
   Width:= 180;
   Height:= 150;
 
