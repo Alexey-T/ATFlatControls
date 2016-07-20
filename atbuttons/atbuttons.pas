@@ -48,6 +48,9 @@ type
     FCaption: string;
     FBitmap: TPicture;
     FOnClick: TNotifyEvent;
+    FImageList: TImageList;
+    FImageIndex: integer;
+    FFlat: boolean;
     procedure DoClick;
     function IsPressed: boolean;
     procedure SetCaption(AValue: string);
@@ -78,7 +81,10 @@ type
     property Bitmap: TPicture read FBitmap write FBitmap;
     property Checked: boolean read FChecked write SetChecked;
     property Checkable: boolean read FCheckable write FCheckable;
+    property ImageList: TImageList read FImageList write FImageList;
+    property ImageIndex: integer read FImageIndex write FImageIndex;
     property Focusable: boolean read FFocusable write SetFocusable;
+    property Flat: boolean read FFlat write FFlat;
     property OnClick: TNotifyEvent read FOnClick write FOnClick;
   end;
 
@@ -122,33 +128,36 @@ var
 begin
   inherited;
 
-  //----draw bg
-  r:= ClientRect;
-  Canvas.Brush.Color:=
-    IfThen(not Enabled, ATButtonTheme.ColorBgDisabled,
-     IfThen(FChecked, ATButtonTheme.ColorBgChecked,
-      IfThen(FOver, ATButtonTheme.ColorBgOver, ATButtonTheme.ColorBgPassive)));
-  Canvas.FillRect(r);
-
-  //----draw border
-  Canvas.Brush.Style:= bsClear;
-
-  Canvas.Pen.Color:=
-    IfThen(FOver, ATButtonTheme.ColorBorderOver,
-      IfThen(Focused, ATButtonTheme.ColorBorderFocused, ATButtonTheme.ColorBorderPassive));
-  Canvas.Rectangle(r);
-
-  size:= 1;
-  if IsPressed then size:= ATButtonTheme.PressedBorderWidth else
-  if FOver then size:= ATButtonTheme.MouseoverBorderWidth;
-
-  for i:= 1 to size-1 do
+  if not FFlat or FOver then
   begin
-    InflateRect(r, -1, -1);
-    Canvas.Rectangle(r);
-  end;
+    //----draw bg
+    r:= ClientRect;
+    Canvas.Brush.Color:=
+      IfThen(not Enabled, ATButtonTheme.ColorBgDisabled,
+       IfThen(FChecked, ATButtonTheme.ColorBgChecked,
+        IfThen(FOver, ATButtonTheme.ColorBgOver, ATButtonTheme.ColorBgPassive)));
+    Canvas.FillRect(r);
 
-  Canvas.Brush.Style:= bsSolid;
+    //----draw border
+    Canvas.Brush.Style:= bsClear;
+
+    Canvas.Pen.Color:=
+      IfThen(FOver, ATButtonTheme.ColorBorderOver,
+        IfThen(Focused, ATButtonTheme.ColorBorderFocused, ATButtonTheme.ColorBorderPassive));
+    Canvas.Rectangle(r);
+
+    size:= 1;
+    if IsPressed then size:= ATButtonTheme.PressedBorderWidth else
+    if FOver then size:= ATButtonTheme.MouseoverBorderWidth;
+
+    for i:= 1 to size-1 do
+    begin
+      InflateRect(r, -1, -1);
+      Canvas.Rectangle(r);
+    end;
+
+    Canvas.Brush.Style:= bsSolid;
+  end;
 
   //----draw caption
   if FCaption<>'' then
@@ -163,6 +172,19 @@ begin
     p.y:= (ClientHeight - Canvas.TextHeight(FCaption)) div 2 +
       IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
     Canvas.TextOut(p.x, p.y, FCaption);
+  end;
+
+  //----draw ImageList icon
+  if Assigned(FImageList) and
+    (FImageIndex>=0) and
+    (FImageIndex<FImageList.Count) then
+  begin
+    p.x:= (ClientWidth-FImageList.Width) div 2 +
+      IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
+    p.y:= (ClientHeight-FImageList.Height) div 2 +
+      IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
+    FImageList.Draw(Canvas, p.x, p.y, FImageIndex);
+    exit
   end;
 
   //----draw bitmap
@@ -277,7 +299,10 @@ begin
   FChecked:= false;
   FCheckable:= false;
   FFocusable:= true;
+  FFlat:= false;
   FOnClick:= nil;
+  FImageList:= nil;
+  FImageIndex:= -1;
 end;
 
 destructor TATButton.Destroy;
