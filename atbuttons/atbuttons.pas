@@ -204,8 +204,8 @@ begin
 
     abkArrowDown:
       begin
-        dx:= (Width - cArrSize) div 2;
-        dy:= -cArrSize div 4;
+        dx:= (Width - cArrSize) div 2 - 1;
+        dy:= -cArrSize div 4 - 1;
         p:= Point(dx, dy + Height div 2);
         p2:= Point(dx + cArrSize, dy + Height div 2);
         p3:= Point(dx + cArrSize div 2, dy + Height div 2 + cArrSize div 2);
@@ -226,8 +226,8 @@ begin
 
     abkCross:
       begin
-        dx:= (Width-cArrSize) div 2-1;
-        dy:= (Height-cArrSize) div 2-1;
+        dx:= (Width-cArrSize) div 2 - 1;
+        dy:= (Height-cArrSize) div 2 - 1;
         Canvas.Pen.Color:= ATButtonTheme.ColorFont;
         Canvas.Line(dx, dy, dx+cArrSize+1, dy+cArrSize+1);
         Canvas.Line(dx+cArrSize, dy, dx-1, dy+cArrSize+1);
