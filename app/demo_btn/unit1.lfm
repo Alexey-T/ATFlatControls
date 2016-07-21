@@ -12,7 +12,7 @@ object fmMain: TfmMain
   object chkFocus: TCheckBox
     Left = 336
     Height = 24
-    Top = 240
+    Top = 208
     Width = 148
     Caption = 'buttons focusable'
     Checked = True
@@ -23,7 +23,7 @@ object fmMain: TfmMain
   object chkEn: TCheckBox
     Left = 336
     Height = 24
-    Top = 264
+    Top = 232
     Width = 136
     Caption = 'buttons enabled'
     Checked = True
@@ -34,10 +34,10 @@ object fmMain: TfmMain
   object PanelToolbar: TPanel
     Left = 280
     Height = 80
-    Top = 80
-    Width = 232
+    Top = 88
+    Width = 224
     ClientHeight = 80
-    ClientWidth = 232
+    ClientWidth = 224
     Color = clMoneyGreen
     ParentColor = False
     TabOrder = 2
@@ -53,17 +53,28 @@ object fmMain: TfmMain
   object Label2: TLabel
     Left = 8
     Height = 17
-    Top = 240
+    Top = 208
     Width = 98
     Caption = 'Change colors:'
     ParentColor = False
+  end
+  object chkShowCap: TCheckBox
+    Left = 336
+    Height = 24
+    Top = 256
+    Width = 122
+    Caption = 'show captions'
+    Checked = True
+    OnChange = chkShowCapChange
+    State = cbChecked
+    TabOrder = 3
   end
   object ImageList1: TImageList
     AllocBy = 10
     Height = 28
     Width = 28
-    left = 360
-    top = 168
+    left = 416
+    top = 144
     Bitmap = {
       4C69030000001C0000001C000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

@@ -18,28 +18,32 @@ type
 
   TATButtonsToolbar = class(TPanel)
   private
-    FImageList: TImageList;
+    FImages: TImageList;
     FSizeIncToIcon: integer;
     FSizeSep: integer;
+    FStringSep: string;
     procedure PopupForDropdownClick(Sender: TObject);
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    procedure AddButton(AImageIndex: integer; AOnClick: TNotifyEvent);
+    procedure AddButton(AImageIndex: integer;
+      AOnClick: TNotifyEvent;
+      const ACaption: string=''; const AHint: string='');
     procedure AddDropdown(AMenu: TPopupMenu);
     procedure AddSep;
     procedure UpdateControls;
     function ButtonCount: integer;
     function GetButton(AIndex: integer): TATButton;
     property Buttons[AIndex: integer]: TATButton read GetButton;
+    property StringSeparator: string read FStringSep write FStringSep;
   published
     property Align;
     property Visible;
     property ShowHint;
     property ParentShowHint;
-    property Images: TImageList read FImageList write FImageList;
-    property SizeIncrementToIcon: integer read FSizeIncToIcon write FSizeIncToIcon;
-    property SizeSeparator: integer read FSizeSep write FSizeSep;
+    property Images: TImageList read FImages write FImages;
+    property SizeIncrementToIcon: integer read FSizeIncToIcon write FSizeIncToIcon default 6;
+    property SizeSeparator: integer read FSizeSep write FSizeSep default 14;
   end;
 
 implementation
@@ -52,9 +56,10 @@ begin
   Caption:= '';
   BevelInner:= bvNone;
   BevelOuter:= bvNone;
-  FImageList:= nil;
+  FImages:= nil;
   FSizeIncToIcon:= 6;
   FSizeSep:= 14;
+  FStringSep:= Utf8Encode(#$25be);
 end;
 
 destructor TATButtonsToolbar.Destroy;
@@ -67,20 +72,20 @@ var
   C: TControl;
   i: integer;
 begin
-  if not Assigned(FImageList) then exit;
+  if not Assigned(FImages) then exit;
   if ControlCount=0 then exit;
 
-  Height:= FImageList.Height+FSizeIncToIcon;
+  Height:= FImages.Height+FSizeIncToIcon;
 
   //update control sizes
   //width only for buttons
   for i:= ControlCount-1 downto 0 do
   begin
     C:= Controls[i];
-    C.Height:= FImageList.Height+FSizeIncToIcon;
+    C.Height:= FImages.Height+FSizeIncToIcon;
     if C is TATButton then
       if (C as TATButton).ImageIndex>=0 then
-        C.Width:= FImageList.Width+FSizeIncToIcon;
+        C.Width:= FImages.Width+FSizeIncToIcon;
   end;
 
   //place controls left to right
@@ -88,6 +93,10 @@ begin
   Controls[0].Top:= 0;
   for i:= ControlCount-1 downto 1 do
     Controls[i].AnchorToNeighbour(akLeft, 0, Controls[i-1]);
+
+  //paint
+  for i:= 0 to ControlCount-1 do
+    Controls[i].Invalidate;
 end;
 
 function TATButtonsToolbar.ButtonCount: integer;
@@ -103,7 +112,8 @@ begin
       Result:= Controls[AIndex] as TATButton;
 end;
 
-procedure TATButtonsToolbar.AddButton(AImageIndex: integer; AOnClick: TNotifyEvent);
+procedure TATButtonsToolbar.AddButton(AImageIndex: integer;
+  AOnClick: TNotifyEvent; const ACaption: string; const AHint: string);
 var
   b: TATButton;
 begin
@@ -111,10 +121,13 @@ begin
   b.Parent:= Self;
   b.Width:= 20;
   b.Height:= 20;
-  b.Caption:= '';
   b.Flat:= true;
-  b.Images:= FImageList;
+  b.Caption:= ACaption;
+  b.Hint:= AHint;
+  b.Images:= FImages;
   b.ImageIndex:= AImageIndex;
+  b.ShowCaption:= false;
+  b.ShowHint:= true;
   b.OnClick:= AOnClick;
 end;
 
@@ -126,7 +139,7 @@ begin
   b.Parent:= Self;
   b.Width:= FSizeSep;
   b.Height:= 20;
-  b.Caption:= Utf8Encode(#$25be);
+  b.Caption:= FStringSep;
   b.Flat:= true;
   b.PopupMenu:= AMenu;
   b.OnClick:= @PopupForDropdownClick;

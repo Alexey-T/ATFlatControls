@@ -12,6 +12,7 @@ type
   { TfmMain }
 
   TfmMain = class(TForm)
+    chkShowCap: TCheckBox;
     chkEn: TCheckBox;
     chkFocus: TCheckBox;
     ImageList1: TImageList;
@@ -20,6 +21,7 @@ type
     PanelToolbar: TPanel;
     procedure chkEnChange(Sender: TObject);
     procedure chkFocusChange(Sender: TObject);
+    procedure chkShowCapChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
     { private declarations }
@@ -110,6 +112,13 @@ begin
   b_colors.Focusable:= en;
   b2.Focusable:= en;
   b3.Focusable:= en;
+end;
+
+procedure TfmMain.chkShowCapChange(Sender: TObject);
+begin
+  b.ShowCaption:= chkShowCap.Checked;
+  b2.ShowCaption:= chkShowCap.Checked;
+  b3.ShowCaption:= chkShowCap.Checked;
 end;
 
 procedure TfmMain.chkEnChange(Sender: TObject);

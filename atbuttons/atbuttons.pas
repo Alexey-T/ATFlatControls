@@ -51,11 +51,13 @@ type
     FImageList: TImageList;
     FImageIndex: integer;
     FFlat: boolean;
+    FShowCaption: boolean;
     procedure DoClick;
     function IsPressed: boolean;
     procedure SetCaption(AValue: string);
     procedure SetChecked(AValue: boolean);
     procedure SetFocusable(AValue: boolean);
+    procedure SetShowCaption(AValue: boolean);
   protected
     procedure Paint; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
@@ -85,6 +87,7 @@ type
     property ImageIndex: integer read FImageIndex write FImageIndex;
     property Focusable: boolean read FFocusable write SetFocusable;
     property Flat: boolean read FFlat write FFlat;
+    property ShowCaption: boolean read FShowCaption write SetShowCaption;
     property OnClick: TNotifyEvent read FOnClick write FOnClick;
   end;
 
@@ -106,6 +109,13 @@ begin
   if FFocusable= AValue then Exit;
   FFocusable:= AValue;
   TabStop:= AValue;
+end;
+
+procedure TATButton.SetShowCaption(AValue: boolean);
+begin
+  if FShowCaption=AValue then exit;
+  FShowCaption:= AValue;
+  Invalidate;
 end;
 
 procedure TATButton.SetCaption(AValue: string);
@@ -160,7 +170,7 @@ begin
   end;
 
   //----draw caption
-  if FCaption<>'' then
+  if FShowCaption and (FCaption<>'') then
   begin
     Canvas.Font.Name:= ATButtonTheme.FontName;
     Canvas.Font.Color:= IfThen(Enabled, ATButtonTheme.ColorFont, ATButtonTheme.ColorFontDisabled);
@@ -304,6 +314,7 @@ begin
   FOnClick:= nil;
   FImageList:= nil;
   FImageIndex:= -1;
+  FShowCaption:= true;
 end;
 
 destructor TATButton.Destroy;
