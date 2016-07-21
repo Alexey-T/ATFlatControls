@@ -166,6 +166,7 @@ begin
     Canvas.Font.Color:= IfThen(Enabled, ATButtonTheme.ColorFont, ATButtonTheme.ColorFontDisabled);
     Canvas.Font.Size:= ATButtonTheme.FontSize;
     Canvas.Font.Style:= ATButtonTheme.FontStyles;
+    Canvas.Brush.Style:= bsClear;
 
     p.x:= (ClientWidth - Canvas.TextWidth(FCaption)) div 2 +
       IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
