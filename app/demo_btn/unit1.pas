@@ -76,7 +76,7 @@ begin
   b_tool1.parent:= PanelToolbar;
   b_tool1.SetBounds(5, 30, 35, 35);
   b_tool1.Caption:= '';
-  b_tool1.ImageList:= ImageList1;
+  b_tool1.Images:= ImageList1;
   b_tool1.ImageIndex:= 0;
   b_tool1.Focusable:= false;
   b_tool1.Flat:= true;
@@ -85,7 +85,7 @@ begin
   b_tool2.parent:= PanelToolbar;
   b_tool2.SetBounds(40, 30, 35, 35);
   b_tool2.Caption:= '';
-  b_tool2.ImageList:= ImageList1;
+  b_tool2.Images:= ImageList1;
   b_tool2.ImageIndex:= 1;
   b_tool2.Focusable:= false;
   b_tool2.Flat:= true;
@@ -94,7 +94,7 @@ begin
   b_tool3.parent:= PanelToolbar;
   b_tool3.SetBounds(75, 30, 35, 35);
   b_tool3.Caption:= '';
-  b_tool3.ImageList:= ImageList1;
+  b_tool3.Images:= ImageList1;
   b_tool3.ImageIndex:= 2;
   b_tool3.Focusable:= false;
   b_tool3.Flat:= true;

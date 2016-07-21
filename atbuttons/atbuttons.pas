@@ -81,7 +81,7 @@ type
     property Bitmap: TPicture read FBitmap write FBitmap;
     property Checked: boolean read FChecked write SetChecked;
     property Checkable: boolean read FCheckable write FCheckable;
-    property ImageList: TImageList read FImageList write FImageList;
+    property Images: TImageList read FImageList write FImageList;
     property ImageIndex: integer read FImageIndex write FImageIndex;
     property Focusable: boolean read FFocusable write SetFocusable;
     property Flat: boolean read FFlat write FFlat;

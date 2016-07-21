@@ -5,7 +5,7 @@ unit atbuttons_register;
 interface
 
 uses
-  Classes, SysUtils, ATButtons, ATListbox, ATLinkLabel, LResources;
+  Classes, SysUtils, ATButtons, ATButtonsToolbar, ATListbox, ATLinkLabel, LResources;
 
 procedure Register;
 
@@ -13,7 +13,7 @@ implementation
 
 procedure Register;
 begin
-  RegisterComponents('Misc', [TATButton, TATListbox, TLinkLabel]);
+  RegisterComponents('Misc', [TATButton, TATButtonsToolbar, TATListbox, TLinkLabel]);
 end;
 
 initialization

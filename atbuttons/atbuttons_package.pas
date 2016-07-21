@@ -8,7 +8,8 @@ unit atbuttons_package;
 interface
 
 uses
-  ATButtons, atbuttons_register, ATListbox, ATLinkLabel, LazarusPackageIntf;
+  ATButtons, atbuttons_register, ATListbox, ATLinkLabel, ATButtonsToolbar, 
+  LazarusPackageIntf;
 
 implementation
 
