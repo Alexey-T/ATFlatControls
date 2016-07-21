@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls, ATButtons;
+  ExtCtrls, Menus, ATButtons, ATButtonsToolbar;
 
 type
   { TfmMain }
@@ -18,7 +18,10 @@ type
     ImageList1: TImageList;
     Label1: TLabel;
     Label2: TLabel;
+    MenuItem1: TMenuItem;
+    MenuItem2: TMenuItem;
     PanelToolbar: TPanel;
+    PopupMenu1: TPopupMenu;
     procedure chkEnChange(Sender: TObject);
     procedure chkFocusChange(Sender: TObject);
     procedure chkShowCapChange(Sender: TObject);
@@ -29,8 +32,8 @@ type
     procedure BtnColorsClick(Sender: TObject);
   public
     { public declarations }
-    b, b_colors, b2, b3,
-    b_tool1, b_tool2, b_tool3: TATButton;
+    b, b2, b3, b_colors: TATButton;
+    bar: TATButtonsToolbar;
   end;
 
 var
@@ -74,33 +77,16 @@ begin
   b_colors.Bitmap.Assign(bmp);
   b_colors.OnClick:= @BtnColorsClick;
 
-  b_tool1:= TATButton.create(self);
-  b_tool1.parent:= PanelToolbar;
-  b_tool1.SetBounds(5, 30, 35, 35);
-  b_tool1.Caption:= '';
-  b_tool1.Images:= ImageList1;
-  b_tool1.ImageIndex:= 0;
-  b_tool1.Focusable:= false;
-  b_tool1.Flat:= true;
-
-  b_tool2:= TATButton.create(self);
-  b_tool2.parent:= PanelToolbar;
-  b_tool2.SetBounds(40, 30, 35, 35);
-  b_tool2.Caption:= '';
-  b_tool2.Images:= ImageList1;
-  b_tool2.ImageIndex:= 1;
-  b_tool2.Focusable:= false;
-  b_tool2.Flat:= true;
-
-  b_tool3:= TATButton.create(self);
-  b_tool3.parent:= PanelToolbar;
-  b_tool3.SetBounds(75, 30, 35, 35);
-  b_tool3.Caption:= '';
-  b_tool3.Images:= ImageList1;
-  b_tool3.ImageIndex:= 2;
-  b_tool3.Focusable:= false;
-  b_tool3.Flat:= true;
-
+  bar:= TATButtonsToolbar.create(self);
+  bar.Parent:= PanelToolbar;
+  bar.SetBounds(4, 30, 400, 60);
+  bar.Images:= ImageList1;
+  bar.AddButton(0, @BtnColorsClick, '', 'hint1');
+  bar.AddDropdown(PopupMenu1);
+  bar.AddButton(1, @BtnColorsClick, '', 'hint2');
+  bar.AddSep;
+  bar.AddButton(2, @BtnColorsClick, '', 'hint3');
+  bar.UpdateControls;
 end;
 
 procedure TfmMain.chkFocusChange(Sender: TObject);

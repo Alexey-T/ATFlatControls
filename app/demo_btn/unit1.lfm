@@ -373,4 +373,14 @@ object fmMain: TfmMain
       0000000000000000000000000000
     }
   end
+  object PopupMenu1: TPopupMenu
+    left = 453
+    top = 143
+    object MenuItem1: TMenuItem
+      Caption = 'Test menu'
+    end
+    object MenuItem2: TMenuItem
+      Caption = 'Test more'
+    end
+  end
 end

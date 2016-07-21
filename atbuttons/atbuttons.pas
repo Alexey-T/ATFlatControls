@@ -36,6 +36,9 @@ var
   ATButtonTheme: TATButtonTheme;
 
 type
+  TATButtonSpecKind = (abkNone, abkArrowDown, abkVerticalLine);
+
+type
   { TATButton }
 
   TATButton = class(TCustomControl)
@@ -52,6 +55,7 @@ type
     FImageIndex: integer;
     FFlat: boolean;
     FShowCaption: boolean;
+    FSpecKind: TATButtonSpecKind;
     procedure DoClick;
     function IsPressed: boolean;
     procedure SetCaption(AValue: string);
@@ -81,19 +85,23 @@ type
     property ParentShowHint;
     property Caption: string read FCaption write SetCaption;
     property Bitmap: TPicture read FBitmap write FBitmap;
-    property Checked: boolean read FChecked write SetChecked;
-    property Checkable: boolean read FCheckable write FCheckable;
+    property Checked: boolean read FChecked write SetChecked default false;
+    property Checkable: boolean read FCheckable write FCheckable default false;
     property Images: TImageList read FImageList write FImageList;
-    property ImageIndex: integer read FImageIndex write FImageIndex;
-    property Focusable: boolean read FFocusable write SetFocusable;
-    property Flat: boolean read FFlat write FFlat;
-    property ShowCaption: boolean read FShowCaption write SetShowCaption;
+    property ImageIndex: integer read FImageIndex write FImageIndex default -1;
+    property Focusable: boolean read FFocusable write SetFocusable default true;
+    property Flat: boolean read FFlat write FFlat default false;
+    property ShowCaption: boolean read FShowCaption write SetShowCaption default true;
+    property SpecKind: TATButtonSpecKind read FSpecKind write FSpecKind default abkNone;
     property OnClick: TNotifyEvent read FOnClick write FOnClick;
   end;
 
 implementation
 
 uses Math, Types;
+
+const
+  cArrSize = 6;
 
 { TATButton }
 
@@ -133,8 +141,8 @@ end;
 procedure TATButton.Paint;
 var
   r: TRect;
-  p: TPoint;
-  size, i: integer;
+  p, p2, p3: TPoint;
+  size, dx, dy, i: integer;
 begin
   inherited;
 
@@ -170,19 +178,46 @@ begin
   end;
 
   //----draw caption
-  if FShowCaption and (FCaption<>'') then
-  begin
-    Canvas.Font.Name:= ATButtonTheme.FontName;
-    Canvas.Font.Color:= IfThen(Enabled, ATButtonTheme.ColorFont, ATButtonTheme.ColorFontDisabled);
-    Canvas.Font.Size:= ATButtonTheme.FontSize;
-    Canvas.Font.Style:= ATButtonTheme.FontStyles;
-    Canvas.Brush.Style:= bsClear;
+  case FSpecKind of
+    abkNone:
+      begin
+        if FShowCaption and (FCaption<>'') then
+        begin
+          Canvas.Font.Name:= ATButtonTheme.FontName;
+          Canvas.Font.Color:= IfThen(Enabled, ATButtonTheme.ColorFont, ATButtonTheme.ColorFontDisabled);
+          Canvas.Font.Size:= ATButtonTheme.FontSize;
+          Canvas.Font.Style:= ATButtonTheme.FontStyles;
+          Canvas.Brush.Style:= bsClear;
 
-    p.x:= (ClientWidth - Canvas.TextWidth(FCaption)) div 2 +
-      IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
-    p.y:= (ClientHeight - Canvas.TextHeight(FCaption)) div 2 +
-      IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
-    Canvas.TextOut(p.x, p.y, FCaption);
+          p.x:= (ClientWidth - Canvas.TextWidth(FCaption)) div 2 +
+            IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
+          p.y:= (ClientHeight - Canvas.TextHeight(FCaption)) div 2 +
+            IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
+          Canvas.TextOut(p.x, p.y, FCaption);
+        end;
+      end;
+
+    abkArrowDown:
+      begin
+        dx:= (Width - cArrSize) div 2;
+        dy:= -cArrSize div 4;
+        p:= Point(dx, dy + Height div 2);
+        p2:= Point(dx + cArrSize, dy + Height div 2);
+        p3:= Point(dx + cArrSize div 2, dy + Height div 2 + cArrSize div 2);
+        Canvas.Brush.Style:= bsSolid;
+        Canvas.Pen.Color:= ATButtonTheme.ColorFont;
+        Canvas.Brush.Color:= ATButtonTheme.ColorFont;
+        Canvas.Polygon([p, p2, p3]);
+      end;
+
+    abkVerticalLine:
+      begin
+        dy:= 2;
+        p:= Point(Width div 2, dy);
+        p2:= Point(Width div 2, Height-dy);
+        Canvas.Pen.Color:= ATButtonTheme.ColorFont;
+        Canvas.Line(p, p2);
+      end;
   end;
 
   //----draw ImageList icon
@@ -315,6 +350,7 @@ begin
   FImageList:= nil;
   FImageIndex:= -1;
   FShowCaption:= true;
+  FSpecKind:= abkNone;
 end;
 
 destructor TATButton.Destroy;

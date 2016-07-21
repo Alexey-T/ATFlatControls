@@ -139,8 +139,9 @@ begin
   b.Parent:= Self;
   b.Width:= FSizeSep;
   b.Height:= 20;
-  b.Caption:= FStringSep;
+  b.Caption:= '';
   b.Flat:= true;
+  b.SpecKind:= abkArrowDown;
   b.PopupMenu:= AMenu;
   b.OnClick:= @PopupForDropdownClick;
 end;
@@ -152,10 +153,11 @@ begin
   b:= TATButton.Create(Self);
   b.Parent:= Self;
   b.Caption:= '';
+  b.Flat:= true;
+  b.SpecKind:= abkVerticalLine;
   b.Enabled:= false;
   b.Width:= FSizeSep;
   b.Height:= 20;
-  b.Flat:= true;
 end;
 
 procedure TATButtonsToolbar.PopupForDropdownClick(Sender: TObject);
