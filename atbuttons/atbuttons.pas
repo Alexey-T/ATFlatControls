@@ -36,7 +36,12 @@ var
   ATButtonTheme: TATButtonTheme;
 
 type
-  TATButtonSpecKind = (abkNone, abkArrowDown, abkVerticalLine);
+  TATButtonSpecKind = (
+    abkNone,
+    abkArrowDown,
+    abkVerticalLine,
+    abkCross
+    );
 
 type
   { TATButton }
@@ -217,6 +222,15 @@ begin
         p2:= Point(Width div 2, Height-dy);
         Canvas.Pen.Color:= ATButtonTheme.ColorFont;
         Canvas.Line(p, p2);
+      end;
+
+    abkCross:
+      begin
+        dx:= (Width-cArrSize) div 2-1;
+        dy:= (Height-cArrSize) div 2-1;
+        Canvas.Pen.Color:= ATButtonTheme.ColorFont;
+        Canvas.Line(dx, dy, dx+cArrSize+1, dy+cArrSize+1);
+        Canvas.Line(dx+cArrSize, dy, dx-1, dy+cArrSize+1);
       end;
   end;
 
