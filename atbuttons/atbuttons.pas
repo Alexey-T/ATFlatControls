@@ -23,6 +23,7 @@ type
     ColorBgOver,
     ColorBgChecked,
     ColorBgDisabled,
+    ColorArrows,
     ColorBorderPassive,
     ColorBorderOver,
     ColorBorderFocused: TColor;
@@ -210,8 +211,8 @@ begin
         p2:= Point(dx + cArrSize, dy + Height div 2);
         p3:= Point(dx + cArrSize div 2, dy + Height div 2 + cArrSize div 2);
         Canvas.Brush.Style:= bsSolid;
-        Canvas.Pen.Color:= ATButtonTheme.ColorFont;
-        Canvas.Brush.Color:= ATButtonTheme.ColorFont;
+        Canvas.Pen.Color:= ATButtonTheme.ColorArrows;
+        Canvas.Brush.Color:= ATButtonTheme.ColorArrows;
         Canvas.Polygon([p, p2, p3]);
       end;
 
@@ -220,7 +221,7 @@ begin
         dy:= 2;
         p:= Point(Width div 2, dy);
         p2:= Point(Width div 2, Height-dy);
-        Canvas.Pen.Color:= ATButtonTheme.ColorFont;
+        Canvas.Pen.Color:= ATButtonTheme.ColorArrows;
         Canvas.Line(p, p2);
       end;
 
@@ -228,7 +229,7 @@ begin
       begin
         dx:= (Width-cArrSize) div 2 - 1;
         dy:= (Height-cArrSize) div 2 - 1;
-        Canvas.Pen.Color:= ATButtonTheme.ColorFont;
+        Canvas.Pen.Color:= ATButtonTheme.ColorArrows;
         Canvas.Line(dx, dy, dx+cArrSize+1, dy+cArrSize+1);
         Canvas.Line(dx+cArrSize, dy, dx-1, dy+cArrSize+1);
       end;
@@ -387,6 +388,7 @@ initialization
     ColorBgOver:= $e0e0e0;
     ColorBgChecked:= $b0b0b0;
     ColorBgDisabled:= $c0c0d0;
+    ColorArrows:= clGray;
     ColorBorderPassive:= $a0a0a0;
     ColorBorderOver:= $d0d0d0;
     ColorBorderFocused:= clNavy;
