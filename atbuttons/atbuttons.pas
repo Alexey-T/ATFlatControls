@@ -152,7 +152,7 @@ var
 begin
   inherited;
 
-  if not FFlat or FOver then
+  if (not FFlat) or (FOver and (FSpecKind<>abkVerticalLine)) then
   begin
     //----draw bg
     r:= ClientRect;
