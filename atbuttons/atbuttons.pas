@@ -66,6 +66,7 @@ type
     function IsPressed: boolean;
     procedure SetCaption(AValue: string);
     procedure SetChecked(AValue: boolean);
+    procedure SetFlat(AValue: boolean);
     procedure SetFocusable(AValue: boolean);
     procedure SetShowCaption(AValue: boolean);
   protected
@@ -96,7 +97,7 @@ type
     property Images: TImageList read FImageList write FImageList;
     property ImageIndex: integer read FImageIndex write FImageIndex default -1;
     property Focusable: boolean read FFocusable write SetFocusable default true;
-    property Flat: boolean read FFlat write FFlat default false;
+    property Flat: boolean read FFlat write SetFlat default false;
     property ShowCaption: boolean read FShowCaption write SetShowCaption default true;
     property SpecKind: TATButtonSpecKind read FSpecKind write FSpecKind default abkNone;
     property OnClick: TNotifyEvent read FOnClick write FOnClick;
@@ -116,6 +117,14 @@ begin
   if FChecked= AValue then Exit;
   FChecked:= AValue;
   Invalidate;
+end;
+
+procedure TATButton.SetFlat(AValue: boolean);
+begin
+  if FFlat=AValue then Exit;
+  FFlat:= AValue;
+  if FFlat then
+    Focusable:= false;
 end;
 
 procedure TATButton.SetFocusable(AValue: boolean);
