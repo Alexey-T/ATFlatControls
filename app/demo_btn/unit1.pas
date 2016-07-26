@@ -74,7 +74,7 @@ begin
   b_colors.parent:= self;
   b_colors.SetBounds(120, chkFocus.Top, 80, 40);
   b_colors.Caption:= '';
-  b_colors.Bitmap.Assign(bmp);
+  b_colors.Picture.Assign(bmp);
   b_colors.OnClick:= @BtnColorsClick;
 
   bar:= TATButtonsToolbar.create(self);

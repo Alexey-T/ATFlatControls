@@ -55,9 +55,9 @@ type
     FCheckable,
     FFocusable: boolean;
     FCaption: string;
-    FBitmap: TPicture;
+    FPicture: TPicture;
     FOnClick: TNotifyEvent;
-    FImageList: TImageList;
+    FImages: TImageList;
     FImageIndex: integer;
     FFlat: boolean;
     FShowCaption: boolean;
@@ -91,15 +91,15 @@ type
     property ShowHint;
     property ParentShowHint;
     property Caption: string read FCaption write SetCaption;
-    property Bitmap: TPicture read FBitmap write FBitmap;
     property Checked: boolean read FChecked write SetChecked default false;
     property Checkable: boolean read FCheckable write FCheckable default false;
-    property Images: TImageList read FImageList write FImageList;
+    property Images: TImageList read FImages write FImages;
     property ImageIndex: integer read FImageIndex write FImageIndex default -1;
     property Focusable: boolean read FFocusable write SetFocusable default true;
     property Flat: boolean read FFlat write SetFlat default false;
     property ShowCaption: boolean read FShowCaption write SetShowCaption default true;
     property SpecKind: TATButtonSpecKind read FSpecKind write FSpecKind default abkNone;
+    property Picture: TPicture read FPicture write FPicture;
     property OnClick: TNotifyEvent read FOnClick write FOnClick;
   end;
 
@@ -114,7 +114,7 @@ const
 
 procedure TATButton.SetChecked(AValue: boolean);
 begin
-  if FChecked= AValue then Exit;
+  if FChecked=AValue then Exit;
   FChecked:= AValue;
   Invalidate;
 end;
@@ -123,27 +123,28 @@ procedure TATButton.SetFlat(AValue: boolean);
 begin
   if FFlat=AValue then Exit;
   FFlat:= AValue;
+  Invalidate;
   if FFlat then
     Focusable:= false;
 end;
 
 procedure TATButton.SetFocusable(AValue: boolean);
 begin
-  if FFocusable= AValue then Exit;
+  if FFocusable=AValue then Exit;
   FFocusable:= AValue;
   TabStop:= AValue;
 end;
 
 procedure TATButton.SetShowCaption(AValue: boolean);
 begin
-  if FShowCaption=AValue then exit;
+  if FShowCaption=AValue then Exit;
   FShowCaption:= AValue;
   Invalidate;
 end;
 
 procedure TATButton.SetCaption(AValue: string);
 begin
-  if FCaption= AValue then Exit;
+  if FCaption=AValue then Exit;
   FCaption:= AValue;
   Invalidate;
 end;
@@ -245,26 +246,26 @@ begin
   end;
 
   //----draw ImageList icon
-  if Assigned(FImageList) and
+  if Assigned(FImages) and
     (FImageIndex>=0) and
-    (FImageIndex<FImageList.Count) then
+    (FImageIndex<FImages.Count) then
   begin
-    p.x:= (ClientWidth-FImageList.Width) div 2 +
+    p.x:= (ClientWidth-FImages.Width) div 2 +
       IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
-    p.y:= (ClientHeight-FImageList.Height) div 2 +
+    p.y:= (ClientHeight-FImages.Height) div 2 +
       IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
-    FImageList.Draw(Canvas, p.x, p.y, FImageIndex);
+    FImages.Draw(Canvas, p.x, p.y, FImageIndex);
     exit
   end;
 
-  //----draw bitmap
-  if Assigned(FBitmap) then
+  //----draw Picture
+  if Assigned(FPicture) then
   begin
-    p.x:= (ClientWidth-FBitmap.Width) div 2 +
+    p.x:= (ClientWidth-FPicture.Width) div 2 +
       IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
-    p.y:= (ClientHeight-FBitmap.Height) div 2 +
+    p.y:= (ClientHeight-FPicture.Height) div 2 +
       IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
-    Canvas.Draw(p.x, p.y, FBitmap.Graphic);
+    Canvas.Draw(p.x, p.y, FPicture.Graphic);
   end;
 end;
 
@@ -363,7 +364,7 @@ begin
   Height:= 25;
 
   FCaption:= 'Button';
-  FBitmap:= TPicture.Create;
+  FPicture:= TPicture.Create;
   FPressed:= false;
   FOver:= false;
   FChecked:= false;
@@ -371,7 +372,7 @@ begin
   FFocusable:= true;
   FFlat:= false;
   FOnClick:= nil;
-  FImageList:= nil;
+  FImages:= nil;
   FImageIndex:= -1;
   FShowCaption:= true;
   FSpecKind:= abkNone;
@@ -379,7 +380,7 @@ end;
 
 destructor TATButton.Destroy;
 begin
-  FBitmap.Free;
+  FPicture.Free;
 
   inherited;
 end;
