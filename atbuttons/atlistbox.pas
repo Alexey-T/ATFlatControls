@@ -47,6 +47,8 @@ type
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     function CanFocus: boolean; override;
     function CanSetFocus: boolean; override;
+    function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint
+      ): Boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -311,6 +313,22 @@ end;
 function TATListbox.CanSetFocus: boolean;
 begin
   Result:= FCanGetFocus;
+end;
+
+function TATListbox.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
+  MousePos: TPoint): Boolean;
+begin
+  if ShowScrollbar then
+  begin
+    Result:= inherited;
+    exit
+  end;
+
+  Result:= true;
+  if WheelDelta>0 then
+    ItemTop:= Max(0, ItemTop-Mouse.WheelScrollLines)
+  else
+    ItemTop:= Min(ItemCount-1, ItemTop+Mouse.WheelScrollLines);
 end;
 
 procedure TATListbox.KeyDown(var Key: Word; Shift: TShiftState);

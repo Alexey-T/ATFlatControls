@@ -47,6 +47,9 @@ begin
 
   list.Color:= $e0e0e0;
   list.ItemCount:= 21;
+
+  //test reaction to wheel w/o scrollbar: set false
+  list.ShowScrollbar:= true;//false;
 end;
 
 procedure TfmMain.ListDraw(Sender: TObject; C: TCanvas; AIndex: integer;
