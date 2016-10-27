@@ -29,7 +29,7 @@ type
     procedure AddButton(AImageIndex: integer;
       AOnClick: TNotifyEvent;
       const ACaption: string=''; const AHint: string='');
-    procedure AddDropdown(AMenu: TPopupMenu);
+    procedure AddDropdown(AMenu: TPopupMenu; ADropdownEvent: TNotifyEvent=nil);
     procedure AddSep;
     procedure UpdateControls;
     function ButtonCount: integer;
@@ -129,7 +129,7 @@ begin
   b.OnClick:= AOnClick;
 end;
 
-procedure TATButtonsToolbar.AddDropdown(AMenu: TPopupMenu);
+procedure TATButtonsToolbar.AddDropdown(AMenu: TPopupMenu; ADropdownEvent: TNotifyEvent = nil);
 var
   b: TATButton;
 begin
@@ -140,7 +140,10 @@ begin
   b.Flat:= true;
   b.SpecKind:= abkArrowDown;
   b.PopupMenu:= AMenu;
-  b.OnClick:= @PopupForDropdownClick;
+  if ADropdownEvent=nil then
+    b.OnClick:= @PopupForDropdownClick
+  else
+    b.OnClick:= ADropdownEvent;
 end;
 
 procedure TATButtonsToolbar.AddSep;
