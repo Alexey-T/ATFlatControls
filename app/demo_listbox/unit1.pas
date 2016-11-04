@@ -18,6 +18,7 @@ type
     procedure ListDraw(Sender: TObject; C: TCanvas; AIndex: integer; const ARect: TRect);
     procedure ListClick(Sender: TObject);
     procedure ListDblClick(Sender: TObject);
+    procedure ListChSel(Sender: TObject);
   public
     { public declarations }
     list: TATListbox;
@@ -44,6 +45,7 @@ begin
   list.OnDrawItem:= @ListDraw;
   list.OnClick:= @ListClick;
   list.OnDblClick:= @ListDblClick;
+  list.OnChangedSel:= @ListChSel;
 
   list.Color:= $e0e0e0;
   list.ItemCount:= 21;
@@ -73,6 +75,11 @@ end;
 procedure TfmMain.ListDblClick(Sender: TObject);
 begin
   Caption:= 'Dbl-clicked: '+IntToStr(list.ItemIndex);
+end;
+
+procedure TfmMain.ListChSel(Sender: TObject);
+begin
+  Caption:= 'Chg-sel: '+IntToStr(list.ItemIndex);
 end;
 
 

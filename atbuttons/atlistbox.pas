@@ -22,6 +22,7 @@ type
   TATListbox = class(TCustomControl)
   private
     FOnDrawItem: TATListboxDrawItemEvent;
+    FOnChangedSel: TNotifyEvent;
     FItemCount,
     FItemIndex,
     FItemHeight,
@@ -40,6 +41,7 @@ type
     procedure UpdateScrollbar;
     function GetVisibleItems: integer;
     function IsIndexValid(N: integer): boolean;
+    procedure DoChangedSel;
   protected
     procedure Paint; override;
     procedure Click; override;
@@ -69,10 +71,13 @@ type
     property ShowScrollbar: boolean read FShowScrollbar write FShowScrollbar;
     property OnClick;
     property OnDblClick;
+    property OnContextPopup;
+    property OnChangedSel: TNotifyEvent read FOnChangedSel write FOnChangedSel;
     property OnDrawItem: TATListboxDrawItemEvent read FOnDrawItem write FOnDrawItem;
     property OnKeyPress;
     property OnKeyDown;
     property OnKeyUp;
+    property OnResize;
   end;
 
 implementation
@@ -107,6 +112,12 @@ end;
 function TATListbox.IsIndexValid(N: integer): boolean;
 begin
   Result:= (N>=0) and (N<ItemCount);
+end;
+
+procedure TATListbox.DoChangedSel;
+begin
+  if Assigned(FOnChangedSel) then
+    FOnChangedSel(Self);
 end;
 
 procedure TATListbox.UpdateScrollbar;
@@ -234,7 +245,7 @@ begin
   if FItemIndex>ItemBottom then
     FItemTop:= Max(0, FItemIndex-GetVisibleItems+1);
 
-  Changed;
+  DoChangedSel;
   Invalidate;
 end;
 
