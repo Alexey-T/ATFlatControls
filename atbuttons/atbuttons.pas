@@ -90,6 +90,7 @@ type
     property Visible;
     property ShowHint;
     property ParentShowHint;
+    property PopupMenu;
     property Caption: string read FCaption write SetCaption;
     property Checked: boolean read FChecked write SetChecked default false;
     property Checkable: boolean read FCheckable write FCheckable default false;
@@ -101,6 +102,17 @@ type
     property SpecKind: TATButtonSpecKind read FSpecKind write FSpecKind default abkNone;
     property Picture: TPicture read FPicture write FPicture;
     property OnClick: TNotifyEvent read FOnClick write FOnClick;
+    property OnDblClick;
+    property OnResize;
+    property OnContextPopup;
+    property OnMouseDown;
+    property OnMouseUp;
+    property OnMouseMove;
+    property OnMouseEnter;
+    property OnMouseLeave;
+    property OnMouseWheel;
+    property OnMouseWheelDown;
+    property OnMouseWheelUp;
   end;
 
 implementation

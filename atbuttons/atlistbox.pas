@@ -68,6 +68,7 @@ type
     property DoubleBuffered;
     property Font;
     property ItemHeight: integer read FItemHeight write FItemHeight;
+    property PopupMenu;
     property ShowScrollbar: boolean read FShowScrollbar write FShowScrollbar;
     property OnClick;
     property OnDblClick;
@@ -78,6 +79,14 @@ type
     property OnKeyDown;
     property OnKeyUp;
     property OnResize;
+    property OnMouseDown;
+    property OnMouseUp;
+    property OnMouseMove;
+    property OnMouseEnter;
+    property OnMouseLeave;
+    property OnMouseWheel;
+    property OnMouseWheelDown;
+    property OnMouseWheelUp;
   end;
 
 implementation
