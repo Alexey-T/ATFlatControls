@@ -47,8 +47,6 @@ type
     procedure Click; override;
     procedure LMVScroll(var Msg: TLMVScroll); message LM_VSCROLL;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
-    function CanFocus: boolean; override;
-    function CanSetFocus: boolean; override;
     function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
       MousePos: TPoint): Boolean; override;
   public
@@ -59,6 +57,8 @@ type
     property ItemTop: integer read FItemTop write SetItemTop;
     property ItemCount: integer read FItemCount write SetItemCount;
     property VisibleItems: integer read GetVisibleItems;
+    function CanFocus: boolean; override;
+    function CanSetFocus: boolean; override;
   published
     property Align;
     property BorderStyle;
