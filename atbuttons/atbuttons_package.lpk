@@ -12,7 +12,7 @@
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
-    <Description Value="ATButtons"/>
+    <Description Value="Custom-drawn controls: button, listbox, toolbar."/>
     <License Value="MPL 2.0, LGPL"/>
     <Version Major="1"/>
     <Files Count="5">
