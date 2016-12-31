@@ -38,6 +38,9 @@ type
     property StringSeparator: string read FStringSep write FStringSep;
   published
     property Align;
+    property Anchors;
+    property BorderSpacing;
+    property Enabled;
     property Visible;
     property ShowHint;
     property ParentShowHint;

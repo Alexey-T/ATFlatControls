@@ -84,6 +84,8 @@ type
     destructor Destroy; override;
   published
     property Align;
+    property Anchors;
+    property BorderSpacing;
     property TabStop;
     property TabOrder;
     property Enabled;

@@ -61,15 +61,18 @@ type
     function CanSetFocus: boolean; override;
   published
     property Align;
+    property Anchors;
     property BorderStyle;
     property BorderSpacing;
     property CanGetFocus: boolean read FCanGetFocus write SetCanBeFocused;
     property Color;
     property DoubleBuffered;
+    property Enabled;
     property Font;
     property ItemHeight: integer read FItemHeight write FItemHeight;
     property PopupMenu;
     property ShowScrollbar: boolean read FShowScrollbar write FShowScrollbar;
+    property Visible;
     property OnClick;
     property OnDblClick;
     property OnContextPopup;
