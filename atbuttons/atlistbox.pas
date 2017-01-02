@@ -41,7 +41,6 @@ type
     procedure UpdateScrollbar;
     function GetVisibleItems: integer;
     function IsIndexValid(N: integer): boolean;
-    procedure DoChangedSel;
   protected
     procedure Paint; override;
     procedure Click; override;
@@ -49,6 +48,7 @@ type
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
       MousePos: TPoint): Boolean; override;
+    procedure ChangedSelection; virtual;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -126,7 +126,7 @@ begin
   Result:= (N>=0) and (N<ItemCount);
 end;
 
-procedure TATListbox.DoChangedSel;
+procedure TATListbox.ChangedSelection;
 begin
   if Assigned(FOnChangedSel) then
     FOnChangedSel(Self);
@@ -257,7 +257,7 @@ begin
   if FItemIndex>ItemBottom then
     FItemTop:= Max(0, FItemIndex-GetVisibleItems+1);
 
-  DoChangedSel;
+  ChangedSelection;
   Invalidate;
 end;
 
