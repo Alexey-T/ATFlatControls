@@ -54,7 +54,7 @@ type
     FChecked,
     FCheckable,
     FFocusable: boolean;
-    FCaption: string;
+    FCaption: TCaption;
     FDataString: string;
     FPicture: TPicture;
     FOnClick: TNotifyEvent;
@@ -66,7 +66,7 @@ type
     FAlignment: TAlignment;
     procedure DoClick;
     function IsPressed: boolean;
-    procedure SetCaption(AValue: string);
+    procedure SetCaption(const AValue: TCaption);
     procedure SetChecked(AValue: boolean);
     procedure SetFlat(AValue: boolean);
     procedure SetFocusable(AValue: boolean);
@@ -89,7 +89,7 @@ type
     function GetTextWidth(const S: string): integer;
   published
     property Align;
-    property Alignment: TAlignment read FAlignment write FAlignment;
+    property Alignment: TAlignment read FAlignment write FAlignment default taCenter;
     property Anchors;
     property BorderSpacing;
     property TabStop;
@@ -99,7 +99,7 @@ type
     property ShowHint;
     property ParentShowHint;
     property PopupMenu;
-    property Caption: string read FCaption write SetCaption;
+    property Caption: TCaption read FCaption write SetCaption;
     property Checked: boolean read FChecked write SetChecked default false;
     property Checkable: boolean read FCheckable write FCheckable default false;
     property Images: TImageList read FImages write FImages;
@@ -172,7 +172,7 @@ begin
     FAlignment:= taLeftJustify;
 end;
 
-procedure TATButton.SetCaption(AValue: string);
+procedure TATButton.SetCaption(const AValue: TCaption);
 begin
   if FCaption=AValue then Exit;
   FCaption:= AValue;
