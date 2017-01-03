@@ -25,12 +25,18 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    procedure AddButton(AImageIndex: integer;
+    procedure AddButton(
+      AImageIndex: integer;
       AOnClick: TNotifyEvent;
-      const ACaption: string=''; const AHint: string='');
+      const ACaption: string='';
+      const AHint: string='';
+      const ADataString: string='');
     procedure AddDropdown(
-      const ACaption: string;
-      AMenu: TPopupMenu; ADropdownEvent: TNotifyEvent=nil);
+      AMenu: TPopupMenu;
+      ADropdownEvent: TNotifyEvent=nil;
+      const ACaption: string='';
+      const AHint: string='';
+      const ADataString: string='');
     procedure AddSep;
     procedure UpdateControls;
     function ButtonCount: integer;
@@ -114,8 +120,12 @@ begin
       Result:= Controls[AIndex] as TATButton;
 end;
 
-procedure TATButtonsToolbar.AddButton(AImageIndex: integer;
-  AOnClick: TNotifyEvent; const ACaption: string; const AHint: string);
+procedure TATButtonsToolbar.AddButton(
+  AImageIndex: integer;
+  AOnClick: TNotifyEvent;
+  const ACaption: string='';
+  const AHint: string='';
+  const ADataString: string='');
 var
   b: TATButton;
 begin
@@ -124,6 +134,7 @@ begin
   b.Flat:= true;
   b.Caption:= ACaption;
   b.Hint:= AHint;
+  b.DataString:= ADataString;
   b.Images:= FImages;
   b.ImageIndex:= AImageIndex;
   b.ShowCaption:= false;
@@ -132,8 +143,11 @@ begin
 end;
 
 procedure TATButtonsToolbar.AddDropdown(
-  const ACaption: string;
-  AMenu: TPopupMenu; ADropdownEvent: TNotifyEvent = nil);
+  AMenu: TPopupMenu;
+  ADropdownEvent: TNotifyEvent=nil;
+  const ACaption: string='';
+  const AHint: string='';
+  const ADataString: string='');
 var
   b: TATButton;
 begin
@@ -150,6 +164,9 @@ begin
   end;
 
   b.Caption:= ACaption;
+  b.Hint:= AHint;
+  b.DataString:= ADataString;
+  b.ShowHint:= true;
   b.Flat:= true;
   b.SpecKind:= abkDropdown;
   b.PopupMenu:= AMenu;

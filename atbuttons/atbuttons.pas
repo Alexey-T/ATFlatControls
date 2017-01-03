@@ -55,6 +55,7 @@ type
     FCheckable,
     FFocusable: boolean;
     FCaption: string;
+    FDataString: string;
     FPicture: TPicture;
     FOnClick: TNotifyEvent;
     FImages: TImageList;
@@ -94,6 +95,7 @@ type
     property ParentShowHint;
     property PopupMenu;
     property Caption: string read FCaption write SetCaption;
+    property DataString: string read FDataString write FDataString;
     property Checked: boolean read FChecked write SetChecked default false;
     property Checkable: boolean read FCheckable write FCheckable default false;
     property Images: TImageList read FImages write FImages;
