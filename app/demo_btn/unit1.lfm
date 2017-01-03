@@ -1,16 +1,16 @@
 object fmMain: TfmMain
   Left = 463
-  Height = 299
+  Height = 300
   Top = 353
   Width = 626
   Caption = 'ATButton demo'
-  ClientHeight = 299
+  ClientHeight = 300
   ClientWidth = 626
   OnCreate = FormCreate
   Position = poScreenCenter
   LCLVersion = '1.7'
   object chkFocus: TCheckBox
-    Left = 336
+    Left = 24
     Height = 24
     Top = 208
     Width = 148
@@ -21,7 +21,7 @@ object fmMain: TfmMain
     TabOrder = 0
   end
   object chkEn: TCheckBox
-    Left = 336
+    Left = 24
     Height = 24
     Top = 232
     Width = 136
@@ -32,12 +32,12 @@ object fmMain: TfmMain
     TabOrder = 1
   end
   object PanelToolbar: TPanel
-    Left = 280
+    Left = 256
     Height = 80
     Top = 88
-    Width = 336
+    Width = 360
     ClientHeight = 80
-    ClientWidth = 336
+    ClientWidth = 360
     Color = clMoneyGreen
     ParentColor = False
     TabOrder = 2
@@ -53,13 +53,13 @@ object fmMain: TfmMain
   object Label2: TLabel
     Left = 8
     Height = 17
-    Top = 208
+    Top = 128
     Width = 98
     Caption = 'Change colors:'
     ParentColor = False
   end
   object chkShowCap: TCheckBox
-    Left = 336
+    Left = 24
     Height = 24
     Top = 256
     Width = 122

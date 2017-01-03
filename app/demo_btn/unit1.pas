@@ -54,25 +54,25 @@ begin
 
   b:= TATButton.create(self);
   b.parent:= self;
-  b.SetBounds(50, 100, 180, 40);
+  b.SetBounds(50, 40, 180, 40);
   b.Caption:= 'Toggle checks';
   b.OnClick:= @BtnToggleClick;
 
   b2:= TATButton.create(self);
   b2.parent:= self;
-  b2.SetBounds(50, 150, 80, 30);
+  b2.SetBounds(50, 90, 80, 30);
   b2.Caption:= 'Check1';
   b2.Checkable:= true;
 
   b3:= TATButton.create(self);
   b3.parent:= self;
-  b3.SetBounds(130, 150, 80, 30);
+  b3.SetBounds(130, 90, 80, 30);
   b3.Caption:= 'Check2';
   b3.Checkable:= true;
 
   b_colors:= TATButton.create(self);
   b_colors.parent:= self;
-  b_colors.SetBounds(120, chkFocus.Top, 80, 40);
+  b_colors.SetBounds(120, 140, 80, 40);
   b_colors.Caption:= '';
   b_colors.Picture.Assign(bmp);
   b_colors.OnClick:= @BtnColorsClick;
@@ -81,12 +81,12 @@ begin
   bar.Parent:= PanelToolbar;
   bar.SetBounds(4, 30, 400, 60);
   bar.Images:= ImageList1;
-  bar.AddButton(0, @BtnColorsClick, '', 'hint1');
+  bar.AddButton(0, @BtnColorsClick, 'Open', 'hint1', '', true);
   bar.AddDropdown(PopupMenu1, nil, '', 'Some menu');
   bar.AddDropdown(PopupMenu1, nil, 'Same dropdown:', 'Does same as btn before');
-  bar.AddButton(1, @BtnColorsClick, '', 'hint2');
+  bar.AddButton(1, @BtnColorsClick, '', 'hint2', '', false);
   bar.AddSep;
-  bar.AddButton(2, @BtnColorsClick, '', 'hint3');
+  bar.AddButton(2, @BtnColorsClick, '', 'hint3', '', false);
   bar.UpdateControls;
 end;
 

@@ -11,7 +11,7 @@ interface
 
 uses
   Classes, SysUtils, Graphics, Controls, ExtCtrls,
-  ImgList, Menus, ATButtons;
+  ImgList, Menus, Math, ATButtons;
 
 type
   { TATButtonsToolbar }
@@ -19,7 +19,6 @@ type
   TATButtonsToolbar = class(TPanel)
   private
     FImages: TImageList;
-    FSizeIncToIcon: integer;
     FStringSep: string;
     procedure PopupForDropdownClick(Sender: TObject);
   public
@@ -28,9 +27,8 @@ type
     procedure AddButton(
       AImageIndex: integer;
       AOnClick: TNotifyEvent;
-      const ACaption: string='';
-      const AHint: string='';
-      const ADataString: string='');
+      const ACaption, AHint, ADataString: string;
+      AShowCaption: boolean);
     procedure AddDropdown(
       AMenu: TPopupMenu;
       ADropdownEvent: TNotifyEvent=nil;
@@ -52,7 +50,6 @@ type
     property ShowHint;
     property ParentShowHint;
     property Images: TImageList read FImages write FImages;
-    property SizeIncrementToIcon: integer read FSizeIncToIcon write FSizeIncToIcon default 6;
   end;
 
 implementation
@@ -66,7 +63,6 @@ begin
   BevelInner:= bvNone;
   BevelOuter:= bvNone;
   FImages:= nil;
-  FSizeIncToIcon:= 6;
   FStringSep:= Utf8Encode(#$25be);
 end;
 
@@ -77,23 +73,34 @@ end;
 
 procedure TATButtonsToolbar.UpdateControls;
 var
-  C: TControl;
+  btn: TATButton;
   i: integer;
 begin
   if not Assigned(FImages) then exit;
   if ControlCount=0 then exit;
 
-  Height:= FImages.Height+FSizeIncToIcon;
+  Height:= FImages.Height+2*cATButtonIndent;
 
-  //update control sizes
-  //width only for buttons
   for i:= ControlCount-1 downto 0 do
   begin
-    C:= Controls[i];
-    C.Height:= FImages.Height+FSizeIncToIcon;
-    if C is TATButton then
-      if (C as TATButton).ImageIndex>=0 then
-        C.Width:= FImages.Width+FSizeIncToIcon;
+    btn:= Controls[i] as TATButton;
+    btn.Height:= Self.Height;
+
+    case btn.Kind of
+      abuDropdown:
+        btn.Width:=
+          cATButtonArrowSize+
+          2*cATButtonIndentArrow+
+          IfThen(btn.Caption<>'', btn.GetTextWidth(btn.Caption)+cATButtonIndent);
+      abuSeparator:
+        btn.Width:= 2*cATButtonIndentArrow
+      else
+        btn.Width:=
+          2*cATButtonIndent+
+          IfThen(btn.ShowCaption, btn.GetTextWidth(btn.Caption))+
+          IfThen((btn.ImageIndex>=0), FImages.Width)+
+          IfThen((btn.ImageIndex>=0) and (btn.Caption<>''), cATButtonIndent);
+      end;
   end;
 
   //place controls left to right
@@ -123,9 +130,8 @@ end;
 procedure TATButtonsToolbar.AddButton(
   AImageIndex: integer;
   AOnClick: TNotifyEvent;
-  const ACaption: string='';
-  const AHint: string='';
-  const ADataString: string='');
+  const ACaption, AHint, ADataString: string;
+  AShowCaption: boolean);
 var
   b: TATButton;
 begin
@@ -137,7 +143,7 @@ begin
   b.DataString:= ADataString;
   b.Images:= FImages;
   b.ImageIndex:= AImageIndex;
-  b.ShowCaption:= false;
+  b.ShowCaption:= AShowCaption;
   b.ShowHint:= true;
   b.OnClick:= AOnClick;
 end;
@@ -153,22 +159,12 @@ var
 begin
   b:= TATButton.Create(Self);
   b.Parent:= Self;
-
-  b.Width:= cATButtonArrowSize+2*cATButtonArrowHorzIndent;
-  if ACaption<>'' then
-  begin
-    b.Canvas.Font.Name:= ATButtonTheme.FontName;
-    b.Canvas.Font.Size:= ATButtonTheme.FontSize;
-    b.Canvas.Font.Style:= ATButtonTheme.FontStyles;
-    b.Width:= b.Width+cATButtonArrowHorzIndent+b.Canvas.TextWidth(ACaption);
-  end;
-
   b.Caption:= ACaption;
   b.Hint:= AHint;
   b.DataString:= ADataString;
   b.ShowHint:= true;
   b.Flat:= true;
-  b.SpecKind:= abkDropdown;
+  b.Kind:= abuDropdown;
   b.PopupMenu:= AMenu;
   if ADropdownEvent=nil then
     b.OnClick:= @PopupForDropdownClick
@@ -184,9 +180,8 @@ begin
   b.Parent:= Self;
   b.Caption:= '';
   b.Flat:= true;
-  b.SpecKind:= abkVerticalLine;
+  b.Kind:= abuSeparator;
   b.Enabled:= false;
-  b.Width:= cATButtonArrowSize+2*cATButtonArrowHorzIndent;
 end;
 
 procedure TATButtonsToolbar.PopupForDropdownClick(Sender: TObject);

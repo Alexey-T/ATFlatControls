@@ -37,11 +37,11 @@ var
   ATButtonTheme: TATButtonTheme;
 
 type
-  TATButtonSpecKind = (
-    abkNone,
-    abkDropdown,
-    abkVerticalLine,
-    abkCross
+  TATButtonKind = (
+    abuNormal,
+    abuDropdown,
+    abuSeparator,
+    abuCross
     );
 
 type
@@ -62,7 +62,8 @@ type
     FImageIndex: integer;
     FFlat: boolean;
     FShowCaption: boolean;
-    FSpecKind: TATButtonSpecKind;
+    FKind: TATButtonKind;
+    FAlignment: TAlignment;
     procedure DoClick;
     function IsPressed: boolean;
     procedure SetCaption(AValue: string);
@@ -70,6 +71,7 @@ type
     procedure SetFlat(AValue: boolean);
     procedure SetFocusable(AValue: boolean);
     procedure SetShowCaption(AValue: boolean);
+    procedure SetKind(AValue: TATButtonKind);
   protected
     procedure Paint; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
@@ -83,8 +85,11 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    property DataString: string read FDataString write FDataString;
+    function GetTextWidth(const S: string): integer;
   published
     property Align;
+    property Alignment: TAlignment read FAlignment write FAlignment;
     property Anchors;
     property BorderSpacing;
     property TabStop;
@@ -95,7 +100,6 @@ type
     property ParentShowHint;
     property PopupMenu;
     property Caption: string read FCaption write SetCaption;
-    property DataString: string read FDataString write FDataString;
     property Checked: boolean read FChecked write SetChecked default false;
     property Checkable: boolean read FCheckable write FCheckable default false;
     property Images: TImageList read FImages write FImages;
@@ -103,7 +107,7 @@ type
     property Focusable: boolean read FFocusable write SetFocusable default true;
     property Flat: boolean read FFlat write SetFlat default false;
     property ShowCaption: boolean read FShowCaption write SetShowCaption default true;
-    property SpecKind: TATButtonSpecKind read FSpecKind write FSpecKind default abkNone;
+    property Kind: TATButtonKind read FKind write SetKind default abuNormal;
     property Picture: TPicture read FPicture write FPicture;
     property OnClick: TNotifyEvent read FOnClick write FOnClick;
     property OnDblClick;
@@ -121,7 +125,8 @@ type
 
 var
   cATButtonArrowSize: integer = 6;
-  cATButtonArrowHorzIndent: integer = 5;
+  cATButtonIndent: integer = 3;
+  cATButtonIndentArrow: integer = 5;
 
 implementation
 
@@ -159,6 +164,14 @@ begin
   Invalidate;
 end;
 
+procedure TATButton.SetKind(AValue: TATButtonKind);
+begin
+  if FKind=AValue then Exit;
+  FKind:= AValue;
+  if AValue=abuDropdown then
+    FAlignment:= taLeftJustify;
+end;
+
 procedure TATButton.SetCaption(AValue: string);
 begin
   if FCaption=AValue then Exit;
@@ -179,7 +192,7 @@ var
 begin
   inherited;
 
-  if (not FFlat) or (FOver and (FSpecKind<>abkVerticalLine)) then
+  if (not FFlat) or (FOver and (FKind<>abuSeparator)) then
   begin
     //----draw bg
     r:= ClientRect;
@@ -211,9 +224,9 @@ begin
   end;
 
   //----draw caption
-  case FSpecKind of
-    abkNone,
-    abkDropdown:
+  case FKind of
+    abuNormal,
+    abuDropdown:
       begin
         if FShowCaption and (FCaption<>'') then
         begin
@@ -223,20 +236,28 @@ begin
           Canvas.Font.Style:= ATButtonTheme.FontStyles;
           Canvas.Brush.Style:= bsClear;
 
-          if FSpecKind=abkNone then
-            p.x:= (ClientWidth - Canvas.TextWidth(FCaption)) div 2 +
-              IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX)
+          if Assigned(Images) and (ImageIndex>=0) then
+            p.x:= Images.Width+cATButtonIndentArrow
           else
-            p.x:= cATButtonArrowHorzIndent;
+          case FAlignment of
+            taLeftJustify:
+              p.x:= cATButtonIndent;
+            taRightJustify:
+              p.x:= ClientWidth-GetTextWidth(FCaption)-cATButtonIndent;
+            taCenter:
+              p.x:= (ClientWidth-GetTextWidth(FCaption)) div 2;
+          end;
 
-          p.y:= (ClientHeight - Canvas.TextHeight(FCaption)) div 2 +
+          if IsPressed then Inc(p.x, ATButtonTheme.PressedCaptionShiftX);
+
+          p.y:= (ClientHeight-Canvas.TextHeight('W')) div 2 +
             IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
           Canvas.TextOut(p.x, p.y, FCaption);
         end;
 
-        if FSpecKind=abkDropdown then
+        if FKind=abuDropdown then
         begin
-          dx:= Width - cATButtonArrowSize - cATButtonArrowHorzIndent;
+          dx:= Width - cATButtonArrowSize - cATButtonIndentArrow;
           dy:= -cATButtonArrowSize div 4 - 1;
           p:= Point(dx, dy + Height div 2);
           p2:= Point(dx + cATButtonArrowSize, dy + Height div 2);
@@ -248,7 +269,7 @@ begin
         end;
       end;
 
-    abkVerticalLine:
+    abuSeparator:
       begin
         dy:= 2;
         p:= Point(Width div 2, dy);
@@ -257,7 +278,7 @@ begin
         Canvas.Line(p, p2);
       end;
 
-    abkCross:
+    abuCross:
       begin
         dx:= (Width-cATButtonArrowSize) div 2 - 1;
         dy:= (Height-cATButtonArrowSize) div 2 - 1;
@@ -267,12 +288,12 @@ begin
       end;
   end;
 
-  //----draw ImageList icon
+  //----draw icon
   if Assigned(FImages) and
     (FImageIndex>=0) and
     (FImageIndex<FImages.Count) then
   begin
-    p.x:= (ClientWidth-FImages.Width) div 2 +
+    p.x:= cATButtonIndent +
       IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
     p.y:= (ClientHeight-FImages.Height) div 2 +
       IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
@@ -385,6 +406,7 @@ begin
   Width:= 100;
   Height:= 25;
 
+  FAlignment:= taCenter;
   FCaption:= 'Button';
   FPicture:= TPicture.Create;
   FPressed:= false;
@@ -397,7 +419,7 @@ begin
   FImages:= nil;
   FImageIndex:= -1;
   FShowCaption:= true;
-  FSpecKind:= abkNone;
+  FKind:= abuNormal;
 end;
 
 destructor TATButton.Destroy;
@@ -405,6 +427,15 @@ begin
   FPicture.Free;
 
   inherited;
+end;
+
+function TATButton.GetTextWidth(const S: string): integer;
+begin
+  if S='' then exit(0);
+  Canvas.Font.Name:= ATButtonTheme.FontName;
+  Canvas.Font.Size:= ATButtonTheme.FontSize;
+  Canvas.Font.Style:= ATButtonTheme.FontStyles;
+  Result:= Canvas.TextWidth(S);
 end;
 
 initialization
