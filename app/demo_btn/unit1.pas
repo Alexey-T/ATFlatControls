@@ -82,7 +82,8 @@ begin
   bar.SetBounds(4, 30, 400, 60);
   bar.Images:= ImageList1;
   bar.AddButton(0, @BtnColorsClick, '', 'hint1');
-  bar.AddDropdown(PopupMenu1);
+  bar.AddDropdown('', PopupMenu1);
+  bar.AddDropdown('Same menu:', PopupMenu1);
   bar.AddButton(1, @BtnColorsClick, '', 'hint2');
   bar.AddSep;
   bar.AddButton(2, @BtnColorsClick, '', 'hint3');

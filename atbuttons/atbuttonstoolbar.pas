@@ -20,7 +20,6 @@ type
   private
     FImages: TImageList;
     FSizeIncToIcon: integer;
-    FSizeSep: integer;
     FStringSep: string;
     procedure PopupForDropdownClick(Sender: TObject);
   public
@@ -29,7 +28,9 @@ type
     procedure AddButton(AImageIndex: integer;
       AOnClick: TNotifyEvent;
       const ACaption: string=''; const AHint: string='');
-    procedure AddDropdown(AMenu: TPopupMenu; ADropdownEvent: TNotifyEvent=nil);
+    procedure AddDropdown(
+      const ACaption: string;
+      AMenu: TPopupMenu; ADropdownEvent: TNotifyEvent=nil);
     procedure AddSep;
     procedure UpdateControls;
     function ButtonCount: integer;
@@ -46,7 +47,6 @@ type
     property ParentShowHint;
     property Images: TImageList read FImages write FImages;
     property SizeIncrementToIcon: integer read FSizeIncToIcon write FSizeIncToIcon default 6;
-    property SizeSeparator: integer read FSizeSep write FSizeSep default 14;
   end;
 
 implementation
@@ -61,7 +61,6 @@ begin
   BevelOuter:= bvNone;
   FImages:= nil;
   FSizeIncToIcon:= 6;
-  FSizeSep:= 14;
   FStringSep:= Utf8Encode(#$25be);
 end;
 
@@ -132,16 +131,27 @@ begin
   b.OnClick:= AOnClick;
 end;
 
-procedure TATButtonsToolbar.AddDropdown(AMenu: TPopupMenu; ADropdownEvent: TNotifyEvent = nil);
+procedure TATButtonsToolbar.AddDropdown(
+  const ACaption: string;
+  AMenu: TPopupMenu; ADropdownEvent: TNotifyEvent = nil);
 var
   b: TATButton;
 begin
   b:= TATButton.Create(Self);
   b.Parent:= Self;
-  b.Width:= FSizeSep;
-  b.Caption:= '';
+
+  b.Width:= cATButtonArrowSize+2*cATButtonArrowHorzIndent;
+  if ACaption<>'' then
+  begin
+    b.Canvas.Font.Name:= ATButtonTheme.FontName;
+    b.Canvas.Font.Size:= ATButtonTheme.FontSize;
+    b.Canvas.Font.Style:= ATButtonTheme.FontStyles;
+    b.Width:= b.Width+cATButtonArrowHorzIndent+b.Canvas.TextWidth(ACaption);
+  end;
+
+  b.Caption:= ACaption;
   b.Flat:= true;
-  b.SpecKind:= abkArrowDown;
+  b.SpecKind:= abkDropdown;
   b.PopupMenu:= AMenu;
   if ADropdownEvent=nil then
     b.OnClick:= @PopupForDropdownClick
@@ -159,7 +169,7 @@ begin
   b.Flat:= true;
   b.SpecKind:= abkVerticalLine;
   b.Enabled:= false;
-  b.Width:= FSizeSep;
+  b.Width:= cATButtonArrowSize+2*cATButtonArrowHorzIndent;
 end;
 
 procedure TATButtonsToolbar.PopupForDropdownClick(Sender: TObject);

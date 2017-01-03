@@ -39,7 +39,7 @@ var
 type
   TATButtonSpecKind = (
     abkNone,
-    abkArrowDown,
+    abkDropdown,
     abkVerticalLine,
     abkCross
     );
@@ -117,12 +117,13 @@ type
     property OnMouseWheelUp;
   end;
 
+var
+  cATButtonArrowSize: integer = 6;
+  cATButtonArrowHorzIndent: integer = 5;
+
 implementation
 
 uses Math, Types;
-
-const
-  cArrSize = 6;
 
 { TATButton }
 
@@ -209,7 +210,8 @@ begin
 
   //----draw caption
   case FSpecKind of
-    abkNone:
+    abkNone,
+    abkDropdown:
       begin
         if FShowCaption and (FCaption<>'') then
         begin
@@ -219,25 +221,29 @@ begin
           Canvas.Font.Style:= ATButtonTheme.FontStyles;
           Canvas.Brush.Style:= bsClear;
 
-          p.x:= (ClientWidth - Canvas.TextWidth(FCaption)) div 2 +
-            IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
+          if FSpecKind=abkNone then
+            p.x:= (ClientWidth - Canvas.TextWidth(FCaption)) div 2 +
+              IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX)
+          else
+            p.x:= cATButtonArrowHorzIndent;
+
           p.y:= (ClientHeight - Canvas.TextHeight(FCaption)) div 2 +
             IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
           Canvas.TextOut(p.x, p.y, FCaption);
         end;
-      end;
 
-    abkArrowDown:
-      begin
-        dx:= (Width - cArrSize) div 2 - 1;
-        dy:= -cArrSize div 4 - 1;
-        p:= Point(dx, dy + Height div 2);
-        p2:= Point(dx + cArrSize, dy + Height div 2);
-        p3:= Point(dx + cArrSize div 2, dy + Height div 2 + cArrSize div 2);
-        Canvas.Brush.Style:= bsSolid;
-        Canvas.Pen.Color:= ATButtonTheme.ColorArrows;
-        Canvas.Brush.Color:= ATButtonTheme.ColorArrows;
-        Canvas.Polygon([p, p2, p3]);
+        if FSpecKind=abkDropdown then
+        begin
+          dx:= Width - cATButtonArrowSize - cATButtonArrowHorzIndent;
+          dy:= -cATButtonArrowSize div 4 - 1;
+          p:= Point(dx, dy + Height div 2);
+          p2:= Point(dx + cATButtonArrowSize, dy + Height div 2);
+          p3:= Point(dx + cATButtonArrowSize div 2, dy + Height div 2 + cATButtonArrowSize div 2);
+          Canvas.Brush.Style:= bsSolid;
+          Canvas.Pen.Color:= ATButtonTheme.ColorArrows;
+          Canvas.Brush.Color:= ATButtonTheme.ColorArrows;
+          Canvas.Polygon([p, p2, p3]);
+        end;
       end;
 
     abkVerticalLine:
@@ -251,11 +257,11 @@ begin
 
     abkCross:
       begin
-        dx:= (Width-cArrSize) div 2 - 1;
-        dy:= (Height-cArrSize) div 2 - 1;
+        dx:= (Width-cATButtonArrowSize) div 2 - 1;
+        dy:= (Height-cATButtonArrowSize) div 2 - 1;
         Canvas.Pen.Color:= ATButtonTheme.ColorArrows;
-        Canvas.Line(dx, dy, dx+cArrSize+1, dy+cArrSize+1);
-        Canvas.Line(dx+cArrSize, dy, dx-1, dy+cArrSize+1);
+        Canvas.Line(dx, dy, dx+cATButtonArrowSize+1, dy+cATButtonArrowSize+1);
+        Canvas.Line(dx+cATButtonArrowSize, dy, dx-1, dy+cATButtonArrowSize+1);
       end;
   end;
 

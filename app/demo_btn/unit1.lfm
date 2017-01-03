@@ -2,10 +2,10 @@ object fmMain: TfmMain
   Left = 463
   Height = 299
   Top = 353
-  Width = 515
+  Width = 626
   Caption = 'ATButton demo'
   ClientHeight = 299
-  ClientWidth = 515
+  ClientWidth = 626
   OnCreate = FormCreate
   Position = poScreenCenter
   LCLVersion = '1.7'
@@ -35,9 +35,9 @@ object fmMain: TfmMain
     Left = 280
     Height = 80
     Top = 88
-    Width = 224
+    Width = 336
     ClientHeight = 80
-    ClientWidth = 224
+    ClientWidth = 336
     Color = clMoneyGreen
     ParentColor = False
     TabOrder = 2
