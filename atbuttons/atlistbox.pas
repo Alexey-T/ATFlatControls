@@ -22,7 +22,8 @@ type
   TATListbox = class(TCustomControl)
   private
     FOnDrawItem: TATListboxDrawItemEvent;
-    FOnChangedSel: TNotifyEvent;
+    FOnChangeSel: TNotifyEvent;
+    FOnScroll: TNotifyEvent;
     FItemCount,
     FItemIndex,
     FItemHeight,
@@ -49,6 +50,7 @@ type
     function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
       MousePos: TPoint): Boolean; override;
     procedure ChangedSelection; virtual;
+    procedure Scrolled; virtual;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -76,8 +78,9 @@ type
     property OnClick;
     property OnDblClick;
     property OnContextPopup;
-    property OnChangedSel: TNotifyEvent read FOnChangedSel write FOnChangedSel;
+    property OnChangedSel: TNotifyEvent read FOnChangeSel write FOnChangeSel;
     property OnDrawItem: TATListboxDrawItemEvent read FOnDrawItem write FOnDrawItem;
+    property OnScroll: TNotifyEvent read FOnScroll write FOnScroll;
     property OnKeyPress;
     property OnKeyDown;
     property OnKeyUp;
@@ -118,8 +121,14 @@ end;
 
 procedure TATListbox.ChangedSelection;
 begin
-  if Assigned(FOnChangedSel) then
-    FOnChangedSel(Self);
+  if Assigned(FOnChangeSel) then
+    FOnChangeSel(Self);
+end;
+
+procedure TATListbox.Scrolled;
+begin
+  if Assigned(FOnScroll) then
+    FOnScroll(Self);
 end;
 
 procedure TATListbox.UpdateScrollbar;
@@ -230,7 +239,7 @@ begin
   if FItemCount=AValue then Exit;
   if AValue<0 then Exit;
   FItemCount:= AValue;
-  Changed;
+  Scrolled;
   Invalidate;
 end;
 
@@ -256,7 +265,7 @@ begin
   if FItemTop=AValue then Exit;
   if not IsIndexValid(AValue) then Exit;
   FItemTop:= Max(0, AValue);
-  Changed;
+  Scrolled;
   Invalidate;
 end;
 
