@@ -95,23 +95,13 @@ type
 implementation
 
 uses
-  Math, Types, LCLType, LCLIntf;
+  Math, Types,
+  InterfaceBase, 
+  LCLType, LCLIntf;
 
 function IsDoubleBufferedNeeded: boolean;
 begin
-  Result:= false;
-
-  {$ifdef windows}
-  exit(true);
-  {$endif}
-
-  {$ifdef darwin}
-  exit(false);
-  {$endif}
-
-  {$ifdef linux}
-  exit(false);
-  {$endif}
+  Result:= WidgetSet.GetLCLCapability(lcCanDrawOutsideOnPaint) = LCL_CAPABILITY_YES;
 end;
 
 { TATListbox }
