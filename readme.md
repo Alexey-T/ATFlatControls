@@ -4,5 +4,7 @@ Controls for Lazarus
 * ATListbox: http://wiki.freepascal.org/ATListbox
 * ATLinkLabel: http://wiki.freepascal.org/ATLinkLabel
 
-Lazarus 1.4.0.
-Tested on Win/Linux/OSX.
+![img](img/demo.png?raw=true)
+
+Lazarus 1.4+
+Tested on Win/Linux/macOS
