@@ -72,7 +72,11 @@ type
     property Enabled;
     property Font;
     property ItemHeight: integer read FItemHeight write FItemHeight;
+    property ParentColor;
+    property ParentFont;
+    property ParentShowHint;
     property PopupMenu;
+    property ShowHint;
     property ShowScrollbar: boolean read FShowScrollbar write FShowScrollbar;
     property Visible;
     property OnClick;
