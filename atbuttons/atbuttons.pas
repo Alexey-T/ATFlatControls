@@ -10,7 +10,8 @@ unit ATButtons;
 interface
 
 uses
-  Classes, SysUtils, Graphics, Controls;
+  Classes, SysUtils, Graphics, Controls,
+  Types, Math;
 
 type
   TATButtonTheme = record
@@ -87,8 +88,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     property DataString: string read FDataString write FDataString;
-    function GetTextWidth(const S: string): integer;
-    function GetTextHeight(const S: string): integer;
+    function GetTextSize(const S: string): TSize;
   published
     property Align;
     property Alignment: TAlignment read FAlignment write FAlignment default taCenter;
@@ -132,8 +132,6 @@ var
   cATButtonIndentArrow: integer = 5;
 
 implementation
-
-uses Math, Types;
 
 { TATButton }
 
@@ -248,14 +246,14 @@ begin
             taLeftJustify:
               p.x:= cATButtonIndent;
             taRightJustify:
-              p.x:= ClientWidth-GetTextWidth(FCaption)-cATButtonIndent;
+              p.x:= ClientWidth-GetTextSize(FCaption).cx-cATButtonIndent;
             taCenter:
-              p.x:= (ClientWidth-GetTextWidth(FCaption)) div 2;
+              p.x:= (ClientWidth-GetTextSize(FCaption).cx) div 2;
           end;
 
           if IsPressed then Inc(p.x, ATButtonTheme.PressedCaptionShiftX);
 
-          p.y:= (ClientHeight-Canvas.TextHeight('W')) div 2 +
+          p.y:= (ClientHeight-GetTextSize('W').cy) div 2 +
             IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
           Canvas.TextOut(p.x, p.y, FCaption);
         end;
@@ -450,22 +448,15 @@ begin
   inherited;
 end;
 
-function TATButton.GetTextWidth(const S: string): integer;
+function TATButton.GetTextSize(const S: string): TSize;
 begin
-  if S='' then exit(0);
+  Result.cx:= 0;
+  Result.cy:= 0;
+  if S='' then exit;
   Canvas.Font.Name:= ATButtonTheme.FontName;
   Canvas.Font.Size:= ATButtonTheme.FontSize;
   Canvas.Font.Style:= ATButtonTheme.FontStyles;
-  Result:= Canvas.TextWidth(S);
-end;
-
-function TATButton.GetTextHeight(const S: string): integer;
-begin
-  if S='' then exit(0);
-  Canvas.Font.Name:= ATButtonTheme.FontName;
-  Canvas.Font.Size:= ATButtonTheme.FontSize;
-  Canvas.Font.Style:= ATButtonTheme.FontStyles;
-  Result:= Canvas.TextHeight(S);
+  Result:= Canvas.TextExtent(S);
 end;
 
 

@@ -101,12 +101,12 @@ begin
           if FKindVertical then
             btn.Height:=
               2*cATButtonIndentArrow+
-              IfThen(btn.Caption<>'', btn.GetTextHeight(btn.Caption)+cATButtonIndent)
+              IfThen(btn.Caption<>'', btn.GetTextSize(btn.Caption).cy+cATButtonIndent)
           else
             btn.Width:=
               cATButtonArrowSize+
               2*cATButtonIndentArrow+
-              IfThen(btn.Caption<>'', btn.GetTextWidth(btn.Caption)+cATButtonIndent);
+              IfThen(btn.Caption<>'', btn.GetTextSize(btn.Caption).cx+cATButtonIndent);
         end;
       abuSeparator:
         begin
@@ -121,13 +121,13 @@ begin
             btn.Height:=
               2*cATButtonIndent+
               Max(
-                IfThen(btn.ShowCaption, btn.GetTextHeight(btn.Caption)),
+                IfThen(btn.ShowCaption, btn.GetTextSize(btn.Caption).cy),
                 IfThen((btn.ImageIndex>=0), FImages.Height)
                 )
           else
             btn.Width:=
               2*cATButtonIndent+
-              IfThen(btn.ShowCaption, btn.GetTextWidth(btn.Caption))+
+              IfThen(btn.ShowCaption, btn.GetTextSize(btn.Caption).cx)+
               IfThen((btn.ImageIndex>=0), FImages.Width)+
               IfThen((btn.ImageIndex>=0) and (btn.Caption<>''), cATButtonIndent);
         end;
