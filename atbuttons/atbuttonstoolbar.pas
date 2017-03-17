@@ -193,6 +193,9 @@ begin
   b.ShowHint:= true;
   b.OnClick:= AOnClick;
 
+  if not AShowCaption then
+    b.Kind:= abuIconOnly
+  else
   if ACaption='' then
     b.Kind:= abuIconOnly
   else
