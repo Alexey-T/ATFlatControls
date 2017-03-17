@@ -21,6 +21,7 @@ type
     FImages: TImageList;
     FKindVertical: boolean;
     procedure PopupForDropdownClick(Sender: TObject);
+    function GetButton(AIndex: integer): TATButton;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -38,7 +39,6 @@ type
     procedure AddSep;
     procedure UpdateControls;
     function ButtonCount: integer;
-    function GetButton(AIndex: integer): TATButton;
     property Buttons[AIndex: integer]: TATButton read GetButton;
   published
     property Align;
@@ -77,7 +77,6 @@ var
   akind: TAnchorKind;
   i: integer;
 begin
-  if not Assigned(FImages) then exit;
   if ControlCount=0 then exit;
 
   if not FKindVertical then
@@ -174,10 +173,8 @@ begin
       Result:= Controls[AIndex] as TATButton;
 end;
 
-procedure TATButtonsToolbar.AddButton(
-  AImageIndex: integer;
-  AOnClick: TNotifyEvent;
-  const ACaption, AHint, ADataString: string;
+procedure TATButtonsToolbar.AddButton(AImageIndex: integer;
+  AOnClick: TNotifyEvent; const ACaption, AHint, ADataString: string;
   AShowCaption: boolean);
 var
   b: TATButton;
