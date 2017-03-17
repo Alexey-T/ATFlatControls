@@ -69,7 +69,11 @@ type
     FFlat: boolean;
     FKind: TATButtonKind;
     procedure DoClick;
+    function GetIconHeight: integer;
+    function GetIconWidth: integer;
     function IsPressed: boolean;
+    procedure PaintIcon(AX, AY: integer);
+    procedure PaintArrow(AX, AY: integer);
     procedure SetCaption(const AValue: TCaption);
     procedure SetChecked(AValue: boolean);
     procedure SetFlat(AValue: boolean);
@@ -77,7 +81,6 @@ type
     procedure SetKind(AValue: TATButtonKind);
   protected
     procedure Paint; override;
-    procedure PaintArrow(AX, AY: integer); virtual;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseLeave; override;
     procedure MouseEnter; override;
@@ -179,7 +182,7 @@ end;
 procedure TATButton.Paint;
 var
   r: TRect;
-  p, p2, p3: TPoint;
+  pnt1, pnt2: TPoint;
   size, dx, dy, i: integer;
 begin
   inherited;
@@ -215,110 +218,99 @@ begin
     Canvas.Brush.Style:= bsSolid;
   end;
 
-  //----draw caption
   Canvas.Font.Name:= ATButtonTheme.FontName;
   Canvas.Font.Color:= IfThen(Enabled, ATButtonTheme.ColorFont, ATButtonTheme.ColorFontDisabled);
   Canvas.Font.Size:= ATButtonTheme.FontSize;
   Canvas.Font.Style:= ATButtonTheme.FontStyles;
   Canvas.Brush.Style:= bsClear;
-  {
-  case FAlignment of
-    taLeftJustify:
-      p.x:= cATButtonIndent;
-    taRightJustify:
-      p.x:= ClientWidth-GetTextSize(FCaption).cx-cATButtonIndent;
-    taCenter:
-      p.x:= (ClientWidth-GetTextSize(FCaption).cx) div 2;
-  end;
-  }
 
   case FKind of
     abuIconOnly:
       begin
-        p.x:= (ClientWidth-FImages.Width) div 2+
+        pnt1.x:= (ClientWidth-GetIconWidth) div 2+
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
-        p.y:= (ClientHeight-FImages.Height) div 2 +
+        pnt1.y:= (ClientHeight-GetIconHeight) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
-        FImages.Draw(Canvas, p.x, p.y, FImageIndex);
+        PaintIcon(pnt1.x, pnt1.y);
       end;
 
     abuTextOnly:
       begin
-        p.x:= (ClientWidth-GetTextSize(Caption).cx) div 2 +
+        pnt1.x:= (ClientWidth-GetTextSize(Caption).cx) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
-        p.y:= (ClientHeight-GetTextSize(Caption).cy) div 2 +
+        pnt1.y:= (ClientHeight-GetTextSize(Caption).cy) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
-        Canvas.TextOut(p.x, p.y, FCaption);
+        Canvas.TextOut(pnt1.x, pnt1.y, FCaption);
       end;
 
     abuTextIconHorz:
       begin
-        p.x:= cATButtonIndent +
+        pnt1.x:= cATButtonIndent +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
-        p.y:= (ClientHeight-FImages.Height) div 2 +
+        pnt1.y:= (ClientHeight-GetIconHeight) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
-        FImages.Draw(Canvas, p.x, p.y, FImageIndex);
+        PaintIcon(pnt1.x, pnt1.y);
 
-        Inc(p.x, FImages.Width+cATButtonIndentArrow);
-        p.y:= (ClientHeight-GetTextSize(Caption).cy) div 2 +
+        Inc(pnt1.x, GetIconWidth+cATButtonIndentArrow);
+        pnt1.y:= (ClientHeight-GetTextSize(Caption).cy) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
-        Canvas.TextOut(p.x, p.y, FCaption);
+        Canvas.TextOut(pnt1.x, pnt1.y, FCaption);
       end;
 
     abuTextIconVert:
       begin
-        p.x:= (ClientWidth-FImages.Width) div 2+
+        pnt1.x:= (ClientWidth-GetIconWidth) div 2+
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
-        p.y:= cATButtonIndent +
+        pnt1.y:= cATButtonIndent +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
-        FImages.Draw(Canvas, p.x, p.y, FImageIndex);
+        PaintIcon(pnt1.x, pnt1.y);
 
-        Inc(p.y, FImages.Height+cATButtonIndentArrow);
-        p.x:= (ClientWidth-GetTextSize(Caption).cx) div 2 +
+        Inc(pnt1.y, GetIconHeight+cATButtonIndentArrow);
+        pnt1.x:= (ClientWidth-GetTextSize(Caption).cx) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
-        Canvas.TextOut(p.x, p.y, FCaption);
+        Canvas.TextOut(pnt1.x, pnt1.y, FCaption);
       end;
 
     abuTextArrow:
       begin
-        p.x:= (ClientWidth-GetTextSize(Caption).cx) div 2 +
+        pnt1.x:= (ClientWidth-GetTextSize(Caption).cx) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
-        p.y:= (ClientHeight-GetTextSize(Caption).cy) div 2 +
+        pnt1.y:= (ClientHeight-GetTextSize(Caption).cy) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
-        Canvas.TextOut(p.x, p.y, FCaption);
+        Canvas.TextOut(pnt1.x, pnt1.y, FCaption);
 
-        p.x:= ClientWidth-cATButtonArrowSize*2+
+        pnt1.x:= ClientWidth-cATButtonArrowSize*2+
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
-        p.y:= (ClientHeight-cATButtonArrowSize div 2) div 2 +
+        pnt1.y:= (ClientHeight-cATButtonArrowSize div 2) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
-        PaintArrow(p.x, p.y);
+        PaintArrow(pnt1.x, pnt1.y);
       end;
 
     abuArrowOnly:
       begin
-        p.x:= (ClientWidth-cATButtonArrowSize) div 2+
+        pnt1.x:= (ClientWidth-cATButtonArrowSize) div 2+
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
-        p.y:= (ClientHeight-cATButtonArrowSize div 2) div 2 +
+        pnt1.y:= (ClientHeight-cATButtonArrowSize div 2) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
-        PaintArrow(p.x, p.y);
+        PaintArrow(pnt1.x, pnt1.y);
       end;
 
     abuSeparatorVert:
       begin
         dy:= 2;
-        p:= Point(dy, Height div 2);
-        p2:= Point(Width-dy, Height div 2);
+        pnt1:= Point(dy, Height div 2);
+        pnt2:= Point(Width-dy, Height div 2);
         Canvas.Pen.Color:= ATButtonTheme.ColorArrows;
-        Canvas.Line(p, p2);
+        Canvas.Line(pnt1, pnt2);
       end;
 
     abuSeparatorHorz:
       begin
         dy:= 2;
-        p:= Point(Width div 2, dy);
-        p2:= Point(Width div 2, Height-dy);
+        pnt1:= Point(Width div 2, dy);
+        pnt2:= Point(Width div 2, Height-dy);
         Canvas.Pen.Color:= ATButtonTheme.ColorArrows;
-        Canvas.Line(p, p2);
+        Canvas.Line(pnt1, pnt2);
       end;
 
     abuCross:
@@ -330,16 +322,15 @@ begin
         Canvas.Line(dx+cATButtonArrowSize, dy, dx-1, dy+cATButtonArrowSize+1);
       end;
   end;
+end;
 
-  //----draw Picture
+procedure TATButton.PaintIcon(AX, AY: integer);
+begin
+  if Assigned(FImages) and (FImageIndex>=0) and (FImageIndex<FImages.Count) then
+    FImages.Draw(Canvas, AX, AY, FImageIndex)
+  else
   if Assigned(FPicture) then
-  begin
-    p.x:= (ClientWidth-FPicture.Width) div 2 +
-      IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
-    p.y:= (ClientHeight-FPicture.Height) div 2 +
-      IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
-    Canvas.Draw(p.x, p.y, FPicture.Graphic);
-  end;
+    Canvas.Draw(AX, AY, FPicture.Graphic);
 end;
 
 procedure TATButton.PaintArrow(AX, AY: integer);
@@ -353,6 +344,28 @@ begin
   Canvas.Pen.Color:= ATButtonTheme.ColorArrows;
   Canvas.Brush.Color:= ATButtonTheme.ColorArrows;
   Canvas.Polygon([p1, p2, p3]);
+end;
+
+function TATButton.GetIconWidth: integer;
+begin
+  if Assigned(FImages) then
+    Result:= FImages.Width
+  else
+  if Assigned(FPicture) then
+    Result:= FPicture.Width
+  else
+    Result:= 0;
+end;
+
+function TATButton.GetIconHeight: integer;
+begin
+  if Assigned(FImages) then
+    Result:= FImages.Height
+  else
+  if Assigned(FPicture) then
+    Result:= FPicture.Height
+  else
+    Result:= 0;
 end;
 
 procedure TATButton.MouseMove(Shift: TShiftState; X, Y: Integer);
