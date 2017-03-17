@@ -274,22 +274,19 @@ begin
 
     abuSeparator:
       begin
+        dy:= 2;
         if KindVertical then
         begin
-          dy:= 2;
           p:= Point(dy, Height div 2);
           p2:= Point(Width-dy, Height div 2);
-          Canvas.Pen.Color:= ATButtonTheme.ColorArrows;
-          Canvas.Line(p, p2);
         end
         else
         begin
-          dy:= 2;
           p:= Point(Width div 2, dy);
           p2:= Point(Width div 2, Height-dy);
-          Canvas.Pen.Color:= ATButtonTheme.ColorArrows;
-          Canvas.Line(p, p2);
         end;
+        Canvas.Pen.Color:= ATButtonTheme.ColorArrows;
+        Canvas.Line(p, p2);
       end;
 
     abuCross:
