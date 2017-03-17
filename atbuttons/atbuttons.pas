@@ -187,7 +187,8 @@ var
 begin
   inherited;
 
-  if (not FFlat) or (FOver and not (FKind in [abuSeparatorHorz, abuSeparatorVert])) then
+  if not FFlat or FChecked or
+    (FOver and not (FKind in [abuSeparatorHorz, abuSeparatorVert])) then
   begin
     //----draw bg
     r:= ClientRect;
