@@ -12,7 +12,6 @@ type
   { TfmMain }
 
   TfmMain = class(TForm)
-    chkShowCap: TCheckBox;
     chkEn: TCheckBox;
     chkFocus: TCheckBox;
     ImageList1: TImageList;
@@ -25,7 +24,6 @@ type
     PopupMenu1: TPopupMenu;
     procedure chkEnChange(Sender: TObject);
     procedure chkFocusChange(Sender: TObject);
-    procedure chkShowCapChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
@@ -85,7 +83,7 @@ begin
   bar.Images:= ImageList1;
   bar.AddButton(0, @BtnColorsClick, 'Open', 'hint1', '', true);
   bar.AddDropdown(PopupMenu1, nil, '', 'Some menu');
-  bar.AddDropdown(PopupMenu1, nil, 'Same dropdown:', 'Does same as btn before');
+  bar.AddDropdown(PopupMenu1, nil, 'Dropdown:', 'Does same as btn before');
   bar.AddButton(1, @BtnColorsClick, '', 'hint2', '', false);
   bar.AddSep;
   bar.AddButton(2, @BtnColorsClick, '', 'hint3', '', false);
@@ -96,6 +94,7 @@ begin
   bar2.KindVertical:= true;
   bar2.Images:= ImageList1;
   bar2.AddButton(0, @BtnColorsClick, 'Open', 'hint1', '', true);
+  bar2.AddDropdown(PopupMenu1, nil, '', 'Some menu');
   bar2.AddDropdown(PopupMenu1, nil, 'Dropdown:', 'Does same as btn before');
   bar2.AddButton(1, @BtnColorsClick, '', 'hint2', '', false);
   bar2.AddSep;
@@ -117,13 +116,6 @@ begin
   b_colors.Focusable:= en;
   b2.Focusable:= en;
   b3.Focusable:= en;
-end;
-
-procedure TfmMain.chkShowCapChange(Sender: TObject);
-begin
-  b.ShowCaption:= chkShowCap.Checked;
-  b2.ShowCaption:= chkShowCap.Checked;
-  b3.ShowCaption:= chkShowCap.Checked;
 end;
 
 procedure TfmMain.chkEnChange(Sender: TObject);

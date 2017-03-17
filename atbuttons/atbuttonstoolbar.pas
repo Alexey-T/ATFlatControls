@@ -93,40 +93,53 @@ begin
       btn.Height:= Self.Height;
 
     case btn.Kind of
-      abuDropdown:
+      abuArrowOnly:
         begin
           if FKindVertical then
-            btn.Height:=
-              2*cATButtonIndentArrow+
-              IfThen(btn.Caption<>'', btn.GetTextSize(btn.Caption).cy+cATButtonIndent)
+            btn.Height:= cATButtonArrowSize+2*cATButtonIndentArrow
           else
-            btn.Width:=
-              cATButtonArrowSize+
-              2*cATButtonIndentArrow+
-              IfThen(btn.Caption<>'', btn.GetTextSize(btn.Caption).cx+cATButtonIndent);
+            btn.Width:= cATButtonArrowSize+2*cATButtonIndentArrow;
         end;
-      abuSeparator:
+
+      abuSeparatorVert:
+        begin
+          btn.Height:= 2*cATButtonIndentArrow;
+        end;
+      abuSeparatorHorz:
+        begin
+          btn.Width:= 2*cATButtonIndentArrow;
+        end;
+
+      abuIconOnly:
         begin
           if FKindVertical then
-            btn.Height:= 2*cATButtonIndentArrow
+            btn.Height:= FImages.Height+2*cATButtonIndentArrow
           else
-            btn.Width:= 2*cATButtonIndentArrow;
-        end
-      else
+            btn.Width:= FImages.Width+2*cATButtonIndentArrow;
+        end;
+
+      abuTextOnly:
         begin
           if FKindVertical then
-            btn.Height:=
-              2*cATButtonIndent+
-              Max(
-                IfThen(btn.ShowCaption, btn.GetTextSize(btn.Caption).cy),
-                IfThen((btn.ImageIndex>=0), FImages.Height)
-                )
+            btn.Height:= btn.GetTextSize(btn.Caption).cy+2*cATButtonIndentArrow
           else
-            btn.Width:=
-              2*cATButtonIndent+
-              IfThen(btn.ShowCaption, btn.GetTextSize(btn.Caption).cx)+
-              IfThen((btn.ImageIndex>=0), FImages.Width)+
-              IfThen((btn.ImageIndex>=0) and (btn.Caption<>''), cATButtonIndent);
+            btn.Width:= btn.GetTextSize(btn.Caption).cx+2*cATButtonIndentArrow;
+        end;
+
+      abuTextIconVert:
+        begin
+          if FKindVertical then
+            btn.Height:= btn.GetTextSize(btn.Caption).cy+FImages.Height+2*cATButtonIndentArrow
+          else
+            btn.Width:= Max(btn.GetTextSize(btn.Caption).cx, FImages.Width)+2*cATButtonIndentArrow;
+        end;
+
+      abuTextIconHorz:
+        begin
+          if FKindVertical then
+            btn.Height:= Max(btn.GetTextSize(btn.Caption).cy, FImages.Height)+2*cATButtonIndentArrow
+          else
+            btn.Width:= btn.GetTextSize(btn.Caption).cx+FImages.Width+2*cATButtonIndentArrow;
         end;
     end;
   end;
@@ -175,12 +188,23 @@ begin
   b.Caption:= ACaption;
   b.Hint:= AHint;
   b.DataString:= ADataString;
-  b.KindVertical:= FKindVertical;
   b.Images:= FImages;
   b.ImageIndex:= AImageIndex;
-  b.ShowCaption:= AShowCaption;
   b.ShowHint:= true;
   b.OnClick:= AOnClick;
+
+  if ACaption='' then
+    b.Kind:= abuIconOnly
+  else
+  if AImageIndex<0 then
+    b.Kind:= abuTextOnly
+  else
+  begin
+    if FKindVertical then
+      b.Kind:= abuTextIconVert
+    else
+      b.Kind:= abuTextIconHorz;
+  end;
 end;
 
 procedure TATButtonsToolbar.AddDropdown(
@@ -199,12 +223,17 @@ begin
   b.DataString:= ADataString;
   b.ShowHint:= true;
   b.Flat:= true;
-  b.Kind:= abuDropdown;
   b.PopupMenu:= AMenu;
+
   if ADropdownEvent=nil then
     b.OnClick:= @PopupForDropdownClick
   else
     b.OnClick:= ADropdownEvent;
+
+  if ACaption<>'' then
+    b.Kind:= abuTextArrow
+  else
+    b.Kind:= abuArrowOnly;
 end;
 
 procedure TATButtonsToolbar.AddSep;
@@ -215,8 +244,10 @@ begin
   b.Parent:= Self;
   b.Caption:= '';
   b.Flat:= true;
-  b.Kind:= abuSeparator;
-  b.KindVertical:= FKindVertical;
+  if FKindVertical then
+    b.Kind:= abuSeparatorVert
+  else
+    b.Kind:= abuSeparatorHorz;
   b.Enabled:= false;
 end;
 

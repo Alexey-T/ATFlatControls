@@ -59,17 +59,6 @@ object fmMain: TfmMain
     Caption = 'Change colors:'
     ParentColor = False
   end
-  object chkShowCap: TCheckBox
-    Left = 24
-    Height = 24
-    Top = 256
-    Width = 122
-    Caption = 'show captions'
-    Checked = True
-    OnChange = chkShowCapChange
-    State = cbChecked
-    TabOrder = 3
-  end
   object PanelRight: TPanel
     Left = 624
     Height = 320
@@ -77,7 +66,7 @@ object fmMain: TfmMain
     Width = 96
     Color = clMoneyGreen
     ParentColor = False
-    TabOrder = 4
+    TabOrder = 3
   end
   object ImageList1: TImageList
     AllocBy = 10
