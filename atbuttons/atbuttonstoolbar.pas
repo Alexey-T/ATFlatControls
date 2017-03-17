@@ -20,6 +20,7 @@ type
   private
     FImages: TImageList;
     FStringSep: string;
+    FKindVertical: boolean;
     procedure PopupForDropdownClick(Sender: TObject);
   public
     constructor Create(AOwner: TComponent); override;
@@ -50,6 +51,7 @@ type
     property ShowHint;
     property ParentShowHint;
     property Images: TImageList read FImages write FImages;
+    property KindVertical: boolean read FKindVertical write FKindVertical default false;
   end;
 
 implementation
@@ -64,6 +66,7 @@ begin
   BevelOuter:= bvNone;
   FImages:= nil;
   FStringSep:= Utf8Encode(#$25be);
+  FKindVertical:= false;
 end;
 
 destructor TATButtonsToolbar.Destroy;
@@ -74,40 +77,74 @@ end;
 procedure TATButtonsToolbar.UpdateControls;
 var
   btn: TATButton;
+  akind: TAnchorKind;
   i: integer;
 begin
   if not Assigned(FImages) then exit;
   if ControlCount=0 then exit;
 
-  Height:= FImages.Height+2*cATButtonIndent;
+  if not FKindVertical then
+    Height:= FImages.Height+2*cATButtonIndent;
 
   for i:= ControlCount-1 downto 0 do
   begin
     btn:= Controls[i] as TATButton;
-    btn.Height:= Self.Height;
+
+    if FKindVertical then
+      btn.Width:= Self.Width
+    else
+      btn.Height:= Self.Height;
 
     case btn.Kind of
       abuDropdown:
-        btn.Width:=
-          cATButtonArrowSize+
-          2*cATButtonIndentArrow+
-          IfThen(btn.Caption<>'', btn.GetTextWidth(btn.Caption)+cATButtonIndent);
+        begin
+          if FKindVertical then
+            btn.Height:=
+              2*cATButtonIndentArrow+
+              IfThen(btn.Caption<>'', btn.GetTextHeight(btn.Caption)+cATButtonIndent)
+          else
+            btn.Width:=
+              cATButtonArrowSize+
+              2*cATButtonIndentArrow+
+              IfThen(btn.Caption<>'', btn.GetTextWidth(btn.Caption)+cATButtonIndent);
+        end;
       abuSeparator:
-        btn.Width:= 2*cATButtonIndentArrow
+        begin
+          if FKindVertical then
+            btn.Height:= 2*cATButtonIndentArrow
+          else
+            btn.Width:= 2*cATButtonIndentArrow;
+        end
       else
-        btn.Width:=
-          2*cATButtonIndent+
-          IfThen(btn.ShowCaption, btn.GetTextWidth(btn.Caption))+
-          IfThen((btn.ImageIndex>=0), FImages.Width)+
-          IfThen((btn.ImageIndex>=0) and (btn.Caption<>''), cATButtonIndent);
-      end;
+        begin
+          if FKindVertical then
+            btn.Height:=
+              2*cATButtonIndent+
+              Max(
+                IfThen(btn.ShowCaption, btn.GetTextHeight(btn.Caption)),
+                IfThen((btn.ImageIndex>=0), FImages.Height)
+                )
+          else
+            btn.Width:=
+              2*cATButtonIndent+
+              IfThen(btn.ShowCaption, btn.GetTextWidth(btn.Caption))+
+              IfThen((btn.ImageIndex>=0), FImages.Width)+
+              IfThen((btn.ImageIndex>=0) and (btn.Caption<>''), cATButtonIndent);
+        end;
+    end;
   end;
 
   //place controls left to right
   Controls[0].Left:= 0;
   Controls[0].Top:= 0;
   for i:= ControlCount-1 downto 1 do
-    Controls[i].AnchorToNeighbour(akLeft, 0, Controls[i-1]);
+  begin
+    if FKindVertical then
+      akind:= akTop
+    else
+      akind:= akLeft;
+    Controls[i].AnchorToNeighbour(akind, 0, Controls[i-1]);
+  end;
 
   //paint
   for i:= 0 to ControlCount-1 do
@@ -141,6 +178,7 @@ begin
   b.Caption:= ACaption;
   b.Hint:= AHint;
   b.DataString:= ADataString;
+  b.KindVertical:= FKindVertical;
   b.Images:= FImages;
   b.ImageIndex:= AImageIndex;
   b.ShowCaption:= AShowCaption;
@@ -181,6 +219,7 @@ begin
   b.Caption:= '';
   b.Flat:= true;
   b.Kind:= abuSeparator;
+  b.KindVertical:= FKindVertical;
   b.Enabled:= false;
 end;
 

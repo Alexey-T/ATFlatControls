@@ -20,12 +20,14 @@ type
     Label2: TLabel;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
+    PanelRight: TPanel;
     PanelToolbar: TPanel;
     PopupMenu1: TPopupMenu;
     procedure chkEnChange(Sender: TObject);
     procedure chkFocusChange(Sender: TObject);
     procedure chkShowCapChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { private declarations }
     procedure BtnToggleClick(Sender: TObject);
@@ -33,7 +35,7 @@ type
   public
     { public declarations }
     b, b2, b3, b_colors: TATButton;
-    bar: TATButtonsToolbar;
+    bar, bar2: TATButtonsToolbar;
   end;
 
 var
@@ -87,7 +89,23 @@ begin
   bar.AddButton(1, @BtnColorsClick, '', 'hint2', '', false);
   bar.AddSep;
   bar.AddButton(2, @BtnColorsClick, '', 'hint3', '', false);
+
+  bar2:= TATButtonsToolbar.create(self);
+  bar2.Parent:= PanelRight;
+  bar2.Align:= alClient;
+  bar2.KindVertical:= true;
+  bar2.Images:= ImageList1;
+  bar2.AddButton(0, @BtnColorsClick, 'Open', 'hint1', '', true);
+  bar2.AddDropdown(PopupMenu1, nil, 'Dropdown:', 'Does same as btn before');
+  bar2.AddButton(1, @BtnColorsClick, '', 'hint2', '', false);
+  bar2.AddSep;
+  bar2.AddButton(2, @BtnColorsClick, '', 'hint3', '', false);
+end;
+
+procedure TfmMain.FormShow(Sender: TObject);
+begin
   bar.UpdateControls;
+  bar2.UpdateControls;
 end;
 
 procedure TfmMain.chkFocusChange(Sender: TObject);

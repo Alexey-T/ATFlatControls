@@ -1,12 +1,13 @@
 object fmMain: TfmMain
-  Left = 463
-  Height = 300
-  Top = 353
-  Width = 626
+  Left = 207
+  Height = 333
+  Top = 329
+  Width = 722
   Caption = 'ATButton demo'
-  ClientHeight = 300
-  ClientWidth = 626
+  ClientHeight = 333
+  ClientWidth = 722
   OnCreate = FormCreate
+  OnShow = FormShow
   Position = poScreenCenter
   LCLVersion = '1.7'
   object chkFocus: TCheckBox
@@ -34,7 +35,7 @@ object fmMain: TfmMain
   object PanelToolbar: TPanel
     Left = 256
     Height = 80
-    Top = 88
+    Top = 8
     Width = 360
     ClientHeight = 80
     ClientWidth = 360
@@ -68,6 +69,15 @@ object fmMain: TfmMain
     OnChange = chkShowCapChange
     State = cbChecked
     TabOrder = 3
+  end
+  object PanelRight: TPanel
+    Left = 624
+    Height = 320
+    Top = 8
+    Width = 88
+    Color = clMoneyGreen
+    ParentColor = False
+    TabOrder = 4
   end
   object ImageList1: TImageList
     AllocBy = 10

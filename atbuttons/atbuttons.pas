@@ -63,6 +63,7 @@ type
     FFlat: boolean;
     FShowCaption: boolean;
     FKind: TATButtonKind;
+    FKindVertical: boolean;
     FAlignment: TAlignment;
     procedure DoClick;
     function IsPressed: boolean;
@@ -87,6 +88,7 @@ type
     destructor Destroy; override;
     property DataString: string read FDataString write FDataString;
     function GetTextWidth(const S: string): integer;
+    function GetTextHeight(const S: string): integer;
   published
     property Align;
     property Alignment: TAlignment read FAlignment write FAlignment default taCenter;
@@ -108,6 +110,7 @@ type
     property Flat: boolean read FFlat write SetFlat default false;
     property ShowCaption: boolean read FShowCaption write SetShowCaption default true;
     property Kind: TATButtonKind read FKind write SetKind default abuNormal;
+    property KindVertical: boolean read FKindVertical write FKindVertical default false;
     property Picture: TPicture read FPicture write FPicture;
     property OnClick: TNotifyEvent read FOnClick write FOnClick;
     property OnDblClick;
@@ -237,7 +240,9 @@ begin
           Canvas.Brush.Style:= bsClear;
 
           if Assigned(Images) and (ImageIndex>=0) then
-            p.x:= Images.Width+cATButtonIndentArrow
+          begin
+            p.x:= Images.Width+cATButtonIndentArrow;
+          end
           else
           case FAlignment of
             taLeftJustify:
@@ -271,11 +276,22 @@ begin
 
     abuSeparator:
       begin
-        dy:= 2;
-        p:= Point(Width div 2, dy);
-        p2:= Point(Width div 2, Height-dy);
-        Canvas.Pen.Color:= ATButtonTheme.ColorArrows;
-        Canvas.Line(p, p2);
+        if KindVertical then
+        begin
+          dy:= 2;
+          p:= Point(dy, Height div 2);
+          p2:= Point(Width-dy, Height div 2);
+          Canvas.Pen.Color:= ATButtonTheme.ColorArrows;
+          Canvas.Line(p, p2);
+        end
+        else
+        begin
+          dy:= 2;
+          p:= Point(Width div 2, dy);
+          p2:= Point(Width div 2, Height-dy);
+          Canvas.Pen.Color:= ATButtonTheme.ColorArrows;
+          Canvas.Line(p, p2);
+        end;
       end;
 
     abuCross:
@@ -293,8 +309,12 @@ begin
     (FImageIndex>=0) and
     (FImageIndex<FImages.Count) then
   begin
-    p.x:= cATButtonIndent +
-      IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
+    if KindVertical and (Caption='') then
+      p.x:= (ClientWidth-FImages.Width) div 2+
+        IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX)
+    else
+      p.x:= cATButtonIndent +
+        IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
     p.y:= (ClientHeight-FImages.Height) div 2 +
       IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
     FImages.Draw(Canvas, p.x, p.y, FImageIndex);
@@ -420,6 +440,7 @@ begin
   FImageIndex:= -1;
   FShowCaption:= true;
   FKind:= abuNormal;
+  FKindVertical:= false;
 end;
 
 destructor TATButton.Destroy;
@@ -437,6 +458,16 @@ begin
   Canvas.Font.Style:= ATButtonTheme.FontStyles;
   Result:= Canvas.TextWidth(S);
 end;
+
+function TATButton.GetTextHeight(const S: string): integer;
+begin
+  if S='' then exit(0);
+  Canvas.Font.Name:= ATButtonTheme.FontName;
+  Canvas.Font.Size:= ATButtonTheme.FontSize;
+  Canvas.Font.Style:= ATButtonTheme.FontStyles;
+  Result:= Canvas.TextHeight(S);
+end;
+
 
 initialization
 
