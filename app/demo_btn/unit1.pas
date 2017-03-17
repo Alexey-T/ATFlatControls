@@ -72,9 +72,10 @@ begin
 
   b_colors:= TATButton.create(self);
   b_colors.parent:= self;
-  b_colors.SetBounds(120, 140, 80, 40);
-  b_colors.Caption:= '';
+  b_colors.SetBounds(120, 140, 100, 50);
+  b_colors.Caption:= 'change';
   b_colors.Picture.Assign(bmp);
+  b_colors.Kind:= abuTextIconVert;
   b_colors.OnClick:= @BtnColorsClick;
 
   bar:= TATButtonsToolbar.create(self);

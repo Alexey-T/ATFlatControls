@@ -1,7 +1,7 @@
 object fmMain: TfmMain
-  Left = 207
+  Left = 206
   Height = 333
-  Top = 329
+  Top = 365
   Width = 729
   Caption = 'ATButton demo'
   ClientHeight = 333
