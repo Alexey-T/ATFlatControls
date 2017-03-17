@@ -259,7 +259,7 @@ begin
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
         FImages.Draw(Canvas, p.x, p.y, FImageIndex);
 
-        Inc(p.x, FImages.Width);
+        Inc(p.x, FImages.Width+cATButtonIndentArrow);
         p.y:= (ClientHeight-GetTextSize(Caption).cy) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
         Canvas.TextOut(p.x, p.y, FCaption);
@@ -273,7 +273,7 @@ begin
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
         FImages.Draw(Canvas, p.x, p.y, FImageIndex);
 
-        Inc(p.y, FImages.Height);
+        Inc(p.y, FImages.Height+cATButtonIndentArrow);
         p.x:= (ClientWidth-GetTextSize(Caption).cx) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
         Canvas.TextOut(p.x, p.y, FCaption);

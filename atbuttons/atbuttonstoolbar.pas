@@ -129,7 +129,7 @@ begin
       abuTextIconVert:
         begin
           if FKindVertical then
-            btn.Height:= btn.GetTextSize(btn.Caption).cy+FImages.Height+2*cATButtonIndentArrow
+            btn.Height:= btn.GetTextSize(btn.Caption).cy+FImages.Height+3*cATButtonIndentArrow
           else
             btn.Width:= Max(btn.GetTextSize(btn.Caption).cx, FImages.Width)+2*cATButtonIndentArrow;
         end;
@@ -139,7 +139,7 @@ begin
           if FKindVertical then
             btn.Height:= Max(btn.GetTextSize(btn.Caption).cy, FImages.Height)+2*cATButtonIndentArrow
           else
-            btn.Width:= btn.GetTextSize(btn.Caption).cx+FImages.Width+2*cATButtonIndentArrow;
+            btn.Width:= btn.GetTextSize(btn.Caption).cx+FImages.Width+3*cATButtonIndentArrow;
         end;
     end;
   end;
