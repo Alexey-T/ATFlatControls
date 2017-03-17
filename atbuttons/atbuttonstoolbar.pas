@@ -19,7 +19,6 @@ type
   TATButtonsToolbar = class(TPanel)
   private
     FImages: TImageList;
-    FStringSep: string;
     FKindVertical: boolean;
     procedure PopupForDropdownClick(Sender: TObject);
   public
@@ -41,7 +40,6 @@ type
     function ButtonCount: integer;
     function GetButton(AIndex: integer): TATButton;
     property Buttons[AIndex: integer]: TATButton read GetButton;
-    property StringSeparator: string read FStringSep write FStringSep;
   published
     property Align;
     property Anchors;
@@ -65,7 +63,6 @@ begin
   BevelInner:= bvNone;
   BevelOuter:= bvNone;
   FImages:= nil;
-  FStringSep:= Utf8Encode(#$25be);
   FKindVertical:= false;
 end;
 
