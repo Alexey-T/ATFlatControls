@@ -16,7 +16,7 @@ uses
 type
   { TATButtonsToolbar }
 
-  TATButtonsToolbar = class(TPanel)
+  TATButtonsToolbar = class(TCustomControl)
   private
     FImages: TImageList;
     FKindVertical: boolean;
@@ -43,10 +43,13 @@ type
   published
     property Align;
     property Anchors;
+    property AutoSize;
     property BorderSpacing;
+    property Color;
     property Enabled;
     property Visible;
     property ShowHint;
+    property ParentColor;
     property ParentShowHint;
     property Images: TImageList read FImages write FImages;
     property KindVertical: boolean read FKindVertical write FKindVertical default false;
@@ -59,9 +62,8 @@ implementation
 constructor TATButtonsToolbar.Create(AOwner: TComponent);
 begin
   inherited;
+  AutoSize:= true;
   Caption:= '';
-  BevelInner:= bvNone;
-  BevelOuter:= bvNone;
   FImages:= nil;
   FKindVertical:= false;
 end;

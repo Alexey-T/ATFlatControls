@@ -1,10 +1,10 @@
 object fmMain: TfmMain
-  Left = 206
-  Height = 333
-  Top = 365
+  Left = 196
+  Height = 352
+  Top = 429
   Width = 729
   Caption = 'ATButton demo'
-  ClientHeight = 333
+  ClientHeight = 352
   ClientWidth = 729
   OnCreate = FormCreate
   OnShow = FormShow
