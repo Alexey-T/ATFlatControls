@@ -81,9 +81,6 @@ var
 begin
   if ControlCount=0 then exit;
 
-  if not FKindVertical then
-    Height:= FImages.Height+2*cATButtonIndent;
-
   for i:= ControlCount-1 downto 0 do
   begin
     btn:= Controls[i] as TATButton;
@@ -91,7 +88,8 @@ begin
     if FKindVertical then
       btn.Width:= Self.Width
     else
-      btn.Height:= Self.Height;
+    if Assigned(FImages) then
+      btn.Height:= FImages.Height+2*cATButtonIndent;
 
     case btn.Kind of
       abuArrowOnly:
