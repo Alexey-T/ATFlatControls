@@ -5,8 +5,11 @@ unit atbuttons_register;
 interface
 
 uses
-  Classes, SysUtils, ATButtons, ATButtonsToolbar, ATListbox, ATLinkLabel,
-  ATPanelSimple, LResources;
+  Classes, SysUtils, 
+  ATButtons, ATButtonsToolbar, 
+  ATListbox, ATLinkLabel,
+  ATPanelSimple, ATPanelColor, 
+  LResources;
 
 procedure Register;
 
@@ -19,6 +22,7 @@ begin
     TATButtonsToolbar,
     TATListbox,
     TATPanelSimple,
+    TATPanelColor,
     TLinkLabel
     ]);
 end;
