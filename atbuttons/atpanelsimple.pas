@@ -28,6 +28,9 @@ type
     property Enabled;
     property ParentColor;
     property Visible;
+    property OnClick;
+    property OnDblClick;
+    property OnResize;
   end;
 
 implementation
