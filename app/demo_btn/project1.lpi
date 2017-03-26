@@ -32,7 +32,7 @@
         <PackageName Value="LCL"/>
       </Item2>
     </RequiredPackages>
-    <Units Count="4">
+    <Units Count="2">
       <Unit0>
         <Filename Value="project1.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -45,16 +45,6 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
       </Unit1>
-      <Unit2>
-        <Filename Value="..\..\atbuttons\atbuttons.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="ATButtons"/>
-      </Unit2>
-      <Unit3>
-        <Filename Value="..\..\atbuttons\atpanelsimple.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="ATPanelSimple"/>
-      </Unit3>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -65,7 +55,6 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="..\..\atbuttons"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Parsing>
