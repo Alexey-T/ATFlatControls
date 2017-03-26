@@ -9,7 +9,7 @@ interface
 
 uses
   ATButtons, atbuttons_register, ATListbox, ATLinkLabel, ATButtonsToolbar, 
-  LazarusPackageIntf;
+  ATPanelSimple, LazarusPackageIntf;
 
 implementation
 

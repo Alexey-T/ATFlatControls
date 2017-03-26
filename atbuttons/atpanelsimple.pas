@@ -1,0 +1,46 @@
+{
+Copyright (C) Alexey Torgashin, uvviewsoft.com
+License: MPL 2.0 or LGPL
+}
+
+unit ATPanelSimple;
+
+{$mode objfpc}{$H+}
+
+interface
+
+uses
+  Classes, SysUtils, Controls;
+
+type
+
+  { TATPanelSimple }
+
+  TATPanelSimple = class(TCustomControl)
+  public
+    constructor Create(AOwner: TComponent); override;
+  published
+    property Align;
+    property Anchors;
+    property AutoSize;
+    property BorderSpacing;
+    property Color;
+    property Enabled;
+    property ParentColor;
+    property Visible;
+  end;
+
+implementation
+
+{ TATPanelSimple }
+
+constructor TATPanelSimple.Create(AOwner: TComponent);
+begin
+  inherited;
+  Width:= 180;
+  Height:= 100;
+  Caption:= '';
+end;
+
+end.
+
