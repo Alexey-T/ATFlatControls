@@ -125,6 +125,14 @@ begin
             btn.Width:= btn.GetTextSize(btn.Caption).cx+2*cATButtonIndentArrow;
         end;
 
+      abuTextArrow:
+        begin
+          if FKindVertical then
+            btn.Height:= btn.GetTextSize(btn.Caption).cy+2*cATButtonIndentArrow
+          else
+            btn.Width:= btn.GetTextSize(btn.Caption).cx+6*cATButtonIndentArrow;
+        end;
+
       abuTextIconVert:
         begin
           if FKindVertical then

@@ -11,7 +11,7 @@ interface
 
 uses
   Classes, SysUtils, Graphics, Controls,
-  Types, Math;
+  Types, Math, Dialogs;
 
 type
   TATButtonTheme = record
@@ -48,6 +48,19 @@ type
     abuSeparatorHorz,
     abuSeparatorVert,
     abuCross
+    );
+
+const
+  cATButtonKindValues: array[TATButtonKind] of string = (
+    'text',
+    'icon',
+    'text_icon_h',
+    'text_icon_v',
+    'text_arr',
+    'arr',
+    'sep_h',
+    'sep_v',
+    'x'
     );
 
 type
@@ -323,6 +336,14 @@ begin
         Canvas.Line(dx+cATButtonArrowSize, dy, dx-1, dy+cATButtonArrowSize+1);
       end;
   end;
+
+  //debug
+  {
+  Canvas.Font.Size:= 6;
+  Canvas.Font.Color:= clNavy;
+  Canvas.Brush.Style:= bsClear;
+  Canvas.TextOut(0, 0, cATButtonKindValues[Kind]);
+  }
 end;
 
 procedure TATButton.PaintIcon(AX, AY: integer);
