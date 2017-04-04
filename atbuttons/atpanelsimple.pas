@@ -40,6 +40,11 @@ implementation
 constructor TATPanelSimple.Create(AOwner: TComponent);
 begin
   inherited;
+
+  ControlStyle:= ControlStyle + [
+    csAcceptsControls,
+    csNoFocus];
+
   Width:= 180;
   Height:= 100;
   Caption:= '';
