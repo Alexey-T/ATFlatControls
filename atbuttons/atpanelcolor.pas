@@ -22,6 +22,7 @@ type
     constructor Create(AOwner: TComponent); override;
   protected
     procedure Paint; override;
+    procedure Resize; override;
   published
     property Align;
     property Caption;
@@ -46,6 +47,7 @@ constructor TATPanelColor.Create(AOwner: TComponent);
 begin
   inherited;
   Caption:= '';
+  Color:= clWhite;
   BorderStyle:= bsNone;
   BorderWidth:= 0;
   BorderColor:= clBlack;
@@ -58,8 +60,12 @@ var
   Size: TSize;
 begin
   //inherited;
-
   R:= ClientRect;
+
+  Canvas.Brush.Style:= bsSolid;
+  Canvas.Brush.Color:= Color;
+  Canvas.FillRect(R);
+
   if BorderWidth>0 then
     Canvas.Frame3d(R, BorderColor, BorderColor, BorderWidth);
 
@@ -72,6 +78,13 @@ begin
     Canvas.TextOut(Pnt.X, Pnt.Y, Caption);
   end;
 end;
+
+procedure TATPanelColor.Resize;
+begin
+  inherited Resize;
+  Invalidate;
+end;
+
 
 end.
 

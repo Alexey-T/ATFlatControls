@@ -15,7 +15,7 @@
     <Description Value="Custom-drawn controls: button, listbox, toolbar."/>
     <License Value="MPL 2.0, LGPL"/>
     <Version Major="1"/>
-    <Files Count="6">
+    <Files Count="7">
       <Item1>
         <Filename Value="atbuttons.pas"/>
         <UnitName Value="ATButtons"/>
@@ -41,6 +41,10 @@
         <Filename Value="atpanelsimple.pas"/>
         <UnitName Value="ATPanelSimple"/>
       </Item6>
+      <Item7>
+        <Filename Value="atpanelcolor.pas"/>
+        <UnitName Value="ATPanelColor"/>
+      </Item7>
     </Files>
     <RequiredPkgs Count="1">
       <Item1>
