@@ -32,6 +32,7 @@ type
     FCanGetFocus: boolean;
     FList: TStringList;
     FShowScrollbar: boolean;
+    procedure DoDefaultOnDrawItem(Sender: TObject; C: TCanvas; AIndex: integer; const ARect: TRect);
     procedure DoPaintTo(C: TCanvas; r: TRect);
     function ItemBottom: integer;
     procedure SetCanBeFocused(AValue: boolean);
@@ -283,13 +284,13 @@ begin
   Width:= 180;
   Height:= 150;
 
-  Color:= clLtGray;
+  Color:= clWhite;
   CanGetFocus:= false;
-  FOnDrawItem:= nil;
+  FOnDrawItem:= @DoDefaultOnDrawItem;
   FList:= TStringList.Create;
   FItemCount:= 0;
   FItemIndex:= 0;
-  FItemHeight:= 28;
+  FItemHeight:= 21;
   FItemTop:= 0;
   FShowScrollbar:= true;
 
@@ -406,6 +407,33 @@ begin
     key:= 0;
     Exit
   end;
+end;
+
+
+procedure TATListbox.DoDefaultOnDrawItem(Sender: TObject; C: TCanvas;
+  AIndex: integer; const ARect: TRect);
+const
+  cIndent = 4;
+begin
+  if AIndex<0 then exit;
+  if AIndex=ItemIndex then
+  begin
+    c.Font.Color:= clWhite;
+    c.Brush.Color:= clMedGray;
+  end
+  else
+  begin
+    c.Font.Color:= clBlack;
+    c.Brush.Color:= clWhite;
+  end;
+  c.Pen.Color:= c.Brush.Color;
+  c.FillRect(ARect);
+
+  c.TextOut(
+    ARect.Left+cIndent,
+    ARect.Top+1,
+    Items[AIndex]
+    );
 end;
 
 
