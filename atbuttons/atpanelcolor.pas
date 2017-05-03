@@ -17,6 +17,7 @@ type
 
   TATPanelColor = class(TCustomControl)
   private
+    FBorderWidth: integer; //new
     FBorderColor: TColor;
   public
     constructor Create(AOwner: TComponent); override;
@@ -32,7 +33,7 @@ type
     property Font;
     property Visible;
     property BorderColor: TColor read FBorderColor write FBorderColor default clBlack;
-    property BorderWidth;
+    property BorderWidth: integer read FBorderWidth write FBorderWidth default 0;
     property OnClick;
     property OnDblClick;
     property OnResize;
@@ -58,6 +59,7 @@ var
   R: TRect;
   Pnt: TPoint;
   Size: TSize;
+  i: integer;
 begin
   //inherited;
   R:= ClientRect;
@@ -66,8 +68,12 @@ begin
   Canvas.Brush.Color:= Color;
   Canvas.FillRect(R);
 
-  if BorderWidth>0 then
-    Canvas.Frame3d(R, BorderColor, BorderColor, BorderWidth);
+  Canvas.Pen.Color:= BorderColor;
+  for i:= 1 to BorderWidth do
+  begin
+    Canvas.Rectangle(R);
+    InflateRect(R, -1, -1);
+  end;
 
   if Caption<>'' then
   begin
