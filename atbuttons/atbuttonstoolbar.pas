@@ -11,7 +11,8 @@ interface
 
 uses
   Classes, SysUtils, Graphics, Controls, ExtCtrls,
-  ImgList, Menus, Math, ATButtons;
+  ImgList, Menus, Math, ATButtons,
+  LclType;
 
 type
   { TATButtonsToolbar }
@@ -20,8 +21,10 @@ type
   private
     FImages: TImageList;
     FKindVertical: boolean;
+    FScalePercents: integer;
     procedure PopupForDropdownClick(Sender: TObject);
     function GetButton(AIndex: integer): TATButton;
+    function DoScale(N: integer): integer;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -40,6 +43,7 @@ type
     procedure UpdateControls;
     function ButtonCount: integer;
     property Buttons[AIndex: integer]: TATButton read GetButton;
+    property ScalePercents: integer read FScalePercents write FScalePercents;
   published
     property Align;
     property Anchors;
@@ -66,6 +70,7 @@ begin
   Caption:= '';
   FImages:= nil;
   FKindVertical:= false;
+  FScalePercents:= 100;
 end;
 
 destructor TATButtonsToolbar.Destroy;
@@ -149,6 +154,11 @@ begin
             btn.Width:= btn.GetTextSize(btn.Caption).cx+FImages.Width+3*cATButtonIndentArrow;
         end;
     end;
+
+    //scale
+    btn.Height:= DoScale(btn.Height);
+    if not KindVertical then
+      btn.Width:= DoScale(btn.Width);
   end;
 
   //place controls left to right
@@ -179,6 +189,14 @@ begin
   if (AIndex>=0) and (AIndex<ControlCount) then
     if Controls[AIndex] is TATButton then
       Result:= Controls[AIndex] as TATButton;
+end;
+
+function TATButtonsToolbar.DoScale(N: integer): integer;
+begin
+  if ScalePercents<=100 then
+    Result:= N
+  else
+    Result:= MulDiv(N, ScalePercents, 100);
 end;
 
 procedure TATButtonsToolbar.AddButton(AImageIndex: integer;
