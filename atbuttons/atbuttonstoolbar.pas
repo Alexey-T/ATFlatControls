@@ -22,6 +22,7 @@ type
     FImages: TImageList;
     FKindVertical: boolean;
     FScalePercents: integer;
+    FButtonWidth: integer;
     procedure PopupForDropdownClick(Sender: TObject);
     function GetButton(AIndex: integer): TATButton;
     function DoScale(N: integer): integer;
@@ -43,12 +44,13 @@ type
     procedure UpdateControls;
     function ButtonCount: integer;
     property Buttons[AIndex: integer]: TATButton read GetButton;
-    property ScalePercents: integer read FScalePercents write FScalePercents;
+    property ScalePercents: integer read FScalePercents write FScalePercents default 100;
   published
     property Align;
     property Anchors;
     property AutoSize;
     property BorderSpacing;
+    property ButtonWidth: integer read FButtonWidth write FButtonWidth default 50;
     property Color;
     property Enabled;
     property Visible;
@@ -71,6 +73,7 @@ begin
   FImages:= nil;
   FKindVertical:= false;
   FScalePercents:= 100;
+  FButtonWidth:= 50;
 end;
 
 destructor TATButtonsToolbar.Destroy;
@@ -91,7 +94,7 @@ begin
     btn:= Controls[i] as TATButton;
 
     if FKindVertical then
-      btn.Width:= Self.Width
+      btn.Width:= FButtonWidth
     else
     if Assigned(FImages) then
       btn.Height:= FImages.Height+2*cATButtonIndent;
