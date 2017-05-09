@@ -11,7 +11,8 @@ interface
 
 uses
   Classes, SysUtils, Graphics, Controls,
-  Types, Math, Dialogs;
+  Types, Math, Forms,
+  LCLType;
 
 type
   TATButtonTheme = record
@@ -46,8 +47,7 @@ type
     abuTextArrow,
     abuArrowOnly,
     abuSeparatorHorz,
-    abuSeparatorVert,
-    abuCross
+    abuSeparatorVert
     );
 
 const
@@ -59,8 +59,7 @@ const
     'text_arr',
     'arr',
     'sep_h',
-    'sep_v',
-    'x'
+    'sep_v'
     );
 
 type
@@ -142,11 +141,22 @@ type
   end;
 
 var
-  cATButtonArrowSize: integer = 6;
+  cATButtonArrowSize: integer = 2;
   cATButtonIndent: integer = 3;
   cATButtonIndentArrow: integer = 5;
 
 implementation
+
+procedure CanvasPaintTriangleDown(C: TCanvas; AColor: TColor; ACoord: TPoint; ASize: integer);
+begin
+  C.Brush.Color:= AColor;
+  C.Pen.Color:= AColor;
+  C.Polygon([
+    Point(ACoord.X - ASize*2, ACoord.Y - ASize),
+    Point(ACoord.X + ASize*2, ACoord.Y - ASize),
+    Point(ACoord.X, ACoord.Y + ASize)
+    ]);
+end;
 
 { TATButton }
 
@@ -232,6 +242,7 @@ begin
     Canvas.Brush.Style:= bsSolid;
   end;
 
+  Canvas.Font.PixelsPerInch:= Screen.PixelsPerInch;
   Canvas.Font.Name:= ATButtonTheme.FontName;
   Canvas.Font.Color:= IfThen(Enabled, ATButtonTheme.ColorFont, ATButtonTheme.ColorFontDisabled);
   Canvas.Font.Size:= ATButtonTheme.FontSize;
@@ -293,18 +304,19 @@ begin
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
         Canvas.TextOut(pnt1.x, pnt1.y, FCaption);
 
-        pnt1.x:= ClientWidth-cATButtonArrowSize*2+
-          IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
-        pnt1.y:= (ClientHeight-cATButtonArrowSize div 2) div 2 +
+        pnt1.x:= ClientWidth+
+          IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX) -
+          MulDiv(cATButtonArrowSize*4, Screen.PixelsPerInch, 96);
+        pnt1.y:= ClientHeight div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
         PaintArrow(pnt1.x, pnt1.y);
       end;
 
     abuArrowOnly:
       begin
-        pnt1.x:= (ClientWidth-cATButtonArrowSize) div 2+
+        pnt1.x:= ClientWidth div 2+
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
-        pnt1.y:= (ClientHeight-cATButtonArrowSize div 2) div 2 +
+        pnt1.y:= ClientHeight div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
         PaintArrow(pnt1.x, pnt1.y);
       end;
@@ -325,15 +337,6 @@ begin
         pnt2:= Point(Width div 2, Height-dy);
         Canvas.Pen.Color:= ATButtonTheme.ColorArrows;
         Canvas.Line(pnt1, pnt2);
-      end;
-
-    abuCross:
-      begin
-        dx:= (Width-cATButtonArrowSize) div 2 - 1;
-        dy:= (Height-cATButtonArrowSize) div 2 - 1;
-        Canvas.Pen.Color:= ATButtonTheme.ColorArrows;
-        Canvas.Line(dx, dy, dx+cATButtonArrowSize+1, dy+cATButtonArrowSize+1);
-        Canvas.Line(dx+cATButtonArrowSize, dy, dx-1, dy+cATButtonArrowSize+1);
       end;
   end;
 
@@ -357,15 +360,11 @@ end;
 
 procedure TATButton.PaintArrow(AX, AY: integer);
 var
-  p1, p2, p3: TPoint;
+  NSize: integer;
 begin
-  p1:= Point(AX, AY);
-  p2:= Point(AX + cATButtonArrowSize, AY);
-  p3:= Point(AX + cATButtonArrowSize div 2, AY + cATButtonArrowSize div 2);
-  Canvas.Brush.Style:= bsSolid;
-  Canvas.Pen.Color:= ATButtonTheme.ColorArrows;
-  Canvas.Brush.Color:= ATButtonTheme.ColorArrows;
-  Canvas.Polygon([p1, p2, p3]);
+  NSize:= MulDiv(cATButtonArrowSize, Screen.PixelsPerInch, 96);
+  CanvasPaintTriangleDown(Canvas, ATButtonTheme.ColorArrows,
+    Point(AX, AY), NSize);
 end;
 
 function TATButton.GetIconWidth: integer;
