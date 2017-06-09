@@ -19,6 +19,8 @@ type
   TATPanelSimple = class(TCustomControl)
   public
     constructor Create(AOwner: TComponent); override;
+  public
+    function CanFocus: boolean; override;
   published
     property Align;
     property Anchors;
@@ -48,6 +50,11 @@ begin
   Width:= 180;
   Height:= 100;
   Caption:= '';
+end;
+
+function TATPanelSimple.CanFocus: boolean;
+begin
+  Result:= false;
 end;
 
 end.

@@ -21,6 +21,7 @@ type
     FBorderColor: TColor;
   public
     constructor Create(AOwner: TComponent); override;
+    function CanFocus: boolean; override;
   protected
     procedure Paint; override;
     procedure Resize; override;
@@ -52,6 +53,11 @@ begin
   BorderStyle:= bsNone;
   BorderWidth:= 0;
   BorderColor:= clBlack;
+end;
+
+function TATPanelColor.CanFocus: boolean;
+begin
+  Result:= false;
 end;
 
 procedure TATPanelColor.Paint;

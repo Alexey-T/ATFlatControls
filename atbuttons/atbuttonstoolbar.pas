@@ -29,6 +29,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    function CanFocus: boolean; override;
     procedure AddButton(
       AImageIndex: integer;
       AOnClick: TNotifyEvent;
@@ -79,6 +80,11 @@ end;
 destructor TATButtonsToolbar.Destroy;
 begin
   inherited;
+end;
+
+function TATButtonsToolbar.CanFocus: boolean;
+begin
+  Result:= false;
 end;
 
 procedure TATButtonsToolbar.UpdateControls;
