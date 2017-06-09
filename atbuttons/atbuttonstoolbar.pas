@@ -210,6 +210,7 @@ var
 begin
   b:= TATButton.Create(Self);
   b.Parent:= Self;
+  b.Focusable:= false;
   b.Flat:= true;
   b.Caption:= ACaption;
   b.Hint:= AHint;
@@ -247,6 +248,7 @@ var
 begin
   b:= TATButton.Create(Self);
   b.Parent:= Self;
+  b.Focusable:= false;
   b.Caption:= ACaption;
   b.Hint:= AHint;
   b.DataString:= ADataString;
@@ -271,6 +273,7 @@ var
 begin
   b:= TATButton.Create(Self);
   b.Parent:= Self;
+  b.Focusable:= false;
   b.Caption:= '';
   b.Flat:= true;
   if FKindVertical then

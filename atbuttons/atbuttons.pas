@@ -92,6 +92,7 @@ type
     procedure SetFocusable(AValue: boolean);
     procedure SetKind(AValue: TATButtonKind);
   protected
+    function CanFocus: boolean; override;
     procedure Paint; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseLeave; override;
@@ -188,6 +189,11 @@ begin
   if FKind=AValue then Exit;
   FKind:= AValue;
   Invalidate;
+end;
+
+function TATButton.CanFocus: boolean;
+begin
+  Result:= FFocusable;
 end;
 
 procedure TATButton.SetCaption(const AValue: TCaption);
