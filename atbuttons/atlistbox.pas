@@ -32,6 +32,8 @@ type
     FCanGetFocus: boolean;
     FList: TStringList;
     FShowScrollbar: boolean;
+    FColorSelFont: TColor;
+    FColorSelBack: TColor;
     procedure DoDefaultOnDrawItem(Sender: TObject; C: TCanvas; AIndex: integer; const ARect: TRect);
     procedure DoPaintTo(C: TCanvas; r: TRect);
     function ItemBottom: integer;
@@ -69,6 +71,8 @@ type
     property BorderSpacing;
     property CanGetFocus: boolean read FCanGetFocus write SetCanBeFocused;
     property Color;
+    property ColorSelFont: TColor read FColorSelFont write FColorSelFont default clWhite;
+    property ColorSelBack: TColor read FColorSelBack write FColorSelBack default clMedGray;
     property DoubleBuffered;
     property Enabled;
     property Font;
@@ -285,6 +289,8 @@ begin
   Height:= 150;
 
   Color:= clWhite;
+  ColorSelFont:= clWhite;
+  ColorSelBack:= clMedGray;
   CanGetFocus:= false;
   FOnDrawItem:= @DoDefaultOnDrawItem;
   FList:= TStringList.Create;
@@ -418,13 +424,13 @@ begin
   if AIndex<0 then exit;
   if AIndex=ItemIndex then
   begin
-    c.Font.Color:= clWhite;
-    c.Brush.Color:= clMedGray;
+    c.Font.Color:= FColorSelFont;
+    c.Brush.Color:= FColorSelBack;
   end
   else
   begin
-    c.Font.Color:= clBlack;
-    c.Brush.Color:= clWhite;
+    c.Font.Color:= Font.Color;
+    c.Brush.Color:= Color;
   end;
   c.Pen.Color:= c.Brush.Color;
   c.FillRect(ARect);
