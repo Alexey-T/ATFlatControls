@@ -23,6 +23,7 @@ type
     FKindVertical: boolean;
     FScalePercents: integer;
     FButtonWidth: integer;
+    FThemed: boolean; //for use in CudaText
     procedure PopupForDropdownClick(Sender: TObject);
     function GetButton(AIndex: integer): TATButton;
     function DoScale(N: integer): integer;
@@ -46,6 +47,7 @@ type
     function ButtonCount: integer;
     property Buttons[AIndex: integer]: TATButton read GetButton;
     property ScalePercents: integer read FScalePercents write FScalePercents default 100;
+    property Themed: boolean read FThemed write FThemed;
   published
     property Align;
     property Anchors;
