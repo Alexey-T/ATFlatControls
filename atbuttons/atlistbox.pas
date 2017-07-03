@@ -36,7 +36,6 @@ type
     FBitmap: TBitmap;
     FCanGetFocus: boolean;
     FList: TStringList;
-    FShowScrollbar: boolean;
     FColorSelFont: TColor;
     FColorSelBack: TColor;
     procedure DoDefaultOnDrawItem(Sender: TObject; C: TCanvas; AIndex: integer; const ARect: TRect);
@@ -73,6 +72,7 @@ type
     property ThemedOther: boolean read FThemedOther write FThemedOther;
     function CanFocus: boolean; override;
     function CanSetFocus: boolean; override;
+    function ClientWidth: integer;
   published
     property Align;
     property Anchors;
@@ -91,7 +91,6 @@ type
     property ParentShowHint;
     property PopupMenu;
     property ShowHint;
-    property ShowScrollbar: boolean read FShowScrollbar write FShowScrollbar default true;
     property Visible;
     property OnClick;
     property OnDblClick;
@@ -164,7 +163,7 @@ procedure TATListbox.UpdateScrollbar;
 var
   si: TScrollInfo;
 begin
-  if FThemedScrollbar then
+  if ThemedScrollbar then
   begin
     FScroll.Min:= 0;
     FScroll.Max:= ItemCount;
@@ -177,7 +176,7 @@ begin
   si.fMask:= SIF_ALL;
   si.nMin:= 0;
 
-  if not FShowScrollbar then
+  if ThemedScrollbar then
   begin
     si.nMax:= 1;
     si.nPage:= 2;
@@ -318,22 +317,7 @@ begin
   if FThemedScrollbar=AValue then Exit;
   FThemedScrollbar:= AValue;
 
-  if not Assigned(FScroll) then
-  begin
-    FScroll:= TATScroll.Create(Self);
-    FScroll.Parent:= Self;
-    FScroll.Kind:= sbVertical;
-    FScroll.Align:= alRight;
-    FScroll.Width:= ATListboxScrollbarProps.ScrollbarWidth;
-    FScroll.IndentBorder:= ATListboxScrollbarProps.ScrollbarBorderSize;
-    FScroll.AutoAdjustLayout(lapDefault, 100,
-      ATListboxScrollbarProps.ScreenScalePercents, 1, 1);
-    FScroll.OnChange:= @ScrollbarChange;
-  end;
-
   FScroll.Visible:= AValue;
-  ShowScrollbar:= not AValue;
-
   Invalidate;
 end;
 
@@ -357,14 +341,22 @@ begin
   FItemIndex:= 0;
   FItemHeight:= 21;
   FItemTop:= 0;
-  FShowScrollbar:= true;
 
   FBitmap:= TBitmap.Create;
   FBitmap.SetSize(1600, 1200);
 
-  FThemedScrollbar:= false;
+  FThemedScrollbar:= true;
   FThemedOther:= false;
-  FScroll:= nil;
+
+  FScroll:= TATScroll.Create(Self);
+  FScroll.Parent:= Self;
+  FScroll.Kind:= sbVertical;
+  FScroll.Align:= alRight;
+  FScroll.Width:= ATListboxScrollbarProps.ScrollbarWidth;
+  FScroll.IndentBorder:= ATListboxScrollbarProps.ScrollbarBorderSize;
+  FScroll.AutoAdjustLayout(lapDefault, 100,
+    ATListboxScrollbarProps.ScreenScalePercents, 1, 1);
+  FScroll.OnChange:= @ScrollbarChange;
 end;
 
 destructor TATListbox.Destroy;
@@ -411,10 +403,17 @@ begin
   Result:= FCanGetFocus;
 end;
 
+function TATListbox.ClientWidth: integer;
+begin
+  Result:= inherited ClientWidth;
+  if ThemedScrollbar then
+    Dec(Result, FScroll.Width);
+end;
+
 function TATListbox.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
   MousePos: TPoint): Boolean;
 begin
-  if ShowScrollbar then
+  if not ThemedScrollbar then
   begin
     Result:= inherited;
     exit
