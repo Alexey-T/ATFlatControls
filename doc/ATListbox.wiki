@@ -1,8 +1,8 @@
 = About =
 
-ATListbox is OS-independant listbox control. It's made for dialog like Sublime Text's command list. Fully owner-drawn: you must not set captions, but must add OnDrawItem event, and set ItemCount, ItemIndex.
+ATListbox is OS-independant listbox control. It's made for dialog like Sublime Text's command list. If OnDrawItem is set, listbox is fully owner-drawn: you must not set items, just set ItemCount, ItemIndex.
 
-Listbox don't get focus by click; to get focus on click set CanGetFocus=true (if focused, it handles keys Up/Down/PgUp/PgDn/Home/End, else you need to handle OnKeyDown in form and set listbox's ItemIndex by hand, which is boring). 
+Listbox doesn't get focus by click; to get focus on click set CanGetFocus=true (if focused, it handles keys Up/Down/PgUp/PgDn/Home/End, else you need to handle OnKeyDown in form and set listbox's ItemIndex by hand, which is boring). 
 
 Author: Alexey Torgashin
 
@@ -26,19 +26,23 @@ Tested on: Win32 (Windows 7), Linux GTK2 / QT (Ubuntu 14.04), macOS (10.8)
 
 = Properties =
 
-* Items: it's just stringlist object that you can use or can ignore: it's ignored in code, listbox is virtual
-* ItemCount: number of items
+* Items: StringList to store items, or you can ignore it if you use OnDrawItem event (listbox will be fully virtual)
+* ItemCount: count of items
 * ItemIndex: index of active item
 * ItemTop: index of item visible at the top
-* ItemHeight: height in pixels of each item
+* ItemHeight: height (in pixels) of each item
 * VisibleItems: count of items fully visible inside control
-* CanGetFocus: set to True to allow control to be focused on click
+* CanGetFocus: allow control to be focused on click
+
+* ThemedScrollbar: allows control to use [[ATScrollBar]] instead of default OS scrollbar
+* ThemedColors: not used (made to use in CudaText app)
 
 Events
 
-* OnDrawItem
 * OnClick
 * OnDblClick
+* OnDrawItem: allows to owner-draw all items
+* OnChangedSel: fired on changed ItemIndex
 
 = Example =
 
