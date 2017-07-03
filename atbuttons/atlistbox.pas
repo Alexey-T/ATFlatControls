@@ -24,7 +24,7 @@ type
   TATListbox = class(TCustomControl)
   private
     FThemedScrollbar: boolean;
-    FThemedOther: boolean;
+    FThemedColors: boolean;
     FScroll: TATScroll;
     FOnDrawItem: TATListboxDrawItemEvent;
     FOnChangeSel: TNotifyEvent;
@@ -69,7 +69,7 @@ type
     property ItemCount: integer read FItemCount write SetItemCount;
     property VisibleItems: integer read GetVisibleItems;
     property ThemedScrollbar: boolean read FThemedScrollbar write SetThemedScrollbar;
-    property ThemedOther: boolean read FThemedOther write FThemedOther;
+    property ThemedColors: boolean read FThemedColors write FThemedColors;
     function CanFocus: boolean; override;
     function CanSetFocus: boolean; override;
     function ClientWidth: integer;
@@ -346,7 +346,7 @@ begin
   FBitmap.SetSize(1600, 1200);
 
   FThemedScrollbar:= true;
-  FThemedOther:= false;
+  FThemedColors:= false;
 
   FScroll:= TATScroll.Create(Self);
   FScroll.Parent:= Self;
