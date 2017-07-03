@@ -11,7 +11,8 @@ interface
 
 uses
   Classes, SysUtils, Graphics, Controls,
-  LMessages;
+  LMessages,
+  ATScrollBar;
 
 type
   TATListboxDrawItemEvent = procedure(Sender: TObject; C: TCanvas; AIndex: integer; const ARect: TRect) of object;
@@ -21,6 +22,9 @@ type
 
   TATListbox = class(TCustomControl)
   private
+    FThemed: boolean;
+    FThemedScroll: boolean;
+    FScroll: TATScroll;
     FOnDrawItem: TATListboxDrawItemEvent;
     FOnChangeSel: TNotifyEvent;
     FOnScroll: TNotifyEvent;

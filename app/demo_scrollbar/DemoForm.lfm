@@ -1,0 +1,200 @@
+object FormDemo: TFormDemo
+  Left = 260
+  Height = 421
+  Top = 285
+  Width = 716
+  Caption = 'ATScrollBar demo'
+  ClientHeight = 421
+  ClientWidth = 716
+  Font.Height = -13
+  Font.Name = 'Default'
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '1.7'
+  object Splitter1: TSplitter
+    Left = 257
+    Height = 421
+    Top = 0
+    Width = 9
+    AutoSnap = False
+    Beveled = True
+  end
+  object Panel1: TPanel
+    Left = 266
+    Height = 421
+    Top = 0
+    Width = 450
+    Align = alClient
+    BevelOuter = bvNone
+    ClientHeight = 421
+    ClientWidth = 450
+    TabOrder = 0
+    object Label1: TLabel
+      Left = 8
+      Height = 17
+      Top = 160
+      Width = 73
+      Caption = 'Border size'
+      ParentColor = False
+    end
+    object labv: TLabel
+      Left = 24
+      Height = 17
+      Top = 8
+      Width = 9
+      Caption = 'V'
+      ParentColor = False
+    end
+    object labh: TLabel
+      Left = 25
+      Height = 17
+      Top = 30
+      Width = 10
+      Caption = 'H'
+      ParentColor = False
+    end
+    object Label2: TLabel
+      Left = 8
+      Height = 17
+      Top = 120
+      Width = 61
+      Caption = 'Page size'
+      ParentColor = False
+    end
+    object Label3: TLabel
+      Left = 8
+      Height = 17
+      Top = 72
+      Width = 27
+      Caption = 'Size'
+      ParentColor = False
+    end
+    object Label4: TLabel
+      Left = 8
+      Height = 17
+      Top = 200
+      Width = 83
+      Caption = 'Arrow longer'
+      ParentColor = False
+    end
+    object Label5: TLabel
+      Left = 8
+      Height = 17
+      Top = 240
+      Width = 88
+      Caption = 'Corner indent'
+      ParentColor = False
+    end
+    object chkDraw: TCheckBox
+      Left = 8
+      Height = 24
+      Top = 296
+      Width = 108
+      Caption = 'Owner-draw'
+      OnClick = chkDrawClick
+      TabOrder = 6
+    end
+    object trackBor: TTrackBar
+      Left = 104
+      Height = 46
+      Top = 136
+      Width = 113
+      Max = 4
+      OnChange = trackBorChange
+      PageSize = 20
+      Position = 1
+      TabOrder = 2
+    end
+    object trackPage: TTrackBar
+      Left = 104
+      Height = 46
+      Top = 96
+      Width = 113
+      Frequency = 20
+      Max = 100
+      Min = 1
+      OnChange = trackPageChange
+      PageSize = 20
+      Position = 20
+      TabOrder = 1
+    end
+    object trackSize: TTrackBar
+      Left = 104
+      Height = 46
+      Top = 48
+      Width = 113
+      Frequency = 20
+      Max = 40
+      Min = 8
+      OnChange = trackSizeChange
+      PageSize = 5
+      Position = 20
+      TabOrder = 0
+    end
+    object trackLonger: TTrackBar
+      Left = 104
+      Height = 46
+      Top = 176
+      Width = 113
+      Frequency = 5
+      Min = -10
+      OnChange = trackLongerChange
+      PageSize = 20
+      Position = 0
+      TabOrder = 3
+    end
+    object trackCornerV: TTrackBar
+      Left = 104
+      Height = 46
+      Top = 216
+      Width = 113
+      Frequency = 10
+      Max = 30
+      Min = -30
+      OnChange = trackCornerVChange
+      PageSize = 20
+      Position = 0
+      TabOrder = 4
+    end
+    object trackCornerH: TTrackBar
+      Left = 230
+      Height = 46
+      Top = 216
+      Width = 113
+      Frequency = 10
+      Max = 30
+      Min = -30
+      OnChange = trackCornerHChange
+      PageSize = 40
+      Position = 0
+      TabOrder = 5
+    end
+    object ListArrows: TListBox
+      Left = 160
+      Height = 104
+      Top = 272
+      Width = 200
+      Items.Strings = (
+        'arrows at edges'
+        'arrows below'
+        'arrows above'
+        'no arrows'
+      )
+      ItemHeight = 23
+      ItemIndex = 0
+      OnClick = ListArrowsClick
+      Options = [lboDrawFocusRect]
+      ScrollWidth = 198
+      TabOrder = 7
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Height = 421
+    Top = 0
+    Width = 257
+    Align = alLeft
+    BevelOuter = bvNone
+    TabOrder = 1
+  end
+end
