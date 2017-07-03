@@ -12,6 +12,8 @@ type
   { TfmMain }
 
   TfmMain = class(TForm)
+    checkThemedScroll: TCheckBox;
+    procedure checkThemedScrollChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
     { private declarations }
@@ -54,6 +56,11 @@ begin
   list.ShowScrollbar:= true;//false;
 end;
 
+procedure TfmMain.checkThemedScrollChange(Sender: TObject);
+begin
+  list.ThemedScrollbar:= checkThemedScroll.checked;
+end;
+
 procedure TfmMain.ListDraw(Sender: TObject; C: TCanvas; AIndex: integer;
   const ARect: TRect);
 begin
@@ -79,7 +86,7 @@ end;
 
 procedure TfmMain.ListChSel(Sender: TObject);
 begin
-  Caption:= 'Chg-sel: '+IntToStr(list.ItemIndex);
+  Caption:= 'Change-sel: '+IntToStr(list.ItemIndex);
 end;
 
 

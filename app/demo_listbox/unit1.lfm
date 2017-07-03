@@ -4,7 +4,19 @@ object fmMain: TfmMain
   Top = 349
   Width = 448
   Caption = 'ATListbox demo'
+  ClientHeight = 251
+  ClientWidth = 448
   OnCreate = FormCreate
   Position = poScreenCenter
-  LCLVersion = '1.7'
+  LCLVersion = '1.9.0.0'
+  object checkThemedScroll: TCheckBox
+    Left = 0
+    Height = 24
+    Top = 227
+    Width = 448
+    Align = alBottom
+    Caption = 'themed scrollbar'
+    OnChange = checkThemedScrollChange
+    TabOrder = 0
+  end
 end

@@ -11,6 +11,7 @@ interface
 
 uses
   Classes, SysUtils, Graphics, Controls,
+  Forms,
   LMessages,
   ATScrollBar;
 
@@ -22,8 +23,8 @@ type
 
   TATListbox = class(TCustomControl)
   private
-    FThemed: boolean;
-    FThemedScroll: boolean;
+    FThemedScrollbar: boolean;
+    FThemedOther: boolean;
     FScroll: TATScroll;
     FOnDrawItem: TATListboxDrawItemEvent;
     FOnChangeSel: TNotifyEvent;
@@ -41,10 +42,12 @@ type
     procedure DoDefaultOnDrawItem(Sender: TObject; C: TCanvas; AIndex: integer; const ARect: TRect);
     procedure DoPaintTo(C: TCanvas; r: TRect);
     function ItemBottom: integer;
+    procedure ScrollbarChange(Sender: TObject);
     procedure SetCanBeFocused(AValue: boolean);
     procedure SetItemCount(AValue: integer);
     procedure SetItemIndex(AValue: integer);
     procedure SetItemTop(AValue: integer);
+    procedure SetThemedScrollbar(AValue: boolean);
     procedure UpdateFromScrollbarMsg(const Msg: TLMScroll);
     procedure UpdateScrollbar;
     function GetVisibleItems: integer;
@@ -66,6 +69,8 @@ type
     property ItemTop: integer read FItemTop write SetItemTop;
     property ItemCount: integer read FItemCount write SetItemCount;
     property VisibleItems: integer read GetVisibleItems;
+    property ThemedScrollbar: boolean read FThemedScrollbar write SetThemedScrollbar;
+    property ThemedOther: boolean read FThemedOther write FThemedOther;
     function CanFocus: boolean; override;
     function CanSetFocus: boolean; override;
   published
@@ -108,6 +113,17 @@ type
     property OnMouseWheelUp;
   end;
 
+type
+  TATListboxScrollbarProps = record
+    ScrollbarWidth: integer;
+    ScrollbarBorderSize: integer;
+    ScreenScalePercents: integer;
+  end;
+
+var
+  ATListboxScrollbarProps: TATListboxScrollbarProps;
+
+
 implementation
 
 uses
@@ -148,6 +164,14 @@ procedure TATListbox.UpdateScrollbar;
 var
   si: TScrollInfo;
 begin
+  if FThemedScrollbar then
+  begin
+    FScroll.Min:= 0;
+    FScroll.Max:= ItemCount;
+    FScroll.PageSize:= VisibleItems;
+    FScroll.Position:= ItemTop;
+  end;
+
   FillChar(si{%H-}, SizeOf(si), 0);
   si.cbSize:= SizeOf(si);
   si.fMask:= SIF_ALL;
@@ -157,13 +181,15 @@ begin
   begin
     si.nMax:= 1;
     si.nPage:= 2;
-    SetScrollInfo(Handle, SB_VERT, si, True);
-    exit
+    si.nPos:= 0;
+  end
+  else
+  begin
+    si.nMax:= FItemCount;
+    si.nPage:= GetVisibleItems;
+    si.nPos:= FItemTop;
   end;
 
-  si.nMax:= FItemCount;
-  si.nPage:= GetVisibleItems;
-  si.nPos:= FItemTop;
   SetScrollInfo(Handle, SB_VERT, si, True);
 end;
 
@@ -237,6 +263,11 @@ begin
   Result:= Min(ItemCount-1, FItemTop+GetVisibleItems-1);
 end;
 
+procedure TATListbox.ScrollbarChange(Sender: TObject);
+begin
+  ItemTop:= FScroll.Position;
+end;
+
 procedure TATListbox.SetCanBeFocused(AValue: boolean);
 begin
   if FCanGetFocus=AValue then Exit;
@@ -282,6 +313,30 @@ begin
   Invalidate;
 end;
 
+procedure TATListbox.SetThemedScrollbar(AValue: boolean);
+begin
+  if FThemedScrollbar=AValue then Exit;
+  FThemedScrollbar:= AValue;
+
+  if not Assigned(FScroll) then
+  begin
+    FScroll:= TATScroll.Create(Self);
+    FScroll.Parent:= Self;
+    FScroll.Kind:= sbVertical;
+    FScroll.Align:= alRight;
+    FScroll.Width:= ATListboxScrollbarProps.ScrollbarWidth;
+    FScroll.IndentBorder:= ATListboxScrollbarProps.ScrollbarBorderSize;
+    FScroll.AutoAdjustLayout(lapDefault, 100,
+      ATListboxScrollbarProps.ScreenScalePercents, 1, 1);
+    FScroll.OnChange:= @ScrollbarChange;
+  end;
+
+  FScroll.Visible:= AValue;
+  ShowScrollbar:= not AValue;
+
+  Invalidate;
+end;
+
 
 constructor TATListbox.Create(AOwner: TComponent);
 begin
@@ -306,6 +361,10 @@ begin
 
   FBitmap:= TBitmap.Create;
   FBitmap.SetSize(1600, 1200);
+
+  FThemedScrollbar:= false;
+  FThemedOther:= false;
+  FScroll:= nil;
 end;
 
 destructor TATListbox.Destroy;
@@ -448,6 +507,13 @@ end;
 
 
 initialization
+
+  with ATListboxScrollbarProps do
+  begin
+    ScrollbarWidth:= 14;
+    ScrollbarBorderSize:= 0;
+    ScreenScalePercents:= 100;
+  end;
 
 end.
 
