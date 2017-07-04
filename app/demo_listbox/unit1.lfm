@@ -16,7 +16,9 @@ object fmMain: TfmMain
     Width = 448
     Align = alBottom
     Caption = 'themed scrollbar'
+    Checked = True
     OnChange = checkThemedScrollChange
+    State = cbChecked
     TabOrder = 0
   end
 end
