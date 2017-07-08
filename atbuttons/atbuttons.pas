@@ -33,7 +33,7 @@ type
     PressedBorderWidth: integer;
     PressedCaptionShiftY: integer;
     PressedCaptionShiftX: integer;
-    ThickBorderWidth: integer;
+    BoldBorderWidth: integer;
   end;
 
 var
@@ -81,7 +81,7 @@ type
     FImageIndex: integer;
     FFlat: boolean;
     FKind: TATButtonKind;
-    FThickFrame: boolean;
+    FBoldBorder: boolean;
     procedure DoClick;
     function GetIconHeight: integer;
     function GetIconWidth: integer;
@@ -93,9 +93,8 @@ type
     procedure SetFlat(AValue: boolean);
     procedure SetFocusable(AValue: boolean);
     procedure SetKind(AValue: TATButtonKind);
-    procedure SetThickFrame(AValue: boolean);
+    procedure SetBoldBorder(AValue: boolean);
   protected
-    function CanFocus: boolean; override;
     procedure Paint; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseLeave; override;
@@ -108,6 +107,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    function CanFocus: boolean; override;
     property DataString: string read FDataString write FDataString;
     function GetTextSize(const S: string): TSize;
   published
@@ -129,7 +129,7 @@ type
     property Focusable: boolean read FFocusable write SetFocusable default true;
     property Flat: boolean read FFlat write SetFlat default false;
     property Kind: TATButtonKind read FKind write SetKind default abuTextOnly;
-    property ThickFrame: boolean read FThickFrame write SetThickFrame default false;
+    property BoldBorder: boolean read FBoldBorder write SetBoldBorder default false;
     property Picture: TPicture read FPicture write FPicture;
     property OnClick: TNotifyEvent read FOnClick write FOnClick;
     property OnDblClick;
@@ -195,10 +195,10 @@ begin
   Invalidate;
 end;
 
-procedure TATButton.SetThickFrame(AValue: boolean);
+procedure TATButton.SetBoldBorder(AValue: boolean);
 begin
-  if FThickFrame=AValue then Exit;
-  FThickFrame:= AValue;
+  if FBoldBorder=AValue then Exit;
+  FBoldBorder:= AValue;
   Invalidate;
 end;
 
@@ -250,8 +250,8 @@ begin
     if IsPressed then
       size:= ATButtonTheme.PressedBorderWidth
     else
-    if ThickFrame then
-      size:= ATButtonTheme.ThickBorderWidth
+    if BoldBorder then
+      size:= ATButtonTheme.BoldBorderWidth
     else
     if FOver then
       size:= ATButtonTheme.MouseoverBorderWidth;
@@ -518,7 +518,7 @@ begin
   FImages:= nil;
   FImageIndex:= -1;
   FKind:= abuTextOnly;
-  FThickFrame:= false;
+  FBoldBorder:= false;
 end;
 
 destructor TATButton.Destroy;
@@ -561,7 +561,7 @@ initialization
     PressedBorderWidth:= 3;
     PressedCaptionShiftX:= 0;
     PressedCaptionShiftY:= 1;
-    ThickBorderWidth:= 3;
+    BoldBorderWidth:= 3;
   end;
 
 end.
