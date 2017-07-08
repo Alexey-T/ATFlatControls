@@ -33,6 +33,7 @@ type
     PressedBorderWidth: integer;
     PressedCaptionShiftY: integer;
     PressedCaptionShiftX: integer;
+    ThickBorderWidth: integer;
   end;
 
 var
@@ -246,8 +247,12 @@ begin
     Canvas.Rectangle(r);
 
     size:= 1;
-    if IsPressed or ThickFrame then
-      size:= ATButtonTheme.PressedBorderWidth else
+    if IsPressed then
+      size:= ATButtonTheme.PressedBorderWidth
+    else
+    if ThickFrame then
+      size:= ATButtonTheme.ThickBorderWidth
+    else
     if FOver then
       size:= ATButtonTheme.MouseoverBorderWidth;
 
@@ -556,6 +561,7 @@ initialization
     PressedBorderWidth:= 3;
     PressedCaptionShiftX:= 0;
     PressedCaptionShiftY:= 1;
+    ThickBorderWidth:= 2;
   end;
 
 end.
