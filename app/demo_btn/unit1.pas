@@ -77,6 +77,7 @@ begin
   b_colors.Picture.Assign(bmp);
   b_colors.Kind:= abuTextIconVert;
   b_colors.OnClick:= @BtnColorsClick;
+  //b_colors.ThickFrame:= true;
 
   bar:= TATButtonsToolbar.create(self);
   bar.Parent:= PanelToolbar;

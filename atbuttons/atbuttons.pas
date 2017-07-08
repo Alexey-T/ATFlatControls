@@ -80,6 +80,7 @@ type
     FImageIndex: integer;
     FFlat: boolean;
     FKind: TATButtonKind;
+    FThickFrame: boolean;
     procedure DoClick;
     function GetIconHeight: integer;
     function GetIconWidth: integer;
@@ -91,6 +92,7 @@ type
     procedure SetFlat(AValue: boolean);
     procedure SetFocusable(AValue: boolean);
     procedure SetKind(AValue: TATButtonKind);
+    procedure SetThickFrame(AValue: boolean);
   protected
     function CanFocus: boolean; override;
     procedure Paint; override;
@@ -126,6 +128,7 @@ type
     property Focusable: boolean read FFocusable write SetFocusable default true;
     property Flat: boolean read FFlat write SetFlat default false;
     property Kind: TATButtonKind read FKind write SetKind default abuTextOnly;
+    property ThickFrame: boolean read FThickFrame write SetThickFrame default false;
     property Picture: TPicture read FPicture write FPicture;
     property OnClick: TNotifyEvent read FOnClick write FOnClick;
     property OnDblClick;
@@ -191,6 +194,13 @@ begin
   Invalidate;
 end;
 
+procedure TATButton.SetThickFrame(AValue: boolean);
+begin
+  if FThickFrame=AValue then Exit;
+  FThickFrame:= AValue;
+  Invalidate;
+end;
+
 function TATButton.CanFocus: boolean;
 begin
   Result:= FFocusable;
@@ -236,8 +246,10 @@ begin
     Canvas.Rectangle(r);
 
     size:= 1;
-    if IsPressed then size:= ATButtonTheme.PressedBorderWidth else
-    if FOver then size:= ATButtonTheme.MouseoverBorderWidth;
+    if IsPressed or ThickFrame then
+      size:= ATButtonTheme.PressedBorderWidth else
+    if FOver then
+      size:= ATButtonTheme.MouseoverBorderWidth;
 
     for i:= 1 to size-1 do
     begin
@@ -501,6 +513,7 @@ begin
   FImages:= nil;
   FImageIndex:= -1;
   FKind:= abuTextOnly;
+  FThickFrame:= false;
 end;
 
 destructor TATButton.Destroy;
