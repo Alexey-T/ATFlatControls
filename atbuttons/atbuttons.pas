@@ -561,7 +561,7 @@ initialization
     PressedBorderWidth:= 3;
     PressedCaptionShiftX:= 0;
     PressedCaptionShiftY:= 1;
-    ThickBorderWidth:= 2;
+    ThickBorderWidth:= 3;
   end;
 
 end.
