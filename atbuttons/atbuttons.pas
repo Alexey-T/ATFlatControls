@@ -82,12 +82,14 @@ type
     FFlat: boolean;
     FKind: TATButtonKind;
     FBoldBorder: boolean;
+    FBoldFont: boolean;
     procedure DoClick;
     function GetIconHeight: integer;
     function GetIconWidth: integer;
     function IsPressed: boolean;
     procedure PaintIcon(AX, AY: integer);
     procedure PaintArrow(AX, AY: integer);
+    procedure SetBoldFont(AValue: boolean);
     procedure SetCaption(const AValue: TCaption);
     procedure SetChecked(AValue: boolean);
     procedure SetFlat(AValue: boolean);
@@ -130,6 +132,7 @@ type
     property Flat: boolean read FFlat write SetFlat default false;
     property Kind: TATButtonKind read FKind write SetKind default abuTextOnly;
     property BoldBorder: boolean read FBoldBorder write SetBoldBorder default false;
+    property BoldFont: boolean read FBoldFont write SetBoldFont default false;
     property Picture: TPicture read FPicture write FPicture;
     property OnClick: TNotifyEvent read FOnClick write FOnClick;
     property OnDblClick;
@@ -269,7 +272,10 @@ begin
   Canvas.Font.Name:= ATButtonTheme.FontName;
   Canvas.Font.Color:= IfThen(Enabled, ATButtonTheme.ColorFont, ATButtonTheme.ColorFontDisabled);
   Canvas.Font.Size:= ATButtonTheme.FontSize;
-  Canvas.Font.Style:= ATButtonTheme.FontStyles;
+  if BoldFont then
+    Canvas.Font.Style:= [fsBold]
+  else
+    Canvas.Font.Style:= ATButtonTheme.FontStyles;
   Canvas.Brush.Style:= bsClear;
 
   case FKind of
@@ -388,6 +394,13 @@ begin
   NSize:= MulDiv(cATButtonArrowSize, Screen.PixelsPerInch, 96);
   CanvasPaintTriangleDown(Canvas, ATButtonTheme.ColorArrows,
     Point(AX, AY), NSize);
+end;
+
+procedure TATButton.SetBoldFont(AValue: boolean);
+begin
+  if FBoldFont=AValue then Exit;
+  FBoldFont:= AValue;
+  Invalidate;
 end;
 
 function TATButton.GetIconWidth: integer;
@@ -535,7 +548,10 @@ begin
   if S='' then exit;
   Canvas.Font.Name:= ATButtonTheme.FontName;
   Canvas.Font.Size:= ATButtonTheme.FontSize;
-  Canvas.Font.Style:= ATButtonTheme.FontStyles;
+  if BoldFont then
+    Canvas.Font.Style:= [fsBold]
+  else
+    Canvas.Font.Style:= ATButtonTheme.FontStyles;
   Result:= Canvas.TextExtent(S);
 end;
 
