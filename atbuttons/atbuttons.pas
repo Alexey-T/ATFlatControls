@@ -73,30 +73,27 @@ type
     FChecked,
     FCheckable,
     FFocusable: boolean;
-    FCaption: TCaption;
     FDataString: string;
     FPicture: TPicture;
-    FOnClick: TNotifyEvent;
     FImages: TImageList;
     FImageIndex: integer;
     FFlat: boolean;
     FKind: TATButtonKind;
     FBoldBorder: boolean;
     FBoldFont: boolean;
-    procedure DoClick;
     function GetIconHeight: integer;
     function GetIconWidth: integer;
     function IsPressed: boolean;
     procedure PaintIcon(AX, AY: integer);
     procedure PaintArrow(AX, AY: integer);
     procedure SetBoldFont(AValue: boolean);
-    procedure SetCaption(const AValue: TCaption);
     procedure SetChecked(AValue: boolean);
     procedure SetFlat(AValue: boolean);
     procedure SetFocusable(AValue: boolean);
     procedure SetKind(AValue: TATButtonKind);
     procedure SetBoldBorder(AValue: boolean);
   protected
+    procedure Click; override;
     procedure Paint; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseLeave; override;
@@ -116,6 +113,7 @@ type
     property Align;
     property Anchors;
     property BorderSpacing;
+    property Caption;
     property TabStop;
     property TabOrder;
     property Enabled;
@@ -123,7 +121,6 @@ type
     property ShowHint;
     property ParentShowHint;
     property PopupMenu;
-    property Caption: TCaption read FCaption write SetCaption;
     property Checked: boolean read FChecked write SetChecked default false;
     property Checkable: boolean read FCheckable write FCheckable default false;
     property Images: TImageList read FImages write FImages;
@@ -134,7 +131,7 @@ type
     property BoldBorder: boolean read FBoldBorder write SetBoldBorder default false;
     property BoldFont: boolean read FBoldFont write SetBoldFont default false;
     property Picture: TPicture read FPicture write FPicture;
-    property OnClick: TNotifyEvent read FOnClick write FOnClick;
+    property OnClick;
     property OnDblClick;
     property OnResize;
     property OnContextPopup;
@@ -205,16 +202,17 @@ begin
   Invalidate;
 end;
 
+procedure TATButton.Click;
+begin
+  inherited;
+  if FCheckable then
+    FChecked:= not FChecked;
+  Invalidate;
+end;
+
 function TATButton.CanFocus: boolean;
 begin
   Result:= FFocusable;
-end;
-
-procedure TATButton.SetCaption(const AValue: TCaption);
-begin
-  if FCaption=AValue then Exit;
-  FCaption:= AValue;
-  Invalidate;
 end;
 
 function TATButton.IsPressed: boolean;
@@ -294,7 +292,7 @@ begin
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
         pnt1.y:= (ClientHeight-GetTextSize(Caption).cy) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
-        Canvas.TextOut(pnt1.x, pnt1.y, FCaption);
+        Canvas.TextOut(pnt1.x, pnt1.y, Caption);
       end;
 
     abuTextIconHorz:
@@ -308,7 +306,7 @@ begin
         Inc(pnt1.x, GetIconWidth+cATButtonIndentArrow);
         pnt1.y:= (ClientHeight-GetTextSize(Caption).cy) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
-        Canvas.TextOut(pnt1.x, pnt1.y, FCaption);
+        Canvas.TextOut(pnt1.x, pnt1.y, Caption);
       end;
 
     abuTextIconVert:
@@ -322,7 +320,7 @@ begin
         Inc(pnt1.y, GetIconHeight+cATButtonIndentArrow);
         pnt1.x:= (ClientWidth-GetTextSize(Caption).cx) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
-        Canvas.TextOut(pnt1.x, pnt1.y, FCaption);
+        Canvas.TextOut(pnt1.x, pnt1.y, Caption);
       end;
 
     abuTextArrow:
@@ -331,7 +329,7 @@ begin
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
         pnt1.y:= (ClientHeight-GetTextSize(Caption).cy) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
-        Canvas.TextOut(pnt1.x, pnt1.y, FCaption);
+        Canvas.TextOut(pnt1.x, pnt1.y, Caption);
 
         pnt1.x:= ClientWidth+
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX) -
@@ -471,20 +469,12 @@ procedure TATButton.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Inte
 begin
   inherited;
 
-  if IsPressed then
-    DoClick;
+  //called by base class:
+  //if IsPressed then
+  //  DoClick;
 
   FPressed:= false;
   Invalidate;
-end;
-
-procedure TATButton.DoClick;
-begin
-  if FCheckable then
-    FChecked:= not FChecked;
-  Invalidate;
-  if Assigned(FOnClick) then
-    FOnClick(Self);
 end;
 
 
@@ -492,7 +482,7 @@ procedure TATButton.KeyPress(var Key: char);
 begin
   inherited;
   if (Key=' ') then
-    DoClick;
+    Click;
 end;
 
 procedure TATButton.DoEnter;
@@ -519,7 +509,7 @@ begin
   Width:= 100;
   Height:= 25;
 
-  FCaption:= 'Button';
+  Caption:= 'Button';
   FPicture:= TPicture.Create;
   FPressed:= false;
   FOver:= false;
@@ -527,7 +517,6 @@ begin
   FCheckable:= false;
   FFocusable:= true;
   FFlat:= false;
-  FOnClick:= nil;
   FImages:= nil;
   FImageIndex:= -1;
   FKind:= abuTextOnly;
