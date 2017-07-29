@@ -468,11 +468,6 @@ end;
 procedure TATButton.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
-
-  //called by base class:
-  //if IsPressed then
-  //  DoClick;
-
   FPressed:= false;
   Invalidate;
 end;
