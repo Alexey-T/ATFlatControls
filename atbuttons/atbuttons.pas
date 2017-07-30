@@ -91,6 +91,7 @@ type
     procedure SetFlat(AValue: boolean);
     procedure SetFocusable(AValue: boolean);
     procedure SetImageIndex(AValue: integer);
+    procedure SetImages(AValue: TImageList);
     procedure SetKind(AValue: TATButtonKind);
     procedure SetBoldBorder(AValue: boolean);
   protected
@@ -124,7 +125,7 @@ type
     property PopupMenu;
     property Checked: boolean read FChecked write SetChecked default false;
     property Checkable: boolean read FCheckable write FCheckable default false;
-    property Images: TImageList read FImages write FImages;
+    property Images: TImageList read FImages write SetImages;
     property ImageIndex: integer read FImageIndex write SetImageIndex default -1;
     property Focusable: boolean read FFocusable write SetFocusable default true;
     property Flat: boolean read FFlat write SetFlat default false;
@@ -193,6 +194,13 @@ procedure TATButton.SetImageIndex(AValue: integer);
 begin
   if FImageIndex=AValue then Exit;
   FImageIndex:= AValue;
+  Invalidate;
+end;
+
+procedure TATButton.SetImages(AValue: TImageList);
+begin
+  if FImages=AValue then Exit;
+  FImages:= AValue;
   Invalidate;
 end;
 
