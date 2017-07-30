@@ -90,6 +90,7 @@ type
     procedure SetChecked(AValue: boolean);
     procedure SetFlat(AValue: boolean);
     procedure SetFocusable(AValue: boolean);
+    procedure SetImageIndex(AValue: integer);
     procedure SetKind(AValue: TATButtonKind);
     procedure SetBoldBorder(AValue: boolean);
   protected
@@ -124,7 +125,7 @@ type
     property Checked: boolean read FChecked write SetChecked default false;
     property Checkable: boolean read FCheckable write FCheckable default false;
     property Images: TImageList read FImages write FImages;
-    property ImageIndex: integer read FImageIndex write FImageIndex default -1;
+    property ImageIndex: integer read FImageIndex write SetImageIndex default -1;
     property Focusable: boolean read FFocusable write SetFocusable default true;
     property Flat: boolean read FFlat write SetFlat default false;
     property Kind: TATButtonKind read FKind write SetKind default abuTextOnly;
@@ -186,6 +187,13 @@ begin
   if FFocusable=AValue then Exit;
   FFocusable:= AValue;
   TabStop:= AValue;
+end;
+
+procedure TATButton.SetImageIndex(AValue: integer);
+begin
+  if FImageIndex=AValue then Exit;
+  FImageIndex:= AValue;
+  Invalidate;
 end;
 
 procedure TATButton.SetKind(AValue: TATButtonKind);
