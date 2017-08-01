@@ -105,6 +105,7 @@ type
     procedure KeyPress(var Key: char); override;
     procedure DoEnter; override;
     procedure DoExit; override;
+    procedure TextChanged; override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -506,6 +507,12 @@ procedure TATButton.DoExit;
 begin
   inherited;
   Invalidate;
+end;
+
+procedure TATButton.TextChanged;
+begin
+  inherited;
+  Invalidate; //paint caption
 end;
 
 constructor TATButton.Create(AOwner: TComponent);
