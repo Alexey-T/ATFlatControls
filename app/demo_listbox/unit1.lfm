@@ -9,16 +9,36 @@ object fmMain: TfmMain
   OnCreate = FormCreate
   Position = poScreenCenter
   LCLVersion = '1.9.0.0'
-  object checkThemedScroll: TCheckBox
+  object Panel1: TPanel
     Left = 0
-    Height = 24
-    Top = 227
+    Height = 50
+    Top = 201
     Width = 448
     Align = alBottom
-    Caption = 'themed scrollbar'
-    Checked = True
-    OnChange = checkThemedScrollChange
-    State = cbChecked
+    ClientHeight = 50
+    ClientWidth = 448
     TabOrder = 0
+    object chkThemedScroll: TCheckBox
+      Left = 8
+      Height = 24
+      Top = 0
+      Width = 142
+      Caption = 'themed scrollbar'
+      Checked = True
+      OnChange = chkThemedScrollChange
+      State = cbChecked
+      TabOrder = 0
+    end
+    object chkOwnerDrawn: TCheckBox
+      Left = 8
+      Height = 24
+      Top = 24
+      Width = 118
+      Caption = 'owner-drawn'
+      Checked = True
+      OnChange = chkOwnerDrawnChange
+      State = cbChecked
+      TabOrder = 1
+    end
   end
 end

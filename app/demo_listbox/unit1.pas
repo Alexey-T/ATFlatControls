@@ -6,14 +6,17 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ATListbox;
+  ExtCtrls, ATListbox;
 
 type
   { TfmMain }
 
   TfmMain = class(TForm)
-    checkThemedScroll: TCheckBox;
-    procedure checkThemedScrollChange(Sender: TObject);
+    chkOwnerDrawn: TCheckBox;
+    chkThemedScroll: TCheckBox;
+    Panel1: TPanel;
+    procedure chkOwnerDrawnChange(Sender: TObject);
+    procedure chkThemedScrollChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
     { private declarations }
@@ -49,13 +52,22 @@ begin
   list.OnDblClick:= @ListDblClick;
   list.OnChangedSel:= @ListChSel;
 
+  list.OwnerDrawn:= true;
   list.Color:= $e0e0e0;
   list.ItemCount:= 21;
+
+  ActiveControl:= list;
 end;
 
-procedure TfmMain.checkThemedScrollChange(Sender: TObject);
+procedure TfmMain.chkThemedScrollChange(Sender: TObject);
 begin
-  list.ThemedScrollbar:= checkThemedScroll.checked;
+  list.ThemedScrollbar:= chkThemedScroll.checked;
+end;
+
+procedure TfmMain.chkOwnerDrawnChange(Sender: TObject);
+begin
+  list.OwnerDrawn:= chkOwnerDrawn.Checked;
+  list.Invalidate;
 end;
 
 procedure TfmMain.ListDraw(Sender: TObject; C: TCanvas; AIndex: integer;
@@ -67,7 +79,8 @@ begin
   C.Pen.Color:= clMedGray;
   C.Line(ARect.Left+2, ARect.Bottom-1, ARect.Right-2, ARect.Bottom-1);
 
-  C.TextOut(ARect.Left+6, ARect.Top+2, 'item '+inttostr(AIndex));
+  C.Font.Color:= $F0 shl AIndex; //weird color to show
+  C.TextOut(ARect.Left+6, ARect.Top+2, 'item '+IntToStr(AIndex));
 end;
 
 procedure TfmMain.ListClick(Sender: TObject);

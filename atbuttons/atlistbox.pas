@@ -26,6 +26,7 @@ type
     FThemedScrollbar: boolean;
     FThemedColors: boolean;
     FScroll: TATScroll;
+    FOwnerDrawn: boolean;
     FOnDrawItem: TATListboxDrawItemEvent;
     FOnChangeSel: TNotifyEvent;
     FOnScroll: TNotifyEvent;
@@ -86,6 +87,7 @@ type
     property Enabled;
     property Font;
     property ItemHeight: integer read FItemHeight write FItemHeight default 21;
+    property OwnerDrawn: boolean read FOwnerDrawn write FOwnerDrawn default false;
     property ParentColor;
     property ParentFont;
     property ParentShowHint;
@@ -208,8 +210,11 @@ begin
     r.Right:= ClientWidth;
     if r.Top>=ClientHeight then Break;
 
-    if Assigned(FOnDrawItem) then
-      FOnDrawItem(Self, C, Index, r)
+    if FOwnerDrawn then
+    begin
+      if Assigned(FOnDrawItem) then
+        FOnDrawItem(Self, C, Index, r);
+    end
     else
     begin
       //default paint useless
@@ -341,6 +346,7 @@ begin
   FItemIndex:= 0;
   FItemHeight:= 21;
   FItemTop:= 0;
+  FOwnerDrawn:= false;
 
   FBitmap:= TBitmap.Create;
   FBitmap.SetSize(1600, 1200);
