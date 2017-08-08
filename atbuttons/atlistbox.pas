@@ -198,6 +198,7 @@ end;
 procedure TATListbox.DoPaintTo(C: TCanvas; r: TRect);
 var
   Index: integer;
+  S: string;
 begin
   C.Brush.Color:= Color;
   C.FillRect(r);
@@ -217,16 +218,23 @@ begin
     end
     else
     begin
-      //default paint useless
-      C.Pen.Color:= clGray;
-      C.Line(r.Left, r.Bottom, r.Right, r.Bottom);
-      C.Brush.Color:= Color;
       if Index=FItemIndex then
       begin
-        C.Brush.Color:= clMedGray;
-        C.FillRect(r);
+        C.Brush.Color:= FColorSelBack;
+        C.Font.Color:= FColorSelFont;
+      end
+      else
+      begin
+        C.Brush.Color:= Color;
+        C.Font.Color:= Self.Font.Color;
       end;
-      C.TextOut(r.Left+6, r.Top+2, '('+IntToStr(Index)+')');
+      C.FillRect(r);
+
+      if (Index>=0) and (Index<FList.Count) then
+        S:= FList[Index]
+      else
+        S:= '('+IntToStr(Index)+')';
+      C.TextOut(r.Left+4, r.Top+2, S);
     end;
   end;
 end;
