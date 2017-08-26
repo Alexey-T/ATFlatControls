@@ -57,6 +57,8 @@ procedure TLinkLabel.Click;
 begin
   if Link<>'' then
     OpenURL(Link);
+  if Assigned(OnClick) then
+    OnClick(Self);
 end;
 
 procedure TLinkLabel.MouseEnter;
