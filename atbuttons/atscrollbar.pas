@@ -258,10 +258,11 @@ end;
 procedure TATScroll.AutoAdjustLayout(AMode: TLayoutAdjustmentPolicy;
   const AFromPPI, AToPPI, AOldFormWidth, ANewFormWidth: Integer);
 begin
-  inherited;
+  //inherited; //dont call
 
   Width:= MulDiv(Width, AToPPI, AFromPPI);
   Height:= MulDiv(Height, AToPPI, AFromPPI);
+
   IndentArrow:= MulDiv(IndentArrow, AToPPI, AFromPPI);
   IndentArrLonger:= MulDiv(IndentArrLonger, AToPPI, AFromPPI);
   IndentCorner:= MulDiv(IndentCorner, AToPPI, AFromPPI);
