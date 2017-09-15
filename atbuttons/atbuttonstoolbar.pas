@@ -24,9 +24,13 @@ type
     FScalePercents: integer;
     FButtonWidth: integer;
     FThemed: boolean; //for use in CudaText
+    FMultiLine: boolean;
     procedure PopupForDropdownClick(Sender: TObject);
     function GetButton(AIndex: integer): TATButton;
     function DoScale(N: integer): integer;
+    procedure UpdateAnchors;
+  protected
+    procedure Resize; override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -62,6 +66,7 @@ type
     property ParentShowHint;
     property Images: TImageList read FImages write FImages;
     property KindVertical: boolean read FKindVertical write FKindVertical default false;
+    property MultiLine: boolean read FMultiLine write FMultiLine default true;
   end;
 
 implementation
@@ -77,6 +82,7 @@ begin
   FKindVertical:= false;
   FScalePercents:= 100;
   FButtonWidth:= 50;
+  FMultiLine:= true;
 end;
 
 destructor TATButtonsToolbar.Destroy;
@@ -92,7 +98,6 @@ end;
 procedure TATButtonsToolbar.UpdateControls;
 var
   btn: TATButton;
-  akind: TAnchorKind;
   i: integer;
 begin
   if ControlCount=0 then exit;
@@ -172,21 +177,68 @@ begin
       btn.Width:= DoScale(btn.Width);
   end;
 
-  //place controls left to right
-  Controls[0].Left:= 0;
-  Controls[0].Top:= 0;
-  for i:= ControlCount-1 downto 1 do
-  begin
-    if FKindVertical then
-      akind:= akTop
-    else
-      akind:= akLeft;
-    Controls[i].AnchorToNeighbour(akind, 0, Controls[i-1]);
-  end;
+  //anchor buttons in row
+  UpdateAnchors;
 
   //paint
   for i:= 0 to ControlCount-1 do
     Controls[i].Invalidate;
+end;
+
+procedure TATButtonsToolbar.UpdateAnchors;
+var
+  CtlSource, Ctl: TControl;
+  akind, akind2: TAnchorKind;
+  i: integer;
+begin
+  if ControlCount=0 then exit;
+  CtlSource:= Controls[0];
+  CtlSource.Left:= 0;
+  CtlSource.Top:= 0;
+
+  for i:= 1 to ControlCount-1 do
+  begin
+    Ctl:= Controls[i];
+
+    //multiline supported only for horiz kind
+    if MultiLine and
+      (not KindVertical) and
+      (Controls[i-1].Left + Controls[i-1].Width + Ctl.Width >= ClientWidth) then
+    begin
+      Ctl.AnchorSide[akLeft].Control:= CtlSource;
+      Ctl.AnchorSide[akTop].Control:= CtlSource;
+      Ctl.AnchorSide[akLeft].Side:= asrLeft;
+      Ctl.AnchorSide[akTop].Side:= asrBottom;
+      Ctl.Anchors:= [akLeft, akTop];
+      CtlSource:= Ctl;
+    end
+    else
+    begin
+      if FKindVertical then
+      begin
+        akind:= akTop;
+        akind2:= akLeft;
+      end
+      else
+      begin
+        akind:= akLeft;
+        akind2:= akTop;
+      end;
+
+      Ctl.AnchorSide[akind].Control:= Controls[i-1];
+      Ctl.AnchorSide[akind2].Control:= Controls[i-1];
+      Ctl.AnchorSide[akind].Side:= asrRight;
+      Ctl.AnchorSide[akind2].Side:= asrTop;
+      Ctl.Anchors:= [akLeft, akTop];
+    end;
+  end;
+end;
+
+procedure TATButtonsToolbar.Resize;
+begin
+  inherited;
+  if MultiLine and not KindVertical then
+    UpdateAnchors;
 end;
 
 function TATButtonsToolbar.ButtonCount: integer;
