@@ -20,14 +20,16 @@ type
   TATButtonsToolbar = class(TCustomControl)
   private
     FImages: TImageList;
-    FKindVertical: boolean;
+    FVertical: boolean;
     FScalePercents: integer;
     FButtonWidth: integer;
     FThemed: boolean; //for use in CudaText
-    FMultiLine: boolean;
+    FWrapable: boolean;
     procedure PopupForDropdownClick(Sender: TObject);
     function GetButton(AIndex: integer): TATButton;
     function DoScale(N: integer): integer;
+    procedure SetVertical(AValue: boolean);
+    procedure SetWrapable(AValue: boolean);
     procedure UpdateAnchors;
   protected
     procedure Resize; override;
@@ -65,8 +67,8 @@ type
     property ParentColor;
     property ParentShowHint;
     property Images: TImageList read FImages write FImages;
-    property KindVertical: boolean read FKindVertical write FKindVertical default false;
-    property MultiLine: boolean read FMultiLine write FMultiLine default true;
+    property Vertical: boolean read FVertical write SetVertical default false;
+    property Wrapable: boolean read FWrapable write SetWrapable default false;
   end;
 
 implementation
@@ -79,10 +81,10 @@ begin
   AutoSize:= true;
   Caption:= '';
   FImages:= nil;
-  FKindVertical:= false;
+  FVertical:= false;
   FScalePercents:= 100;
   FButtonWidth:= 50;
-  FMultiLine:= true;
+  FWrapable:= false;
 end;
 
 destructor TATButtonsToolbar.Destroy;
@@ -106,7 +108,7 @@ begin
   begin
     btn:= Controls[i] as TATButton;
 
-    if FKindVertical then
+    if Vertical then
       btn.Width:= FButtonWidth
     else
     if Assigned(FImages) then
@@ -115,7 +117,7 @@ begin
     case btn.Kind of
       abuArrowOnly:
         begin
-          if FKindVertical then
+          if Vertical then
             btn.Height:= cATButtonArrowSize+2*cATButtonIndentArrow
           else
             btn.Width:= cATButtonArrowSize+2*cATButtonIndentArrow;
@@ -132,7 +134,7 @@ begin
 
       abuIconOnly:
         begin
-          if FKindVertical then
+          if Vertical then
             btn.Height:= FImages.Height+2*cATButtonIndentArrow
           else
             btn.Width:= FImages.Width+2*cATButtonIndentArrow;
@@ -140,7 +142,7 @@ begin
 
       abuTextOnly:
         begin
-          if FKindVertical then
+          if Vertical then
             btn.Height:= btn.GetTextSize(btn.Caption).cy+2*cATButtonIndentArrow
           else
             btn.Width:= btn.GetTextSize(btn.Caption).cx+2*cATButtonIndentArrow;
@@ -148,7 +150,7 @@ begin
 
       abuTextArrow:
         begin
-          if FKindVertical then
+          if Vertical then
             btn.Height:= btn.GetTextSize(btn.Caption).cy+2*cATButtonIndentArrow
           else
             btn.Width:= btn.GetTextSize(btn.Caption).cx+6*cATButtonIndentArrow;
@@ -156,7 +158,7 @@ begin
 
       abuTextIconVert:
         begin
-          if FKindVertical then
+          if Vertical then
             btn.Height:= btn.GetTextSize(btn.Caption).cy+FImages.Height+3*cATButtonIndentArrow
           else
             btn.Width:= Max(btn.GetTextSize(btn.Caption).cx, FImages.Width)+2*cATButtonIndentArrow;
@@ -164,7 +166,7 @@ begin
 
       abuTextIconHorz:
         begin
-          if FKindVertical then
+          if Vertical then
             btn.Height:= Max(btn.GetTextSize(btn.Caption).cy, FImages.Height)+2*cATButtonIndentArrow
           else
             btn.Width:= btn.GetTextSize(btn.Caption).cx+FImages.Width+3*cATButtonIndentArrow;
@@ -173,7 +175,7 @@ begin
 
     //scale
     btn.Height:= DoScale(btn.Height);
-    if not KindVertical then
+    if not Vertical then
       btn.Width:= DoScale(btn.Width);
   end;
 
@@ -200,9 +202,9 @@ begin
   begin
     Ctl:= Controls[i];
 
-    //multiline supported only for horiz kind
-    if MultiLine and
-      (not KindVertical) and
+    //Wrapable supported only for horiz kind
+    if Wrapable and
+      (not Vertical) and
       (Controls[i-1].Left + Controls[i-1].Width + Ctl.Width >= ClientWidth) then
     begin
       Ctl.AnchorSide[akLeft].Control:= CtlSource;
@@ -214,7 +216,7 @@ begin
     end
     else
     begin
-      if FKindVertical then
+      if Vertical then
       begin
         akind:= akTop;
         akind2:= akLeft;
@@ -237,7 +239,7 @@ end;
 procedure TATButtonsToolbar.Resize;
 begin
   inherited;
-  if MultiLine and not KindVertical then
+  if Wrapable and not Vertical then
     UpdateAnchors;
 end;
 
@@ -260,6 +262,20 @@ begin
     Result:= N
   else
     Result:= MulDiv(N, ScalePercents, 100);
+end;
+
+procedure TATButtonsToolbar.SetVertical(AValue: boolean);
+begin
+  if FVertical=AValue then Exit;
+  FVertical:= AValue;
+  UpdateControls;
+end;
+
+procedure TATButtonsToolbar.SetWrapable(AValue: boolean);
+begin
+  if FWrapable=AValue then Exit;
+  FWrapable:= AValue;
+  UpdateControls;
 end;
 
 procedure TATButtonsToolbar.AddButton(AImageIndex: integer;
@@ -290,7 +306,7 @@ begin
     b.Kind:= abuTextOnly
   else
   begin
-    if FKindVertical then
+    if Vertical then
       b.Kind:= abuTextIconVert
     else
       b.Kind:= abuTextIconHorz;
@@ -336,7 +352,7 @@ begin
   b.Focusable:= false;
   b.Caption:= '';
   b.Flat:= true;
-  if FKindVertical then
+  if Vertical then
     b.Kind:= abuSeparatorVert
   else
     b.Kind:= abuSeparatorHorz;

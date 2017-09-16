@@ -94,7 +94,7 @@ begin
   bar2:= TATButtonsToolbar.create(self);
   bar2.Parent:= PanelRight;
   bar2.Align:= alClient;
-  bar2.KindVertical:= true;
+  bar2.Vertical:= true;
   bar2.Images:= ImageList1;
   bar2.AddButton(0, @BtnColorsClick, 'Open', 'hint1', '', true);
   bar2.AddDropdown(PopupMenu1, nil, '', 'Some menu');
