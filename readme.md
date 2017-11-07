@@ -1,18 +1,17 @@
 Controls for Lazarus 
 
-* ATButton: http://wiki.freepascal.org/ATButton
-* ATButtonsToolbar: http://wiki.freepascal.org/ATButtonsToolbar
-* ATListbox: http://wiki.freepascal.org/ATListbox
-* ATLinkLabel: http://wiki.freepascal.org/ATLinkLabel
-* ATScrollbar: http://wiki.freepascal.org/ATScrollBar
+* ATButton: custom-drawn button: http://wiki.freepascal.org/ATButton
+* ATButtonsToolbar: toolbar based on ATButton: http://wiki.freepascal.org/ATButtonsToolbar
+* ATListbox: custom-drawn listbox: http://wiki.freepascal.org/ATListbox
+* ATScrollbar: most powerful custom-drawn scrollbar: http://wiki.freepascal.org/ATScrollBar
 
-simple panels:
+simple controls:
 
+* ATLinkLabel: label which shows clickable URL: http://wiki.freepascal.org/ATLinkLabel
 * ATPanelSimple: simple TCustomControl child, no caption/border
 * ATPanelColor: simple TCustomControl child, with caption/color/bordercolor/borderwidth
 
 ![img](img/atbuttons.png?raw=true)
 ![img](img/atscrollbar.png?raw=true)
 
-Lazarus 1.4+, tested on Win/Linux/macOS.
-
+Lazarus 1.6+, tested on Win/Linux/macOS.
