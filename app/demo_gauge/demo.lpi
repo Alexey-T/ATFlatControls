@@ -25,7 +25,7 @@
     </RunParams>
     <RequiredPackages Count="2">
       <Item1>
-        <PackageName Value="atgauge_package"/>
+        <PackageName Value="atflatcontrols_package"/>
       </Item1>
       <Item2>
         <PackageName Value="LCL"/>

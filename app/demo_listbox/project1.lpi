@@ -26,13 +26,13 @@
     </RunParams>
     <RequiredPackages Count="2">
       <Item1>
-        <PackageName Value="atbuttons_package"/>
+        <PackageName Value="atflatcontrols_package"/>
       </Item1>
       <Item2>
         <PackageName Value="LCL"/>
       </Item2>
     </RequiredPackages>
-    <Units Count="3">
+    <Units Count="2">
       <Unit0>
         <Filename Value="project1.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -45,11 +45,6 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
       </Unit1>
-      <Unit2>
-        <Filename Value="..\..\atbuttons\atlistbox.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="ATListbox"/>
-      </Unit2>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

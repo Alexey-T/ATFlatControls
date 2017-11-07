@@ -26,7 +26,7 @@
     </RunParams>
     <RequiredPackages Count="2">
       <Item1>
-        <PackageName Value="atbuttons_package"/>
+        <PackageName Value="atflatcontrols_package"/>
       </Item1>
       <Item2>
         <PackageName Value="LCL"/>

@@ -5,8 +5,7 @@ program Demo;
 uses
   {XPMan,}
   Forms, Interfaces,
-  DemoForm in 'DemoForm.pas' {FormDemo},
-  ATScrollBar in 'ATScrollBar.pas';
+  DemoForm in 'DemoForm.pas' {FormDemo};
 
 {.$R *.res}
 

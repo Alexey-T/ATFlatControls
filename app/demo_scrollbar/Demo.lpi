@@ -26,12 +26,15 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="1">
+    <RequiredPackages Count="2">
       <Item1>
-        <PackageName Value="LCL"/>
+        <PackageName Value="atflatcontrols_package"/>
       </Item1>
+      <Item2>
+        <PackageName Value="LCL"/>
+      </Item2>
     </RequiredPackages>
-    <Units Count="3">
+    <Units Count="2">
       <Unit0>
         <Filename Value="Demo.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -44,18 +47,12 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit1>
-      <Unit2>
-        <Filename Value="../atscrollbar/atscrollbar.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="ATScrollBar"/>
-      </Unit2>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
     <Version Value="11"/>
     <SearchPaths>
       <IncludeFiles Value="../atscrollbar;$(ProjOutDir)"/>
-      <OtherUnitFiles Value="../atscrollbar"/>
       <UnitOutputDirectory Value="out"/>
     </SearchPaths>
     <Parsing>
