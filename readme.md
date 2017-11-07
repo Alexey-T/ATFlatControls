@@ -13,6 +13,8 @@ Simple controls:
 * ATPanelColor: simple TCustomControl child, with caption/color/bordercolor/borderwidth
 
 ![img](img/atbuttons.png?raw=true)
+![img](img/atlistbox.png?raw=true)
 ![img](img/atscrollbar.png?raw=true)
+![img](img/atgauge.png?raw=true)
 
 Lazarus 1.6+, tested on Win/Linux/macOS.
