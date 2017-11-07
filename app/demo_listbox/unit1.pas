@@ -83,9 +83,9 @@ begin
   C.Line(ARect.Left+2, ARect.Bottom-1, ARect.Right-2, ARect.Bottom-1);
 
   S:= 'item '+IntToStr(AIndex);
-  C.Font.Color:= $F0 shl AIndex; //weird color to show
-  C.Font.Size:= AIndex+5;
-  C.TextOut(ARect.Left+6+AIndex*6, (ARect.Top+ARect.Bottom-C.TextHeight(IntToStr(AIndex))) div 2, S);
+  C.Font.Color:= $F0 shl AIndex; //weird color
+  C.Font.Size:= AIndex+5; //weird font size
+  C.TextOut(ARect.Left+6+AIndex*6, (ARect.Top+ARect.Bottom-C.TextHeight(S)) div 2, S);
 end;
 
 procedure TfmMain.ListClick(Sender: TObject);
