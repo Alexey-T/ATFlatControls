@@ -15,7 +15,7 @@
     <Description Value="Custom-drawn controls: ATButton, ATListbox, ATButtonsToolbar, ATScrollbar, and several simple controls."/>
     <License Value="MPL 2.0, LGPL"/>
     <Version Major="1"/>
-    <Files Count="8">
+    <Files Count="9">
       <Item1>
         <Filename Value="atbuttons.pas"/>
         <UnitName Value="ATButtons"/>
@@ -49,6 +49,10 @@
         <Filename Value="atscrollbar.pas"/>
         <UnitName Value="ATScrollBar"/>
       </Item8>
+      <Item9>
+        <Filename Value="atstatusbar.pas"/>
+        <UnitName Value="ATStatusBar"/>
+      </Item9>
     </Files>
     <RequiredPkgs Count="1">
       <Item1>
