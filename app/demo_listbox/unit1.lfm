@@ -1,10 +1,10 @@
 object fmMain: TfmMain
   Left = 428
-  Height = 251
-  Top = 349
+  Height = 329
+  Top = 271
   Width = 448
   Caption = 'ATListbox demo'
-  ClientHeight = 251
+  ClientHeight = 329
   ClientWidth = 448
   OnCreate = FormCreate
   Position = poScreenCenter
@@ -12,7 +12,7 @@ object fmMain: TfmMain
   object Panel1: TPanel
     Left = 0
     Height = 50
-    Top = 201
+    Top = 279
     Width = 448
     Align = alBottom
     ClientHeight = 50
@@ -20,9 +20,9 @@ object fmMain: TfmMain
     TabOrder = 0
     object chkThemedScroll: TCheckBox
       Left = 8
-      Height = 24
+      Height = 23
       Top = 0
-      Width = 142
+      Width = 128
       Caption = 'themed scrollbar'
       Checked = True
       OnChange = chkThemedScrollChange
@@ -31,9 +31,9 @@ object fmMain: TfmMain
     end
     object chkOwnerDrawn: TCheckBox
       Left = 8
-      Height = 24
+      Height = 23
       Top = 24
-      Width = 118
+      Width = 104
       Caption = 'owner-drawn'
       Checked = True
       OnChange = chkOwnerDrawnChange

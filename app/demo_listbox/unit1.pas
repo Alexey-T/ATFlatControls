@@ -55,6 +55,7 @@ begin
   list.OwnerDrawn:= true;
   list.Color:= $e0e0e0;
   list.ItemCount:= 21;
+  list.ItemHeight:= 26;
 
   ActiveControl:= list;
 end;
@@ -72,6 +73,8 @@ end;
 
 procedure TfmMain.ListDraw(Sender: TObject; C: TCanvas; AIndex: integer;
   const ARect: TRect);
+var
+  S: string;
 begin
   C.Brush.Color:= IfThen(AIndex=list.ItemIndex, clMedGray, list.Color);
   C.FillRect(ARect);
@@ -79,8 +82,10 @@ begin
   C.Pen.Color:= clMedGray;
   C.Line(ARect.Left+2, ARect.Bottom-1, ARect.Right-2, ARect.Bottom-1);
 
+  S:= 'item '+IntToStr(AIndex);
   C.Font.Color:= $F0 shl AIndex; //weird color to show
-  C.TextOut(ARect.Left+6, ARect.Top+2, 'item '+IntToStr(AIndex));
+  C.Font.Size:= AIndex+5;
+  C.TextOut(ARect.Left+6+AIndex*6, (ARect.Top+ARect.Bottom-C.TextHeight(IntToStr(AIndex))) div 2, S);
 end;
 
 procedure TfmMain.ListClick(Sender: TObject);
