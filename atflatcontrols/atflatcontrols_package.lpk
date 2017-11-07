@@ -2,7 +2,7 @@
 <CONFIG>
   <Package Version="4">
     <PathDelim Value="\"/>
-    <Name Value="atbuttons_package"/>
+    <Name Value="atflatcontrols_package"/>
     <Type Value="RunAndDesignTime"/>
     <Author Value="Alexey Torgashin"/>
     <CompilerOptions>
@@ -12,18 +12,18 @@
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
-    <Description Value="Custom-drawn controls: button, listbox, toolbar."/>
+    <Description Value="Custom-drawn controls: ATButton, ATListbox, ATButtonsToolbar, ATScrollbar, and several simple controls."/>
     <License Value="MPL 2.0, LGPL"/>
-    <Version Major="1" Minor="1"/>
+    <Version Major="1"/>
     <Files Count="8">
       <Item1>
         <Filename Value="atbuttons.pas"/>
         <UnitName Value="ATButtons"/>
       </Item1>
       <Item2>
-        <Filename Value="atbuttons_register.pas"/>
+        <Filename Value="atflatcontrols_register.pas"/>
         <HasRegisterProc Value="True"/>
-        <UnitName Value="atbuttons_register"/>
+        <UnitName Value="atflatcontrols_register"/>
       </Item2>
       <Item3>
         <Filename Value="atlistbox.pas"/>

@@ -1,4 +1,4 @@
-unit atbuttons_register;
+unit atflatcontrols_register;
 
 {$mode objfpc}{$H+}
 
