@@ -1,0 +1,140 @@
+object Form1: TForm1
+  Left = 470
+  Height = 368
+  Top = 242
+  Width = 551
+  Caption = 'Gauge demo'
+  ClientHeight = 368
+  ClientWidth = 551
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poScreenCenter
+  LCLVersion = '1.9.0.0'
+  object PanelTop: TPanel
+    Left = 0
+    Height = 189
+    Top = 0
+    Width = 551
+    Align = alClient
+    BevelOuter = bvNone
+    TabOrder = 0
+  end
+  object PanelBtm: TPanel
+    Left = 0
+    Height = 179
+    Top = 189
+    Width = 551
+    Align = alBottom
+    BevelOuter = bvNone
+    ClientHeight = 179
+    ClientWidth = 551
+    TabOrder = 1
+    object TrackBar1: TTrackBar
+      Left = 8
+      Height = 46
+      Top = 8
+      Width = 208
+      Max = 100
+      OnChange = TrackBar1Change
+      Position = 0
+      TabOrder = 0
+    end
+    object chkBorder: TCheckBox
+      Left = 8
+      Height = 24
+      Top = 64
+      Width = 73
+      Caption = 'border'
+      Checked = True
+      OnChange = chkBorderChange
+      State = cbChecked
+      TabOrder = 1
+    end
+    object chkTextInvert: TCheckBox
+      Left = 8
+      Height = 24
+      Top = 112
+      Width = 232
+      Caption = 'show text inverted (gtk2: bad)'
+      OnChange = chkTextInvertChange
+      TabOrder = 2
+    end
+    object chkShowtext: TCheckBox
+      Left = 8
+      Height = 24
+      Top = 88
+      Width = 94
+      Caption = 'show text'
+      Checked = True
+      OnChange = chkShowtextChange
+      State = cbChecked
+      TabOrder = 3
+    end
+    object GroupBox1: TGroupBox
+      Left = 256
+      Height = 168
+      Top = 0
+      Width = 145
+      Caption = 'kind'
+      ClientHeight = 149
+      ClientWidth = 141
+      TabOrder = 4
+      object bText: TRadioButton
+        Left = 8
+        Height = 24
+        Top = 0
+        Width = 54
+        Caption = 'text'
+        Checked = True
+        OnChange = bTextChange
+        TabOrder = 0
+        TabStop = True
+      end
+      object bHorz: TRadioButton
+        Left = 8
+        Height = 24
+        Top = 24
+        Width = 83
+        Caption = 'horz bar'
+        OnChange = bHorzChange
+        TabOrder = 1
+      end
+      object bVert: TRadioButton
+        Left = 8
+        Height = 24
+        Top = 48
+        Width = 80
+        Caption = 'vert bar'
+        OnChange = bVertChange
+        TabOrder = 2
+      end
+      object bNeedle: TRadioButton
+        Left = 8
+        Height = 24
+        Top = 96
+        Width = 72
+        Caption = 'needle'
+        OnChange = bNeedleChange
+        TabOrder = 4
+      end
+      object bPie: TRadioButton
+        Left = 8
+        Height = 24
+        Top = 72
+        Width = 47
+        Caption = 'pie'
+        OnChange = bPieChange
+        TabOrder = 3
+      end
+      object bHalfPie: TRadioButton
+        Left = 8
+        Height = 24
+        Top = 120
+        Width = 74
+        Caption = 'halfpie'
+        OnChange = bHalfPieChange
+        TabOrder = 5
+      end
+    end
+  end
+end

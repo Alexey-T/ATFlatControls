@@ -4,8 +4,9 @@ Controls for Lazarus
 * ATButtonsToolbar: toolbar based on ATButton: http://wiki.freepascal.org/ATButtonsToolbar
 * ATListbox: custom-drawn listbox: http://wiki.freepascal.org/ATListbox
 * ATScrollbar: most powerful custom-drawn scrollbar: http://wiki.freepascal.org/ATScrollBar
+* ATGauge: progress indicator like in Delphi7: http://wiki.freepascal.org/ATGauge
 
-simple controls:
+Simple controls:
 
 * ATLinkLabel: label which shows clickable URL: http://wiki.freepascal.org/ATLinkLabel
 * ATPanelSimple: simple TCustomControl child, no caption/border

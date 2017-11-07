@@ -1,0 +1,35 @@
+object Form1: TForm1
+  Left = 515
+  Height = 113
+  Top = 187
+  Width = 391
+  Caption = 'Gauge test'
+  ClientHeight = 113
+  ClientWidth = 391
+  Position = poScreenCenter
+  LCLVersion = '1.5'
+  object Gauge1: TGauge
+    Left = 10
+    Height = 93
+    Top = 10
+    Width = 371
+    Align = alClient
+    BorderSpacing.Around = 10
+    Color = clBtnFace
+    Font.Color = clCream
+    Font.Height = -21
+    ParentColor = False
+    ParentFont = False
+    Progress = 40
+    MinValue = 10
+    MaxValue = 110
+    BackColor = clMoneyGreen
+    ForeColor = clOlive
+  end
+  object Timer1: TTimer
+    Interval = 200
+    OnTimer = Timer1Timer
+    left = 22
+    top = 86
+  end
+end

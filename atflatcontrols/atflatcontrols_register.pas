@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, 
   ATButtons, ATButtonsToolbar, 
   ATListbox, ATLinkLabel, ATScrollbar,
-  ATPanelSimple, ATPanelColor, 
+  ATPanelSimple, ATPanelColor, ATGauge,
   LResources;
 
 procedure Register;
@@ -24,7 +24,8 @@ begin
     TATScroll,
     TATPanelSimple,
     TATPanelColor,
-    TATLabelLink
+    TATLabelLink,
+    TGauge
     ]);
 end;
 
