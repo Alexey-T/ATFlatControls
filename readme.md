@@ -5,6 +5,7 @@ Controls for Lazarus
 * ATListbox: custom-drawn listbox: http://wiki.freepascal.org/ATListbox
 * ATScrollbar: most powerful custom-drawn scrollbar: http://wiki.freepascal.org/ATScrollBar
 * ATGauge: progress indicator like in Delphi7: http://wiki.freepascal.org/ATGauge
+* ATStatubar: custom-drawn statusbar, no IDE designer support
 
 Simple controls:
 
@@ -16,5 +17,6 @@ Simple controls:
 ![img](img/atlistbox.png?raw=true)
 ![img](img/atscrollbar.png?raw=true)
 ![img](img/atgauge.png?raw=true)
+![img](img/atstatusbar.png?raw=true)
 
 Lazarus 1.6+, tested on Win/Linux/macOS.
