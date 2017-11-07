@@ -24,7 +24,7 @@ begin
     TATScroll,
     TATPanelSimple,
     TATPanelColor,
-    TLinkLabel
+    TATLabelLink
     ]);
 end;
 

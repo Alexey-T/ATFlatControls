@@ -14,9 +14,9 @@ uses
   LclIntf;
 
 type
-  { TLinkLabel }
+  { TATLabelLink }
 
-  TLinkLabel = class(TLabel)
+  TATLabelLink = class(TLabel)
   private
     FLink: string;
     FColorLinkNormal: TColor;
@@ -36,7 +36,7 @@ type
 
 implementation
 
-constructor TLinkLabel.Create(AOwner: TComponent);
+constructor TATLabelLink.Create(AOwner: TComponent);
 begin
   inherited;
   Cursor:= crHandPoint;
@@ -46,14 +46,14 @@ begin
   Font.Color:= ColorLinkNormal;
 end;
 
-procedure TLinkLabel.SetLink(AValue: string);
+procedure TATLabelLink.SetLink(AValue: string);
 begin
   if FLink=AValue then Exit;
   FLink:= AValue;
   Hint:= AValue;
 end;
 
-procedure TLinkLabel.Click;
+procedure TATLabelLink.Click;
 begin
   if Link<>'' then
     OpenURL(Link);
@@ -61,13 +61,13 @@ begin
     OnClick(Self);
 end;
 
-procedure TLinkLabel.MouseEnter;
+procedure TATLabelLink.MouseEnter;
 begin
   Font.Color:= ColorLinkMouseover;
   Font.Style:= Font.Style+[fsUnderline];
 end;
 
-procedure TLinkLabel.MouseLeave;
+procedure TATLabelLink.MouseLeave;
 begin
   Font.Color:= ColorLinkNormal;
   Font.Style:= Font.Style-[fsUnderline];
