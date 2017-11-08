@@ -241,8 +241,8 @@ var
   TextSize: TSize;
   NOffsetLeft: integer;
 begin
-  if AData.FColorBack<>clNone then
-    C.Brush.Color:= AData.FColorBack
+  if AData.ColorBack<>clNone then
+    C.Brush.Color:= AData.ColorBack
   else
     C.Brush.Color:= Color;
   C.FillRect(ARect);
@@ -250,10 +250,10 @@ begin
   RectText:= Rect(ARect.Left+FPadding, ARect.Top, ARect.Right-FPadding, ARect.Bottom);
 
   if Assigned(FImages) then
-    if AData.FImageIndex>=0 then
+    if AData.ImageIndex>=0 then
     begin
-      if AData.FCaption='' then
-        case AData.FAlign of
+      if AData.Caption='' then
+        case AData.Align of
           taLeftJustify:
             PosIcon.x:= ARect.Left+FPadding;
           taRightJustify:
@@ -265,16 +265,16 @@ begin
         PosIcon.x:= ARect.Left+FPadding;
       PosIcon.y:= (ARect.Top+ARect.Bottom-FImages.Height) div 2;
 
-      FImages.Draw(C, PosIcon.x, PosIcon.y, AData.FImageIndex);
+      FImages.Draw(C, PosIcon.x, PosIcon.y, AData.ImageIndex);
       Inc(RectText.Left, FImages.Width);
     end;
 
-  if AData.FCaption<>'' then
+  if AData.Caption<>'' then
   begin
     C.FillRect(RectText);
-    TextSize:= C.TextExtent(AData.FCaption);
+    TextSize:= C.TextExtent(AData.Caption);
 
-    case AData.FAlign of
+    case AData.Align of
       taLeftJustify:
         NOffsetLeft:= FPadding;
       taRightJustify:
@@ -283,8 +283,8 @@ begin
         NOffsetLeft:= (RectText.Right-RectText.Left-TextSize.cx) div 2 - FPadding;
     end;
 
-    if AData.FColorFont<>clNone then
-      C.Font.Color:= AData.FColorFont
+    if AData.ColorFont<>clNone then
+      C.Font.Color:= AData.ColorFont
     else
       C.Font.Color:= Self.Font.Color;
 
@@ -293,8 +293,8 @@ begin
       (ARect.Top+ARect.Bottom-TextSize.cy) div 2+1,
       ETO_CLIPPED+ETO_OPAQUE,
       @RectText,
-      PChar(AData.FCaption),
-      Length(AData.FCaption),
+      PChar(AData.Caption),
+      Length(AData.Caption),
       nil);
   end;
 
@@ -340,7 +340,7 @@ begin
     for i:= 0 to PanelCount-1 do
     begin
       Result.Left:= Result.Right + 1;
-      Result.Right:= Result.Left + TATStatusData(FItems.Items[i]).FWidth - 1;
+      Result.Right:= Result.Left + GetPanelData(i).Width - 1;
       if AIndex=i then Exit;
     end;
 end;
@@ -417,10 +417,10 @@ var
   Data: TATStatusData;
 begin
   Data:= FItems.Add as TATStatusData;
-  Data.FWidth:= MulDiv(AWidth, ScalePercents,  100);
-  Data.FAlign:= AAlign;
-  Data.FCaption:= ACaption;
-  Data.FImageIndex:= AImageIndex;
+  Data.Width:= MulDiv(AWidth, ScalePercents,  100);
+  Data.Align:= AAlign;
+  Data.Caption:= ACaption;
+  Data.ImageIndex:= AImageIndex;
   Invalidate;
 end;
 
@@ -482,7 +482,7 @@ var
 begin
   D:= GetPanelData(AIndex);
   if Assigned(D) then
-    Result:= D.FCaption
+    Result:= D.Caption
   else
     Result:= '';
 end;
@@ -494,7 +494,7 @@ begin
   D:= GetPanelData(AIndex);
   if Assigned(D) then
   begin
-    D.FCaption:= AValue;
+    D.Caption:= AValue;
     Invalidate;
   end;
 end;
@@ -513,12 +513,12 @@ begin
     begin
       D:= GetPanelData(i);
       if Assigned(D) then
-        Inc(NSize, D.FWidth);
+        Inc(NSize, D.Width);
     end;
 
   D:= GetPanelData(AIndex);
   if Assigned(D) then
-    D.FWidth:= Max(0, Width-NSize);
+    D.Width:= Max(0, Width-NSize);
 end;
 
 
