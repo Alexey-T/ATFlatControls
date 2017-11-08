@@ -26,13 +26,10 @@ uses
   Controls, ExtCtrls;
 
 type
-  TATStatusAlign = (saLeft, saRight, saMiddle);
-
-type
   TATStatusData = class
   public
     ItemWidth: Integer;
-    ItemAlign: TATStatusAlign;
+    ItemAlign: TAlignment;
     ItemCaption: string;
   end;
 
@@ -63,7 +60,7 @@ type
     FOnPanelDrawAfter: TATStatusDrawEvent;
 
     procedure DoPaintTo(C: TCanvas);
-    procedure DoPaintPanelTo(C: TCanvas; ARect: TRect; AAlign: TATStatusAlign; const ACaption: string);
+    procedure DoPaintPanelTo(C: TCanvas; ARect: TRect; AAlign: TAlignment; const ACaption: string);
     function IsIndexOk(AIndex: Integer): boolean;
     function DoDrawBefore(AIndex: Integer; ACanvas: TCanvas; const ARect: TRect): boolean;
     function DoDrawAfter(AIndex: Integer; ACanvas: TCanvas; const ARect: TRect): boolean;
@@ -77,7 +74,8 @@ type
     function GetPanelAt(X, Y: Integer): Integer;
     function GetPanelData(AIndex: Integer): TATStatusData;
     function PanelCount: Integer;
-    procedure AddPanel(AWidth: Integer; AAlign: TATStatusAlign; const ACaption: string = '');
+    procedure AddPanel(AWidth: Integer; AAlign: TAlignment; const ACaption: string=
+      '');
     procedure DeletePanel(AIndex: Integer);
     procedure DeletePanels;
     property Captions[Index: integer]: string read GetCaption write SetCaption; default;
@@ -201,7 +199,7 @@ begin
 end;
 
 procedure TATStatus.DoPaintPanelTo(C: TCanvas; ARect: TRect;
-  AAlign: TATStatusAlign; const ACaption: string);
+  AAlign: TAlignment; const ACaption: string);
 var
   RectText: TRect;
   NOffsetLeft, NOffsetTop: Integer;
@@ -213,11 +211,11 @@ begin
   C.FillRect(RectText);
 
   case AAlign of
-    saLeft:
+    taLeftJustify:
       NOffsetLeft:= FIndentLeft;
-    saRight:
+    taRightJustify:
       NOffsetLeft:= (ARect.Right-ARect.Left) - C.TextWidth(ACaption)- FIndentLeft*2;
-    else
+    taCenter:
       NOffsetLeft:= (ARect.Right-ARect.Left) div 2 - C.TextWidth(ACaption) div 2 - FIndentLeft;
   end;
   NOffsetTop:= (ClientHeight - C.TextHeight(ACaption)) div 2;
@@ -346,7 +344,7 @@ begin
 end;
 
 
-procedure TATStatus.AddPanel(AWidth: Integer; AAlign: TATStatusAlign; const ACaption: string = '');
+procedure TATStatus.AddPanel(AWidth: Integer; AAlign: TAlignment; const ACaption: string = '');
 var
   Data: TATStatusData;
 begin

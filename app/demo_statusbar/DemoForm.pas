@@ -43,10 +43,10 @@ begin
   t.OnPanelClick:= ItemClick;
   t.OnPanelDrawAfter:= ItemDraw;
 
-  t.AddPanel(100, saLeft, 'Left');
-  t.AddPanel(100, saMiddle, 'Middle');
-  t.AddPanel(150, saLeft, 'Item wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww');
-  t.AddPanel(150, saRight, 'Right');
+  t.AddPanel(100, taLeftJustify, 'Left');
+  t.AddPanel(100, taCenter, 'Middle');
+  t.AddPanel(150, taLeftJustify, 'Item wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww');
+  t.AddPanel(150, taRightJustify, 'Right');
 
   //-----------------------------------
   t0:= TATStatus.Create(Self);
@@ -65,15 +65,15 @@ begin
   t0.Font.Size:= 13;
   t0.Height:= 32;
 
-  t0.AddPanel(50, saRight, 'Rt');
-  t0.AddPanel(50, saRight, 'Rt2');
-  t0.AddPanel(100, saMiddle, 'Middle');
-  t0.AddPanel(300, saLeft, 'Item wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww');
+  t0.AddPanel(50, taRightJustify, 'Rt');
+  t0.AddPanel(50, taRightJustify, 'Rt2');
+  t0.AddPanel(100, taCenter, 'Middle');
+  t0.AddPanel(300, taLeftJustify, 'Item wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww');
 end;
 
 procedure TForm1.bAddClick(Sender: TObject);
 begin
-  t.AddPanel(50, saMiddle, 'n'+StringOfChar('n', Random(8)));
+  t.AddPanel(50, taCenter, 'n'+StringOfChar('n', Random(8)));
 end;
 
 procedure TForm1.bDelClick(Sender: TObject);
