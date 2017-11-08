@@ -49,7 +49,7 @@ type
     FColorBorderL: TColor;
     FColorBorderU: TColor;
     FColorBorderD: TColor;
-    FIndentLeft: integer;
+    FPadding: integer;
     FClickedIndex: integer;
     FScalePercents: integer;
 
@@ -103,7 +103,7 @@ type
     property ColorBorderL: TColor read FColorBorderL write FColorBorderL;
     property ColorBorderU: TColor read FColorBorderU write FColorBorderU;
     property ColorBorderD: TColor read FColorBorderD write FColorBorderD;
-    property IndentLeft: integer read FIndentLeft write FIndentLeft;
+    property Padding: integer read FPadding write FPadding;
     property Images: TImageList read FImages write FImages;
     property OnClick;
     property OnDblClick;
@@ -152,12 +152,8 @@ begin
   Width:= 400;
   Height:= 24;
 
-  Font.Name:= 'Tahoma';
-  Font.Color:= clBlack;
-  Font.Size:= 8;
-
   FScalePercents:= 100;
-  FIndentLeft:= 5;
+  FPadding:= 1;
 
   Color:= $E0E0E0;
   FColorBorderTop:= clGray;
@@ -213,7 +209,7 @@ begin
   C.Brush.Color:= Color;
   C.FillRect(ARect);
 
-  RectText:= Rect(ARect.Left+FIndentLeft, ARect.Top, ARect.Right-FIndentLeft, ARect.Bottom);
+  RectText:= Rect(ARect.Left+FPadding, ARect.Top, ARect.Right-FPadding, ARect.Bottom);
 
   if Assigned(FImages) then
     if AData.ItemImageIndex>=0 then
@@ -221,14 +217,14 @@ begin
       if AData.ItemCaption='' then
         case AData.ItemAlign of
           taLeftJustify:
-            PosIcon.x:= ARect.Left+FIndentLeft;
+            PosIcon.x:= ARect.Left+FPadding;
           taRightJustify:
-            PosIcon.x:= (ARect.Right-FImages.Width-FIndentLeft);
+            PosIcon.x:= (ARect.Right-FImages.Width-FPadding);
           taCenter:
             PosIcon.x:= (ARect.Left+ARect.Right-FImages.Width) div 2
         end
       else
-        PosIcon.x:= ARect.Left+FIndentLeft;
+        PosIcon.x:= ARect.Left+FPadding;
       PosIcon.y:= (ARect.Top+ARect.Bottom-FImages.Height) div 2;
 
       FImages.Draw(C, PosIcon.x, PosIcon.y, AData.ItemImageIndex);
@@ -242,11 +238,11 @@ begin
 
     case AData.ItemAlign of
       taLeftJustify:
-        NOffsetLeft:= FIndentLeft;
+        NOffsetLeft:= FPadding;
       taRightJustify:
-        NOffsetLeft:= RectText.Right-RectText.Left-TextSize.cx - FIndentLeft*2;
+        NOffsetLeft:= RectText.Right-RectText.Left-TextSize.cx - FPadding*2;
       taCenter:
-        NOffsetLeft:= (RectText.Right-RectText.Left-TextSize.cx) div 2 - FIndentLeft;
+        NOffsetLeft:= (RectText.Right-RectText.Left-TextSize.cx) div 2 - FPadding;
     end;
 
     ExtTextOut(C.Handle,

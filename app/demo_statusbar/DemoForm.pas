@@ -45,7 +45,6 @@ begin
   t:= TATStatus.Create(Self);
   t.Parent:= Self;
   t.Images:= ImageList1;
-  t.IndentLeft:= 2;
   t.OnPanelClick:= ItemClick;
   t.OnPanelDrawAfter:= ItemDraw;
 
@@ -61,7 +60,6 @@ begin
   t0:= TATStatus.Create(Self);
   t0.Parent:= Self;
   t0.Images:= ImageList1;
-  t0.IndentLeft:= 2;
   t0.OnPanelClick:= ItemClick;
   t0.Top:= ClientHeight-2;
 
