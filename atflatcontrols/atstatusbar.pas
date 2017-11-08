@@ -50,7 +50,7 @@ type
     FColorBorderU: TColor;
     FColorBorderD: TColor;
     FIndentLeft: integer;
-    FItemIndex: integer;
+    FClickedIndex: integer;
     FScalePercents: integer;
 
     FList: TList;
@@ -93,6 +93,8 @@ type
     {$endif}
   published
     property Align;
+    property Anchors;
+    property BorderSpacing;
     property DoubleBuffered;
     property Enabled;
     property Visible;
@@ -349,7 +351,7 @@ procedure TATStatus.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X, Y: integer);
 begin
   inherited;
-  FItemIndex:= GetPanelAt(X, Y);
+  FClickedIndex:= GetPanelAt(X, Y);
 end;
 
 function TATStatus.CanFocus: boolean;
@@ -420,7 +422,7 @@ procedure TATStatus.Click;
 begin
   inherited;
   if Assigned(FOnPanelClick) then
-    FOnPanelClick(Self, FItemIndex);
+    FOnPanelClick(Self, FClickedIndex);
 end;
 
 function TATStatus.DoDrawBefore(AIndex: integer; ACanvas: TCanvas; const ARect: TRect): boolean;
