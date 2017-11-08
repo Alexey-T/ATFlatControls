@@ -15,8 +15,8 @@ object Form1: TForm1
     Left = 200
     Height = 15
     Top = 256
-    Width = 32
-    Caption = 'Click'
+    Width = 93
+    Caption = 'OnClick report'
     ParentColor = False
   end
   object bAdd: TButton

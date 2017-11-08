@@ -88,7 +88,8 @@ end;
 
 procedure TForm1.bDelClick(Sender: TObject);
 begin
-  t.DeletePanel(t.PanelCount-1);
+  if t.PanelCount>0 then
+    t.DeletePanel(t.PanelCount-1);
 end;
 
 procedure TForm1.Edit1Change(Sender: TObject);
@@ -103,8 +104,8 @@ end;
 
 procedure TForm1.ItemClick(S: TObject; Index: Integer);
 begin
-  Label1.Caption:= 'Clicked panel '+Inttostr(Index) + ' of '+
-    IfThen(S=t, 'light', 'dark') + ' bar';
+  Label1.Caption:= 'Clicked panel '+IntToStr(Index) + ' of '+
+    IfThen(S=t, 'top bar', 'bottom bar');
 end;
 
 procedure TForm1.ItemDraw(Sender: TObject; AIndex: Integer;
