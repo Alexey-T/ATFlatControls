@@ -39,6 +39,15 @@ type
   TATStatusDrawEvent = procedure (Sender: TObject; AIndex: integer;
     ACanvas: TCanvas; const ARect: TRect; var ACanDraw: boolean) of object;
 
+const
+  cDefStatusbarPadding = 1;
+  cDefStatusbarColorBack = $E0E0E0;
+  cDefStatusbarColorBorderTop = clGray;
+  cDefStatusbarColorBorderR = clGray;
+  cDefStatusbarColorBorderL = clNone;
+  cDefStatusbarColorBorderU = clNone;
+  cDefStatusbarColorBorderD = clNone;
+
 type
   { TATStatus }
 
@@ -98,14 +107,16 @@ type
     property DoubleBuffered;
     property Enabled;
     property Visible;
-    property ColorBorderTop: TColor read FColorBorderTop write FColorBorderTop;
-    property ColorBorderR: TColor read FColorBorderR write FColorBorderR;
-    property ColorBorderL: TColor read FColorBorderL write FColorBorderL;
-    property ColorBorderU: TColor read FColorBorderU write FColorBorderU;
-    property ColorBorderD: TColor read FColorBorderD write FColorBorderD;
-    property Padding: integer read FPadding write FPadding;
+    property Color;
+    property ColorBorderTop: TColor read FColorBorderTop write FColorBorderTop default cDefStatusbarColorBorderTop;
+    property ColorBorderR: TColor read FColorBorderR write FColorBorderR default cDefStatusbarColorBorderR;
+    property ColorBorderL: TColor read FColorBorderL write FColorBorderL default cDefStatusbarColorBorderL;
+    property ColorBorderU: TColor read FColorBorderU write FColorBorderU default cDefStatusbarColorBorderU;
+    property ColorBorderD: TColor read FColorBorderD write FColorBorderD default cDefStatusbarColorBorderD;
+    property Padding: integer read FPadding write FPadding default cDefStatusbarPadding;
     property Images: TImageList read FImages write FImages;
     property OnClick;
+    property OnContextPopup;
     property OnDblClick;
     property OnResize;
     property OnPanelClick: TATStatusClickEvent read FOnPanelClick write FOnPanelClick;
@@ -153,14 +164,14 @@ begin
   Height:= 24;
 
   FScalePercents:= 100;
-  FPadding:= 1;
+  FPadding:= cDefStatusbarPadding;
 
-  Color:= $E0E0E0;
-  FColorBorderTop:= clGray;
-  FColorBorderR:= clGray;
-  FColorBorderL:= clNone;
-  FColorBorderU:= clNone;
-  FColorBorderD:= clNone;
+  Color:= cDefStatusbarColorBack;
+  FColorBorderTop:= cDefStatusbarColorBorderTop;
+  FColorBorderR:= cDefStatusbarColorBorderR;
+  FColorBorderL:= cDefStatusbarColorBorderL;
+  FColorBorderU:= cDefStatusbarColorBorderU;
+  FColorBorderD:= cDefStatusbarColorBorderD;
 
   FBitmap:= TBitmap.Create;
   FBitmap.PixelFormat:= pf24bit;
