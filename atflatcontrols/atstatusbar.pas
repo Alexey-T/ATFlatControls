@@ -28,15 +28,15 @@ uses
 type
   TATStatusData = class
   public
-    ItemWidth: Integer;
+    ItemWidth: integer;
     ItemAlign: TAlignment;
     ItemCaption: string;
     ItemImageIndex: integer;
   end;
 
 type
-  TATStatusClickEvent = procedure (Sender: TObject; AIndex: Integer) of object;
-  TATStatusDrawEvent = procedure (Sender: TObject; AIndex: Integer;
+  TATStatusClickEvent = procedure (Sender: TObject; AIndex: integer) of object;
+  TATStatusDrawEvent = procedure (Sender: TObject; AIndex: integer;
     ACanvas: TCanvas; const ARect: TRect; var ACanDraw: boolean) of object;
 
 type
@@ -49,8 +49,8 @@ type
     FColorBorderL: TColor;
     FColorBorderU: TColor;
     FColorBorderD: TColor;
-    FIndentLeft: Integer;
-    FItemIndex: Integer;
+    FIndentLeft: integer;
+    FItemIndex: integer;
     FScalePercents: integer;
 
     FList: TList;
@@ -63,22 +63,22 @@ type
 
     procedure DoPaintTo(C: TCanvas);
     procedure DoPaintPanelTo(C: TCanvas; ARect: TRect; AData: TATStatusData);
-    function IsIndexOk(AIndex: Integer): boolean;
-    function DoDrawBefore(AIndex: Integer; ACanvas: TCanvas; const ARect: TRect): boolean;
-    function DoDrawAfter(AIndex: Integer; ACanvas: TCanvas; const ARect: TRect): boolean;
+    function IsIndexOk(AIndex: integer): boolean;
+    function DoDrawBefore(AIndex: integer; ACanvas: TCanvas; const ARect: TRect): boolean;
+    function DoDrawAfter(AIndex: integer; ACanvas: TCanvas; const ARect: TRect): boolean;
     function GetCaption(N: integer): string;
     procedure SetCaption(N: integer; const S: string);
   public
     constructor Create(AOnwer: TComponent); override;
     destructor Destroy; override;
     function CanFocus: boolean; override;
-    function GetPanelRect(AIndex: Integer): TRect;
-    function GetPanelAt(X, Y: Integer): Integer;
-    function GetPanelData(AIndex: Integer): TATStatusData;
-    function PanelCount: Integer;
-    procedure AddPanel(AWidth: Integer; AAlign: TAlignment;
+    function GetPanelRect(AIndex: integer): TRect;
+    function GetPanelAt(X, Y: integer): integer;
+    function GetPanelData(AIndex: integer): TATStatusData;
+    function PanelCount: integer;
+    procedure AddPanel(AWidth: integer; AAlign: TAlignment;
       const ACaption: string=''; AImageIndex: integer=-1);
-    procedure DeletePanel(AIndex: Integer);
+    procedure DeletePanel(AIndex: integer);
     procedure DeletePanels;
     property Captions[Index: integer]: string read GetCaption write SetCaption; default;
     procedure DoPanelAutosize(AIndex: integer);
@@ -86,7 +86,7 @@ type
   protected
     procedure Paint; override;
     procedure Resize; override;
-    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: integer); override;
     procedure Click; override;
     {$ifdef windows}
     procedure WMEraseBkgnd(var Message: TMessage); message WM_ERASEBKGND;
@@ -101,7 +101,7 @@ type
     property ColorBorderL: TColor read FColorBorderL write FColorBorderL;
     property ColorBorderU: TColor read FColorBorderU write FColorBorderU;
     property ColorBorderD: TColor read FColorBorderD write FColorBorderD;
-    property IndentLeft: Integer read FIndentLeft write FIndentLeft;
+    property IndentLeft: integer read FIndentLeft write FIndentLeft;
     property Images: TImageList read FImages write FImages;
     property OnClick;
     property OnDblClick;
@@ -127,12 +127,12 @@ end;
 
 { TATStatus }
 
-function TATStatus.IsIndexOk(AIndex: Integer): boolean;
+function TATStatus.IsIndexOk(AIndex: integer): boolean;
 begin
   Result:= (AIndex>=0) and (AIndex<FList.Count);
 end;
 
-function TATStatus.PanelCount: Integer;
+function TATStatus.PanelCount: integer;
 begin
   Result:= FList.Count;
 end;
@@ -174,7 +174,7 @@ end;
 
 destructor TATStatus.Destroy;
 var
-  i: Integer;
+  i: integer;
 begin
   for i:= PanelCount-1 downto 0 do
   begin
@@ -286,9 +286,9 @@ begin
   end;  
 end;
 
-function TATStatus.GetPanelRect(AIndex: Integer): TRect;
+function TATStatus.GetPanelRect(AIndex: integer): TRect;
 var
-  i: Integer;
+  i: integer;
 begin
   Result.Left:= 0;
   Result.Right:= -1;
@@ -306,7 +306,7 @@ end;
 
 procedure TATStatus.DoPaintTo(C: TCanvas);
 var
-  i: Integer;
+  i: integer;
   ARect: TRect;
 begin
   C.Brush.Color:= Color;
@@ -329,9 +329,9 @@ begin
 end;
 
 
-function TATStatus.GetPanelAt(X, Y: Integer): Integer;
+function TATStatus.GetPanelAt(X, Y: integer): integer;
 var
-  i: Integer;
+  i: integer;
   Pnt: TPoint;
 begin
   Result:= -1;
@@ -346,7 +346,7 @@ begin
 end;
 
 procedure TATStatus.MouseDown(Button: TMouseButton; Shift: TShiftState;
-  X, Y: Integer);
+  X, Y: integer);
 begin
   inherited;
   FItemIndex:= GetPanelAt(X, Y);
@@ -369,7 +369,7 @@ begin
 end;
 
 
-procedure TATStatus.AddPanel(AWidth: Integer; AAlign: TAlignment;
+procedure TATStatus.AddPanel(AWidth: integer; AAlign: TAlignment;
   const ACaption: string = '';
   AImageIndex: integer=-1);
 var
@@ -384,7 +384,7 @@ begin
   Invalidate;
 end;
 
-procedure TATStatus.DeletePanel(AIndex: Integer);
+procedure TATStatus.DeletePanel(AIndex: integer);
 begin
   if IsIndexOk(AIndex) then
   begin
@@ -400,7 +400,7 @@ begin
     DeletePanel(PanelCount-1);
 end;
 
-function TATStatus.GetPanelData(AIndex: Integer): TATStatusData;
+function TATStatus.GetPanelData(AIndex: integer): TATStatusData;
 begin
   if IsIndexOk(AIndex) then
     Result:= TATStatusData(FList[AIndex])
@@ -423,14 +423,14 @@ begin
     FOnPanelClick(Self, FItemIndex);
 end;
 
-function TATStatus.DoDrawBefore(AIndex: Integer; ACanvas: TCanvas; const ARect: TRect): boolean;
+function TATStatus.DoDrawBefore(AIndex: integer; ACanvas: TCanvas; const ARect: TRect): boolean;
 begin
   Result:= true;
   if Assigned(FOnPanelDrawBefore) then
     FOnPanelDrawBefore(Self, AIndex, ACanvas, ARect, Result);
 end;
 
-function TATStatus.DoDrawAfter(AIndex: Integer; ACanvas: TCanvas; const ARect: TRect): boolean;
+function TATStatus.DoDrawAfter(AIndex: integer; ACanvas: TCanvas; const ARect: TRect): boolean;
 begin
   Result:= true;
   if Assigned(FOnPanelDrawAfter) then
