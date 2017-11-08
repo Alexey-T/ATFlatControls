@@ -206,7 +206,7 @@ var
   RectText: TRect;
   PosIcon: TPoint;
   TextSize: TSize;
-  NOffsetLeft, NOffsetTop: Integer;
+  NOffsetLeft: integer;
 begin
   C.Brush.Color:= Color;
   C.FillRect(ARect);
@@ -246,11 +246,10 @@ begin
       taCenter:
         NOffsetLeft:= (RectText.Right-RectText.Left-TextSize.cx) div 2 - FIndentLeft;
     end;
-    NOffsetTop:= (ClientHeight-TextSize.cy) div 2;
 
     ExtTextOut(C.Handle,
       RectText.Left+NOffsetLeft+2,
-      ARect.Top+NOffsetTop,
+      (ARect.Top+ARect.Bottom-TextSize.cy) div 2+1,
       ETO_CLIPPED+ETO_OPAQUE,
       @RectText,
       PChar(AData.ItemCaption),

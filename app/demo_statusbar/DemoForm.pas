@@ -16,6 +16,7 @@ type
     Edit1: TEdit;
     ImageList1: TImageList;
     Label1: TLabel;
+    Label2: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure bAddClick(Sender: TObject);
     procedure bDelClick(Sender: TObject);
@@ -94,8 +95,8 @@ procedure TForm1.Edit1Change(Sender: TObject);
 var
   d: TATStatusData;
 begin
-  if t.PanelCount<1 then Exit;
-  d:= t.GetPanelData(0);
+  if t.PanelCount=0 then Exit;
+  d:= t.GetPanelData(t.PanelCount-1);
   d.ItemCaption:= Edit1.Text;
   t.Invalidate;
 end;
