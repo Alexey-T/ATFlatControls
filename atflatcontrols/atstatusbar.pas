@@ -81,8 +81,8 @@ type
     function IsIndexOk(AIndex: integer): boolean;
     function DoDrawBefore(AIndex: integer; ACanvas: TCanvas; const ARect: TRect): boolean;
     function DoDrawAfter(AIndex: integer; ACanvas: TCanvas; const ARect: TRect): boolean;
-    function GetCaption(N: integer): string;
-    procedure SetCaption(N: integer; const S: string);
+    function GetCaption(AIndex: integer): string;
+    procedure SetCaption(AIndex: integer; const AValue: string);
   public
     constructor Create(AOnwer: TComponent); override;
     destructor Destroy; override;
@@ -95,7 +95,7 @@ type
       const ACaption: string=''; AImageIndex: integer=-1);
     procedure DeletePanel(AIndex: integer);
     procedure DeletePanels;
-    property Captions[Index: integer]: string read GetCaption write SetCaption; default;
+    property Captions[AIndex: integer]: string read GetCaption write SetCaption; default;
     procedure DoPanelAutosize(AIndex: integer);
     property ScalePercents: integer read FScalePercents write FScalePercents default 100;
   protected
@@ -473,19 +473,25 @@ begin
     FOnPanelDrawAfter(Self, AIndex, ACanvas, ARect, Result);
 end;
 
-function TATStatus.GetCaption(N: integer): string;
-begin
-  Result:= GetPanelData(N).ItemCaption;
-end;
-
-procedure TATStatus.SetCaption(N: integer; const S: string);
+function TATStatus.GetCaption(AIndex: integer): string;
 var
   D: TATStatusData;
 begin
-  D:= GetPanelData(N);
+  D:= GetPanelData(AIndex);
+  if Assigned(D) then
+    Result:= D.ItemCaption
+  else
+    Result:= '';
+end;
+
+procedure TATStatus.SetCaption(AIndex: integer; const AValue: string);
+var
+  D: TATStatusData;
+begin
+  D:= GetPanelData(AIndex);
   if Assigned(D) then
   begin
-    D.ItemCaption:= S;
+    D.ItemCaption:= AValue;
     Invalidate;
   end;
 end;
