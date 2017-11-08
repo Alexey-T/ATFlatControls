@@ -1,0 +1,49 @@
+object Form1: TForm1
+  Left = 303
+  Height = 381
+  Top = 282
+  Width = 716
+  Caption = 'ATStatus demo'
+  ClientHeight = 381
+  ClientWidth = 716
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  OnCreate = FormCreate
+  LCLVersion = '1.9.0.0'
+  object Label1: TLabel
+    Left = 200
+    Height = 13
+    Top = 256
+    Width = 26
+    Caption = 'Click'
+    ParentColor = False
+  end
+  object bAdd: TButton
+    Left = 200
+    Height = 25
+    Top = 192
+    Width = 75
+    Caption = 'add'
+    OnClick = bAddClick
+    TabOrder = 0
+  end
+  object bDel: TButton
+    Left = 280
+    Height = 25
+    Top = 192
+    Width = 75
+    Caption = 'del'
+    OnClick = bDelClick
+    TabOrder = 1
+  end
+  object Edit1: TEdit
+    Left = 200
+    Height = 30
+    Top = 224
+    Width = 225
+    OnChange = Edit1Change
+    TabOrder = 2
+  end
+end
