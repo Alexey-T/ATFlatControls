@@ -26,12 +26,18 @@ uses
   Controls, ExtCtrls;
 
 type
+
+  { TATStatusData }
+
   TATStatusData = class
   public
     ItemWidth: integer;
     ItemAlign: TAlignment;
     ItemCaption: string;
     ItemImageIndex: integer;
+    ItemFontColor: integer;
+    ItemBackColor: integer;
+    constructor Create; virtual;
   end;
 
 type
@@ -136,6 +142,17 @@ begin
   {$else}
   Result:= true;
   {$endif}
+end;
+
+{ TATStatusData }
+
+constructor TATStatusData.Create;
+begin
+  ItemAlign:= taLeftJustify;
+  ItemImageIndex:= -1;
+  ItemWidth:= 100;
+  ItemFontColor:= clNone;
+  ItemBackColor:= clNone;
 end;
 
 { TATStatus }
@@ -255,6 +272,11 @@ begin
       taCenter:
         NOffsetLeft:= (RectText.Right-RectText.Left-TextSize.cx) div 2 - FPadding;
     end;
+
+    if AData.ItemFontColor<>clNone then
+      C.Font.Color:= AData.ItemFontColor
+    else
+      C.Font.Color:= Self.Font.Color;
 
     ExtTextOut(C.Handle,
       RectText.Left+NOffsetLeft+2,

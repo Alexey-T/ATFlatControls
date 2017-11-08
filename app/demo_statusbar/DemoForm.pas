@@ -23,8 +23,8 @@ type
     procedure Edit1Change(Sender: TObject);
   private
     { Private declarations }
-    procedure ItemClick(S: TObject; Index: Integer);
-    procedure ItemDraw(Sender: TObject; AIndex: Integer;
+    procedure StatusClick(Sender: TObject; AIndex: Integer);
+    procedure StatusDraw(Sender: TObject; AIndex: Integer;
       ACanvas: TCanvas; const ARect: TRect; var ACanDraw: boolean);
   public
     { Public declarations }
@@ -45,8 +45,8 @@ begin
   t:= TATStatus.Create(Self);
   t.Parent:= Self;
   t.Images:= ImageList1;
-  t.OnPanelClick:= ItemClick;
-  t.OnPanelDrawAfter:= ItemDraw;
+  t.OnPanelClick:= StatusClick;
+  t.OnPanelDrawAfter:= StatusDraw;
 
   t.AddPanel(100, taLeftJustify, 'Left', 0);
   t.AddPanel(100, taCenter, 'Center', 1);
@@ -60,7 +60,7 @@ begin
   t0:= TATStatus.Create(Self);
   t0.Parent:= Self;
   t0.Images:= ImageList1;
-  t0.OnPanelClick:= ItemClick;
+  t0.OnPanelClick:= StatusClick;
   t0.Top:= ClientHeight-2;
 
   t0.Color:= clLtGray;
@@ -100,13 +100,20 @@ begin
   t.Invalidate;
 end;
 
-procedure TForm1.ItemClick(S: TObject; Index: Integer);
+procedure TForm1.StatusClick(Sender: TObject; AIndex: Integer);
+var
+  D: TATStatusData;
 begin
-  Label1.Caption:= 'Clicked panel '+IntToStr(Index) + ' of '+
-    IfThen(S=t, 'top bar', 'bottom bar');
+  Label1.Caption:= 'Clicked panel '+IntToStr(AIndex) + ' of '+
+    IfThen(Sender=t, 'top bar', 'bottom bar');
+
+  D:= (Sender as TATStatus).GetPanelData(AIndex);
+  if D=nil then exit;
+  D.ItemFontColor:= clRed;
+  (Sender as TATStatus).Invalidate;
 end;
 
-procedure TForm1.ItemDraw(Sender: TObject; AIndex: Integer;
+procedure TForm1.StatusDraw(Sender: TObject; AIndex: Integer;
   ACanvas: TCanvas; const ARect: TRect; var ACanDraw: boolean);
 begin
   Exit;
