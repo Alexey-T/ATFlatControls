@@ -214,7 +214,7 @@ begin
 
   case AAlign of
     saLeft:
-      NOffsetLeft:= 0;
+      NOffsetLeft:= FIndentLeft;
     saRight:
       NOffsetLeft:= (ARect.Right-ARect.Left) - C.TextWidth(ACaption)- FIndentLeft*2;
     else
