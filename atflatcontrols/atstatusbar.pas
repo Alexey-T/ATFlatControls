@@ -222,7 +222,6 @@ begin
   end;
   NOffsetTop:= (ClientHeight - C.TextHeight(ACaption)) div 2;
 
-  C.Font.Assign(Self.Font);
   ExtTextOut(C.Handle,
     ARect.Left+NOffsetLeft+2,
     ARect.Top+NOffsetTop,
@@ -286,6 +285,7 @@ var
 begin
   C.Brush.Color:= Color;
   C.FillRect(ClientRect);
+  C.Font.Assign(Self.Font);
 
   for i:= 0 to PanelCount-1 do
   begin
