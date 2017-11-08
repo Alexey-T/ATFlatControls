@@ -234,7 +234,10 @@ var
   TextSize: TSize;
   NOffsetLeft: integer;
 begin
-  C.Brush.Color:= Color;
+  if AData.ItemBackColor<>clNone then
+    C.Brush.Color:= AData.ItemBackColor
+  else
+    C.Brush.Color:= Color;
   C.FillRect(ARect);
 
   RectText:= Rect(ARect.Left+FPadding, ARect.Top, ARect.Right-FPadding, ARect.Bottom);

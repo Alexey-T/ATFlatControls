@@ -109,7 +109,16 @@ begin
 
   D:= (Sender as TATStatus).GetPanelData(AIndex);
   if D=nil then exit;
-  D.ItemFontColor:= clRed;
+  if D.ItemFontColor=clNone then
+  begin
+    D.ItemFontColor:= clGreen;
+    D.ItemBackColor:= clYellow;
+  end
+  else
+  begin
+    D.ItemFontColor:= clNone;
+    D.ItemBackColor:= clNone;
+  end;
   (Sender as TATStatus).Invalidate;
 end;
 
