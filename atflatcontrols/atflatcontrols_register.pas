@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, 
   ATButtons, ATButtonsToolbar, 
-  ATListbox, ATLinkLabel, ATScrollbar,
+  ATListbox, ATLinkLabel, ATScrollbar, ATStatusbar,
   ATPanelSimple, ATPanelColor, ATGauge,
   LResources;
 
@@ -22,6 +22,7 @@ begin
     TATButtonsToolbar,
     TATListbox,
     TATScroll,
+    TATStatus,
     TATPanelSimple,
     TATPanelColor,
     TATLabelLink,

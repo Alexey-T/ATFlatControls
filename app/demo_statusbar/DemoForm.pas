@@ -96,7 +96,7 @@ var
 begin
   if t.PanelCount=0 then Exit;
   d:= t.GetPanelData(t.PanelCount-1);
-  d.ItemCaption:= Edit1.Text;
+  d.Caption:= Edit1.Text;
   t.Invalidate;
 end;
 
@@ -109,15 +109,15 @@ begin
 
   D:= (Sender as TATStatus).GetPanelData(AIndex);
   if D=nil then exit;
-  if D.ItemFontColor=clNone then
+  if D.ColorFont=clNone then
   begin
-    D.ItemFontColor:= clGreen;
-    D.ItemBackColor:= clYellow;
+    D.ColorFont:= clGreen;
+    D.ColorBack:= clYellow;
   end
   else
   begin
-    D.ItemFontColor:= clNone;
-    D.ItemBackColor:= clNone;
+    D.ColorFont:= clNone;
+    D.ColorBack:= clNone;
   end;
   (Sender as TATStatus).Invalidate;
 end;
