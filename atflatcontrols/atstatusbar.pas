@@ -31,6 +31,7 @@ type
     ItemWidth: Integer;
     ItemAlign: TAlignment;
     ItemCaption: string;
+    ItemImageIndex: integer;
   end;
 
 type
@@ -54,13 +55,14 @@ type
 
     FList: TList;
     FBitmap: TBitmap;
+    FImages: TImageList;
 
     FOnPanelClick: TATStatusClickEvent;
     FOnPanelDrawBefore: TATStatusDrawEvent;
     FOnPanelDrawAfter: TATStatusDrawEvent;
 
     procedure DoPaintTo(C: TCanvas);
-    procedure DoPaintPanelTo(C: TCanvas; ARect: TRect; AAlign: TAlignment; const ACaption: string);
+    procedure DoPaintPanelTo(C: TCanvas; ARect: TRect; AData: TATStatusData);
     function IsIndexOk(AIndex: Integer): boolean;
     function DoDrawBefore(AIndex: Integer; ACanvas: TCanvas; const ARect: TRect): boolean;
     function DoDrawAfter(AIndex: Integer; ACanvas: TCanvas; const ARect: TRect): boolean;
@@ -74,8 +76,8 @@ type
     function GetPanelAt(X, Y: Integer): Integer;
     function GetPanelData(AIndex: Integer): TATStatusData;
     function PanelCount: Integer;
-    procedure AddPanel(AWidth: Integer; AAlign: TAlignment; const ACaption: string=
-      '');
+    procedure AddPanel(AWidth: Integer; AAlign: TAlignment;
+      const ACaption: string=''; AImageIndex: integer=-1);
     procedure DeletePanel(AIndex: Integer);
     procedure DeletePanels;
     property Captions[Index: integer]: string read GetCaption write SetCaption; default;
@@ -100,6 +102,7 @@ type
     property ColorBorderU: TColor read FColorBorderU write FColorBorderU;
     property ColorBorderD: TColor read FColorBorderD write FColorBorderD;
     property IndentLeft: Integer read FIndentLeft write FIndentLeft;
+    property Images: TImageList read FImages write FImages;
     property OnClick;
     property OnDblClick;
     property OnResize;
@@ -198,36 +201,62 @@ begin
     DoPaintTo(Canvas);
 end;
 
-procedure TATStatus.DoPaintPanelTo(C: TCanvas; ARect: TRect;
-  AAlign: TAlignment; const ACaption: string);
+procedure TATStatus.DoPaintPanelTo(C: TCanvas; ARect: TRect; AData: TATStatusData);
 var
   RectText: TRect;
+  PosIcon: TPoint;
+  TextSize: TSize;
   NOffsetLeft, NOffsetTop: Integer;
 begin
   C.Brush.Color:= Color;
   C.FillRect(ARect);
 
   RectText:= Rect(ARect.Left+FIndentLeft, ARect.Top, ARect.Right-FIndentLeft, ARect.Bottom);
-  C.FillRect(RectText);
 
-  case AAlign of
-    taLeftJustify:
-      NOffsetLeft:= FIndentLeft;
-    taRightJustify:
-      NOffsetLeft:= (ARect.Right-ARect.Left) - C.TextWidth(ACaption)- FIndentLeft*2;
-    taCenter:
-      NOffsetLeft:= (ARect.Right-ARect.Left) div 2 - C.TextWidth(ACaption) div 2 - FIndentLeft;
+  if Assigned(FImages) then
+    if AData.ItemImageIndex>=0 then
+    begin
+      if AData.ItemCaption='' then
+        case AData.ItemAlign of
+          taLeftJustify:
+            PosIcon.x:= ARect.Left+FIndentLeft;
+          taRightJustify:
+            PosIcon.x:= (ARect.Right-FImages.Width-FIndentLeft);
+          taCenter:
+            PosIcon.x:= (ARect.Left+ARect.Right-FImages.Width) div 2
+        end
+      else
+        PosIcon.x:= ARect.Left+FIndentLeft;
+      PosIcon.y:= (ARect.Top+ARect.Bottom-FImages.Height) div 2;
+
+      FImages.Draw(C, PosIcon.x, PosIcon.y, AData.ItemImageIndex);
+      Inc(RectText.Left, FImages.Width);
+    end;
+
+  if AData.ItemCaption<>'' then
+  begin
+    C.FillRect(RectText);
+    TextSize:= C.TextExtent(AData.ItemCaption);
+
+    case AData.ItemAlign of
+      taLeftJustify:
+        NOffsetLeft:= FIndentLeft;
+      taRightJustify:
+        NOffsetLeft:= RectText.Right-RectText.Left-TextSize.cx - FIndentLeft*2;
+      taCenter:
+        NOffsetLeft:= (RectText.Right-RectText.Left-TextSize.cx) div 2 - FIndentLeft;
+    end;
+    NOffsetTop:= (ClientHeight-TextSize.cy) div 2;
+
+    ExtTextOut(C.Handle,
+      RectText.Left+NOffsetLeft+2,
+      ARect.Top+NOffsetTop,
+      ETO_CLIPPED+ETO_OPAQUE,
+      @RectText,
+      PChar(AData.ItemCaption),
+      Length(AData.ItemCaption),
+      nil);
   end;
-  NOffsetTop:= (ClientHeight - C.TextHeight(ACaption)) div 2;
-
-  ExtTextOut(C.Handle,
-    ARect.Left+NOffsetLeft+2,
-    ARect.Top+NOffsetTop,
-    ETO_CLIPPED+ETO_OPAQUE,
-    @RectText,
-    PChar(ACaption),
-    Length(ACaption),
-    nil);
 
   if FColorBorderR<>clNone then
   begin
@@ -290,10 +319,7 @@ begin
     ARect:= GetPanelRect(i);
     if DoDrawBefore(i, C, ARect) then
     begin
-      DoPaintPanelTo(C, ARect,
-        TATStatusData(FList[i]).ItemAlign,
-        TATStatusData(FList[i]).ItemCaption
-        );
+      DoPaintPanelTo(C, ARect, TATStatusData(FList[i]));
       DoDrawAfter(i, C, ARect);
     end;  
   end;
@@ -344,7 +370,9 @@ begin
 end;
 
 
-procedure TATStatus.AddPanel(AWidth: Integer; AAlign: TAlignment; const ACaption: string = '');
+procedure TATStatus.AddPanel(AWidth: Integer; AAlign: TAlignment;
+  const ACaption: string = '';
+  AImageIndex: integer=-1);
 var
   Data: TATStatusData;
 begin
@@ -352,6 +380,7 @@ begin
   Data.ItemWidth:= MulDiv(AWidth, ScalePercents,  100);
   Data.ItemAlign:= AAlign;
   Data.ItemCaption:= ACaption;
+  Data.ItemImageIndex:= AImageIndex;
   FList.Add(Data);
   Invalidate;
 end;

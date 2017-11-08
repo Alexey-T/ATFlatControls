@@ -7,10 +7,14 @@ uses
   Dialogs, ExtCtrls, StdCtrls, ATStatusBar;
 
 type
+
+  { TForm1 }
+
   TForm1 = class(TForm)
     bAdd: TButton;
     bDel: TButton;
     Edit1: TEdit;
+    ImageList1: TImageList;
     Label1: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure bAddClick(Sender: TObject);
@@ -39,18 +43,23 @@ procedure TForm1.FormCreate(Sender: TObject);
 begin
   t:= TATStatus.Create(Self);
   t.Parent:= Self;
+  t.Images:= ImageList1;
   t.IndentLeft:= 2;
   t.OnPanelClick:= ItemClick;
   t.OnPanelDrawAfter:= ItemDraw;
 
-  t.AddPanel(100, taLeftJustify, 'Left');
-  t.AddPanel(100, taCenter, 'Middle');
-  t.AddPanel(150, taLeftJustify, 'Item wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww');
-  t.AddPanel(150, taRightJustify, 'Right');
+  t.AddPanel(100, taLeftJustify, 'Left', 0);
+  t.AddPanel(100, taCenter, 'Center', 1);
+  t.AddPanel(150, taLeftJustify, 'Long wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww');
+  t.AddPanel(100, taRightJustify, 'Right', 0);
+  t.AddPanel(80, taLeftJustify, '', 0);
+  t.AddPanel(80, taCenter, '', 0);
+  t.AddPanel(80, taRightJustify, '', 0);
 
   //-----------------------------------
   t0:= TATStatus.Create(Self);
   t0.Parent:= Self;
+  t0.Images:= ImageList1;
   t0.IndentLeft:= 2;
   t0.OnPanelClick:= ItemClick;
   t0.Top:= ClientHeight-2;
@@ -67,8 +76,8 @@ begin
 
   t0.AddPanel(50, taRightJustify, 'Rt');
   t0.AddPanel(50, taRightJustify, 'Rt2');
-  t0.AddPanel(100, taCenter, 'Middle');
-  t0.AddPanel(300, taLeftJustify, 'Item wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww');
+  t0.AddPanel(100, taCenter, 'Center');
+  t0.AddPanel(300, taLeftJustify, 'Long wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww');
 end;
 
 procedure TForm1.bAddClick(Sender: TObject);
