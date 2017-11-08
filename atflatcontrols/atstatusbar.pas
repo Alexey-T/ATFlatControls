@@ -113,7 +113,9 @@ type
     property DoubleBuffered;
     property Enabled;
     property Visible;
-    property Color;
+    property ParentColor;
+    property Font;
+    property Color default cDefStatusbarColorBack;
     property ColorBorderTop: TColor read FColorBorderTop write FColorBorderTop default cDefStatusbarColorBorderTop;
     property ColorBorderR: TColor read FColorBorderR write FColorBorderR default cDefStatusbarColorBorderR;
     property ColorBorderL: TColor read FColorBorderL write FColorBorderL default cDefStatusbarColorBorderL;
