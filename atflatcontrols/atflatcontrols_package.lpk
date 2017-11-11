@@ -12,7 +12,14 @@
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
-    <Description Value="Custom-drawn controls: ATButton, ATListbox, ATButtonsToolbar, ATScrollbar, and several simple controls."/>
+    <Description Value="Custom-drawn controls, used in CudaText:
+- ATButton
+- ATButtonsToolbar
+- ATGauge
+- ATListbox
+- ATScrollbar
+- ATStatusbar
+and several simple controls."/>
     <License Value="MPL 2.0, LGPL"/>
     <Version Major="1"/>
     <Files Count="9">
