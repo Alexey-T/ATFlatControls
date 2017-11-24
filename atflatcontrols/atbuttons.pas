@@ -48,7 +48,8 @@ type
     abuTextArrow,
     abuArrowOnly,
     abuSeparatorHorz,
-    abuSeparatorVert
+    abuSeparatorVert,
+    abuIconArrow
     );
 
 const
@@ -60,7 +61,8 @@ const
     'text_arr',
     'arr',
     'sep_h',
-    'sep_v'
+    'sep_v',
+    'icon_arr'
     );
 
 type
@@ -347,6 +349,22 @@ begin
         pnt1.y:= (ClientHeight-GetTextSize(Caption).cy) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
         Canvas.TextOut(pnt1.x, pnt1.y, Caption);
+
+        pnt1.x:= ClientWidth+
+          IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX) -
+          MulDiv(cATButtonArrowSize*4, Screen.PixelsPerInch, 96);
+        pnt1.y:= ClientHeight div 2 +
+          IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
+        PaintArrow(pnt1.x, pnt1.y);
+      end;
+
+    abuIconArrow:
+      begin
+        pnt1.x:= (ClientWidth-GetIconWidth) div 2+
+          IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
+        pnt1.y:= (ClientHeight-GetIconHeight) div 2 +
+          IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
+        PaintIcon(pnt1.x, pnt1.y);
 
         pnt1.x:= ClientWidth+
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX) -

@@ -47,7 +47,8 @@ type
       ADropdownEvent: TNotifyEvent=nil;
       const ACaption: string='';
       const AHint: string='';
-      const ADataString: string='');
+      const ADataString: string='';
+      const AImageIndex: integer=-1);
     procedure AddSep;
     procedure UpdateControls;
     function ButtonCount: integer;
@@ -154,6 +155,14 @@ begin
             btn.Height:= btn.GetTextSize(btn.Caption).cy+2*cATButtonIndentArrow
           else
             btn.Width:= btn.GetTextSize(btn.Caption).cx+6*cATButtonIndentArrow;
+        end;
+
+      abuIconArrow:
+        begin
+          if Vertical then
+            btn.Height:= FImages.Height+2*cATButtonIndentArrow
+          else
+            btn.Width:= FImages.Width+6*cATButtonIndentArrow;
         end;
 
       abuTextIconVert:
@@ -318,7 +327,8 @@ procedure TATButtonsToolbar.AddDropdown(
   ADropdownEvent: TNotifyEvent=nil;
   const ACaption: string='';
   const AHint: string='';
-  const ADataString: string='');
+  const ADataString: string='';
+  const AImageIndex: integer=-1);
 var
   b: TATButton;
 begin
@@ -340,7 +350,14 @@ begin
   if ACaption<>'' then
     b.Kind:= abuTextArrow
   else
-    b.Kind:= abuArrowOnly;
+    if AImageIndex>=0 then
+    begin
+      b.Kind:= abuIconArrow;
+      b.Images:= FImages;
+      b.ImageIndex:= AImageIndex;
+    end
+    else
+      b.Kind:= abuArrowOnly;
 end;
 
 procedure TATButtonsToolbar.AddSep;
