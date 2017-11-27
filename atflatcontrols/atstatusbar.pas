@@ -107,6 +107,7 @@ type
     procedure DeletePanels;
     property Captions[AIndex: integer]: string read GetCaption write SetCaption;
     procedure DoPanelAutosize(AIndex: integer);
+    function FindPanel(ATag: PtrInt): integer;
     property ScalePercents: integer read FScalePercents write FScalePercents default 100;
   protected
     procedure Paint; override;
@@ -524,6 +525,19 @@ begin
   D:= GetPanelData(AIndex);
   if Assigned(D) then
     D.Width:= Max(0, Width-NSize);
+end;
+
+function TATStatus.FindPanel(ATag: PtrInt): integer;
+var
+  D: TATStatusData;
+  i: integer;
+begin
+  Result:= -1;
+  for i:= 0 to PanelCount-1 do
+  begin
+    D:= GetPanelData(i);
+    if Assigned(D) and (D.Tag=ATag) then exit(i);
+  end;
 end;
 
 
