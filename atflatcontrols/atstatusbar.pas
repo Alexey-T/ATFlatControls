@@ -37,6 +37,7 @@ type
     FImageIndex: integer;
     FColorFont: integer;
     FColorBack: integer;
+    FTag: PtrInt;
   public
     constructor Create(ACollection: TCollection); override;
   published
@@ -46,6 +47,7 @@ type
     property ImageIndex: integer read FImageIndex write FImageIndex default -1;
     property ColorFont: TColor read FColorFont write FColorFont default clNone;
     property ColorBack: TColor read FColorBack write FColorBack default clNone;
+    property Tag: PtrInt read FTag write FTag default 0;
   end;
 
 type
@@ -164,6 +166,7 @@ begin
   FWidth:= 100;
   FColorFont:= clNone;
   FColorBack:= clNone;
+  FTag:= 0;
 end;
 
 { TATStatus }
