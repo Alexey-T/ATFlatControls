@@ -239,9 +239,14 @@ procedure TATButton.Paint;
 var
   r: TRect;
   pnt1, pnt2: TPoint;
-  size, dx, dy, i: integer;
+  size, dx, dy, NSizeArrow, i: integer;
 begin
   inherited;
+
+  if FArrow then
+    NSizeArrow:= 4*cATButtonArrowSize
+  else
+    NSizeArrow:= 0;
 
   if not FFlat or FChecked or
     (FOver and not (FKind in [abuSeparatorHorz, abuSeparatorVert])) then
@@ -294,7 +299,7 @@ begin
   case FKind of
     abuIconOnly:
       begin
-        pnt1.x:= (ClientWidth-GetIconWidth) div 2+
+        pnt1.x:= (ClientWidth-GetIconWidth-NSizeArrow) div 2+
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
         pnt1.y:= (ClientHeight-GetIconHeight) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
@@ -303,7 +308,7 @@ begin
 
     abuTextOnly:
       begin
-        pnt1.x:= (ClientWidth-GetTextSize(Caption).cx) div 2 +
+        pnt1.x:= (ClientWidth-GetTextSize(Caption).cx-NSizeArrow) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
         pnt1.y:= (ClientHeight-GetTextSize(Caption).cy) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
@@ -326,7 +331,7 @@ begin
 
     abuTextIconVert:
       begin
-        pnt1.x:= (ClientWidth-GetIconWidth) div 2+
+        pnt1.x:= (ClientWidth-GetIconWidth-NSizeArrow) div 2+
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
         pnt1.y:= cATButtonIndent +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
