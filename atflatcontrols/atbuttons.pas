@@ -365,12 +365,10 @@ begin
   if FArrow then
   begin
     //if caption not empty, paint on right side, else centered
-    if Caption<>'' then
-      pnt1.x:= ClientWidth-
-        Scale96ToScreen(cATButtonArrowSize*4)
+    if (Caption<>'') or (ImageIndex>=0) then
+      pnt1.x:= ClientWidth - Scale96ToScreen(cATButtonArrowSize*4)
     else
-      pnt1.x:= ClientWidth div 2-
-        Scale96ToScreen(cATButtonArrowSize div 2);
+      pnt1.x:= ClientWidth div 2 - Scale96ToScreen(cATButtonArrowSize div 2);
 
     pnt1.y:= ClientHeight div 2 +
       IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
