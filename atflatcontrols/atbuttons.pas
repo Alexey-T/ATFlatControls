@@ -338,7 +338,7 @@ begin
         PaintIcon(pnt1.x, pnt1.y);
 
         Inc(pnt1.y, GetIconHeight+cATButtonIndentArrow);
-        pnt1.x:= (ClientWidth-GetTextSize(Caption).cx) div 2 +
+        pnt1.x:= (ClientWidth-GetTextSize(Caption).cx-NSizeArrow) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
         Canvas.TextOut(pnt1.x, pnt1.y, Caption);
       end;
