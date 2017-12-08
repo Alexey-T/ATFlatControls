@@ -43,6 +43,7 @@ type
       const ACaption, AHint, ADataString: string;
       AShowCaption: boolean);
     procedure AddDropdown(
+      AImageIndex: integer;
       AMenu: TPopupMenu;
       ADropdownEvent: TNotifyEvent=nil;
       const ACaption: string='';
@@ -115,14 +116,6 @@ begin
       btn.Height:= FImages.Height+2*cATButtonIndent;
 
     case btn.Kind of
-      abuArrowOnly:
-        begin
-          if Vertical then
-            btn.Height:= cATButtonArrowSize+2*cATButtonIndentArrow
-          else
-            btn.Width:= cATButtonArrowSize+2*cATButtonIndentArrow;
-        end;
-
       abuSeparatorVert:
         begin
           btn.Height:= 2*cATButtonIndentArrow;
@@ -148,14 +141,6 @@ begin
             btn.Width:= btn.GetTextSize(btn.Caption).cx+2*cATButtonIndentArrow;
         end;
 
-      abuTextArrow:
-        begin
-          if Vertical then
-            btn.Height:= btn.GetTextSize(btn.Caption).cy+2*cATButtonIndentArrow
-          else
-            btn.Width:= btn.GetTextSize(btn.Caption).cx+6*cATButtonIndentArrow;
-        end;
-
       abuTextIconVert:
         begin
           if Vertical then
@@ -171,6 +156,14 @@ begin
           else
             btn.Width:= btn.GetTextSize(btn.Caption).cx+FImages.Width+3*cATButtonIndentArrow;
         end;
+    end;
+
+    if btn.Arrow then
+    begin
+      if not Vertical then
+        btn.Width:= btn.Width+4*cATButtonArrowSize;
+      if Vertical and (btn.Caption='') and (btn.ImageIndex<0) then
+        btn.Height:= btn.Height+3*cATButtonArrowSize;
     end;
 
     //scale
@@ -314,6 +307,7 @@ begin
 end;
 
 procedure TATButtonsToolbar.AddDropdown(
+  AImageIndex: integer;
   AMenu: TPopupMenu;
   ADropdownEvent: TNotifyEvent=nil;
   const ACaption: string='';
@@ -324,6 +318,8 @@ var
 begin
   b:= TATButton.Create(Self);
   b.Parent:= Self;
+  b.Images:= FImages;
+  b.ImageIndex:= AImageIndex;
   b.Focusable:= false;
   b.Caption:= ACaption;
   b.Hint:= AHint;
@@ -331,16 +327,25 @@ begin
   b.ShowHint:= true;
   b.Flat:= true;
   b.PopupMenu:= AMenu;
+  b.Arrow:= true;
 
   if ADropdownEvent=nil then
     b.OnClick:= @PopupForDropdownClick
   else
     b.OnClick:= ADropdownEvent;
 
-  if ACaption<>'' then
-    b.Kind:= abuTextArrow
+  if AImageIndex>=0 then
+  begin
+    if b.Caption<>'' then
+      if Vertical then
+        b.Kind:= abuTextIconVert
+      else
+        b.Kind:= abuTextIconHorz
+    else
+      b.Kind:= abuIconOnly;
+  end
   else
-    b.Kind:= abuArrowOnly;
+    b.Kind:= abuTextOnly;
 end;
 
 procedure TATButtonsToolbar.AddSep;

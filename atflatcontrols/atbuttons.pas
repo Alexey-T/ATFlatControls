@@ -45,8 +45,6 @@ type
     abuIconOnly,
     abuTextIconHorz,
     abuTextIconVert,
-    abuTextArrow,
-    abuArrowOnly,
     abuSeparatorHorz,
     abuSeparatorVert
     );
@@ -57,8 +55,6 @@ const
     'icon',
     'text_icon_h',
     'text_icon_v',
-    'text_arr',
-    'arr',
     'sep_h',
     'sep_v'
     );
@@ -77,6 +73,7 @@ type
     FPicture: TPicture;
     FImages: TImageList;
     FImageIndex: integer;
+    FArrow: boolean;
     FFlat: boolean;
     FKind: TATButtonKind;
     FBoldBorder: boolean;
@@ -130,6 +127,7 @@ type
     property ImageIndex: integer read FImageIndex write SetImageIndex default -1;
     property Focusable: boolean read FFocusable write SetFocusable default true;
     property Flat: boolean read FFlat write SetFlat default false;
+    property Arrow: boolean read FArrow write FArrow default false;
     property Kind: TATButtonKind read FKind write SetKind default abuTextOnly;
     property BoldBorder: boolean read FBoldBorder write SetBoldBorder default false;
     property BoldFont: boolean read FBoldFont write SetBoldFont default false;
@@ -340,31 +338,6 @@ begin
         Canvas.TextOut(pnt1.x, pnt1.y, Caption);
       end;
 
-    abuTextArrow:
-      begin
-        pnt1.x:= (ClientWidth-GetTextSize(Caption).cx) div 2 +
-          IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
-        pnt1.y:= (ClientHeight-GetTextSize(Caption).cy) div 2 +
-          IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
-        Canvas.TextOut(pnt1.x, pnt1.y, Caption);
-
-        pnt1.x:= ClientWidth+
-          IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX) -
-          MulDiv(cATButtonArrowSize*4, Screen.PixelsPerInch, 96);
-        pnt1.y:= ClientHeight div 2 +
-          IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
-        PaintArrow(pnt1.x, pnt1.y);
-      end;
-
-    abuArrowOnly:
-      begin
-        pnt1.x:= ClientWidth div 2+
-          IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
-        pnt1.y:= ClientHeight div 2 +
-          IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
-        PaintArrow(pnt1.x, pnt1.y);
-      end;
-
     abuSeparatorVert:
       begin
         dy:= 2;
@@ -384,13 +357,21 @@ begin
       end;
   end;
 
-  //debug
-  {
-  Canvas.Font.Size:= 6;
-  Canvas.Font.Color:= clNavy;
-  Canvas.Brush.Style:= bsClear;
-  Canvas.TextOut(0, 0, cATButtonKindValues[Kind]);
-  }
+  if FArrow then
+  begin
+    //if caption not empty, paint on right side, else centered
+    if Caption<>'' then
+      pnt1.x:= ClientWidth-
+        MulDiv(cATButtonArrowSize*4, Screen.PixelsPerInch, 96)
+    else
+      pnt1.x:= ClientWidth div 2-
+        MulDiv(cATButtonArrowSize div 2, Screen.PixelsPerInch, 96);
+
+    pnt1.y:= ClientHeight div 2 +
+      IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
+
+    PaintArrow(pnt1.x, pnt1.y);
+  end;
 end;
 
 procedure TATButton.PaintIcon(AX, AY: integer);

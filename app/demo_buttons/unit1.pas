@@ -84,8 +84,8 @@ begin
   bar.SetBounds(4, 30, 400, 60);
   bar.Images:= ImageList1;
   bar.AddButton(0, @BtnColorsClick, 'Open', 'hint1', '', true);
-  bar.AddDropdown(PopupMenu1, nil, '', 'Some menu');
-  bar.AddDropdown(PopupMenu1, nil, 'Sub:', 'Does same as btn before');
+  bar.AddDropdown(-1, PopupMenu1, nil, '', 'Some menu');
+  bar.AddDropdown(0, PopupMenu1, nil, 'Sub:', 'Does same as btn before');
   bar.AddButton(1, @BtnColorsClick, '', 'hint2', '', false);
   bar.AddSep;
   bar.AddButton(2, @BtnColorsClick, '', 'hint3', '', false);
@@ -97,8 +97,8 @@ begin
   bar2.Vertical:= true;
   bar2.Images:= ImageList1;
   bar2.AddButton(0, @BtnColorsClick, 'Open', 'hint1', '', true);
-  bar2.AddDropdown(PopupMenu1, nil, '', 'Some menu');
-  bar2.AddDropdown(PopupMenu1, nil, 'Sub:', 'Does same as btn before');
+  bar2.AddDropdown(-1, PopupMenu1, nil, '', 'Some menu');
+  bar2.AddDropdown(0, PopupMenu1, nil, 'Sub:', 'Does same as btn before');
   bar2.AddButton(1, @BtnColorsClick, '', 'hint2', '', false);
   bar2.AddSep;
   bar2.AddButton(2, @BtnColorsClick, '', 'hint3', '', false);
