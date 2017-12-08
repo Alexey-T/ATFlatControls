@@ -367,10 +367,10 @@ begin
     //if caption not empty, paint on right side, else centered
     if Caption<>'' then
       pnt1.x:= ClientWidth-
-        MulDiv(cATButtonArrowSize*4, Screen.PixelsPerInch, 96)
+        Scale96ToScreen(cATButtonArrowSize*4)
     else
       pnt1.x:= ClientWidth div 2-
-        MulDiv(cATButtonArrowSize div 2, Screen.PixelsPerInch, 96);
+        Scale96ToScreen(cATButtonArrowSize div 2);
 
     pnt1.y:= ClientHeight div 2 +
       IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
@@ -392,7 +392,7 @@ procedure TATButton.PaintArrow(AX, AY: integer);
 var
   NSize: integer;
 begin
-  NSize:= MulDiv(cATButtonArrowSize, Screen.PixelsPerInch, 96);
+  NSize:= Scale96ToScreen(cATButtonArrowSize);
   CanvasPaintTriangleDown(Canvas, ATButtonTheme.ColorArrows,
     Point(AX, AY), NSize);
 end;
