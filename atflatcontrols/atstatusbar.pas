@@ -101,8 +101,8 @@ type
     function GetPanelAt(X, Y: integer): integer;
     function GetPanelData(AIndex: integer): TATStatusData;
     function PanelCount: integer;
-    procedure AddPanel(AWidth: integer; AAlign: TAlignment; const ACaption: string=
-      ''; AImageIndex: integer=-1; ATag: PtrInt=0);
+    procedure AddPanel(APanelIndex: integer; AWidth: integer; AAlign: TAlignment;
+      const ACaption: string=''; AImageIndex: integer=-1; ATag: PtrInt=0);
     procedure DeletePanel(AIndex: integer);
     procedure DeletePanels;
     property Captions[AIndex: integer]: string read GetCaption write SetCaption;
@@ -414,14 +414,18 @@ begin
 end;
 
 
-procedure TATStatus.AddPanel(AWidth: integer; AAlign: TAlignment;
+procedure TATStatus.AddPanel(APanelIndex: integer; AWidth: integer; AAlign: TAlignment;
   const ACaption: string = '';
   AImageIndex: integer=-1;
   ATag: PtrInt=0);
 var
   Data: TATStatusData;
 begin
-  Data:= FItems.Add as TATStatusData;
+  if APanelIndex<0 then
+    Data:= FItems.Add as TATStatusData
+  else
+    Data:= FItems.Insert(APanelIndex) as TATStatusData;
+
   Data.Width:= MulDiv(AWidth, ScalePercents,  100);
   Data.Align:= AAlign;
   Data.Caption:= ACaption;
