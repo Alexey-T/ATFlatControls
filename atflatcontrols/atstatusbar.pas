@@ -88,7 +88,6 @@ type
 
     procedure DoPaintTo(C: TCanvas);
     procedure DoPaintPanelTo(C: TCanvas; ARect: TRect; AData: TATStatusData);
-    function IsIndexOk(AIndex: integer): boolean;
     function DoDrawBefore(AIndex: integer; ACanvas: TCanvas; const ARect: TRect): boolean;
     function DoDrawAfter(AIndex: integer; ACanvas: TCanvas; const ARect: TRect): boolean;
     function GetCaption(AIndex: integer): string;
@@ -101,6 +100,7 @@ type
     function GetPanelAt(X, Y: integer): integer;
     function GetPanelData(AIndex: integer): TATStatusData;
     function PanelCount: integer;
+    function IsIndexOk(AIndex: integer): boolean;
     procedure AddPanel(APanelIndex: integer; AWidth: integer; AAlign: TAlignment;
       const ACaption: string=''; AImageIndex: integer=-1; ATag: PtrInt=0);
     procedure DeletePanel(AIndex: integer);
