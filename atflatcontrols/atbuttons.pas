@@ -69,7 +69,6 @@ type
     FChecked,
     FCheckable,
     FFocusable: boolean;
-    FDataString: string;
     FPicture: TPicture;
     FImages: TImageList;
     FImageIndex: integer;
@@ -78,6 +77,9 @@ type
     FKind: TATButtonKind;
     FBoldBorder: boolean;
     FBoldFont: boolean;
+    FDataString: string;
+    FDataString2: string;
+    FDataString3: string;
     function GetIconHeight: integer;
     function GetIconWidth: integer;
     function IsPressed: boolean;
@@ -108,6 +110,8 @@ type
     destructor Destroy; override;
     function CanFocus: boolean; override;
     property DataString: string read FDataString write FDataString;
+    property DataString2: string read FDataString2 write FDataString2;
+    property DataString3: string read FDataString3 write FDataString3;
     function GetTextSize(const S: string): TSize;
   published
     property Align;
