@@ -52,6 +52,7 @@ type
     procedure AddSep;
     procedure UpdateControls;
     function ButtonCount: integer;
+    function IsIndexOk(AIndex: integer): boolean;
     property Buttons[AIndex: integer]: TATButton read GetButton;
     property ScalePercents: integer read FScalePercents write FScalePercents default 100;
     property Themed: boolean read FThemed write FThemed;
@@ -239,6 +240,11 @@ end;
 function TATButtonsToolbar.ButtonCount: integer;
 begin
   Result:= ControlCount;
+end;
+
+function TATButtonsToolbar.IsIndexOk(AIndex: integer): boolean;
+begin
+  Result:= (AIndex>=0) and (AIndex<ButtonCount);
 end;
 
 function TATButtonsToolbar.GetButton(AIndex: integer): TATButton;
