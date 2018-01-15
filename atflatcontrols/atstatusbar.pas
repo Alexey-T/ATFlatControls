@@ -108,7 +108,7 @@ type
     procedure DeletePanel(AIndex: integer);
     procedure DeletePanels;
     property Captions[AIndex: integer]: string read GetCaption write SetCaption;
-    procedure DoPanelAutosize(AIndex: integer);
+    procedure DoPanelAutoFill(AIndex: integer);
     function FindPanel(ATag: PtrInt): integer;
     property ScalePercents: integer read FScalePercents write FScalePercents default 100;
   protected
@@ -513,7 +513,7 @@ begin
 end;
 
 
-procedure TATStatus.DoPanelAutosize(AIndex: integer);
+procedure TATStatus.DoPanelAutoFill(AIndex: integer);
 var
   NSize, i: integer;
   D: TATStatusData;
