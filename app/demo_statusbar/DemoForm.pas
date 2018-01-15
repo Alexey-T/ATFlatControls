@@ -48,10 +48,10 @@ begin
   t.OnPanelClick:= StatusClick;
   t.OnPanelDrawAfter:= StatusDraw;
 
-  t.AddPanel(-1, 100, taLeftJustify, 'Left', 0);
-  t.AddPanel(-1, 100, taCenter, 'Center', 1);
-  t.AddPanel(-1, 150, taLeftJustify, 'Long wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww');
-  t.AddPanel(-1, 100, taRightJustify, 'Right', 0);
+  t.AddPanel(-1, 100, taLeftJustify, 'Left', 0);//, 0, true);
+  t.AddPanel(-1, 100, taCenter, 'Center', 1);//, 0, true);
+  t.AddPanel(-1, 150, taLeftJustify, 'Long wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww');//, -1, 0, true);
+  t.AddPanel(-1, 100, taRightJustify, 'Right', 0);//, 0, true);
   t.AddPanel(-1, 80, taLeftJustify, '', 0);
   t.AddPanel(-1, 80, taCenter, '', 0);
   t.AddPanel(-1, 80, taRightJustify, '', 0);
@@ -73,9 +73,9 @@ begin
   t0.Font.Size:= 13;
   t0.Height:= 32;
 
-  t0.AddPanel(-1, 50, taRightJustify, 'Rt');
-  t0.AddPanel(-1, 50, taRightJustify, 'Rt2');
-  t0.AddPanel(-1, 100, taCenter, 'Center');
+  t0.AddPanel(-1, 50, taRightJustify, 'Rt');//, -1, 0, true);
+  t0.AddPanel(-1, 50, taRightJustify, 'Rt2');//, -1, 0, true);
+  t0.AddPanel(-1, 100, taCenter, 'Center');//, -1, 0, true);
   t0.AddPanel(-1, 300, taLeftJustify, 'Long wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww');
 end;
 

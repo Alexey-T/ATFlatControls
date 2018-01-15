@@ -58,7 +58,7 @@ type
     ACanvas: TCanvas; const ARect: TRect; var ACanDraw: boolean) of object;
 
 const
-  cDefStatusbarPadding = 1;
+  cDefStatusbarPadding = 2;
   cDefStatusbarColorBack = $E0E0E0;
   cDefStatusbarColorBorderTop = clGray;
   cDefStatusbarColorBorderR = clGray;
@@ -104,11 +104,12 @@ type
     function PanelCount: integer;
     function IsIndexOk(AIndex: integer): boolean;
     procedure AddPanel(APanelIndex: integer; AWidth: integer; AAlign: TAlignment;
-      const ACaption: string=''; AImageIndex: integer=-1; ATag: PtrInt=0);
+      const ACaption: string=''; AImageIndex: integer=-1; ATag: PtrInt=0; AAutoSize: boolean=false);
     procedure DeletePanel(AIndex: integer);
     procedure DeletePanels;
     property Captions[AIndex: integer]: string read GetCaption write SetCaption;
     procedure DoPanelStretch(AIndex: integer);
+    procedure DoPanelAutoWidth(AIndex: integer);
     function FindPanel(ATag: PtrInt): integer;
     property ScalePercents: integer read FScalePercents write FScalePercents default 100;
   protected
@@ -283,11 +284,11 @@ begin
 
     case AData.Align of
       taLeftJustify:
-        NOffsetLeft:= FPadding;
+        NOffsetLeft:= 0;
       taRightJustify:
-        NOffsetLeft:= RectText.Right-RectText.Left-TextSize.cx - FPadding*2;
+        NOffsetLeft:= RectText.Right-RectText.Left-TextSize.cx;
       taCenter:
-        NOffsetLeft:= (RectText.Right-RectText.Left-TextSize.cx) div 2 - FPadding;
+        NOffsetLeft:= (RectText.Right-RectText.Left-TextSize.cx) div 2;
     end;
 
     if AData.ColorFont<>clNone then
@@ -354,13 +355,23 @@ end;
 
 procedure TATStatus.DoPaintTo(C: TCanvas);
 var
-  i: integer;
   ARect: TRect;
+  D: TATStatusData;
+  i: integer;
 begin
   C.Brush.Color:= Color;
   C.FillRect(ClientRect);
   C.Font.Assign(Self.Font);
 
+  //autosize panels
+  for i:= 0 to PanelCount-1 do
+  begin
+    D:= GetPanelData(i);
+    if Assigned(D) and D.AutoSize then
+      DoPanelAutoWidth(i);
+  end;
+
+  //paint panels
   for i:= 0 to PanelCount-1 do
   begin
     ARect:= GetPanelRect(i);
@@ -420,7 +431,8 @@ end;
 procedure TATStatus.AddPanel(APanelIndex: integer; AWidth: integer; AAlign: TAlignment;
   const ACaption: string = '';
   AImageIndex: integer=-1;
-  ATag: PtrInt=0);
+  ATag: PtrInt=0;
+  AAutoSize: boolean=false);
 var
   Data: TATStatusData;
 begin
@@ -433,6 +445,7 @@ begin
   Data.Align:= AAlign;
   Data.Caption:= ACaption;
   Data.ImageIndex:= AImageIndex;
+  Data.AutoSize:= AAutoSize;
   Data.Tag:= ATag;
   Invalidate;
 end;
@@ -533,6 +546,28 @@ begin
   if Assigned(D) then
     D.Width:= Max(0, Width-NSize);
 end;
+
+
+procedure TATStatus.DoPanelAutoWidth(AIndex: integer);
+var
+  NSize: integer;
+  D: TATStatusData;
+begin
+  D:= GetPanelData(AIndex);
+  if Assigned(D) then
+  begin
+    NSize:= FPadding*2+2;
+    if D.ImageIndex>=0 then
+      Inc(NSize, Images.Width+FPadding);
+
+    Canvas.Font.Assign(Font);
+    if D.Caption<>'' then
+      Inc(NSize, Canvas.TextWidth(D.Caption));
+
+    D.Width:= NSize;
+  end;
+end;
+
 
 function TATStatus.FindPanel(ATag: PtrInt): integer;
 var
