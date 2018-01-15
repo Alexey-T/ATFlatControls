@@ -75,8 +75,8 @@ begin
 
   t0.AddPanel(-1, 50, taRightJustify, 'Rt');//, -1, 0, true);
   t0.AddPanel(-1, 50, taRightJustify, 'Rt2');//, -1, 0, true);
+  t0.AddPanel(-1, 300, taLeftJustify, 'Long wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww', -1, 0, false, true);
   t0.AddPanel(-1, 100, taCenter, 'Center');//, -1, 0, true);
-  t0.AddPanel(-1, 300, taLeftJustify, 'Long wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww');
 end;
 
 procedure TForm1.bAddClick(Sender: TObject);

@@ -36,6 +36,7 @@ type
     FCaption: string;
     FImageIndex: integer;
     FAutoSize: boolean;
+    FAutoStretch: boolean;
     FColorFont: integer;
     FColorBack: integer;
     FTag: PtrInt;
@@ -47,6 +48,7 @@ type
     property Caption: string read FCaption write FCaption;
     property ImageIndex: integer read FImageIndex write FImageIndex default -1;
     property AutoSize: boolean read FAutoSize write FAutoSize default false;
+    property AutoStretch: boolean read FAutoStretch write FAutoStretch default false;
     property ColorFont: TColor read FColorFont write FColorFont default clNone;
     property ColorBack: TColor read FColorBack write FColorBack default clNone;
     property Tag: PtrInt read FTag write FTag default 0;
@@ -104,7 +106,9 @@ type
     function PanelCount: integer;
     function IsIndexOk(AIndex: integer): boolean;
     procedure AddPanel(APanelIndex: integer; AWidth: integer; AAlign: TAlignment;
-      const ACaption: string=''; AImageIndex: integer=-1; ATag: PtrInt=0; AAutoSize: boolean=false);
+      const ACaption: string=''; AImageIndex: integer=-1; ATag: PtrInt=0;
+      AAutoSize: boolean=false;
+      AAutoStretch: boolean=false);
     procedure DeletePanel(AIndex: integer);
     procedure DeletePanels;
     property Captions[AIndex: integer]: string read GetCaption write SetCaption;
@@ -168,6 +172,7 @@ begin
   FAlign:= taLeftJustify;
   FImageIndex:= -1;
   FAutoSize:= false;
+  FAutoStretch:= false;
   FWidth:= 100;
   FColorFont:= clNone;
   FColorBack:= clNone;
@@ -363,12 +368,23 @@ begin
   C.FillRect(ClientRect);
   C.Font.Assign(Self.Font);
 
-  //autosize panels
+  //consider AutoSize
   for i:= 0 to PanelCount-1 do
   begin
     D:= GetPanelData(i);
     if Assigned(D) and D.AutoSize then
       DoPanelAutoWidth(i);
+  end;
+
+  //consider AutoStretch
+  for i:= 0 to PanelCount-1 do
+  begin
+    D:= GetPanelData(i);
+    if Assigned(D) and not D.AutoSize and D.AutoStretch then
+    begin
+      DoPanelStretch(i);
+      Break; //allowed for single panel
+    end;
   end;
 
   //paint panels
@@ -432,7 +448,8 @@ procedure TATStatus.AddPanel(APanelIndex: integer; AWidth: integer; AAlign: TAli
   const ACaption: string = '';
   AImageIndex: integer=-1;
   ATag: PtrInt=0;
-  AAutoSize: boolean=false);
+  AAutoSize: boolean=false;
+  AAutoStretch: boolean=false);
 var
   Data: TATStatusData;
 begin
@@ -446,6 +463,7 @@ begin
   Data.Caption:= ACaption;
   Data.ImageIndex:= AImageIndex;
   Data.AutoSize:= AAutoSize;
+  Data.AutoStretch:= AAutoStretch;
   Data.Tag:= ATag;
   Invalidate;
 end;
