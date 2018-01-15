@@ -35,6 +35,7 @@ type
     FAlign: TAlignment;
     FCaption: string;
     FImageIndex: integer;
+    FAutoSize: boolean;
     FColorFont: integer;
     FColorBack: integer;
     FTag: PtrInt;
@@ -45,6 +46,7 @@ type
     property Align: TAlignment read FAlign write FAlign default taLeftJustify;
     property Caption: string read FCaption write FCaption;
     property ImageIndex: integer read FImageIndex write FImageIndex default -1;
+    property AutoSize: boolean read FAutoSize write FAutoSize default false;
     property ColorFont: TColor read FColorFont write FColorFont default clNone;
     property ColorBack: TColor read FColorBack write FColorBack default clNone;
     property Tag: PtrInt read FTag write FTag default 0;
@@ -164,6 +166,7 @@ begin
   inherited;
   FAlign:= taLeftJustify;
   FImageIndex:= -1;
+  FAutoSize:= false;
   FWidth:= 100;
   FColorFont:= clNone;
   FColorBack:= clNone;
