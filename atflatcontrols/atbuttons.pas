@@ -437,7 +437,7 @@ begin
   if FArrow then
   begin
     //if caption not empty, paint on right side, else centered
-    if (Caption<>'') or (ImageIndex>=0) then
+    if (Caption<>'') or (ImageIndex>=0) or (FKind=abuTextChoice) then
       pnt1.x:= ClientWidth - Scale96ToScreen(cATButtonArrowSize*4)
     else
       pnt1.x:= ClientWidth div 2 - Scale96ToScreen(cATButtonArrowSize div 2);

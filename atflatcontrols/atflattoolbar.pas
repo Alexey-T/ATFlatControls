@@ -371,7 +371,7 @@ var
 begin
   b:= TATButton.Create(Self);
   b.Parent:= Self;
-  b.Caption:= '??';
+  b.Caption:= '';
   b.Width:= AWidth;
   b.OnClick:= AOnClick;
   b.Focusable:= false;
