@@ -35,6 +35,7 @@ type
     PressedCaptionShiftX: integer;
     ChoiceLeftIndent: integer;
     BoldBorderWidth: integer;
+    ChoiceBorderWidth: integer;
   end;
 
 var
@@ -260,6 +261,7 @@ var
   r: TRect;
   pnt1, pnt2: TPoint;
   size, dy, NSizeArrow, i: integer;
+  bUseBack, bUseBorder: boolean;
   S: string;
 begin
   inherited;
@@ -269,23 +271,36 @@ begin
   else
     NSizeArrow:= 0;
 
-  if not FFlat or FChecked or
-    (FOver and not (FKind in [abuSeparatorHorz, abuSeparatorVert])) then
+  bUseBack:=
+    (not FFlat)
+    or FChecked
+    or (FOver and not (FKind in [abuSeparatorHorz, abuSeparatorVert]));
+  bUseBorder:= bUseBack
+    or (FKind=abuTextChoice);
+
+  r:= ClientRect;
+
+  if bUseBack then
   begin
-    //----draw bg
-    r:= ClientRect;
     Canvas.Brush.Color:=
       IfThen(not Enabled, ATButtonTheme.ColorBgDisabled,
        IfThen(FChecked, ATButtonTheme.ColorBgChecked,
         IfThen(FOver, ATButtonTheme.ColorBgOver, ATButtonTheme.ColorBgPassive)));
     Canvas.FillRect(r);
+  end;
 
-    //----draw border
+  if bUseBorder then
+  begin
     Canvas.Brush.Style:= bsClear;
 
-    Canvas.Pen.Color:=
-      IfThen(FOver, ATButtonTheme.ColorBorderOver,
-        IfThen(Focused, ATButtonTheme.ColorBorderFocused, ATButtonTheme.ColorBorderPassive));
+    if FOver then
+      Canvas.Pen.Color:= ATButtonTheme.ColorBorderOver
+    else
+    if Focused then
+      Canvas.Pen.Color:= ATButtonTheme.ColorBorderFocused
+    else
+      Canvas.Pen.Color:= ATButtonTheme.ColorBorderPassive;
+
     Canvas.Rectangle(r);
 
     size:= 1;
@@ -294,6 +309,9 @@ begin
     else
     if BoldBorder then
       size:= ATButtonTheme.BoldBorderWidth
+    else
+    if Kind=abuTextChoice then
+      size:= ATButtonTheme.ChoiceBorderWidth
     else
     if FOver then
       size:= ATButtonTheme.MouseoverBorderWidth;
@@ -639,6 +657,7 @@ initialization
     PressedCaptionShiftY:= 1;
     ChoiceLeftIndent:= 5;
     BoldBorderWidth:= 3;
+    ChoiceBorderWidth:= 1;
   end;
 
 end.

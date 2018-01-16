@@ -49,6 +49,13 @@ type
       const ACaption: string='';
       const AHint: string='';
       const ADataString: string='');
+    procedure AddChoice(
+      AOnClick: TNotifyEvent;
+      AWidth: integer;
+      AItems: TStrings;
+      AItemIndex: integer;
+      const AHint: string='';
+      const ADataString: string='');
     procedure AddSep;
     procedure UpdateControls;
     function ButtonCount: integer;
@@ -354,6 +361,27 @@ begin
   end
   else
     b.Kind:= abuTextOnly;
+end;
+
+procedure TATFlatToolbar.AddChoice(AOnClick: TNotifyEvent;
+  AWidth: integer; AItems: TStrings; AItemIndex: integer;
+  const AHint: string; const ADataString: string);
+var
+  b: TATButton;
+begin
+  b:= TATButton.Create(Self);
+  b.Parent:= Self;
+  b.Caption:= '??';
+  b.Width:= AWidth;
+  b.OnClick:= AOnClick;
+  b.Focusable:= false;
+  b.Flat:= true;
+  b.Arrow:= true;
+  b.Kind:= abuTextChoice;
+  b.Items.AddStrings(AItems);
+  b.ItemIndex:= AItemIndex;
+  b.Hint:= AHint;
+  b.DataString:= ADataString;
 end;
 
 procedure TATFlatToolbar.AddSep;

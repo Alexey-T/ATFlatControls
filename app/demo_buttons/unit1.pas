@@ -30,6 +30,7 @@ type
     { private declarations }
     procedure BtnToggleClick(Sender: TObject);
     procedure BtnColorsClick(Sender: TObject);
+    procedure BtnChoiceClick(Sender: TObject);
   public
     { public declarations }
     b, b2, b3, b_choice, b_colors: TATButton;
@@ -49,7 +50,14 @@ procedure TfmMain.FormCreate(Sender: TObject);
 var
   bmp: TBitmap;
   fn: string;
+  List: TStringList;
 begin
+  List:= TStringList.Create;
+  List.Add('item-a');
+  List.Add('item-bb');
+  List.Add('item-cccc');
+  List.Add('item-ddddddd');
+
   bmp:= TBitmap.Create;
   fn:= ExtractFilepath(Application.Exename)+'bmp1.bmp';
   if FileExists(fn) then
@@ -104,7 +112,8 @@ begin
   bar.AddButton(1, @BtnColorsClick, '', 'hint2', '', false);
   bar.AddSep;
   bar.AddButton(2, @BtnColorsClick, '', 'hint3', '', false);
-  bar.AddButton(-1, nil, 'Cap', 'hint4', '', true);
+  //bar.AddButton(-1, nil, 'Cap', 'hint4', '', true);
+  bar.AddChoice(@BtnChoiceClick, 80, List, 0, 'choice combo', '');
 
   bar2:= TATFlatToolbar.create(self);
   bar2.Parent:= PanelRight;
@@ -168,6 +177,11 @@ begin
     ColorBgChecked:= SomeColor;
   end;
   Invalidate;
+end;
+
+procedure TfmMain.BtnChoiceClick(Sender: TObject);
+begin
+  ShowMessage('choice changed');
 end;
 
 end.
