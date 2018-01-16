@@ -48,9 +48,12 @@ implementation
 procedure TfmMain.FormCreate(Sender: TObject);
 var
   bmp: TBitmap;
+  fn: string;
 begin
   bmp:= TBitmap.Create;
-  bmp.LoadFromFile(ExtractFilepath(Application.Exename)+'bmp1.bmp');
+  fn:= ExtractFilepath(Application.Exename)+'bmp1.bmp';
+  if FileExists(fn) then
+    bmp.LoadFromFile(fn);
 
   b:= TATButton.create(self);
   b.parent:= self;
