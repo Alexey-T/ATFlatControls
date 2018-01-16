@@ -9,7 +9,7 @@ interface
 
 uses
   ATButtons, atflatcontrols_register, ATListbox, ATLinkLabel, 
-  ATButtonsToolbar, ATPanelSimple, ATPanelColor, ATScrollBar, ATStatusBar, 
+  ATFlatToolbar, ATPanelSimple, ATPanelColor, ATScrollBar, ATStatusBar, 
   ATGauge, LazarusPackageIntf;
 
 implementation

@@ -243,7 +243,7 @@ procedure TATButton.Paint;
 var
   r: TRect;
   pnt1, pnt2: TPoint;
-  size, dx, dy, NSizeArrow, i: integer;
+  size, dy, NSizeArrow, i: integer;
 begin
   inherited;
 

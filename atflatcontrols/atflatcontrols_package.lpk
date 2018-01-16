@@ -14,7 +14,7 @@
     </CompilerOptions>
     <Description Value="Custom-drawn controls, used in CudaText:
 - ATButton
-- ATButtonsToolbar
+- ATFlatToolbar
 - ATGauge
 - ATListbox
 - ATScrollbar
@@ -41,8 +41,8 @@ and several simple controls."/>
         <UnitName Value="ATLinkLabel"/>
       </Item4>
       <Item5>
-        <Filename Value="atbuttonstoolbar.pas"/>
-        <UnitName Value="ATButtonsToolbar"/>
+        <Filename Value="atflattoolbar.pas"/>
+        <UnitName Value="ATFlatToolbar"/>
       </Item5>
       <Item6>
         <Filename Value="atpanelsimple.pas"/>

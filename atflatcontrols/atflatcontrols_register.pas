@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, 
-  ATButtons, ATButtonsToolbar, 
+  ATButtons, ATFlatToolbar, 
   ATListbox, ATLinkLabel, ATScrollbar, ATStatusbar,
   ATPanelSimple, ATPanelColor, ATGauge,
   LResources;
@@ -19,7 +19,7 @@ procedure Register;
 begin
   RegisterComponents('Misc', [
     TATButton,
-    TATButtonsToolbar,
+    TATFlatToolbar,
     TATListbox,
     TATScroll,
     TATStatus,

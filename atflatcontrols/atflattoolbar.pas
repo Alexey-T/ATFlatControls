@@ -3,7 +3,7 @@ Copyright (C) Alexey Torgashin, uvviewsoft.com
 License: MPL 2.0 or LGPL
 }
 
-unit ATButtonsToolbar;
+unit ATFlatToolbar;
 
 {$mode objfpc}{$H+}
 
@@ -15,9 +15,9 @@ uses
   LclType;
 
 type
-  { TATButtonsToolbar }
+  { TATFlatToolbar }
 
-  TATButtonsToolbar = class(TCustomControl)
+  TATFlatToolbar = class(TCustomControl)
   private
     FImages: TImageList;
     FVertical: boolean;
@@ -75,9 +75,9 @@ type
 
 implementation
 
-{ TATButtonsToolbar }
+{ TATFlatToolbar }
 
-constructor TATButtonsToolbar.Create(AOwner: TComponent);
+constructor TATFlatToolbar.Create(AOwner: TComponent);
 begin
   inherited;
   AutoSize:= false;
@@ -91,17 +91,17 @@ begin
   FWrapable:= false;
 end;
 
-destructor TATButtonsToolbar.Destroy;
+destructor TATFlatToolbar.Destroy;
 begin
   inherited;
 end;
 
-function TATButtonsToolbar.CanFocus: boolean;
+function TATFlatToolbar.CanFocus: boolean;
 begin
   Result:= false;
 end;
 
-procedure TATButtonsToolbar.UpdateControls;
+procedure TATFlatToolbar.UpdateControls;
 var
   btn: TATButton;
   i: integer;
@@ -183,7 +183,7 @@ begin
     Controls[i].Invalidate;
 end;
 
-procedure TATButtonsToolbar.UpdateAnchors;
+procedure TATFlatToolbar.UpdateAnchors;
 var
   CtlSource, Ctl: TControl;
   akind, akind2: TAnchorKind;
@@ -232,24 +232,24 @@ begin
   end;
 end;
 
-procedure TATButtonsToolbar.Resize;
+procedure TATFlatToolbar.Resize;
 begin
   inherited;
   if Wrapable and not Vertical then
     UpdateAnchors;
 end;
 
-function TATButtonsToolbar.ButtonCount: integer;
+function TATFlatToolbar.ButtonCount: integer;
 begin
   Result:= ControlCount;
 end;
 
-function TATButtonsToolbar.IsIndexOk(AIndex: integer): boolean;
+function TATFlatToolbar.IsIndexOk(AIndex: integer): boolean;
 begin
   Result:= (AIndex>=0) and (AIndex<ButtonCount);
 end;
 
-function TATButtonsToolbar.GetButton(AIndex: integer): TATButton;
+function TATFlatToolbar.GetButton(AIndex: integer): TATButton;
 begin
   Result:= nil;
   if (AIndex>=0) and (AIndex<ControlCount) then
@@ -257,7 +257,7 @@ begin
       Result:= Controls[AIndex] as TATButton;
 end;
 
-function TATButtonsToolbar.DoScale(N: integer): integer;
+function TATFlatToolbar.DoScale(N: integer): integer;
 begin
   if ScalePercents<=100 then
     Result:= N
@@ -265,21 +265,21 @@ begin
     Result:= MulDiv(N, ScalePercents, 100);
 end;
 
-procedure TATButtonsToolbar.SetVertical(AValue: boolean);
+procedure TATFlatToolbar.SetVertical(AValue: boolean);
 begin
   if FVertical=AValue then Exit;
   FVertical:= AValue;
   UpdateControls;
 end;
 
-procedure TATButtonsToolbar.SetWrapable(AValue: boolean);
+procedure TATFlatToolbar.SetWrapable(AValue: boolean);
 begin
   if FWrapable=AValue then Exit;
   FWrapable:= AValue;
   UpdateControls;
 end;
 
-procedure TATButtonsToolbar.AddButton(AImageIndex: integer;
+procedure TATFlatToolbar.AddButton(AImageIndex: integer;
   AOnClick: TNotifyEvent; const ACaption, AHint, ADataString: string;
   AShowCaption: boolean);
 var
@@ -314,7 +314,7 @@ begin
   end;
 end;
 
-procedure TATButtonsToolbar.AddDropdown(
+procedure TATFlatToolbar.AddDropdown(
   AImageIndex: integer;
   AMenu: TPopupMenu;
   ADropdownEvent: TNotifyEvent=nil;
@@ -356,7 +356,7 @@ begin
     b.Kind:= abuTextOnly;
 end;
 
-procedure TATButtonsToolbar.AddSep;
+procedure TATFlatToolbar.AddSep;
 var
   b: TATButton;
 begin
@@ -372,7 +372,7 @@ begin
   b.Enabled:= false;
 end;
 
-procedure TATButtonsToolbar.PopupForDropdownClick(Sender: TObject);
+procedure TATFlatToolbar.PopupForDropdownClick(Sender: TObject);
 var
   C: TControl;
   P: TPoint;

@@ -223,8 +223,6 @@ begin
 end;
 
 destructor TATStatus.Destroy;
-var
-  i: integer;
 begin
   FItems.Clear;
   FreeAndNil(FItems);
