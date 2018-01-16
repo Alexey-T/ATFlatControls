@@ -10,7 +10,7 @@ unit ATButtons;
 interface
 
 uses
-  Classes, SysUtils, Graphics, Controls,
+  Classes, SysUtils, Graphics, Controls, Menus,
   Types, Math, Forms,
   LCLType;
 
@@ -85,6 +85,8 @@ type
     FDataString3: string;
     FItems: TStringList;
     FItemIndex: integer;
+    FPopup: TPopupMenu;
+    procedure DoChoiceClick(Sender: TObject);
     function GetIconHeight: integer;
     function GetIconWidth: integer;
     function IsPressed: boolean;
@@ -98,6 +100,7 @@ type
     procedure SetImages(AValue: TImageList);
     procedure SetKind(AValue: TATButtonKind);
     procedure SetBoldBorder(AValue: boolean);
+    procedure ShowChoiceMenu;
   protected
     procedure Click; override;
     procedure Paint; override;
@@ -230,6 +233,12 @@ end;
 
 procedure TATButton.Click;
 begin
+  if FKind=abuTextChoice then
+  begin
+    ShowChoiceMenu;
+    exit
+  end;
+
   inherited;
   if FCheckable then
     FChecked:= not FChecked;
@@ -572,6 +581,38 @@ begin
   else
     Canvas.Font.Style:= ATButtonTheme.FontStyles;
   Result:= Canvas.TextExtent(S);
+end;
+
+procedure TATButton.DoChoiceClick(Sender: TObject);
+begin
+  FItemIndex:= (Sender as TComponent).Tag;
+  Invalidate;
+  inherited Click;
+end;
+
+procedure TATButton.ShowChoiceMenu;
+var
+  mi: TMenuItem;
+  i: integer;
+  P: TPoint;
+begin
+  if not Assigned(FPopup) then
+    FPopup:= TPopupMenu.Create(Self);
+
+  FPopup.Items.Clear;
+  for i:= 0 to FItems.Count-1 do
+  begin
+    mi:= TMenuItem.Create(Self);
+    mi.Caption:= FItems[i];
+    mi.Tag:= i;
+    mi.RadioItem:= true;
+    mi.Checked:= i=FItemIndex;
+    mi.OnClick:= @DoChoiceClick;
+    FPopup.Items.Add(mi);
+  end;
+
+  P:= ClientToScreen(Point(0, Height));
+  FPopup.PopUp(P.X, P.Y);
 end;
 
 
