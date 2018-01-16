@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls, Menus, ATButtons, ATButtonsToolbar;
+  ExtCtrls, Menus, ATButtons, ATFlatToolbar;
 
 type
   { TfmMain }
@@ -33,7 +33,7 @@ type
   public
     { public declarations }
     b, b2, b3, b_colors: TATButton;
-    bar, bar2: TATButtonsToolbar;
+    bar, bar2: TATFlatToolbar;
   end;
 
 var
@@ -79,7 +79,7 @@ begin
   b_colors.OnClick:= @BtnColorsClick;
   b_colors.BoldFont:= true;
 
-  bar:= TATButtonsToolbar.create(self);
+  bar:= TATFlatToolbar.create(self);
   bar.Parent:= PanelToolbar;
   bar.SetBounds(4, 30, 400, 60);
   bar.Images:= ImageList1;
@@ -91,7 +91,7 @@ begin
   bar.AddButton(2, @BtnColorsClick, '', 'hint3', '', false);
   bar.AddButton(-1, nil, 'Cap', 'hint4', '', true);
 
-  bar2:= TATButtonsToolbar.create(self);
+  bar2:= TATFlatToolbar.create(self);
   bar2.Parent:= PanelRight;
   bar2.Align:= alClient;
   bar2.Vertical:= true;
