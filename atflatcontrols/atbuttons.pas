@@ -33,7 +33,7 @@ type
     PressedBorderWidth: integer;
     PressedCaptionShiftY: integer;
     PressedCaptionShiftX: integer;
-    ChoiceLeftIndent: integer;
+    ChoiceIndent: integer;
     BoldBorderWidth: integer;
     ChoiceBorderWidth: integer;
   end;
@@ -278,7 +278,7 @@ procedure TATButton.Paint;
 var
   r: TRect;
   pnt1, pnt2: TPoint;
-  NSize, dy, NSizeArrow, i: integer;
+  NSize, dy, NSizeArrow: integer;
   bUseBack, bUseBorder: boolean;
   NColor: TColor;
   S: string;
@@ -393,7 +393,7 @@ begin
 
     abuTextChoice:
       begin
-        pnt1.x:= ATButtonTheme.ChoiceLeftIndent +
+        pnt1.x:= ATButtonTheme.ChoiceIndent +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
         pnt1.y:= (ClientHeight-GetTextSize('W').cy) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
@@ -664,7 +664,7 @@ initialization
     PressedBorderWidth:= 3;
     PressedCaptionShiftX:= 0;
     PressedCaptionShiftY:= 1;
-    ChoiceLeftIndent:= 5;
+    ChoiceIndent:= 5;
     BoldBorderWidth:= 3;
     ChoiceBorderWidth:= 1;
   end;
