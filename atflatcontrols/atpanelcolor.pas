@@ -48,6 +48,8 @@ implementation
 constructor TATPanelColor.Create(AOwner: TComponent);
 begin
   inherited;
+  Width:= 150;
+  Height:= 100;
   Caption:= '';
   Color:= clWhite;
   BorderStyle:= bsNone;

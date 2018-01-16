@@ -47,7 +47,7 @@ begin
     csAcceptsControls,
     csNoFocus];
 
-  Width:= 180;
+  Width:= 150;
   Height:= 100;
   Caption:= '';
 end;
