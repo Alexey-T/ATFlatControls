@@ -281,6 +281,7 @@ var
   NSize, dy, NSizeArrow: integer;
   bUseBack, bUseBorder: boolean;
   NColor: TColor;
+  TextSize: TSize;
   S: string;
 begin
   inherited;
@@ -356,15 +357,17 @@ begin
 
     abuTextOnly:
       begin
-        pnt1.x:= (ClientWidth-GetTextSize(Caption).cx-NSizeArrow) div 2 +
+        TextSize:= GetTextSize(Caption);
+        pnt1.x:= (ClientWidth-TextSize.cx-NSizeArrow) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
-        pnt1.y:= (ClientHeight-GetTextSize(Caption).cy) div 2 +
+        pnt1.y:= (ClientHeight-TextSize.cy) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
         Canvas.TextOut(pnt1.x, pnt1.y, Caption);
       end;
 
     abuTextIconHorz:
       begin
+        TextSize:= GetTextSize(Caption);
         pnt1.x:= cATButtonIndent +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
         pnt1.y:= (ClientHeight-GetIconHeight) div 2 +
@@ -372,13 +375,14 @@ begin
         PaintIcon(pnt1.x, pnt1.y);
 
         Inc(pnt1.x, GetIconWidth+cATButtonIndentArrow);
-        pnt1.y:= (ClientHeight-GetTextSize(Caption).cy) div 2 +
+        pnt1.y:= (ClientHeight-TextSize.cy) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
         Canvas.TextOut(pnt1.x, pnt1.y, Caption);
       end;
 
     abuTextIconVert:
       begin
+        TextSize:= GetTextSize(Caption);
         pnt1.x:= (ClientWidth-GetIconWidth-NSizeArrow) div 2+
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
         pnt1.y:= cATButtonIndent +
@@ -386,7 +390,7 @@ begin
         PaintIcon(pnt1.x, pnt1.y);
 
         Inc(pnt1.y, GetIconHeight+cATButtonIndentArrow);
-        pnt1.x:= (ClientWidth-GetTextSize(Caption).cx-NSizeArrow) div 2 +
+        pnt1.x:= (ClientWidth-TextSize.cx-NSizeArrow) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
         Canvas.TextOut(pnt1.x, pnt1.y, Caption);
       end;
