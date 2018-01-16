@@ -32,7 +32,7 @@ type
     procedure BtnColorsClick(Sender: TObject);
   public
     { public declarations }
-    b, b2, b3, b_colors: TATButton;
+    b, b2, b3, b_choice, b_colors: TATButton;
     bar, bar2: TATFlatToolbar;
   end;
 
@@ -72,6 +72,18 @@ begin
   b3.SetBounds(130, 90, 80, 30);
   b3.Caption:= 'Check2';
   b3.Checkable:= true;
+
+  b_choice:= TATButton.create(self);
+  b_choice.parent:= self;
+  b_choice.SetBounds(210, 90, 100, 30);
+  b_choice.Caption:= '_________';
+  b_choice.Kind:= abuTextChoice;
+  b_choice.Arrow:= true;
+  b_choice.Focusable:= false;
+  b_choice.Items.Add('item-a');
+  b_choice.Items.Add('item-b');
+  b_choice.Items.Add('item-c');
+  b_choice.ItemIndex:= 1;
 
   b_colors:= TATButton.create(self);
   b_colors.parent:= self;

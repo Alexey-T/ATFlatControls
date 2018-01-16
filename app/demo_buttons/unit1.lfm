@@ -14,7 +14,7 @@ object fmMain: TfmMain
     Left = 24
     Height = 24
     Top = 208
-    Width = 151
+    Width = 148
     Caption = 'buttons focusable'
     Checked = True
     OnChange = chkFocusChange
@@ -25,7 +25,7 @@ object fmMain: TfmMain
     Left = 24
     Height = 24
     Top = 232
-    Width = 139
+    Width = 136
     Caption = 'buttons enabled'
     Checked = True
     OnChange = chkEnChange
@@ -46,7 +46,7 @@ object fmMain: TfmMain
       Left = 6
       Height = 17
       Top = 3
-      Width = 125
+      Width = 122
       Caption = 'ATButtonsToolbar'
       ParentColor = False
     end
@@ -55,7 +55,7 @@ object fmMain: TfmMain
     Left = 8
     Height = 17
     Top = 128
-    Width = 101
+    Width = 98
     Caption = 'Change colors:'
     ParentColor = False
   end

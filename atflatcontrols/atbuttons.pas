@@ -33,6 +33,7 @@ type
     PressedBorderWidth: integer;
     PressedCaptionShiftY: integer;
     PressedCaptionShiftX: integer;
+    ChoiceLeftIndent: integer;
     BoldBorderWidth: integer;
   end;
 
@@ -46,7 +47,8 @@ type
     abuTextIconHorz,
     abuTextIconVert,
     abuSeparatorHorz,
-    abuSeparatorVert
+    abuSeparatorVert,
+    abuTextChoice
     );
 
 const
@@ -56,7 +58,8 @@ const
     'text_icon_h',
     'text_icon_v',
     'sep_h',
-    'sep_v'
+    'sep_v',
+    'text_choice'
     );
 
 type
@@ -80,6 +83,8 @@ type
     FDataString: string;
     FDataString2: string;
     FDataString3: string;
+    FItems: TStringList;
+    FItemIndex: integer;
     function GetIconHeight: integer;
     function GetIconWidth: integer;
     function IsPressed: boolean;
@@ -113,6 +118,8 @@ type
     property DataString2: string read FDataString2 write FDataString2;
     property DataString3: string read FDataString3 write FDataString3;
     function GetTextSize(const S: string): TSize;
+    property Items: TStringList read FItems;
+    property ItemIndex: integer read FItemIndex write FItemIndex;
   published
     property Align;
     property Anchors;
@@ -244,6 +251,7 @@ var
   r: TRect;
   pnt1, pnt2: TPoint;
   size, dy, NSizeArrow, i: integer;
+  S: string;
 begin
   inherited;
 
@@ -345,6 +353,19 @@ begin
         pnt1.x:= (ClientWidth-GetTextSize(Caption).cx-NSizeArrow) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
         Canvas.TextOut(pnt1.x, pnt1.y, Caption);
+      end;
+
+    abuTextChoice:
+      begin
+        pnt1.x:= ATButtonTheme.ChoiceLeftIndent +
+          IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
+        pnt1.y:= (ClientHeight-GetTextSize('W').cy) div 2 +
+          IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
+        if (FItemIndex>=0) and (FItemIndex<FItems.Count) then
+          S:= FItems[FItemIndex]
+        else
+          S:= '?';
+        Canvas.TextOut(pnt1.x, pnt1.y, S);
       end;
 
     abuSeparatorVert:
@@ -527,10 +548,13 @@ begin
   FImageIndex:= -1;
   FKind:= abuTextOnly;
   FBoldBorder:= false;
+  FItems:= TStringList.Create;
+  FItemIndex:= -1;
 end;
 
 destructor TATButton.Destroy;
 begin
+  FItems.Free;
   FPicture.Free;
 
   inherited;
@@ -572,6 +596,7 @@ initialization
     PressedBorderWidth:= 3;
     PressedCaptionShiftX:= 0;
     PressedCaptionShiftY:= 1;
+    ChoiceLeftIndent:= 5;
     BoldBorderWidth:= 3;
   end;
 
