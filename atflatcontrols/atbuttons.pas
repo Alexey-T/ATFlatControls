@@ -88,6 +88,7 @@ type
     FItemIndex: integer;
     FPopup: TPopupMenu;
     procedure DoChoiceClick(Sender: TObject);
+    procedure DoPaintBorder(C: TCanvas; R: TRect; AColor: TColor; AWidth: integer);
     function GetIconHeight: integer;
     function GetIconWidth: integer;
     function IsPressed: boolean;
@@ -256,12 +257,30 @@ begin
   Result:= FPressed and FOver;
 end;
 
+procedure TATButton.DoPaintBorder(C: TCanvas; R: TRect; AColor: TColor; AWidth: integer);
+var
+  i: integer;
+begin
+  C.Brush.Style:= bsClear;
+  C.Pen.Color:= AColor;
+  C.Rectangle(R);
+
+  for i:= 1 to AWidth-1 do
+  begin
+    InflateRect(R, -1, -1);
+    C.Rectangle(R);
+  end;
+
+  C.Brush.Style:= bsSolid;
+end;
+
 procedure TATButton.Paint;
 var
   r: TRect;
   pnt1, pnt2: TPoint;
-  size, dy, NSizeArrow, i: integer;
+  NSize, dy, NSizeArrow, i: integer;
   bUseBack, bUseBorder: boolean;
+  NColor: TColor;
   S: string;
 begin
   inherited;
@@ -291,38 +310,28 @@ begin
 
   if bUseBorder then
   begin
-    Canvas.Brush.Style:= bsClear;
-
     if FOver then
-      Canvas.Pen.Color:= ATButtonTheme.ColorBorderOver
+      NColor:= ATButtonTheme.ColorBorderOver
     else
     if Focused then
-      Canvas.Pen.Color:= ATButtonTheme.ColorBorderFocused
+      NColor:= ATButtonTheme.ColorBorderFocused
     else
-      Canvas.Pen.Color:= ATButtonTheme.ColorBorderPassive;
+      NColor:= ATButtonTheme.ColorBorderPassive;
 
-    Canvas.Rectangle(r);
-
-    size:= 1;
+    NSize:= 1;
     if IsPressed then
-      size:= ATButtonTheme.PressedBorderWidth
+      NSize:= ATButtonTheme.PressedBorderWidth
     else
     if BoldBorder then
-      size:= ATButtonTheme.BoldBorderWidth
+      NSize:= ATButtonTheme.BoldBorderWidth
     else
     if Kind=abuTextChoice then
-      size:= ATButtonTheme.ChoiceBorderWidth
+      NSize:= ATButtonTheme.ChoiceBorderWidth
     else
     if FOver then
-      size:= ATButtonTheme.MouseoverBorderWidth;
+      NSize:= ATButtonTheme.MouseoverBorderWidth;
 
-    for i:= 1 to size-1 do
-    begin
-      InflateRect(r, -1, -1);
-      Canvas.Rectangle(r);
-    end;
-
-    Canvas.Brush.Style:= bsSolid;
+    DoPaintBorder(Canvas, R, NColor, NSize);
   end;
 
   Canvas.Font.PixelsPerInch:= Screen.PixelsPerInch;
