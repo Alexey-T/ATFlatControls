@@ -80,7 +80,9 @@ implementation
 constructor TATButtonsToolbar.Create(AOwner: TComponent);
 begin
   inherited;
-  AutoSize:= true;
+  AutoSize:= false;
+  Width:= 200;
+  Height:= 20;
   Caption:= '';
   FImages:= nil;
   FVertical:= false;
