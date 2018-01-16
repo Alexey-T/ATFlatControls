@@ -302,10 +302,17 @@ begin
 
   if bUseBack then
   begin
-    Canvas.Brush.Color:=
-      IfThen(not Enabled, ATButtonTheme.ColorBgDisabled,
-       IfThen(FChecked, ATButtonTheme.ColorBgChecked,
-        IfThen(FOver, ATButtonTheme.ColorBgOver, ATButtonTheme.ColorBgPassive)));
+    if not Enabled then
+      NColor:= ATButtonTheme.ColorBgDisabled
+    else
+    if FChecked then
+      NColor:= ATButtonTheme.ColorBgChecked
+    else
+    if FOver then
+      NColor:= ATButtonTheme.ColorBgOver
+    else
+      NColor:= ATButtonTheme.ColorBgPassive;
+    Canvas.Brush.Color:= NColor;
     Canvas.FillRect(r);
   end;
 
