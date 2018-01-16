@@ -88,10 +88,10 @@ type
     FItemIndex: integer;
     FPopup: TPopupMenu;
     procedure DoChoiceClick(Sender: TObject);
-    procedure DoPaintBorder(C: TCanvas; R: TRect; AColor: TColor; AWidth: integer);
     function GetIconHeight: integer;
     function GetIconWidth: integer;
     function IsPressed: boolean;
+    procedure PaintBorder(C: TCanvas; R: TRect; AColor: TColor; AWidth: integer);
     procedure PaintIcon(AX, AY: integer);
     procedure PaintArrow(AX, AY: integer);
     procedure SetBoldFont(AValue: boolean);
@@ -257,7 +257,7 @@ begin
   Result:= FPressed and FOver;
 end;
 
-procedure TATButton.DoPaintBorder(C: TCanvas; R: TRect; AColor: TColor; AWidth: integer);
+procedure TATButton.PaintBorder(C: TCanvas; R: TRect; AColor: TColor; AWidth: integer);
 var
   i: integer;
 begin
@@ -331,7 +331,7 @@ begin
     if FOver then
       NSize:= ATButtonTheme.MouseoverBorderWidth;
 
-    DoPaintBorder(Canvas, R, NColor, NSize);
+    PaintBorder(Canvas, R, NColor, NSize);
   end;
 
   Canvas.Font.PixelsPerInch:= Screen.PixelsPerInch;
