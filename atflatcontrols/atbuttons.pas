@@ -33,9 +33,10 @@ type
     PressedBorderWidth: integer;
     PressedCaptionShiftY: integer;
     PressedCaptionShiftX: integer;
-    ChoiceIndent: integer;
     BoldBorderWidth: integer;
+    ChoiceIndent: integer;
     ChoiceBorderWidth: integer;
+    ArrowSize: integer;
   end;
 
 var
@@ -66,7 +67,6 @@ const
 const
   cDefaultButtonPadding = 4;
   cDefaultButtonPaddingBig = 5;
-  cDefaultButtonArrowSize = 2;
 
 type
   { TATButton }
@@ -82,7 +82,6 @@ type
     FImages: TImageList;
     FImageIndex: integer;
     FArrow: boolean;
-    FArrowSize: integer;
     FArrowAlign: TAlignment;
     FFlat: boolean;
     FKind: TATButtonKind;
@@ -153,7 +152,6 @@ type
     property Focusable: boolean read FFocusable write SetFocusable default true;
     property Flat: boolean read FFlat write SetFlat default false;
     property Arrow: boolean read FArrow write FArrow default false;
-    property ArrowSize: integer read FArrowSize write FArrowSize default cDefaultButtonArrowSize;
     property ArrowAlign: TAlignment read FArrowAlign write FArrowAlign default taRightJustify;
     property Kind: TATButtonKind read FKind write SetKind default abuTextOnly;
     property BoldBorder: boolean read FBoldBorder write SetBoldBorder default false;
@@ -295,7 +293,7 @@ begin
   inherited;
 
   if FArrow then
-    NSizeArrow:= 4*FArrowSize
+    NSizeArrow:= 4*ATButtonTheme.ArrowSize
   else
     NSizeArrow:= 0;
 
@@ -448,9 +446,9 @@ begin
       taLeftJustify:
         pnt1.x:= 2;
       taRightJustify:
-        pnt1.x:= ClientWidth - Scale96ToScreen(FArrowSize*4);
+        pnt1.x:= ClientWidth - Scale96ToScreen(ATButtonTheme.ArrowSize*4);
       taCenter:
-        pnt1.x:= ClientWidth div 2 - Scale96ToScreen(FArrowSize div 2);
+        pnt1.x:= (ClientWidth - Scale96ToScreen(ATButtonTheme.ArrowSize)) div 2;
     end;
 
     pnt1.y:= ClientHeight div 2 +
@@ -473,7 +471,7 @@ procedure TATButton.PaintArrow(AX, AY: integer);
 var
   NSize: integer;
 begin
-  NSize:= Scale96ToScreen(FArrowSize);
+  NSize:= Scale96ToScreen(ATButtonTheme.ArrowSize);
   CanvasPaintTriangleDown(Canvas, ATButtonTheme.ColorArrows,
     Point(AX, AY), NSize);
 end;
@@ -607,7 +605,6 @@ begin
   FKind:= abuTextOnly;
   FBoldBorder:= false;
   FArrow:= false;
-  FArrowSize:= cDefaultButtonArrowSize;
   FArrowAlign:= taRightJustify;
   FPadding:= cDefaultButtonPadding;
   FPaddingBig:= cDefaultButtonPaddingBig;
@@ -691,9 +688,10 @@ initialization
     PressedBorderWidth:= 3;
     PressedCaptionShiftX:= 0;
     PressedCaptionShiftY:= 1;
-    ChoiceIndent:= 5;
     BoldBorderWidth:= 3;
+    ChoiceIndent:= 5;
     ChoiceBorderWidth:= 1;
+    ArrowSize:= 2;
   end;
 
 end.

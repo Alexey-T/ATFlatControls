@@ -171,9 +171,9 @@ begin
     if btn.Arrow then
     begin
       if not Vertical then
-        btn.Width:= btn.Width+4*btn.ArrowSize;
+        btn.Width:= btn.Width+4*ATButtonTheme.ArrowSize;
       if Vertical and (btn.Caption='') and (btn.ImageIndex<0) then
-        btn.Height:= btn.Height+4*btn.ArrowSize;
+        btn.Height:= btn.Height+4*ATButtonTheme.ArrowSize;
     end;
 
     //scale
