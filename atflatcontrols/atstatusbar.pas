@@ -283,6 +283,13 @@ begin
   if AData.Caption<>'' then
   begin
     C.FillRect(RectText);
+
+    C.Font.Assign(Self.Font);
+    if AData.ColorFont<>clNone then
+      C.Font.Color:= AData.ColorFont
+    else
+      C.Font.Color:= Self.Font.Color;
+
     TextSize:= C.TextExtent(AData.Caption);
 
     case AData.Align of
@@ -294,13 +301,8 @@ begin
         NOffsetLeft:= (RectText.Right-RectText.Left-TextSize.cx) div 2;
     end;
 
-    if AData.ColorFont<>clNone then
-      C.Font.Color:= AData.ColorFont
-    else
-      C.Font.Color:= Self.Font.Color;
-
     ExtTextOut(C.Handle,
-      RectText.Left+NOffsetLeft+2,
+      RectText.Left+NOffsetLeft,
       (ARect.Top+ARect.Bottom-TextSize.cy) div 2+1,
       ETO_CLIPPED+ETO_OPAQUE,
       @RectText,
