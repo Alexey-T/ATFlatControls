@@ -77,6 +77,7 @@ type
     FImages: TImageList;
     FImageIndex: integer;
     FArrow: boolean;
+    FArrowAlign: TAlignment;
     FFlat: boolean;
     FKind: TATButtonKind;
     FBoldBorder: boolean;
@@ -144,6 +145,7 @@ type
     property Focusable: boolean read FFocusable write SetFocusable default true;
     property Flat: boolean read FFlat write SetFlat default false;
     property Arrow: boolean read FArrow write FArrow default false;
+    property ArrowAlign: TAlignment read FArrowAlign write FArrowAlign default taRightJustify;
     property Kind: TATButtonKind read FKind write SetKind default abuTextOnly;
     property BoldBorder: boolean read FBoldBorder write SetBoldBorder default false;
     property BoldFont: boolean read FBoldFont write SetBoldFont default false;
@@ -436,11 +438,14 @@ begin
 
   if FArrow then
   begin
-    //if caption not empty, paint on right side, else centered
-    if (Caption<>'') or (ImageIndex>=0) or (FKind=abuTextChoice) then
-      pnt1.x:= ClientWidth - Scale96ToScreen(cATButtonArrowSize*4)
-    else
-      pnt1.x:= ClientWidth div 2 - Scale96ToScreen(cATButtonArrowSize div 2);
+    case FArrowAlign of
+      taLeftJustify:
+        pnt1.x:= 2;
+      taRightJustify:
+        pnt1.x:= ClientWidth - Scale96ToScreen(cATButtonArrowSize*4);
+      taCenter:
+        pnt1.x:= ClientWidth div 2 - Scale96ToScreen(cATButtonArrowSize div 2);
+    end;
 
     pnt1.y:= ClientHeight div 2 +
       IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
@@ -595,6 +600,8 @@ begin
   FImageIndex:= -1;
   FKind:= abuTextOnly;
   FBoldBorder:= false;
+  FArrow:= false;
+  FArrowAlign:= taRightJustify;
   FItems:= TStringList.Create;
   FItemIndex:= -1;
 end;

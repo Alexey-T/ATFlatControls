@@ -343,6 +343,10 @@ begin
   b.Flat:= true;
   b.PopupMenu:= AMenu;
   b.Arrow:= true;
+  if b.Caption='' then
+    b.ArrowAlign:= taCenter
+  else
+    b.ArrowAlign:= taRightJustify;
 
   if ADropdownEvent=nil then
     b.OnClick:= @PopupForDropdownClick
