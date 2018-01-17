@@ -1,7 +1,7 @@
 Controls for Lazarus 
 
 * ATButton: custom-drawn button: http://wiki.freepascal.org/ATButton
-* ATButtonsToolbar: toolbar based on ATButton: http://wiki.freepascal.org/ATButtonsToolbar
+* ATFlatToolbar: toolbar based on ATButton: http://wiki.freepascal.org/ATFlatToolbar
 * ATListbox: custom-drawn listbox: http://wiki.freepascal.org/ATListbox
 * ATGauge: progress indicator like in Delphi7: http://wiki.freepascal.org/ATGauge
 * ATScrollbar: most powerful custom-drawn scrollbar: http://wiki.freepascal.org/ATScrollBar
