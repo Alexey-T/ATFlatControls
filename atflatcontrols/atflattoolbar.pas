@@ -123,57 +123,57 @@ begin
       btn.Width:= FButtonWidth
     else
     if Assigned(FImages) then
-      btn.Height:= FImages.Height+2*cATButtonIndent;
+      btn.Height:= FImages.Height+2*btn.Padding;
 
     case btn.Kind of
       abuSeparatorVert:
         begin
-          btn.Height:= 2*cATButtonIndentArrow;
+          btn.Height:= 2*btn.PaddingBig;
         end;
       abuSeparatorHorz:
         begin
-          btn.Width:= 2*cATButtonIndentArrow;
+          btn.Width:= 2*btn.PaddingBig;
         end;
 
       abuIconOnly:
         begin
           if Vertical then
-            btn.Height:= FImages.Height+2*cATButtonIndentArrow
+            btn.Height:= FImages.Height+2*btn.Padding
           else
-            btn.Width:= FImages.Width+2*cATButtonIndentArrow;
+            btn.Width:= FImages.Width+2*btn.Padding;
         end;
 
       abuTextOnly:
         begin
           if Vertical then
-            btn.Height:= btn.GetTextSize(btn.Caption).cy+2*cATButtonIndentArrow
+            btn.Height:= btn.GetTextSize(btn.Caption).cy+2*btn.Padding
           else
-            btn.Width:= btn.GetTextSize(btn.Caption).cx+2*cATButtonIndentArrow;
+            btn.Width:= btn.GetTextSize(btn.Caption).cx+2*btn.Padding;
         end;
 
       abuTextIconVert:
         begin
           if Vertical then
-            btn.Height:= btn.GetTextSize(btn.Caption).cy+FImages.Height+3*cATButtonIndentArrow
+            btn.Height:= btn.GetTextSize(btn.Caption).cy+FImages.Height+3*btn.Padding
           else
-            btn.Width:= Max(btn.GetTextSize(btn.Caption).cx, FImages.Width)+2*cATButtonIndentArrow;
+            btn.Width:= Max(btn.GetTextSize(btn.Caption).cx, FImages.Width)+2*btn.Padding;
         end;
 
       abuTextIconHorz:
         begin
           if Vertical then
-            btn.Height:= Max(btn.GetTextSize(btn.Caption).cy, FImages.Height)+2*cATButtonIndentArrow
+            btn.Height:= Max(btn.GetTextSize(btn.Caption).cy, FImages.Height)+2*btn.Padding
           else
-            btn.Width:= btn.GetTextSize(btn.Caption).cx+FImages.Width+3*cATButtonIndentArrow;
+            btn.Width:= btn.GetTextSize(btn.Caption).cx+FImages.Width+3*btn.Padding;
         end;
     end;
 
     if btn.Arrow then
     begin
       if not Vertical then
-        btn.Width:= btn.Width+4*cATButtonArrowSize;
+        btn.Width:= btn.Width+4*btn.ArrowSize;
       if Vertical and (btn.Caption='') and (btn.ImageIndex<0) then
-        btn.Height:= btn.Height+3*cATButtonArrowSize;
+        btn.Height:= btn.Height+3*btn.ArrowSize;
     end;
 
     //scale

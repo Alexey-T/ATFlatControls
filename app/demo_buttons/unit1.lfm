@@ -1,19 +1,19 @@
 object fmMain: TfmMain
   Left = 196
-  Height = 352
+  Height = 450
   Top = 388
-  Width = 729
+  Width = 803
   Caption = 'ATButton demo'
-  ClientHeight = 352
-  ClientWidth = 729
+  ClientHeight = 450
+  ClientWidth = 803
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poScreenCenter
   LCLVersion = '1.9.0.0'
   object chkFocus: TCheckBox
-    Left = 24
+    Left = 16
     Height = 24
-    Top = 208
+    Top = 384
     Width = 148
     Caption = 'buttons focusable'
     Checked = True
@@ -22,9 +22,9 @@ object fmMain: TfmMain
     TabOrder = 0
   end
   object chkEn: TCheckBox
-    Left = 24
+    Left = 16
     Height = 24
-    Top = 232
+    Top = 408
     Width = 136
     Caption = 'buttons enabled'
     Checked = True
@@ -33,12 +33,12 @@ object fmMain: TfmMain
     TabOrder = 1
   end
   object PanelToolbar: TPanel
-    Left = 256
-    Height = 80
+    Left = 192
+    Height = 96
     Top = 8
-    Width = 360
-    ClientHeight = 80
-    ClientWidth = 360
+    Width = 472
+    ClientHeight = 96
+    ClientWidth = 472
     Color = clMoneyGreen
     ParentColor = False
     TabOrder = 2
@@ -51,19 +51,11 @@ object fmMain: TfmMain
       ParentColor = False
     end
   end
-  object Label2: TLabel
-    Left = 8
-    Height = 17
-    Top = 128
-    Width = 98
-    Caption = 'Change colors:'
-    ParentColor = False
-  end
   object PanelRight: TPanel
-    Left = 624
-    Height = 320
+    Left = 672
+    Height = 400
     Top = 8
-    Width = 96
+    Width = 120
     Color = clMoneyGreen
     ParentColor = False
     TabOrder = 3
@@ -72,8 +64,8 @@ object fmMain: TfmMain
     AllocBy = 10
     Height = 28
     Width = 28
-    left = 368
-    top = 152
+    left = 224
+    top = 384
     Bitmap = {
       4C69030000001C0000001C000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -373,8 +365,8 @@ object fmMain: TfmMain
     }
   end
   object PopupMenu1: TPopupMenu
-    left = 432
-    top = 160
+    left = 304
+    top = 384
     object MenuItem1: TMenuItem
       Caption = 'Test menu'
     end

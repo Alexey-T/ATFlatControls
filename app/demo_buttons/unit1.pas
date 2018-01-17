@@ -16,7 +16,6 @@ type
     chkFocus: TCheckBox;
     ImageList1: TImageList;
     Label1: TLabel;
-    Label2: TLabel;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
     PanelRight: TPanel;
@@ -65,25 +64,25 @@ begin
 
   b:= TATButton.create(self);
   b.parent:= self;
-  b.SetBounds(50, 40, 180, 40);
+  b.SetBounds(50, 140, 180, 40);
   b.Caption:= 'Toggle checks';
   b.OnClick:= @BtnToggleClick;
 
   b2:= TATButton.create(self);
   b2.parent:= self;
-  b2.SetBounds(50, 90, 80, 30);
+  b2.SetBounds(50, 190, 80, 30);
   b2.Caption:= 'Check1';
   b2.Checkable:= true;
 
   b3:= TATButton.create(self);
   b3.parent:= self;
-  b3.SetBounds(130, 90, 80, 30);
+  b3.SetBounds(130, 190, 80, 30);
   b3.Caption:= 'Check2';
   b3.Checkable:= true;
 
   b_choice:= TATButton.create(self);
   b_choice.parent:= self;
-  b_choice.SetBounds(210, 90, 100, 30);
+  b_choice.SetBounds(210, 190, 100, 30);
   b_choice.Caption:= '_________';
   b_choice.Kind:= abuTextChoice;
   b_choice.Arrow:= true;
@@ -95,7 +94,7 @@ begin
 
   b_colors:= TATButton.create(self);
   b_colors.parent:= self;
-  b_colors.SetBounds(120, 140, 100, 50);
+  b_colors.SetBounds(120, 240, 100, 50);
   b_colors.Caption:= 'change';
   b_colors.Picture.Assign(bmp);
   b_colors.Kind:= abuTextIconVert;

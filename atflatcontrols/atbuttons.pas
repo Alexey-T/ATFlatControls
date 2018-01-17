@@ -63,6 +63,11 @@ const
     'text_choice'
     );
 
+const
+  cDefaultButtonPadding = 4;
+  cDefaultButtonPaddingBig = 5;
+  cDefaultButtonArrowSize = 2;
+
 type
   { TATButton }
 
@@ -77,6 +82,7 @@ type
     FImages: TImageList;
     FImageIndex: integer;
     FArrow: boolean;
+    FArrowSize: integer;
     FArrowAlign: TAlignment;
     FFlat: boolean;
     FKind: TATButtonKind;
@@ -88,6 +94,8 @@ type
     FItems: TStringList;
     FItemIndex: integer;
     FPopup: TPopupMenu;
+    FPadding: integer;
+    FPaddingBig: integer;
     procedure DoChoiceClick(Sender: TObject);
     function GetIconHeight: integer;
     function GetIconWidth: integer;
@@ -145,11 +153,14 @@ type
     property Focusable: boolean read FFocusable write SetFocusable default true;
     property Flat: boolean read FFlat write SetFlat default false;
     property Arrow: boolean read FArrow write FArrow default false;
+    property ArrowSize: integer read FArrowSize write FArrowSize default cDefaultButtonArrowSize;
     property ArrowAlign: TAlignment read FArrowAlign write FArrowAlign default taRightJustify;
     property Kind: TATButtonKind read FKind write SetKind default abuTextOnly;
     property BoldBorder: boolean read FBoldBorder write SetBoldBorder default false;
     property BoldFont: boolean read FBoldFont write SetBoldFont default false;
     property Picture: TPicture read FPicture write FPicture;
+    property Padding: integer read FPadding write FPadding default cDefaultButtonPadding;
+    property PaddingBig: integer read FPaddingBig write FPaddingBig default cDefaultButtonPaddingBig;
     property OnClick;
     property OnDblClick;
     property OnResize;
@@ -163,11 +174,6 @@ type
     property OnMouseWheelDown;
     property OnMouseWheelUp;
   end;
-
-var
-  cATButtonArrowSize: integer = 2;
-  cATButtonIndent: integer = 3;
-  cATButtonIndentArrow: integer = 5;
 
 implementation
 
@@ -289,7 +295,7 @@ begin
   inherited;
 
   if FArrow then
-    NSizeArrow:= 4*cATButtonArrowSize
+    NSizeArrow:= 4*FArrowSize
   else
     NSizeArrow:= 0;
 
@@ -357,7 +363,7 @@ begin
   case FKind of
     abuIconOnly:
       begin
-        pnt1.x:= (ClientWidth-GetIconWidth-NSizeArrow) div 2+
+        pnt1.x:= (ClientWidth-GetIconWidth) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
         pnt1.y:= (ClientHeight-GetIconHeight) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
@@ -377,13 +383,13 @@ begin
     abuTextIconHorz:
       begin
         TextSize:= GetTextSize(Caption);
-        pnt1.x:= cATButtonIndent +
+        pnt1.x:= FPadding +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
         pnt1.y:= (ClientHeight-GetIconHeight) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
         PaintIcon(pnt1.x, pnt1.y);
 
-        Inc(pnt1.x, GetIconWidth+cATButtonIndentArrow);
+        Inc(pnt1.x, GetIconWidth+FPadding);
         pnt1.y:= (ClientHeight-TextSize.cy) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
         Canvas.TextOut(pnt1.x, pnt1.y, Caption);
@@ -394,11 +400,11 @@ begin
         TextSize:= GetTextSize(Caption);
         pnt1.x:= (ClientWidth-GetIconWidth-NSizeArrow) div 2+
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
-        pnt1.y:= cATButtonIndent +
+        pnt1.y:= FPadding +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
         PaintIcon(pnt1.x, pnt1.y);
 
-        Inc(pnt1.y, GetIconHeight+cATButtonIndentArrow);
+        Inc(pnt1.y, GetIconHeight+FPadding);
         pnt1.x:= (ClientWidth-TextSize.cx-NSizeArrow) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
         Canvas.TextOut(pnt1.x, pnt1.y, Caption);
@@ -442,9 +448,9 @@ begin
       taLeftJustify:
         pnt1.x:= 2;
       taRightJustify:
-        pnt1.x:= ClientWidth - Scale96ToScreen(cATButtonArrowSize*4);
+        pnt1.x:= ClientWidth - Scale96ToScreen(FArrowSize*4);
       taCenter:
-        pnt1.x:= ClientWidth div 2 - Scale96ToScreen(cATButtonArrowSize div 2);
+        pnt1.x:= ClientWidth div 2 - Scale96ToScreen(FArrowSize div 2);
     end;
 
     pnt1.y:= ClientHeight div 2 +
@@ -467,7 +473,7 @@ procedure TATButton.PaintArrow(AX, AY: integer);
 var
   NSize: integer;
 begin
-  NSize:= Scale96ToScreen(cATButtonArrowSize);
+  NSize:= Scale96ToScreen(FArrowSize);
   CanvasPaintTriangleDown(Canvas, ATButtonTheme.ColorArrows,
     Point(AX, AY), NSize);
 end;
@@ -601,7 +607,10 @@ begin
   FKind:= abuTextOnly;
   FBoldBorder:= false;
   FArrow:= false;
+  FArrowSize:= cDefaultButtonArrowSize;
   FArrowAlign:= taRightJustify;
+  FPadding:= cDefaultButtonPadding;
+  FPaddingBig:= cDefaultButtonPaddingBig;
   FItems:= TStringList.Create;
   FItemIndex:= -1;
 end;
