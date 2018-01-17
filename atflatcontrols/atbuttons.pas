@@ -34,7 +34,6 @@ type
     PressedCaptionShiftY: integer;
     PressedCaptionShiftX: integer;
     BoldBorderWidth: integer;
-    ChoiceIndent: integer;
     ChoiceBorderWidth: integer;
     ArrowSize: integer;
   end;
@@ -410,7 +409,7 @@ begin
 
     abuTextChoice:
       begin
-        pnt1.x:= ATButtonTheme.ChoiceIndent +
+        pnt1.x:= FPadding +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
         pnt1.y:= (ClientHeight-GetTextSize('W').cy) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
@@ -689,7 +688,6 @@ initialization
     PressedCaptionShiftX:= 0;
     PressedCaptionShiftY:= 1;
     BoldBorderWidth:= 3;
-    ChoiceIndent:= 5;
     ChoiceBorderWidth:= 1;
     ArrowSize:= 2;
   end;
