@@ -173,7 +173,7 @@ begin
       if not Vertical then
         btn.Width:= btn.Width+4*btn.ArrowSize;
       if Vertical and (btn.Caption='') and (btn.ImageIndex<0) then
-        btn.Height:= btn.Height+3*btn.ArrowSize;
+        btn.Height:= btn.Height+4*btn.ArrowSize;
     end;
 
     //scale
