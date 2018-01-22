@@ -57,7 +57,7 @@ type
       const AHint: string='';
       const ADataString: string='');
     procedure AddSep;
-    procedure UpdateControls;
+    procedure UpdateControls(AInvalidate: boolean=false);
     function ButtonCount: integer;
     function IsIndexOk(AIndex: integer): boolean;
     property Buttons[AIndex: integer]: TATButton read GetButton;
@@ -108,7 +108,7 @@ begin
   Result:= false;
 end;
 
-procedure TATFlatToolbar.UpdateControls;
+procedure TATFlatToolbar.UpdateControls(AInvalidate: boolean);
 var
   btn: TATButton;
   i: integer;
@@ -185,9 +185,9 @@ begin
   //anchor buttons in row
   UpdateAnchors;
 
-  //paint
-  for i:= 0 to ControlCount-1 do
-    Controls[i].Invalidate;
+  if AInvalidate then
+    for i:= 0 to ControlCount-1 do
+      Controls[i].Invalidate;
 end;
 
 procedure TATFlatToolbar.UpdateAnchors;
