@@ -381,6 +381,7 @@ begin
   b.Focusable:= false;
   b.Flat:= true;
   b.Arrow:= true;
+  b.ArrowAlign:= taRightJustify;
   b.Kind:= abuTextChoice;
   b.Items.AddStrings(AItems);
   b.ItemIndex:= AItemIndex;
