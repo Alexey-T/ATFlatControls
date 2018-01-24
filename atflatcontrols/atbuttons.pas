@@ -410,7 +410,7 @@ begin
     abuTextChoice:
       begin
         pnt1.x:= FPadding +
-          IfThen(FArrowAlign=taLeftJustify, FPadding + ATButtonTheme.ArrowSize*4) +
+          IfThen(FArrowAlign=taLeftJustify, FPadding + Scale96ToScreen(ATButtonTheme.ArrowSize*4)) +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
         pnt1.y:= (ClientHeight-GetTextSize('W').cy) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
@@ -444,7 +444,7 @@ begin
   begin
     case FArrowAlign of
       taLeftJustify:
-        pnt1.x:= ATButtonTheme.ArrowSize*4;
+        pnt1.x:= Scale96ToScreen(ATButtonTheme.ArrowSize*4);
       taRightJustify:
         pnt1.x:= ClientWidth - Scale96ToScreen(ATButtonTheme.ArrowSize*4);
       taCenter:
