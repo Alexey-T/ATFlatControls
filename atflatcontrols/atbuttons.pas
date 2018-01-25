@@ -122,6 +122,7 @@ type
     procedure DoEnter; override;
     procedure DoExit; override;
     procedure TextChanged; override;
+    procedure Resize; override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -578,6 +579,12 @@ procedure TATButton.TextChanged;
 begin
   inherited;
   Invalidate; //paint caption
+end;
+
+procedure TATButton.Resize;
+begin
+  inherited;
+  Invalidate;
 end;
 
 constructor TATButton.Create(AOwner: TComponent);
