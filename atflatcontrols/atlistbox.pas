@@ -69,6 +69,7 @@ type
     property ItemTop: integer read FItemTop write SetItemTop;
     property ItemCount: integer read FItemCount write SetItemCount;
     property VisibleItems: integer read GetVisibleItems;
+    function GetItemIndexAt(Pnt: TPoint): integer;
     property ThemedScrollbar: boolean read FThemedScrollbar write SetThemedScrollbar;
     property ThemedColors: boolean read FThemedColors write FThemedColors;
     function CanFocus: boolean; override;
@@ -266,9 +267,22 @@ begin
     LCLIntf.SetFocus(Handle);
 
   Pnt:= ScreenToClient(Mouse.CursorPos);
-  ItemIndex:= Pnt.Y div FItemHeight + FItemTop;
+  ItemIndex:= GetItemIndexAt(Pnt);
 
   inherited; //OnClick must be after ItemIndex set
+end;
+
+function TATListbox.GetItemIndexAt(Pnt: TPoint): integer;
+begin
+  Result:= -1;
+  if ItemCount=0 then exit;
+
+  if (Pnt.X>=0) and (Pnt.X<ClientWidth) then
+  begin
+    Result:= Pnt.Y div FItemHeight + FItemTop;
+    if Result>=ItemCount then
+      Result:= -1;
+  end;
 end;
 
 function TATListbox.ItemBottom: integer;
