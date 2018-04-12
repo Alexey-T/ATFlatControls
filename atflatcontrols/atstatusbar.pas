@@ -34,6 +34,7 @@ type
     FWidth: integer;
     FAlign: TAlignment;
     FCaption: TCaption;
+    FHint: string;
     FImageIndex: integer;
     FAutoSize: boolean;
     FAutoStretch: boolean;
@@ -46,6 +47,7 @@ type
     property Width: integer read FWidth write FWidth;
     property Align: TAlignment read FAlign write FAlign default taLeftJustify;
     property Caption: TCaption read FCaption write FCaption;
+    property Hint: string read FHint write FHint;
     property ImageIndex: integer read FImageIndex write FImageIndex default -1;
     property AutoSize: boolean read FAutoSize write FAutoSize default false;
     property AutoStretch: boolean read FAutoStretch write FAutoStretch default false;
@@ -95,7 +97,9 @@ type
     function DoDrawBefore(AIndex: integer; ACanvas: TCanvas; const ARect: TRect): boolean;
     function DoDrawAfter(AIndex: integer; ACanvas: TCanvas; const ARect: TRect): boolean;
     function GetCaption(AIndex: integer): TCaption;
+    function GetHint(AIndex: integer): string;
     procedure SetCaption(AIndex: integer; const AValue: TCaption);
+    procedure SetHint(AIndex: integer; const AValue: string);
   public
     constructor Create(AOnwer: TComponent); override;
     destructor Destroy; override;
@@ -111,6 +115,7 @@ type
     procedure DeletePanel(AIndex: integer);
     procedure DeletePanels;
     property Captions[AIndex: integer]: TCaption read GetCaption write SetCaption;
+    property Hints[AIndex: integer]: string read GetHint write SetHint;
     procedure DoPanelStretch(AIndex: integer);
     procedure DoPanelAutoWidth(AIndex: integer);
     function FindPanel(ATag: PtrInt): integer;
@@ -140,6 +145,8 @@ type
     property Padding: integer read FPadding write FPadding default cDefStatusbarPadding;
     property Panels: TCollection read FItems write FItems;
     property Images: TImageList read FImages write FImages;
+    property ShowHint;
+    property ParentShowHint;
     property OnClick;
     property OnContextPopup;
     property OnDblClick;
@@ -538,6 +545,29 @@ begin
   if Assigned(D) then
   begin
     D.Caption:= AValue;
+    Invalidate;
+  end;
+end;
+
+function TATStatus.GetHint(AIndex: integer): string;
+var
+  D: TATStatusData;
+begin
+  D:= GetPanelData(AIndex);
+  if Assigned(D) then
+    Result:= D.Hint
+  else
+    Result:= '';
+end;
+
+procedure TATStatus.SetHint(AIndex: integer; const AValue: string);
+var
+  D: TATStatusData;
+begin
+  D:= GetPanelData(AIndex);
+  if Assigned(D) then
+  begin
+    D.Hint:= AValue;
     Invalidate;
   end;
 end;
