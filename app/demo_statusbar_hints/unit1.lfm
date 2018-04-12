@@ -1,0 +1,42 @@
+object Form1: TForm1
+  Left = 463
+  Height = 202
+  Top = 180
+  Width = 503
+  Caption = 'ATStatusbar: test hints for panels'
+  ClientHeight = 202
+  ClientWidth = 503
+  Position = poScreenCenter
+  LCLVersion = '1.9.0.0'
+  object ATStatus1: TATStatus
+    Left = 0
+    Height = 24
+    Hint = 'zzzz'
+    Top = 178
+    Width = 503
+    Align = alBottom
+    DoubleBuffered = True
+    Panels = <    
+      item
+        Width = 100
+        Caption = 'a'
+        Hint = 'aaa'
+      end    
+      item
+        Width = 100
+        Caption = 'b'
+        Hint = 'bbb'
+      end    
+      item
+        Width = 100
+        Caption = 'no hint'
+      end    
+      item
+        Width = 100
+        Caption = 'd'
+        Hint = 'ddddd'
+      end>
+    ShowHint = True
+    ParentShowHint = False
+  end
+end
