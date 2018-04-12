@@ -33,7 +33,7 @@ type
   private
     FWidth: integer;
     FAlign: TAlignment;
-    FCaption: string;
+    FCaption: TCaption;
     FImageIndex: integer;
     FAutoSize: boolean;
     FAutoStretch: boolean;
@@ -45,7 +45,7 @@ type
   published
     property Width: integer read FWidth write FWidth;
     property Align: TAlignment read FAlign write FAlign default taLeftJustify;
-    property Caption: string read FCaption write FCaption;
+    property Caption: TCaption read FCaption write FCaption;
     property ImageIndex: integer read FImageIndex write FImageIndex default -1;
     property AutoSize: boolean read FAutoSize write FAutoSize default false;
     property AutoStretch: boolean read FAutoStretch write FAutoStretch default false;
@@ -94,8 +94,8 @@ type
     procedure DoPaintPanelTo(C: TCanvas; ARect: TRect; AData: TATStatusData);
     function DoDrawBefore(AIndex: integer; ACanvas: TCanvas; const ARect: TRect): boolean;
     function DoDrawAfter(AIndex: integer; ACanvas: TCanvas; const ARect: TRect): boolean;
-    function GetCaption(AIndex: integer): string;
-    procedure SetCaption(AIndex: integer; const AValue: string);
+    function GetCaption(AIndex: integer): TCaption;
+    procedure SetCaption(AIndex: integer; const AValue: TCaption);
   public
     constructor Create(AOnwer: TComponent); override;
     destructor Destroy; override;
@@ -106,12 +106,11 @@ type
     function PanelCount: integer;
     function IsIndexOk(AIndex: integer): boolean;
     procedure AddPanel(APanelIndex: integer; AWidth: integer; AAlign: TAlignment;
-      const ACaption: string=''; AImageIndex: integer=-1; ATag: PtrInt=0;
-      AAutoSize: boolean=false;
-      AAutoStretch: boolean=false);
+      const ACaption: TCaption= ''; AImageIndex: integer= - 1; ATag: PtrInt= 0;
+      AAutoSize: boolean= false; AAutoStretch: boolean= false);
     procedure DeletePanel(AIndex: integer);
     procedure DeletePanels;
-    property Captions[AIndex: integer]: string read GetCaption write SetCaption;
+    property Captions[AIndex: integer]: TCaption read GetCaption write SetCaption;
     procedure DoPanelStretch(AIndex: integer);
     procedure DoPanelAutoWidth(AIndex: integer);
     function FindPanel(ATag: PtrInt): integer;
@@ -445,7 +444,7 @@ end;
 
 
 procedure TATStatus.AddPanel(APanelIndex: integer; AWidth: integer; AAlign: TAlignment;
-  const ACaption: string = '';
+  const ACaption: TCaption='';
   AImageIndex: integer=-1;
   ATag: PtrInt=0;
   AAutoSize: boolean=false;
@@ -520,7 +519,7 @@ begin
     FOnPanelDrawAfter(Self, AIndex, ACanvas, ARect, Result);
 end;
 
-function TATStatus.GetCaption(AIndex: integer): string;
+function TATStatus.GetCaption(AIndex: integer): TCaption;
 var
   D: TATStatusData;
 begin
@@ -531,7 +530,7 @@ begin
     Result:= '';
 end;
 
-procedure TATStatus.SetCaption(AIndex: integer; const AValue: string);
+procedure TATStatus.SetCaption(AIndex: integer; const AValue: TCaption);
 var
   D: TATStatusData;
 begin
