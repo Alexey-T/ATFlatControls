@@ -83,6 +83,7 @@ type
     FPadding: integer;
     FClickedIndex: integer;
     FScalePercents: integer;
+    FPrevPanelMouseOver: integer;
 
     FItems: TCollection;
     FBitmap: TBitmap;
@@ -123,6 +124,7 @@ type
   protected
     procedure Paint; override;
     procedure Resize; override;
+    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: integer); override;
     procedure Click; override;
     {$ifdef windows}
@@ -419,11 +421,7 @@ begin
   Pnt:= Point(X, Y);
 
   for i:= 0 to PanelCount-1 do
-    if PtInRect(GetPanelRect(i), Pnt) then
-    begin
-      Result:= i;
-      Exit;
-    end;
+    if PtInRect(GetPanelRect(i), Pnt) then exit(i);
 end;
 
 procedure TATStatus.MouseDown(Button: TMouseButton; Shift: TShiftState;
@@ -447,6 +445,31 @@ begin
     FBitmap.Height:= Max(FBitmap.Height, Height);
   end;
   Invalidate;
+end;
+
+procedure TATStatus.MouseMove(Shift: TShiftState; X, Y: Integer);
+var
+  NPanel: integer;
+begin
+  inherited;
+
+  NPanel:= GetPanelAt(X, Y);
+  if NPanel<0 then
+  begin
+    Hint:= '';
+    Application.HideHint;
+    exit;
+  end;
+
+  Hint:= Hints[NPanel];
+
+  if NPanel<>FPrevPanelMouseOver then
+  begin
+    FPrevPanelMouseOver:= NPanel;
+    Application.HideHint;
+    if ShowHint and (Hint<>'') then
+      Application.ActivateHint(ClientToScreen(Point(X, Y)));
+  end;
 end;
 
 
