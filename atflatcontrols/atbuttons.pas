@@ -36,6 +36,7 @@ type
     BoldBorderWidth: integer;
     ChoiceBorderWidth: integer;
     ArrowSize: integer;
+    GapForAutoSize: integer;
   end;
 
 var
@@ -589,10 +590,8 @@ begin
 end;
 
 procedure TATButton.SetAutoSize(AValue: boolean);
-const
-  cGap = 2;
 var
-  NText, NIcon: integer;
+  NText, NIcon, NGap: integer;
 begin
   inherited;
   if not AValue then exit;
@@ -600,16 +599,17 @@ begin
   Canvas.Font.Assign(Font);
   NText:= Canvas.TextWidth(Caption);
   NIcon:= GetIconWidth;
+  NGap:= ATButtonTheme.GapForAutoSize;
 
   case FKind of
     abuTextOnly:
-      Width:= NText+cGap;
+      Width:= NText+NGap;
     abuIconOnly:
-      Width:= NIcon+cGap;
+      Width:= NIcon+NGap;
     abuTextIconHorz:
-      Width:= NText+cGap+NIcon+cGap;
+      Width:= NText+NGap+NIcon+NGap;
     abuTextIconVert:
-      Width:= Max(NIcon, NText)+cGap;
+      Width:= Max(NIcon, NText)+NGap;
   end;
 end;
 
@@ -724,6 +724,7 @@ initialization
     BoldBorderWidth:= 3;
     ChoiceBorderWidth:= 1;
     ArrowSize:= 2;
+    GapForAutoSize:= 4;
   end;
 
 end.
