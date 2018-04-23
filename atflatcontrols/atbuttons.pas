@@ -483,6 +483,7 @@ procedure TATButton.SetBoldFont(AValue: boolean);
 begin
   if FBoldFont=AValue then Exit;
   FBoldFont:= AValue;
+  AutoSize:= AutoSize;
   Invalidate;
 end;
 
@@ -598,6 +599,11 @@ begin
 
   Canvas.Font.Name:= ATButtonTheme.FontName;
   Canvas.Font.Size:= ATButtonTheme.FontSize;
+  if FBoldFont then
+    Canvas.Font.Style:= [fsBold]
+  else
+    Canvas.Font.Style:= [];
+
   NText:= Canvas.TextWidth(Caption);
   NIcon:= GetIconWidth;
   NGap:= ATButtonTheme.GapForAutoSize;
