@@ -596,7 +596,8 @@ begin
   inherited;
   if not AValue then exit;
 
-  Canvas.Font.Assign(Font);
+  Canvas.Font.Name:= ATButtonTheme.FontName;
+  Canvas.Font.Size:= ATButtonTheme.FontSize;
   NText:= Canvas.TextWidth(Caption);
   NIcon:= GetIconWidth;
   NGap:= ATButtonTheme.GapForAutoSize;
@@ -724,7 +725,7 @@ initialization
     BoldBorderWidth:= 3;
     ChoiceBorderWidth:= 1;
     ArrowSize:= 2;
-    GapForAutoSize:= 4;
+    GapForAutoSize:= 8;
   end;
 
 end.
