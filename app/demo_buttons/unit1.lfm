@@ -1,10 +1,10 @@
 object fmMain: TfmMain
-  Left = 196
-  Height = 450
-  Top = 388
+  Left = 417
+  Height = 469
+  Top = 346
   Width = 803
   Caption = 'ATButton demo'
-  ClientHeight = 450
+  ClientHeight = 469
   ClientWidth = 803
   OnCreate = FormCreate
   OnShow = FormShow
@@ -60,12 +60,21 @@ object fmMain: TfmMain
     ParentColor = False
     TabOrder = 3
   end
+  object btnAutosize: TButton
+    Left = 184
+    Height = 25
+    Top = 384
+    Width = 171
+    Caption = 'auto-size some buttons'
+    OnClick = btnAutosizeClick
+    TabOrder = 4
+  end
   object ImageList1: TImageList
     AllocBy = 10
     Height = 28
     Width = 28
-    left = 224
-    top = 384
+    left = 352
+    top = 344
     Bitmap = {
       4C69030000001C0000001C000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -365,8 +374,8 @@ object fmMain: TfmMain
     }
   end
   object PopupMenu1: TPopupMenu
-    left = 304
-    top = 384
+    left = 400
+    top = 344
     object MenuItem1: TMenuItem
       Caption = 'Test menu'
     end

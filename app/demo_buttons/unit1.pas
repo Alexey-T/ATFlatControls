@@ -12,6 +12,7 @@ type
   { TfmMain }
 
   TfmMain = class(TForm)
+    btnAutosize: TButton;
     chkEn: TCheckBox;
     chkFocus: TCheckBox;
     ImageList1: TImageList;
@@ -21,6 +22,7 @@ type
     PanelRight: TPanel;
     PanelToolbar: TPanel;
     PopupMenu1: TPopupMenu;
+    procedure btnAutosizeClick(Sender: TObject);
     procedure chkEnChange(Sender: TObject);
     procedure chkFocusChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -154,6 +156,15 @@ begin
   b_colors.Enabled:= en;
   b2.Enabled:= en;
   b3.Enabled:= en;
+end;
+
+procedure TfmMain.btnAutosizeClick(Sender: TObject);
+begin
+  b.AutoSize:= true;
+  b2.AutoSize:= true;
+  b3.AutoSize:= true;
+  b_choice.AutoSize:= true;
+  b_colors.AutoSize:= true;
 end;
 
 procedure TfmMain.BtnToggleClick(Sender: TObject);

@@ -123,6 +123,7 @@ type
     procedure DoExit; override;
     procedure TextChanged; override;
     procedure Resize; override;
+    procedure SetAutoSize(AValue: boolean); override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -585,6 +586,31 @@ procedure TATButton.Resize;
 begin
   inherited;
   Invalidate;
+end;
+
+procedure TATButton.SetAutoSize(AValue: boolean);
+const
+  cGap = 2;
+var
+  NText, NIcon: integer;
+begin
+  inherited;
+  if not AValue then exit;
+
+  Canvas.Font.Assign(Font);
+  NText:= Canvas.TextWidth(Caption);
+  NIcon:= GetIconWidth;
+
+  case FKind of
+    abuTextOnly:
+      Width:= NText+cGap;
+    abuIconOnly:
+      Width:= NIcon+cGap;
+    abuTextIconHorz:
+      Width:= NText+cGap+NIcon+cGap;
+    abuTextIconVert:
+      Width:= Max(NIcon, NText)+cGap;
+  end;
 end;
 
 constructor TATButton.Create(AOwner: TComponent);
