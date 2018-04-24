@@ -599,10 +599,11 @@ begin
 
   Canvas.Font.Name:= ATButtonTheme.FontName;
   Canvas.Font.Size:= ATButtonTheme.FontSize;
-  if FBoldFont then
-    Canvas.Font.Style:= [fsBold]
-  else
-    Canvas.Font.Style:= [];
+  Canvas.Font.Style:= [];
+  //if FBoldFont then
+  //  Canvas.Font.Style:= [fsBold]
+  //else
+  //  Canvas.Font.Style:= [];
 
   NText:= Canvas.TextWidth(Caption);
   NIcon:= GetIconWidth;
@@ -731,7 +732,7 @@ initialization
     BoldBorderWidth:= 3;
     ChoiceBorderWidth:= 1;
     ArrowSize:= 2;
-    GapForAutoSize:= 8;
+    GapForAutoSize:= 10;
   end;
 
 end.
