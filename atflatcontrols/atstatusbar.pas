@@ -62,13 +62,13 @@ type
     ACanvas: TCanvas; const ARect: TRect; var ACanDraw: boolean) of object;
 
 const
-  cDefStatusbarPadding = 2;
-  cDefStatusbarColorBack = $E0E0E0;
-  cDefStatusbarColorBorderTop = clGray;
-  cDefStatusbarColorBorderR = clGray;
-  cDefStatusbarColorBorderL = clNone;
-  cDefStatusbarColorBorderU = clNone;
-  cDefStatusbarColorBorderD = clNone;
+  cDefaultStatusbarPadding = 2;
+  cDefaultStatusbarColorBack = clBtnFace;
+  cDefaultStatusbarColorBorderTop = clGray;
+  cDefaultStatusbarColorBorderR = clGray;
+  cDefaultStatusbarColorBorderL = clNone;
+  cDefaultStatusbarColorBorderU = clNone;
+  cDefaultStatusbarColorBorderD = clNone;
 
 type
   { TATStatus }
@@ -138,13 +138,13 @@ type
     property Enabled;
     property Visible;
     property Font;
-    property Color default cDefStatusbarColorBack;
-    property ColorBorderTop: TColor read FColorBorderTop write FColorBorderTop default cDefStatusbarColorBorderTop;
-    property ColorBorderR: TColor read FColorBorderR write FColorBorderR default cDefStatusbarColorBorderR;
-    property ColorBorderL: TColor read FColorBorderL write FColorBorderL default cDefStatusbarColorBorderL;
-    property ColorBorderU: TColor read FColorBorderU write FColorBorderU default cDefStatusbarColorBorderU;
-    property ColorBorderD: TColor read FColorBorderD write FColorBorderD default cDefStatusbarColorBorderD;
-    property Padding: integer read FPadding write FPadding default cDefStatusbarPadding;
+    property Color default cDefaultStatusbarColorBack;
+    property ColorBorderTop: TColor read FColorBorderTop write FColorBorderTop default cDefaultStatusbarColorBorderTop;
+    property ColorBorderR: TColor read FColorBorderR write FColorBorderR default cDefaultStatusbarColorBorderR;
+    property ColorBorderL: TColor read FColorBorderL write FColorBorderL default cDefaultStatusbarColorBorderL;
+    property ColorBorderU: TColor read FColorBorderU write FColorBorderU default cDefaultStatusbarColorBorderU;
+    property ColorBorderD: TColor read FColorBorderD write FColorBorderD default cDefaultStatusbarColorBorderD;
+    property Padding: integer read FPadding write FPadding default cDefaultStatusbarPadding;
     property Panels: TCollection read FItems write FItems;
     property Images: TImageList read FImages write FImages;
     property ShowHint;
@@ -213,14 +213,14 @@ begin
   Height:= 24;
 
   FScalePercents:= 100;
-  FPadding:= cDefStatusbarPadding;
+  FPadding:= cDefaultStatusbarPadding;
 
-  Color:= cDefStatusbarColorBack;
-  FColorBorderTop:= cDefStatusbarColorBorderTop;
-  FColorBorderR:= cDefStatusbarColorBorderR;
-  FColorBorderL:= cDefStatusbarColorBorderL;
-  FColorBorderU:= cDefStatusbarColorBorderU;
-  FColorBorderD:= cDefStatusbarColorBorderD;
+  Color:= cDefaultStatusbarColorBack;
+  FColorBorderTop:= cDefaultStatusbarColorBorderTop;
+  FColorBorderR:= cDefaultStatusbarColorBorderR;
+  FColorBorderL:= cDefaultStatusbarColorBorderL;
+  FColorBorderU:= cDefaultStatusbarColorBorderU;
+  FColorBorderD:= cDefaultStatusbarColorBorderD;
 
   FBitmap:= TBitmap.Create;
   FBitmap.PixelFormat:= pf24bit;
@@ -261,9 +261,9 @@ var
   NOffsetLeft: integer;
 begin
   if AData.ColorBack<>clNone then
-    C.Brush.Color:= AData.ColorBack
+    C.Brush.Color:= ColorToRGB(AData.ColorBack)
   else
-    C.Brush.Color:= Color;
+    C.Brush.Color:= ColorToRGB(Color);
   C.FillRect(ARect);
 
   RectText:= Rect(ARect.Left+FPadding, ARect.Top, ARect.Right-FPadding, ARect.Bottom);
@@ -294,9 +294,9 @@ begin
 
     C.Font.Assign(Self.Font);
     if AData.ColorFont<>clNone then
-      C.Font.Color:= AData.ColorFont
+      C.Font.Color:= ColorToRGB(AData.ColorFont)
     else
-      C.Font.Color:= Self.Font.Color;
+      C.Font.Color:= ColorToRGB(Self.Font.Color);
 
     TextSize:= C.TextExtent(AData.Caption);
 
@@ -321,28 +321,28 @@ begin
 
   if FColorBorderR<>clNone then
   begin
-    C.Pen.Color:= FColorBorderR;
+    C.Pen.Color:= ColorToRGB(FColorBorderR);
     C.MoveTo(ARect.Right, ARect.Top);
     C.LineTo(ARect.Right, ARect.Bottom);
   end;
 
   if FColorBorderL<>clNone then
   begin
-    C.Pen.Color:= FColorBorderL;
+    C.Pen.Color:= ColorToRGB(FColorBorderL);
     C.MoveTo(ARect.Left, ARect.Top);
     C.LineTo(ARect.Left, ARect.Bottom);
   end;
 
   if FColorBorderU<>clNone then
   begin
-    C.Pen.Color:= FColorBorderU;
+    C.Pen.Color:= ColorToRGB(FColorBorderU);
     C.MoveTo(ARect.Left, ARect.Top);
     C.LineTo(ARect.Right, ARect.Top);
   end;
 
   if FColorBorderD<>clNone then
   begin
-    C.Pen.Color:= FColorBorderD;
+    C.Pen.Color:= ColorToRGB(FColorBorderD);
     C.MoveTo(ARect.Left, ARect.Bottom-1);
     C.LineTo(ARect.Right, ARect.Bottom-1);
   end;  
@@ -372,7 +372,7 @@ var
   D: TATStatusData;
   i: integer;
 begin
-  C.Brush.Color:= Color;
+  C.Brush.Color:= ColorToRGB(Color);
   C.FillRect(ClientRect);
   C.Font.Assign(Self.Font);
 
@@ -406,7 +406,7 @@ begin
     end;  
   end;
 
-  C.Pen.Color:= FColorBorderTop;
+  C.Pen.Color:= ColorToRGB(FColorBorderTop);
   C.MoveTo(0, 0);
   C.LineTo(ClientWidth, 0);
 end;
