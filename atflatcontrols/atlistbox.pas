@@ -202,7 +202,7 @@ var
   Index: integer;
   S: string;
 begin
-  C.Brush.Color:= Color;
+  C.Brush.Color:= ColorToRGB(Color);
   C.FillRect(r);
 
   for Index:= FItemTop to FItemCount-1 do
@@ -222,13 +222,13 @@ begin
     begin
       if Index=FItemIndex then
       begin
-        C.Brush.Color:= FColorSelBack;
-        C.Font.Color:= FColorSelFont;
+        C.Brush.Color:= ColorToRGB(FColorSelBack);
+        C.Font.Color:= ColorToRGB(FColorSelFont);
       end
       else
       begin
-        C.Brush.Color:= Color;
-        C.Font.Color:= Self.Font.Color;
+        C.Brush.Color:= ColorToRGB(Color);
+        C.Font.Color:= ColorToRGB(Self.Font.Color);
       end;
       C.FillRect(r);
 
@@ -515,15 +515,15 @@ begin
   if AIndex<0 then exit;
   if AIndex=ItemIndex then
   begin
-    c.Font.Color:= FColorSelFont;
-    c.Brush.Color:= FColorSelBack;
+    c.Font.Color:= ColorToRGB(FColorSelFont);
+    c.Brush.Color:= ColorToRGB(FColorSelBack);
   end
   else
   begin
-    c.Font.Color:= Font.Color;
-    c.Brush.Color:= Color;
+    c.Font.Color:= ColorToRGB(Font.Color);
+    c.Brush.Color:= ColorToRGB(Color);
   end;
-  c.Pen.Color:= c.Brush.Color;
+  c.Pen.Color:= ColorToRGB(c.Brush.Color);
   c.FillRect(ARect);
 
   c.TextOut(
