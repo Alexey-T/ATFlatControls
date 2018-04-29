@@ -179,8 +179,8 @@ implementation
 
 procedure CanvasPaintTriangleDown(C: TCanvas; AColor: TColor; ACoord: TPoint; ASize: integer);
 begin
-  C.Brush.Color:= AColor;
-  C.Pen.Color:= AColor;
+  C.Brush.Color:= ColorToRGB(AColor);
+  C.Pen.Color:= ColorToRGB(AColor);
   C.Polygon([
     Point(ACoord.X - ASize*2, ACoord.Y - ASize),
     Point(ACoord.X + ASize*2, ACoord.Y - ASize),
@@ -270,7 +270,7 @@ var
   i: integer;
 begin
   C.Brush.Style:= bsClear;
-  C.Pen.Color:= AColor;
+  C.Pen.Color:= ColorToRGB(AColor);
   C.Rectangle(R);
 
   for i:= 1 to AWidth-1 do
@@ -320,7 +320,7 @@ begin
       NColor:= ATButtonTheme.ColorBgOver
     else
       NColor:= ATButtonTheme.ColorBgPassive;
-    Canvas.Brush.Color:= NColor;
+    Canvas.Brush.Color:= ColorToRGB(NColor);
     Canvas.FillRect(r);
   end;
 
@@ -352,7 +352,7 @@ begin
 
   Canvas.Font.PixelsPerInch:= Screen.PixelsPerInch;
   Canvas.Font.Name:= ATButtonTheme.FontName;
-  Canvas.Font.Color:= IfThen(Enabled, ATButtonTheme.ColorFont, ATButtonTheme.ColorFontDisabled);
+  Canvas.Font.Color:= ColorToRGB(IfThen(Enabled, ATButtonTheme.ColorFont, ATButtonTheme.ColorFontDisabled));
   Canvas.Font.Size:= ATButtonTheme.FontSize;
   if BoldFont then
     Canvas.Font.Style:= [fsBold]
@@ -429,7 +429,7 @@ begin
         dy:= 2;
         pnt1:= Point(dy, Height div 2);
         pnt2:= Point(Width-dy, Height div 2);
-        Canvas.Pen.Color:= ATButtonTheme.ColorArrows;
+        Canvas.Pen.Color:= ColorToRGB(ATButtonTheme.ColorArrows);
         Canvas.Line(pnt1, pnt2);
       end;
 
@@ -438,7 +438,7 @@ begin
         dy:= 2;
         pnt1:= Point(Width div 2, dy);
         pnt2:= Point(Width div 2, Height-dy);
-        Canvas.Pen.Color:= ATButtonTheme.ColorArrows;
+        Canvas.Pen.Color:= ColorToRGB(ATButtonTheme.ColorArrows);
         Canvas.Line(pnt1, pnt2);
       end;
   end;
