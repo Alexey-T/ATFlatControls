@@ -295,7 +295,7 @@ begin
     if DoDrawEvent(aseCorner, C, FRectCorner) then
       DoPaintStd_Corner(C, FRectCorner);
 
-  C.Brush.Color:= ATScrollbarTheme.ColorBorder;
+  C.Brush.Color:= ColorToRGB(ATScrollbarTheme.ColorBorder);
   C.FillRect(FRectMain);
 
   InflateRect(FRectMain, -FIndentBorder, -FIndentBorder);
@@ -494,11 +494,11 @@ var
   cc: Integer;
 begin
   if IsRectEmpty(R) then exit;
-  C.Brush.Color:= ATScrollbarTheme.ColorArrowBorder;
+  C.Brush.Color:= ColorToRGB(ATScrollbarTheme.ColorArrowBorder);
   C.FillRect(R);
 
   InflateRect(R, -1, -1);
-  C.Brush.Color:= ATScrollbarTheme.ColorArrowFill;
+  C.Brush.Color:= ColorToRGB(ATScrollbarTheme.ColorArrowFill);
   C.FillRect(R);
 
   P:= CenterPoint(R);
@@ -533,8 +533,8 @@ begin
       Exit;
  end;     
 
-  C.Brush.Color:= ATScrollbarTheme.ColorArrowSign;
-  C.Pen.Color:= ATScrollbarTheme.ColorArrowSign;
+  C.Brush.Color:= ColorToRGB(ATScrollbarTheme.ColorArrowSign);
+  C.Pen.Color:= ColorToRGB(ATScrollbarTheme.ColorArrowSign);
   C.Polygon([P1, P2, P3]);
 end;
 
@@ -627,8 +627,8 @@ const
 var
   P: TPoint;
 begin
-  C.Brush.Color:= ATScrollbarTheme.ColorThumbFill;
-  C.Pen.Color:= ATScrollbarTheme.ColorThumbBorder;
+  C.Brush.Color:= ColorToRGB(ATScrollbarTheme.ColorThumbFill);
+  C.Pen.Color:= ColorToRGB(ATScrollbarTheme.ColorThumbBorder);
   C.Rectangle(R);
 
   P:= CenterPoint(R);
@@ -766,21 +766,21 @@ end;
 procedure TATScroll.DoPaintStd_Corner(C: TCanvas; const R: TRect);
 begin
   if IsRectEmpty(R) then exit;
-  C.Brush.Color:= ATScrollbarTheme.ColorBG;
+  C.Brush.Color:= ColorToRGB(ATScrollbarTheme.ColorBG);
   C.FillRect(R);
 end;
 
 procedure TATScroll.DoPaintStd_Back(C: TCanvas; const R: TRect);
 begin
   if IsRectEmpty(R) then exit;
-  C.Brush.Color:= ATScrollbarTheme.ColorBG;
+  C.Brush.Color:= ColorToRGB(ATScrollbarTheme.ColorBG);
   C.FillRect(R);
 end;
 
 procedure TATScroll.DoPaintStd_BackScrolled(C: TCanvas; const R: TRect);
 begin
   if IsRectEmpty(R) then exit;
-  C.Brush.Color:= ATScrollbarTheme.ColorScrolled;
+  C.Brush.Color:= ColorToRGB(ATScrollbarTheme.ColorScrolled);
   C.FillRect(R);
 end;
 
