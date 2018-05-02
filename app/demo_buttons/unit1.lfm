@@ -1,7 +1,7 @@
 object fmMain: TfmMain
   Left = 417
   Height = 469
-  Top = 346
+  Top = 246
   Width = 803
   Caption = 'ATButton demo'
   ClientHeight = 469
@@ -14,7 +14,7 @@ object fmMain: TfmMain
     Left = 16
     Height = 24
     Top = 384
-    Width = 148
+    Width = 134
     Caption = 'buttons focusable'
     Checked = True
     OnChange = chkFocusChange
@@ -25,7 +25,7 @@ object fmMain: TfmMain
     Left = 16
     Height = 24
     Top = 408
-    Width = 136
+    Width = 125
     Caption = 'buttons enabled'
     Checked = True
     OnChange = chkEnChange
@@ -44,9 +44,9 @@ object fmMain: TfmMain
     TabOrder = 2
     object Label1: TLabel
       Left = 6
-      Height = 17
+      Height = 14
       Top = 3
-      Width = 122
+      Width = 103
       Caption = 'ATButtonsToolbar'
       ParentColor = False
     end

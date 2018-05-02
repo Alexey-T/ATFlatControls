@@ -110,6 +110,7 @@ begin
   bar.AddButton(0, @BtnColorsClick, 'Open', 'hint1', '', true);
   bar.AddDropdown(-1, PopupMenu1, nil, '', 'Some menu');
   bar.AddDropdown(-1, PopupMenu1, nil, 'Sub:', 'Does same as btn before');
+  bar.AddDropdown(1, PopupMenu1, nil, '', 'Does same as btn before');
   bar.AddButton(1, @BtnColorsClick, '', 'hint2', '', false);
   bar.AddSep;
   bar.AddButton(2, @BtnColorsClick, '', 'hint3', '', false);
@@ -124,6 +125,7 @@ begin
   bar2.AddButton(0, @BtnColorsClick, 'Open', 'hint1', '', true);
   bar2.AddDropdown(-1, PopupMenu1, nil, '', 'Some menu');
   bar2.AddDropdown(-1, PopupMenu1, nil, 'Sub:', 'Does same as btn before');
+  bar2.AddDropdown(1, PopupMenu1, nil, '', 'Does same as btn before');
   bar2.AddButton(1, @BtnColorsClick, '', 'hint2', '', false);
   bar2.AddSep;
   bar2.AddButton(2, @BtnColorsClick, '', 'hint3', '', false);

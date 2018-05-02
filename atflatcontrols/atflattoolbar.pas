@@ -140,7 +140,7 @@ begin
           if Vertical then
             btn.Height:= FImages.Height+2*btn.Padding
           else
-            btn.Width:= FImages.Width+2*btn.Padding;
+            btn.Width:= FImages.Width+2*btn.Padding + IfThen(btn.Arrow, btn.Padding);
         end;
 
       abuTextOnly:
@@ -343,7 +343,7 @@ begin
   b.Flat:= true;
   b.PopupMenu:= AMenu;
   b.Arrow:= true;
-  if b.Caption='' then
+  if (b.Caption='') and (AImageIndex<0) then
     b.ArrowAlign:= taCenter
   else
     b.ArrowAlign:= taRightJustify;

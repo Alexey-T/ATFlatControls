@@ -364,7 +364,8 @@ begin
     abuIconOnly:
       begin
         pnt1.x:= (ClientWidth-GetIconWidth) div 2 +
-          IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX);
+          IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftX) -
+          IfThen(Arrow, Padding);
         pnt1.y:= (ClientHeight-GetIconHeight) div 2 +
           IfThen(IsPressed, ATButtonTheme.PressedCaptionShiftY);
         PaintIcon(pnt1.x, pnt1.y);
