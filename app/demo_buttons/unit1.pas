@@ -45,6 +45,9 @@ implementation
 
 {$R *.lfm}
 
+var
+  MyTheme: TATButtonTheme;
+
 { TfmMain }
 
 procedure TfmMain.FormCreate(Sender: TObject);
@@ -102,6 +105,7 @@ begin
   b_colors.Kind:= abuTextIconVert;
   b_colors.OnClick:= @BtnColorsClick;
   b_colors.BoldFont:= true;
+  b_colors.Theme:= @MyTheme;
 
   bar:= TATFlatToolbar.create(self);
   bar.Parent:= PanelToolbar;
@@ -195,6 +199,12 @@ procedure TfmMain.BtnChoiceClick(Sender: TObject);
 begin
   ShowMessage('choice changed');
 end;
+
+initialization
+
+  MyTheme:= ATButtonTheme;
+  MyTheme.ColorBgPassive:= clGreen;
+  MyTheme.ColorBgOver:= $00aa00;
 
 end.
 
