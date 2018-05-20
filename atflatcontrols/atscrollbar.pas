@@ -557,7 +557,7 @@ begin
     N0:= FRectMain.Top;
     NLen:= FRectMain.Bottom-FRectMain.Top;
   end;
-  Result:= N0 + (APos-FMin) * NLen div Math.Max(1, FMax-FMin);
+  Result:= N0 + (APos-FMin) * NLen div Math.Max(1, FMax-FMin+FPage);
 end;
 
 procedure TATScroll.DoUpdateThumbRect;
@@ -690,8 +690,10 @@ end;
 
 procedure TATScroll.SetPos(Value: Integer);
 begin
-  Value:= Math.Min(Value, FMax);
-  Value:= Math.Max(Value, FMin);
+  if Value>FMax then
+    Value:= FMax;
+  if Value<FMin then
+    Value:= FMin;
   if FPos<>Value then
   begin
     FPos:= Value;
@@ -727,8 +729,9 @@ begin
   N:= MouseToPos(
     X-FMouseDragOffset,
     Y-FMouseDragOffset);
-  N:= Math.Max(N, FMin);
-  N:= Math.Min(N, FMax-FPage);
+
+  if N<FMin then N:= FMin;
+  if N>FMax then N:= FMax;
   SetPos(N);
 end;
 
