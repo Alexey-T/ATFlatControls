@@ -93,10 +93,12 @@ type
     FIndentArrLonger: Integer;
     FTimerDelay: Integer;
 
-    FPos,
-    FMin,
-    FMax,
+    FPos: Integer;
+    FMin: Integer;
+    FMax: Integer;
     FPage: Integer;
+    FMinSizeToShowThumb: Integer;
+    FMinSizeOfThumb: Integer;
 
     //internal
     FRectMain: TRect; //area for scrolling
@@ -153,10 +155,6 @@ type
   public
     constructor Create(AOnwer: TComponent); override;
     destructor Destroy; override;
-    property Position: Integer read FPos write SetPos;
-    property Min: Integer read FMin write SetMin;
-    property Max: Integer read FMax write SetMax;
-    property PageSize: Integer read FPage write SetPage;
     procedure AutoAdjustLayout(AMode: TLayoutAdjustmentPolicy; const AFromPPI, AToPPI,
       AOldFormWidth, ANewFormWidth: Integer); override;
   protected
@@ -180,6 +178,13 @@ type
     property PopupMenu;
     property ShowHint;
     property Visible;
+
+    property Position: Integer read FPos write SetPos;
+    property Min: Integer read FMin write SetMin;
+    property Max: Integer read FMax write SetMax;
+    property PageSize: Integer read FPage write SetPage;
+    property MinSizeToShowThumb: Integer read FMinSizeToShowThumb write FMinSizeToShowThumb default 10;
+    property MinSizeOfThumb: Integer read FMinSizeOfThumb write FMinSizeOfThumb default 4;
     property Kind: TScrollBarKind read FKind write SetKind default sbHorizontal;
     property KindArrows: TATScrollArrowsKind read FKindArrows write SetKindArrows default asaArrowsNormal;
     property IndentBorder: Integer read FIndentBorder write FIndentBorder default 1;
@@ -187,6 +192,7 @@ type
     property IndentArrow: Integer read FIndentArrow write FIndentArrow default 3;
     property IndentArrLonger: Integer read FIndentArrLonger write FIndentArrLonger default 0;
     property TimerDelay: Integer read FTimerDelay write FTimerDelay default 80;
+
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
     property OnOwnerDraw: TATScrollDrawEvent read FOnOwnerDraw write FOnOwnerDraw;
     property OnContextPopup;
@@ -230,6 +236,8 @@ begin
   FMin:= 0;
   FMax:= 100;
   FPage:= 20;
+  FMinSizeToShowThumb:= 10;
+  FMinSizeOfThumb:= 4;
 
   Color:= ATScrollbarTheme.ColorBG;
 
@@ -561,8 +569,6 @@ begin
 end;
 
 procedure TATScroll.DoUpdateThumbRect;
-const
-  cMinView = 10;
 var
   R: TRect;
 begin
@@ -572,24 +578,24 @@ begin
 
   if IsHorz then
   begin
-    if FRectMain.Right-FRectMain.Left<cMinView then Exit;
+    if FRectMain.Right-FRectMain.Left<FMinSizeToShowThumb then Exit;
     R.Top:= FRectMain.Top;
     R.Bottom:= FRectMain.Bottom;
     R.Left:= GetPxAtScroll(FPos);
-    R.Left:= Math.Min(R.Left, FRectMain.Right-cMinView);
+    R.Left:= Math.Min(R.Left, FRectMain.Right-FMinSizeOfThumb);
     R.Right:= GetPxAtScroll(FPos+FPage);
-    R.Right:= Math.Max(R.Right, R.Left+cMinView);
+    R.Right:= Math.Max(R.Right, R.Left+FMinSizeOfThumb);
     R.Right:= Math.Min(R.Right, FRectMain.Right);
   end
   else
   begin
-    if FRectMain.Bottom-FRectMain.Top<cMinView then Exit;
+    if FRectMain.Bottom-FRectMain.Top<FMinSizeToShowThumb then Exit;
     R.Left:= FRectMain.Left;
     R.Right:= FRectMain.Right;
     R.Top:= GetPxAtScroll(FPos);
-    R.Top:= Math.Min(R.Top, FRectMain.Bottom-cMinView);
+    R.Top:= Math.Min(R.Top, FRectMain.Bottom-FMinSizeOfThumb);
     R.Bottom:= GetPxAtScroll(FPos+FPage);
-    R.Bottom:= Math.Max(R.Bottom, R.Top+cMinView);
+    R.Bottom:= Math.Max(R.Bottom, R.Top+FMinSizeOfThumb);
     R.Bottom:= Math.Min(R.Bottom, FRectMain.Bottom);
   end;
   FRectThumb:= R;
