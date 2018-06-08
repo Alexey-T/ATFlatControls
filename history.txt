@@ -3,7 +3,7 @@
 + ATListbox: added props VirtualMode, VirtualItemCount
     If VirtualMode=false, listbox uses item count from Items prop. 
     If true, listbox uses item count from VirtualItemCount prop.
-+ ATListbox: added func CurrentItemCount
++ ATListbox: prop ItemCount gets count for all modes, and is read-only
 
 2018.05.21
 + ATScroll: props Position/Min/Max/PageSize made published
