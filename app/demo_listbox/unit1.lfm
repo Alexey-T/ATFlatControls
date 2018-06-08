@@ -1,28 +1,28 @@
 object fmMain: TfmMain
   Left = 428
-  Height = 329
+  Height = 355
   Top = 271
   Width = 448
   Caption = 'ATListbox demo'
-  ClientHeight = 329
+  ClientHeight = 355
   ClientWidth = 448
   OnCreate = FormCreate
   Position = poScreenCenter
   LCLVersion = '1.9.0.0'
   object Panel1: TPanel
     Left = 0
-    Height = 50
-    Top = 279
+    Height = 82
+    Top = 273
     Width = 448
     Align = alBottom
-    ClientHeight = 50
+    ClientHeight = 82
     ClientWidth = 448
     TabOrder = 0
     object chkThemedScroll: TCheckBox
       Left = 8
-      Height = 23
+      Height = 24
       Top = 0
-      Width = 128
+      Width = 141
       Caption = 'themed scrollbar'
       Checked = True
       OnChange = chkThemedScrollChange
@@ -31,14 +31,25 @@ object fmMain: TfmMain
     end
     object chkOwnerDrawn: TCheckBox
       Left = 8
-      Height = 23
+      Height = 24
       Top = 24
-      Width = 104
+      Width = 114
       Caption = 'owner-drawn'
       Checked = True
       OnChange = chkOwnerDrawnChange
       State = cbChecked
       TabOrder = 1
+    end
+    object chkVirtual: TCheckBox
+      Left = 8
+      Height = 24
+      Top = 49
+      Width = 262
+      Caption = 'virtual items (don''t use Items prop)'
+      Checked = True
+      OnChange = chkVirtualChange
+      State = cbChecked
+      TabOrder = 2
     end
   end
 end

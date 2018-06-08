@@ -12,11 +12,13 @@ type
   { TfmMain }
 
   TfmMain = class(TForm)
+    chkVirtual: TCheckBox;
     chkOwnerDrawn: TCheckBox;
     chkThemedScroll: TCheckBox;
     Panel1: TPanel;
     procedure chkOwnerDrawnChange(Sender: TObject);
     procedure chkThemedScrollChange(Sender: TObject);
+    procedure chkVirtualChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
     { private declarations }
@@ -54,8 +56,13 @@ begin
 
   list.OwnerDrawn:= true;
   list.Color:= $e0e0e0;
-  list.ItemCount:= 21;
+  list.VirtualItemCount:= 21;
   list.ItemHeight:= 26;
+
+  list.Items.Add('real item first');
+  list.Items.Add('real item 1');
+  list.Items.Add('real item 2');
+  list.Items.Add('real item last');
 
   ActiveControl:= list;
 end;
@@ -63,6 +70,12 @@ end;
 procedure TfmMain.chkThemedScrollChange(Sender: TObject);
 begin
   list.ThemedScrollbar:= chkThemedScroll.checked;
+end;
+
+procedure TfmMain.chkVirtualChange(Sender: TObject);
+begin
+  list.VirtualMode:= chkVirtual.Checked;
+  list.Invalidate;
 end;
 
 procedure TfmMain.chkOwnerDrawnChange(Sender: TObject);
@@ -82,7 +95,11 @@ begin
   C.Pen.Color:= clMedGray;
   C.Line(ARect.Left+2, ARect.Bottom-1, ARect.Right-2, ARect.Bottom-1);
 
-  S:= 'item '+IntToStr(AIndex);
+  if List.VirtualMode then
+    S:= 'virtual item '+IntToStr(AIndex)
+  else
+    S:= List.Items[AIndex];
+
   C.Font.Color:= $F0 shl AIndex; //weird color
   C.Font.Size:= AIndex+5; //weird font size
   C.TextOut(ARect.Left+6+AIndex*6, (ARect.Top+ARect.Bottom-C.TextHeight(S)) div 2, S);

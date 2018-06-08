@@ -27,29 +27,31 @@ type
     FThemedColors: boolean;
     FScroll: TATScroll;
     FOwnerDrawn: boolean;
-    FOnDrawItem: TATListboxDrawItemEvent;
-    FOnChangeSel: TNotifyEvent;
-    FOnScroll: TNotifyEvent;
-    FItemCount,
-    FItemIndex,
-    FItemHeight,
+    FVirtualMode: boolean;
+    FVirtualItemCount: integer;
+    FItemIndex: integer;
+    FItemHeight: integer;
     FItemTop: integer;
     FBitmap: TBitmap;
     FCanGetFocus: boolean;
     FList: TStringList;
     FColorSelFont: TColor;
     FColorSelBack: TColor;
+    FOnDrawItem: TATListboxDrawItemEvent;
+    FOnChangeSel: TNotifyEvent;
+    FOnScroll: TNotifyEvent;
     procedure DoDefaultOnDrawItem(Sender: TObject; C: TCanvas; AIndex: integer; const ARect: TRect);
     procedure DoPaintTo(C: TCanvas; r: TRect);
     function ItemBottom: integer;
     procedure ScrollbarChange(Sender: TObject);
     procedure SetCanBeFocused(AValue: boolean);
-    procedure SetItemCount(AValue: integer);
+    procedure SetVirtualItemCount(AValue: integer);
     procedure SetItemIndex(AValue: integer);
     procedure SetItemTop(AValue: integer);
     procedure SetThemedScrollbar(AValue: boolean);
     procedure UpdateFromScrollbarMsg(const Msg: TLMScroll);
     procedure UpdateScrollbar;
+    function CurrentItemCount: integer;
     function GetVisibleItems: integer;
     function IsIndexValid(N: integer): boolean;
   protected
@@ -67,7 +69,7 @@ type
     property Items: TStringList read FList;
     property ItemIndex: integer read FItemIndex write SetItemIndex;
     property ItemTop: integer read FItemTop write SetItemTop;
-    property ItemCount: integer read FItemCount write SetItemCount;
+    property VirtualItemCount: integer read FVirtualItemCount write SetVirtualItemCount;
     property VisibleItems: integer read GetVisibleItems;
     function GetItemIndexAt(Pnt: TPoint): integer;
     property ThemedScrollbar: boolean read FThemedScrollbar write SetThemedScrollbar;
@@ -95,6 +97,7 @@ type
     property ParentShowHint;
     property PopupMenu;
     property ShowHint;
+    property VirtualMode: boolean read FVirtualMode write FVirtualMode default true;
     property Visible;
     property OnClick;
     property OnDblClick;
@@ -148,7 +151,7 @@ end;
 
 function TATListbox.IsIndexValid(N: integer): boolean;
 begin
-  Result:= (N>=0) and (N<ItemCount);
+  Result:= (N>=0) and (N<CurrentItemCount);
 end;
 
 procedure TATListbox.ChangedSelection;
@@ -170,7 +173,7 @@ begin
   if ThemedScrollbar then
   begin
     FScroll.Min:= 0;
-    FScroll.Max:= ItemCount;
+    FScroll.Max:= CurrentItemCount;
     FScroll.PageSize:= VisibleItems;
     FScroll.Position:= ItemTop;
   end;
@@ -188,12 +191,20 @@ begin
   end
   else
   begin
-    si.nMax:= FItemCount;
+    si.nMax:= CurrentItemCount;
     si.nPage:= GetVisibleItems;
     si.nPos:= FItemTop;
   end;
 
   SetScrollInfo(Handle, SB_VERT, si, True);
+end;
+
+function TATListbox.CurrentItemCount: integer;
+begin
+  if FVirtualMode then
+    Result:= FVirtualItemCount
+  else
+    Result:= Items.Count;
 end;
 
 
@@ -205,7 +216,7 @@ begin
   C.Brush.Color:= ColorToRGB(Color);
   C.FillRect(r);
 
-  for Index:= FItemTop to FItemCount-1 do
+  for Index:= FItemTop to CurrentItemCount-1 do
   begin
     r.Top:= (Index-FItemTop)*FItemHeight;
     r.Bottom:= r.Top+FItemHeight;
@@ -275,19 +286,19 @@ end;
 function TATListbox.GetItemIndexAt(Pnt: TPoint): integer;
 begin
   Result:= -1;
-  if ItemCount=0 then exit;
+  if CurrentItemCount=0 then exit;
 
   if (Pnt.X>=0) and (Pnt.X<ClientWidth) then
   begin
     Result:= Pnt.Y div FItemHeight + FItemTop;
-    if Result>=ItemCount then
+    if Result>=CurrentItemCount then
       Result:= -1;
   end;
 end;
 
 function TATListbox.ItemBottom: integer;
 begin
-  Result:= Min(ItemCount-1, FItemTop+GetVisibleItems-1);
+  Result:= Min(CurrentItemCount-1, FItemTop+GetVisibleItems-1);
 end;
 
 procedure TATListbox.ScrollbarChange(Sender: TObject);
@@ -305,11 +316,11 @@ begin
     ControlStyle:= ControlStyle+[csNoFocus];
 end;
 
-procedure TATListbox.SetItemCount(AValue: integer);
+procedure TATListbox.SetVirtualItemCount(AValue: integer);
 begin
-  if FItemCount=AValue then Exit;
+  if FVirtualItemCount=AValue then Exit;
   if AValue<0 then Exit;
-  FItemCount:= AValue;
+  FVirtualItemCount:= AValue;
   Scrolled;
   Invalidate;
 end;
@@ -365,11 +376,12 @@ begin
   CanGetFocus:= false;
   FOnDrawItem:= @DoDefaultOnDrawItem;
   FList:= TStringList.Create;
-  FItemCount:= 0;
+  FVirtualItemCount:= 0;
   FItemIndex:= 0;
   FItemHeight:= 21;
   FItemTop:= 0;
   FOwnerDrawn:= false;
+  FVirtualMode:= true;
 
   FBitmap:= TBitmap.Create;
   FBitmap.SetSize(1600, 1200);
@@ -399,11 +411,11 @@ procedure TATListbox.UpdateFromScrollbarMsg(const Msg: TLMScroll);
 var
   NMax: integer;
 begin
-  NMax:= Max(0, FItemCount-GetVisibleItems);
+  NMax:= Max(0, CurrentItemCount-GetVisibleItems);
 
   case Msg.ScrollCode of
     SB_TOP:        FItemTop:= 0;
-    SB_BOTTOM:     FItemTop:= Max(0, FItemCount-GetVisibleItems);
+    SB_BOTTOM:     FItemTop:= Max(0, CurrentItemCount-GetVisibleItems);
 
     SB_LINEUP:     FItemTop:= Max(0, FItemTop-1);
     SB_LINEDOWN:   FItemTop:= Min(NMax, FItemTop+1);
@@ -452,7 +464,7 @@ begin
   if WheelDelta>0 then
     ItemTop:= Max(0, ItemTop-Mouse.WheelScrollLines)
   else
-    ItemTop:= Max(0, Min(ItemCount-VisibleItems, ItemTop+Mouse.WheelScrollLines));
+    ItemTop:= Max(0, Min(CurrentItemCount-VisibleItems, ItemTop+Mouse.WheelScrollLines));
 end;
 
 procedure TATListbox.KeyDown(var Key: Word; Shift: TShiftState);
@@ -480,7 +492,7 @@ begin
   end;
   if (key=vk_next) then
   begin
-    ItemIndex:= Min(ItemCount-1, ItemIndex+(VisibleItems-1));
+    ItemIndex:= Min(CurrentItemCount-1, ItemIndex+(VisibleItems-1));
     key:= 0;
     Exit
   end;
@@ -493,7 +505,7 @@ begin
   end;
   if (key=vk_end) then
   begin
-    ItemIndex:= ItemCount-1;
+    ItemIndex:= CurrentItemCount-1;
     key:= 0;
     Exit
   end;
@@ -526,11 +538,16 @@ begin
   c.Pen.Color:= ColorToRGB(c.Brush.Color);
   c.FillRect(ARect);
 
-  c.TextOut(
-    ARect.Left+cIndent,
-    ARect.Top+1,
-    Items[AIndex]
-    );
+  if FVirtualMode or (AIndex>=Items.Count) then
+    c.TextOut(
+      ARect.Left+cIndent,
+      ARect.Top+1,
+      '?')
+  else
+    c.TextOut(
+      ARect.Left+cIndent,
+      ARect.Top+1,
+      Items[AIndex]);
 end;
 
 procedure TATListbox.DoScaleScrollbar;
