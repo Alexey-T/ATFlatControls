@@ -51,7 +51,6 @@ type
     procedure SetThemedScrollbar(AValue: boolean);
     procedure UpdateFromScrollbarMsg(const Msg: TLMScroll);
     procedure UpdateScrollbar;
-    function CurrentItemCount: integer;
     function GetVisibleItems: integer;
     function IsIndexValid(N: integer): boolean;
   protected
@@ -69,6 +68,7 @@ type
     property Items: TStringList read FList;
     property ItemIndex: integer read FItemIndex write SetItemIndex;
     property ItemTop: integer read FItemTop write SetItemTop;
+    function ItemCount: integer;
     property VirtualItemCount: integer read FVirtualItemCount write SetVirtualItemCount;
     property VisibleItems: integer read GetVisibleItems;
     function GetItemIndexAt(Pnt: TPoint): integer;
@@ -151,7 +151,7 @@ end;
 
 function TATListbox.IsIndexValid(N: integer): boolean;
 begin
-  Result:= (N>=0) and (N<CurrentItemCount);
+  Result:= (N>=0) and (N<ItemCount);
 end;
 
 procedure TATListbox.ChangedSelection;
@@ -173,7 +173,7 @@ begin
   if ThemedScrollbar then
   begin
     FScroll.Min:= 0;
-    FScroll.Max:= CurrentItemCount;
+    FScroll.Max:= ItemCount;
     FScroll.PageSize:= VisibleItems;
     FScroll.Position:= ItemTop;
   end;
@@ -191,7 +191,7 @@ begin
   end
   else
   begin
-    si.nMax:= CurrentItemCount;
+    si.nMax:= ItemCount;
     si.nPage:= GetVisibleItems;
     si.nPos:= FItemTop;
   end;
@@ -199,7 +199,7 @@ begin
   SetScrollInfo(Handle, SB_VERT, si, True);
 end;
 
-function TATListbox.CurrentItemCount: integer;
+function TATListbox.ItemCount: integer;
 begin
   if FVirtualMode then
     Result:= FVirtualItemCount
@@ -216,7 +216,7 @@ begin
   C.Brush.Color:= ColorToRGB(Color);
   C.FillRect(r);
 
-  for Index:= FItemTop to CurrentItemCount-1 do
+  for Index:= FItemTop to ItemCount-1 do
   begin
     r.Top:= (Index-FItemTop)*FItemHeight;
     r.Bottom:= r.Top+FItemHeight;
@@ -286,19 +286,19 @@ end;
 function TATListbox.GetItemIndexAt(Pnt: TPoint): integer;
 begin
   Result:= -1;
-  if CurrentItemCount=0 then exit;
+  if ItemCount=0 then exit;
 
   if (Pnt.X>=0) and (Pnt.X<ClientWidth) then
   begin
     Result:= Pnt.Y div FItemHeight + FItemTop;
-    if Result>=CurrentItemCount then
+    if Result>=ItemCount then
       Result:= -1;
   end;
 end;
 
 function TATListbox.ItemBottom: integer;
 begin
-  Result:= Min(CurrentItemCount-1, FItemTop+GetVisibleItems-1);
+  Result:= Min(ItemCount-1, FItemTop+GetVisibleItems-1);
 end;
 
 procedure TATListbox.ScrollbarChange(Sender: TObject);
@@ -411,11 +411,11 @@ procedure TATListbox.UpdateFromScrollbarMsg(const Msg: TLMScroll);
 var
   NMax: integer;
 begin
-  NMax:= Max(0, CurrentItemCount-GetVisibleItems);
+  NMax:= Max(0, ItemCount-GetVisibleItems);
 
   case Msg.ScrollCode of
     SB_TOP:        FItemTop:= 0;
-    SB_BOTTOM:     FItemTop:= Max(0, CurrentItemCount-GetVisibleItems);
+    SB_BOTTOM:     FItemTop:= Max(0, ItemCount-GetVisibleItems);
 
     SB_LINEUP:     FItemTop:= Max(0, FItemTop-1);
     SB_LINEDOWN:   FItemTop:= Min(NMax, FItemTop+1);
@@ -464,7 +464,7 @@ begin
   if WheelDelta>0 then
     ItemTop:= Max(0, ItemTop-Mouse.WheelScrollLines)
   else
-    ItemTop:= Max(0, Min(CurrentItemCount-VisibleItems, ItemTop+Mouse.WheelScrollLines));
+    ItemTop:= Max(0, Min(ItemCount-VisibleItems, ItemTop+Mouse.WheelScrollLines));
 end;
 
 procedure TATListbox.KeyDown(var Key: Word; Shift: TShiftState);
@@ -492,7 +492,7 @@ begin
   end;
   if (key=vk_next) then
   begin
-    ItemIndex:= Min(CurrentItemCount-1, ItemIndex+(VisibleItems-1));
+    ItemIndex:= Min(ItemCount-1, ItemIndex+(VisibleItems-1));
     key:= 0;
     Exit
   end;
@@ -505,7 +505,7 @@ begin
   end;
   if (key=vk_end) then
   begin
-    ItemIndex:= CurrentItemCount-1;
+    ItemIndex:= ItemCount-1;
     key:= 0;
     Exit
   end;
