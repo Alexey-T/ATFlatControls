@@ -4,6 +4,7 @@
     - HotTrack
     - HotTrackIndex (public)
     - ColorHotTrackBack
++ ATListbox: added props IndentLeft, IndentTop    
 
 2018.06.08
 + ATListbox: added props VirtualMode, VirtualItemCount

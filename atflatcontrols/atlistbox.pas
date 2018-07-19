@@ -40,6 +40,8 @@ type
     FColorHotTrackBack: TColor;
     FHotTrack: boolean;
     FHotTrackIndex: integer;
+    FIndentLeft: integer;
+    FIndentTop: integer;
     FOnDrawItem: TATListboxDrawItemEvent;
     FOnChangeSel: TNotifyEvent;
     FOnScroll: TNotifyEvent;
@@ -97,6 +99,8 @@ type
     property Enabled;
     property Font;
     property HotTrack: boolean read FHotTrack write FHotTrack default false;
+    property IndentLeft: integer read FIndentLeft write FIndentLeft default 4;
+    property IndentTop: integer read FIndentTop write FIndentTop default 2;
     property ItemHeight: integer read FItemHeight write FItemHeight default 21;
     property OwnerDrawn: boolean read FOwnerDrawn write FOwnerDrawn default false;
     property ParentColor;
@@ -267,7 +271,10 @@ begin
   else
     S:= '('+IntToStr(AIndex)+')';
 
-  C.TextOut(R.Left+4, R.Top+2, S);
+  C.TextOut(
+    R.Left+FIndentLeft,
+    R.Top+FIndentTop,
+    S);
 end;
 
 procedure TATListbox.Paint;
@@ -398,6 +405,8 @@ begin
   FItemIndex:= 0;
   FItemHeight:= 21;
   FItemTop:= 0;
+  FIndentLeft:= 4;
+  FIndentTop:= 2;
   FOwnerDrawn:= false;
   FVirtualMode:= true;
   FHotTrack:= false;
