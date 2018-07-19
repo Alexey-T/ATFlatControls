@@ -37,10 +37,12 @@ type
     FList: TStringList;
     FColorSelFont: TColor;
     FColorSelBack: TColor;
+    FColorHotTrackBack: TColor;
+    FHotTrack: boolean;
+    FHotTrackIndex: integer;
     FOnDrawItem: TATListboxDrawItemEvent;
     FOnChangeSel: TNotifyEvent;
     FOnScroll: TNotifyEvent;
-    procedure DoDefaultOnDrawItem(Sender: TObject; C: TCanvas; AIndex: integer; const ARect: TRect);
     procedure DoPaintTo(C: TCanvas; r: TRect);
     function ItemBottom: integer;
     procedure ScrollbarChange(Sender: TObject);
@@ -58,6 +60,7 @@ type
     procedure Click; override;
     procedure LMVScroll(var Msg: TLMVScroll); message LM_VSCROLL;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
+    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
       MousePos: TPoint): Boolean; override;
     procedure ChangedSelection; virtual;
@@ -69,6 +72,7 @@ type
     property ItemIndex: integer read FItemIndex write SetItemIndex;
     property ItemTop: integer read FItemTop write SetItemTop;
     function ItemCount: integer;
+    property HotTrackIndex: integer read FHotTrackIndex;
     property VirtualItemCount: integer read FVirtualItemCount write SetVirtualItemCount;
     property VisibleItems: integer read GetVisibleItems;
     function GetItemIndexAt(Pnt: TPoint): integer;
@@ -87,9 +91,11 @@ type
     property Color;
     property ColorSelFont: TColor read FColorSelFont write FColorSelFont default clWhite;
     property ColorSelBack: TColor read FColorSelBack write FColorSelBack default clMedGray;
+    property ColorHotTrackBack: TColor read FColorHotTrackBack write FColorHotTrackBack default clMoneyGreen;
     property DoubleBuffered;
     property Enabled;
     property Font;
+    property HotTrack: boolean read FHotTrack write FHotTrack default false;
     property ItemHeight: integer read FItemHeight write FItemHeight default 21;
     property OwnerDrawn: boolean read FOwnerDrawn write FOwnerDrawn default false;
     property ParentColor;
@@ -373,8 +379,8 @@ begin
   Color:= clWhite;
   ColorSelFont:= clWhite;
   ColorSelBack:= clMedGray;
+  ColorHotTrackBack:= clMoneyGreen;
   CanGetFocus:= false;
-  FOnDrawItem:= @DoDefaultOnDrawItem;
   FList:= TStringList.Create;
   FVirtualItemCount:= 0;
   FItemIndex:= 0;
@@ -382,6 +388,7 @@ begin
   FItemTop:= 0;
   FOwnerDrawn:= false;
   FVirtualMode:= true;
+  FHotTrack:= false;
 
   FBitmap:= TBitmap.Create;
   FBitmap.SetSize(1600, 1200);
@@ -518,36 +525,17 @@ begin
   end;
 end;
 
-
-procedure TATListbox.DoDefaultOnDrawItem(Sender: TObject; C: TCanvas;
-  AIndex: integer; const ARect: TRect);
-const
-  cIndent = 4;
+procedure TATListbox.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin
-  if AIndex<0 then exit;
-  if AIndex=ItemIndex then
+  inherited;
+
+  if FHotTrack then
   begin
-    c.Font.Color:= ColorToRGB(FColorSelFont);
-    c.Brush.Color:= ColorToRGB(FColorSelBack);
+    FHotTrackIndex:= GetItemIndexAt(Point(X, Y));
+    Invalidate;
   end
   else
-  begin
-    c.Font.Color:= ColorToRGB(Font.Color);
-    c.Brush.Color:= ColorToRGB(Color);
-  end;
-  c.Pen.Color:= ColorToRGB(c.Brush.Color);
-  c.FillRect(ARect);
-
-  if FVirtualMode or (AIndex>=Items.Count) then
-    c.TextOut(
-      ARect.Left+cIndent,
-      ARect.Top+1,
-      '?')
-  else
-    c.TextOut(
-      ARect.Left+cIndent,
-      ARect.Top+1,
-      Items[AIndex]);
+    FHotTrackIndex:= -1;
 end;
 
 procedure TATListbox.DoScaleScrollbar;

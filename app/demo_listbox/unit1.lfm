@@ -1,21 +1,21 @@
 object fmMain: TfmMain
   Left = 428
-  Height = 355
-  Top = 271
+  Height = 376
+  Top = 250
   Width = 448
   Caption = 'ATListbox demo'
-  ClientHeight = 355
+  ClientHeight = 376
   ClientWidth = 448
   OnCreate = FormCreate
   Position = poScreenCenter
   LCLVersion = '1.9.0.0'
   object Panel1: TPanel
     Left = 0
-    Height = 82
-    Top = 273
+    Height = 99
+    Top = 277
     Width = 448
     Align = alBottom
-    ClientHeight = 82
+    ClientHeight = 99
     ClientWidth = 448
     TabOrder = 0
     object chkThemedScroll: TCheckBox
@@ -50,6 +50,15 @@ object fmMain: TfmMain
       OnChange = chkVirtualChange
       State = cbChecked
       TabOrder = 2
+    end
+    object chkHotTrack: TCheckBox
+      Left = 8
+      Height = 24
+      Top = 72
+      Width = 87
+      Caption = 'hot track'
+      OnChange = chkHotTrackChange
+      TabOrder = 3
     end
   end
 end

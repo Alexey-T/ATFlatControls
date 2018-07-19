@@ -12,10 +12,12 @@ type
   { TfmMain }
 
   TfmMain = class(TForm)
+    chkHotTrack: TCheckBox;
     chkVirtual: TCheckBox;
     chkOwnerDrawn: TCheckBox;
     chkThemedScroll: TCheckBox;
     Panel1: TPanel;
+    procedure chkHotTrackChange(Sender: TObject);
     procedure chkOwnerDrawnChange(Sender: TObject);
     procedure chkThemedScrollChange(Sender: TObject);
     procedure chkVirtualChange(Sender: TObject);
@@ -84,12 +86,25 @@ begin
   list.Invalidate;
 end;
 
+procedure TfmMain.chkHotTrackChange(Sender: TObject);
+begin
+  list.HotTrack:= chkHotTrack.Checked;
+  list.Invalidate;
+end;
+
 procedure TfmMain.ListDraw(Sender: TObject; C: TCanvas; AIndex: integer;
   const ARect: TRect);
 var
   S: string;
 begin
-  C.Brush.Color:= IfThen(AIndex=list.ItemIndex, clMedGray, list.Color);
+  if AIndex=list.ItemIndex then
+    C.Brush.Color:= $B08080
+  else
+  if list.HotTrack and (AIndex=list.HotTrackIndex) then
+    C.Brush.Color:= clMoneyGreen
+  else
+    C.Brush.Color:= list.Color;
+
   C.FillRect(ARect);
 
   C.Pen.Color:= clMedGray;
