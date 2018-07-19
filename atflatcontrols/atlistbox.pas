@@ -43,6 +43,7 @@ type
     FOnDrawItem: TATListboxDrawItemEvent;
     FOnChangeSel: TNotifyEvent;
     FOnScroll: TNotifyEvent;
+    procedure DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
     procedure DoPaintTo(C: TCanvas; r: TRect);
     function ItemBottom: integer;
     procedure ScrollbarChange(Sender: TObject);
@@ -217,7 +218,6 @@ end;
 procedure TATListbox.DoPaintTo(C: TCanvas; r: TRect);
 var
   Index: integer;
-  S: string;
 begin
   C.Brush.Color:= ColorToRGB(Color);
   C.FillRect(r);
@@ -236,26 +236,38 @@ begin
         FOnDrawItem(Self, C, Index, r);
     end
     else
-    begin
-      if Index=FItemIndex then
-      begin
-        C.Brush.Color:= ColorToRGB(FColorSelBack);
-        C.Font.Color:= ColorToRGB(FColorSelFont);
-      end
-      else
-      begin
-        C.Brush.Color:= ColorToRGB(Color);
-        C.Font.Color:= ColorToRGB(Self.Font.Color);
-      end;
-      C.FillRect(r);
-
-      if (Index>=0) and (Index<FList.Count) then
-        S:= FList[Index]
-      else
-        S:= '('+IntToStr(Index)+')';
-      C.TextOut(r.Left+4, r.Top+2, S);
-    end;
+      DoDefaultDrawItem(C, Index, r);
   end;
+end;
+
+procedure TATListbox.DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
+var
+  S: string;
+begin
+  if AIndex=FItemIndex then
+  begin
+    C.Brush.Color:= ColorToRGB(FColorSelBack);
+    C.Font.Color:= ColorToRGB(FColorSelFont);
+  end
+  else
+  if FHotTrack and (AIndex=FHotTrackIndex) then
+  begin
+    C.Brush.Color:= ColorToRGB(ColorHotTrackBack);
+    C.Font.Color:= ColorToRGB(Self.Font.Color);
+  end
+  else
+  begin
+    C.Brush.Color:= ColorToRGB(Color);
+    C.Font.Color:= ColorToRGB(Self.Font.Color);
+  end;
+  C.FillRect(R);
+
+  if (AIndex>=0) and (AIndex<FList.Count) then
+    S:= FList[AIndex]
+  else
+    S:= '('+IntToStr(AIndex)+')';
+
+  C.TextOut(R.Left+4, R.Top+2, S);
 end;
 
 procedure TATListbox.Paint;
