@@ -1,4 +1,10 @@
 
+2018.07.19
++ ATListbox: added props:
+    - HotTrack
+    - HotTrackIndex (public)
+    - ColorHotTrackBack
+
 2018.06.08
 + ATListbox: added props VirtualMode, VirtualItemCount
     If VirtualMode=false, listbox uses item count from Items prop. 
