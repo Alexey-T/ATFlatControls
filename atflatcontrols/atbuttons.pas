@@ -27,6 +27,7 @@ type
     ColorBgChecked,
     ColorBgDisabled,
     ColorArrows,
+    ColorSeparators,
     ColorBorderPassive,
     ColorBorderOver,
     ColorBorderFocused: TColor;
@@ -441,7 +442,7 @@ begin
         dy:= 2;
         pnt1:= Point(dy, Height div 2);
         pnt2:= Point(Width-dy, Height div 2);
-        Canvas.Pen.Color:= ColorToRGB(Theme^.ColorArrows);
+        Canvas.Pen.Color:= ColorToRGB(Theme^.ColorSeparators);
         Canvas.Line(pnt1, pnt2);
       end;
 
@@ -450,7 +451,7 @@ begin
         dy:= 2;
         pnt1:= Point(Width div 2, dy);
         pnt2:= Point(Width div 2, Height-dy);
-        Canvas.Pen.Color:= ColorToRGB(Theme^.ColorArrows);
+        Canvas.Pen.Color:= ColorToRGB(Theme^.ColorSeparators);
         Canvas.Line(pnt1, pnt2);
       end;
   end;
@@ -735,6 +736,7 @@ initialization
     ColorBgChecked:= $b0b0b0;
     ColorBgDisabled:= $c0c0d0;
     ColorArrows:= clGray;
+    ColorSeparators:= clDkGray;
     ColorBorderPassive:= $a0a0a0;
     ColorBorderOver:= $d0d0d0;
     ColorBorderFocused:= clNavy;
