@@ -11,7 +11,7 @@ interface
 
 uses
   Classes, SysUtils, Graphics, Controls, Menus,
-  Types, Math, Forms,
+  Types, Math, Forms, ExtCtrls,
   LCLType;
 
 type
@@ -98,6 +98,7 @@ type
     FPadding: integer;
     FPaddingBig: integer;
     FTheme: PATButtonTheme;
+    FTimerMouseover: TTimer;
     procedure DoChoiceClick(Sender: TObject);
     function GetIconHeight: integer;
     function GetIconWidth: integer;
@@ -115,6 +116,7 @@ type
     procedure SetBoldBorder(AValue: boolean);
     procedure SetTheme(AValue: PATButtonTheme);
     procedure ShowChoiceMenu;
+    procedure TimerMouseoverTick(Sender: TObject);
   protected
     procedure Click; override;
     procedure Paint; override;
@@ -548,6 +550,9 @@ begin
   inherited;
   FOver:= true;
   Invalidate;
+
+  //timer is workaround for LCL bug, when MouseLeave not called
+  FTimerMouseover.Enabled:= true;
 end;
 
 procedure TATButton.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
@@ -665,6 +670,11 @@ begin
   FItems:= TStringList.Create;
   FItemIndex:= -1;
   FTheme:= @ATButtonTheme;
+
+  FTimerMouseover:= TTimer.Create(Self);
+  FTimerMouseover.Enabled:= false;
+  FTimerMouseover.Interval:= 400;
+  FTimerMouseover.OnTimer:= @TimerMouseoverTick;
 end;
 
 destructor TATButton.Destroy;
@@ -719,6 +729,18 @@ begin
 
   P:= ClientToScreen(Point(0, Height));
   FPopup.PopUp(P.X, P.Y);
+end;
+
+procedure TATButton.TimerMouseoverTick(Sender: TObject);
+var
+  Pnt: TPoint;
+begin
+  Pnt:= ScreenToClient(Mouse.CursorPos);
+  if not PtInRect(ClientRect, Pnt) then
+  begin
+    FTimerMouseover.Enabled:= false;
+    MouseLeave;
+  end;
 end;
 
 
