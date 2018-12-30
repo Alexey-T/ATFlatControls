@@ -541,6 +541,7 @@ end;
 procedure TATButton.MouseLeave;
 begin
   inherited;
+  FTimerMouseover.Enabled:= false;
   FOver:= false;
   Invalidate;
 end;
@@ -550,8 +551,6 @@ begin
   inherited;
   FOver:= true;
   Invalidate;
-
-  //timer is workaround for LCL bug, when MouseLeave not called
   FTimerMouseover.Enabled:= true;
 end;
 
@@ -732,15 +731,14 @@ begin
 end;
 
 procedure TATButton.TimerMouseoverTick(Sender: TObject);
+//timer is workaround for LCL issue, where MouseLeave not called
+//if mouse leaves app window area (at last on Linux)
 var
   Pnt: TPoint;
 begin
   Pnt:= ScreenToClient(Mouse.CursorPos);
   if not PtInRect(ClientRect, Pnt) then
-  begin
-    FTimerMouseover.Enabled:= false;
     MouseLeave;
-  end;
 end;
 
 
