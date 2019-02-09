@@ -1,20 +1,20 @@
 object fmMain: TfmMain
-  Left = 417
+  Left = 1460
   Height = 469
-  Top = 246
-  Width = 803
+  Top = 357
+  Width = 610
   Caption = 'ATButton demo'
   ClientHeight = 469
-  ClientWidth = 803
+  ClientWidth = 610
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '1.9.0.0'
+  LCLVersion = '2.1.0.0'
   object chkFocus: TCheckBox
     Left = 16
     Height = 24
     Top = 384
-    Width = 134
+    Width = 148
     Caption = 'buttons focusable'
     Checked = True
     OnChange = chkFocusChange
@@ -25,7 +25,7 @@ object fmMain: TfmMain
     Left = 16
     Height = 24
     Top = 408
-    Width = 125
+    Width = 136
     Caption = 'buttons enabled'
     Checked = True
     OnChange = chkEnChange
@@ -33,29 +33,23 @@ object fmMain: TfmMain
     TabOrder = 1
   end
   object PanelToolbar: TPanel
-    Left = 192
-    Height = 96
-    Top = 8
-    Width = 472
-    ClientHeight = 96
-    ClientWidth = 472
+    Left = 0
+    Height = 56
+    Top = 0
+    Width = 610
+    Align = alTop
+    BevelOuter = bvNone
     Color = clMoneyGreen
     ParentColor = False
     TabOrder = 2
-    object Label1: TLabel
-      Left = 6
-      Height = 14
-      Top = 3
-      Width = 103
-      Caption = 'ATButtonsToolbar'
-      ParentColor = False
-    end
   end
   object PanelRight: TPanel
-    Left = 672
-    Height = 400
-    Top = 8
-    Width = 120
+    Left = 551
+    Height = 413
+    Top = 56
+    Width = 59
+    Align = alRight
+    BevelOuter = bvNone
     Color = clMoneyGreen
     ParentColor = False
     TabOrder = 3

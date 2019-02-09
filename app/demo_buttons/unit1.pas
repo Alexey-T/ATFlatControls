@@ -16,7 +16,6 @@ type
     chkEn: TCheckBox;
     chkFocus: TCheckBox;
     ImageList1: TImageList;
-    Label1: TLabel;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
     PanelRight: TPanel;
@@ -109,7 +108,7 @@ begin
 
   bar:= TATFlatToolbar.create(self);
   bar.Parent:= PanelToolbar;
-  bar.SetBounds(4, 30, 400, 60);
+  bar.SetBounds(0, 0, 400, 50);
   bar.Images:= ImageList1;
   bar.AddButton(0, @BtnColorsClick, 'Open', 'hint1', '', true);
   bar.AddDropdown(-1, PopupMenu1, nil, '', 'Some menu');
