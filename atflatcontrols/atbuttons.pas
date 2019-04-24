@@ -12,6 +12,7 @@ interface
 uses
   Classes, SysUtils, Graphics, Controls, Menus,
   Types, Math, Forms, ExtCtrls,
+  FPTimer,
   LCLType;
 
 type
@@ -98,7 +99,7 @@ type
     FPadding: integer;
     FPaddingBig: integer;
     FTheme: PATButtonTheme;
-    FTimerMouseover: TTimer;
+    FTimerMouseover: TFPTimer;
     procedure DoChoiceClick(Sender: TObject);
     function GetIconHeight: integer;
     function GetIconWidth: integer;
@@ -670,9 +671,9 @@ begin
   FItemIndex:= -1;
   FTheme:= @ATButtonTheme;
 
-  FTimerMouseover:= TTimer.Create(Self);
+  FTimerMouseover:= TFPTimer.Create(Self);
   FTimerMouseover.Enabled:= false;
-  FTimerMouseover.Interval:= 400;
+  FTimerMouseover.Interval:= 1000;
   FTimerMouseover.OnTimer:= @TimerMouseoverTick;
 end;
 
@@ -732,7 +733,7 @@ end;
 
 procedure TATButton.TimerMouseoverTick(Sender: TObject);
 //timer is workaround for LCL issue, where MouseLeave not called
-//if mouse leaves app window area (at last on Linux)
+//if mouse leaves app window area (at least on Linux)
 var
   Pnt: TPoint;
 begin
