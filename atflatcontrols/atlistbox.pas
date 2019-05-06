@@ -81,6 +81,7 @@ type
     function GetItemIndexAt(Pnt: TPoint): integer;
     property ThemedScrollbar: boolean read FThemedScrollbar write SetThemedScrollbar;
     property ThemedColors: boolean read FThemedColors write FThemedColors;
+    property Scrollbar: TATScroll read FScroll;
     function CanFocus: boolean; override;
     function CanSetFocus: boolean; override;
     function ClientWidth: integer;
