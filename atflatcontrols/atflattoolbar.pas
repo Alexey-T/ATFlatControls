@@ -118,6 +118,7 @@ begin
   for i:= ControlCount-1 downto 0 do
   begin
     btn:= Controls[i] as TATButton;
+    btn.ScalePercents:= FScalePercents;
 
     if Vertical then
       btn.Width:= FButtonWidth

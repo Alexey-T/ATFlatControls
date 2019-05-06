@@ -81,6 +81,7 @@ type
     FChecked,
     FCheckable,
     FFocusable: boolean;
+    FScalePercents: integer;
     FPicture: TPicture;
     FImages: TImageList;
     FImageIndex: integer;
@@ -118,6 +119,7 @@ type
     procedure SetTheme(AValue: PATButtonTheme);
     procedure ShowChoiceMenu;
     procedure TimerMouseoverTick(Sender: TObject);
+    function DoScale(AValue: integer): integer;
   protected
     procedure Click; override;
     procedure Paint; override;
@@ -143,6 +145,7 @@ type
     property Items: TStringList read FItems;
     property ItemIndex: integer read FItemIndex write FItemIndex;
     property Theme: PATButtonTheme read FTheme write SetTheme;
+    property ScalePercents: integer read FScalePercents write FScalePercents;
   published
     property Align;
     property Anchors;
@@ -365,10 +368,9 @@ begin
     PaintBorder(Canvas, R, NColor, NSize);
   end;
 
-  Canvas.Font.PixelsPerInch:= Screen.PixelsPerInch;
   Canvas.Font.Name:= Theme^.FontName;
   Canvas.Font.Color:= ColorToRGB(IfThen(Enabled, Theme^.ColorFont, Theme^.ColorFontDisabled));
-  Canvas.Font.Size:= Theme^.FontSize;
+  Canvas.Font.Size:= DoScale(Theme^.FontSize);
   if BoldFont then
     Canvas.Font.Style:= [fsBold]
   else
@@ -429,7 +431,7 @@ begin
     abuTextChoice:
       begin
         pnt1.x:= FPadding +
-          IfThen(FArrowAlign=taLeftJustify, FPadding + Scale96ToScreen(Theme^.ArrowSize*4)) +
+          IfThen(FArrowAlign=taLeftJustify, FPadding + DoScale(Theme^.ArrowSize*4)) +
           IfThen(IsPressed, Theme^.PressedCaptionShiftX);
         pnt1.y:= (ClientHeight-GetTextSize('W').cy) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftY);
@@ -463,11 +465,11 @@ begin
   begin
     case FArrowAlign of
       taLeftJustify:
-        pnt1.x:= Scale96ToScreen(Theme^.ArrowSize*4);
+        pnt1.x:= DoScale(Theme^.ArrowSize*4);
       taRightJustify:
-        pnt1.x:= ClientWidth - Scale96ToScreen(Theme^.ArrowSize*4);
+        pnt1.x:= ClientWidth - DoScale(Theme^.ArrowSize*4);
       taCenter:
-        pnt1.x:= (ClientWidth - Scale96ToScreen(Theme^.ArrowSize)) div 2;
+        pnt1.x:= (ClientWidth - DoScale(Theme^.ArrowSize)) div 2;
     end;
 
     pnt1.y:= ClientHeight div 2 +
@@ -490,7 +492,7 @@ procedure TATButton.PaintArrow(AX, AY: integer);
 var
   NSize: integer;
 begin
-  NSize:= Scale96ToScreen(Theme^.ArrowSize);
+  NSize:= DoScale(Theme^.ArrowSize);
   CanvasPaintTriangleDown(Canvas, Theme^.ColorArrows,
     Point(AX, AY), NSize);
 end;
@@ -650,6 +652,7 @@ begin
   TabStop:= true;
   Width:= 100;
   Height:= 25;
+  FScalePercents:= 100;
 
   Caption:= 'Button';
   FPicture:= TPicture.Create;
@@ -740,6 +743,11 @@ begin
   Pnt:= ScreenToClient(Mouse.CursorPos);
   if not PtInRect(ClientRect, Pnt) then
     MouseLeave;
+end;
+
+function TATButton.DoScale(AValue: integer): integer; inline;
+begin
+  Result:= AValue*FScalePercents div 100;
 end;
 
 
