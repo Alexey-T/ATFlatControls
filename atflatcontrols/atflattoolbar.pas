@@ -27,7 +27,7 @@ type
     FWrapable: boolean;
     procedure PopupForDropdownClick(Sender: TObject);
     function GetButton(AIndex: integer): TATButton;
-    function DoScale(N: integer): integer;
+    function DoScale(AValue: integer): integer;
     procedure SetVertical(AValue: boolean);
     procedure SetWrapable(AValue: boolean);
     procedure UpdateAnchors;
@@ -264,12 +264,9 @@ begin
       Result:= Controls[AIndex] as TATButton;
 end;
 
-function TATFlatToolbar.DoScale(N: integer): integer;
+function TATFlatToolbar.DoScale(AValue: integer): integer; inline;
 begin
-  if ScalePercents<=100 then
-    Result:= N
-  else
-    Result:= MulDiv(N, ScalePercents, 100);
+  Result:= AValue*FScalePercents div 100;
 end;
 
 procedure TATFlatToolbar.SetVertical(AValue: boolean);
