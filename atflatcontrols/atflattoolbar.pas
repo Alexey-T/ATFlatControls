@@ -123,7 +123,7 @@ begin
       btn.Width:= FButtonWidth
     else
     if Assigned(FImages) then
-      btn.Height:= FImages.Height+2*btn.Padding;
+      btn.Height:= FButtonWidth;
 
     case btn.Kind of
       abuSeparatorVert:
@@ -138,9 +138,9 @@ begin
       abuIconOnly:
         begin
           if Vertical then
-            btn.Height:= FImages.Height+2*btn.Padding
+            btn.Height:= FButtonWidth
           else
-            btn.Width:= FImages.Width+2*btn.Padding + IfThen(btn.Arrow, btn.Padding);
+            btn.Width:= FButtonWidth + IfThen(btn.Arrow, btn.Padding);
         end;
 
       abuTextOnly:
@@ -154,17 +154,17 @@ begin
       abuTextIconVert:
         begin
           if Vertical then
-            btn.Height:= btn.GetTextSize(btn.Caption).cy+FImages.Height+3*btn.Padding
+            btn.Height:= btn.GetTextSize(btn.Caption).cy+FButtonWidth+btn.Padding
           else
-            btn.Width:= Max(btn.GetTextSize(btn.Caption).cx, FImages.Width)+2*btn.Padding;
+            btn.Width:= Max(btn.GetTextSize(btn.Caption).cx, FButtonWidth);
         end;
 
       abuTextIconHorz:
         begin
           if Vertical then
-            btn.Height:= Max(btn.GetTextSize(btn.Caption).cy, FImages.Height)+2*btn.Padding
+            btn.Height:= Max(btn.GetTextSize(btn.Caption).cy, FButtonWidth)
           else
-            btn.Width:= btn.GetTextSize(btn.Caption).cx+FImages.Width+3*btn.Padding;
+            btn.Width:= btn.GetTextSize(btn.Caption).cx+FButtonWidth+btn.Padding;
         end;
     end;
 
