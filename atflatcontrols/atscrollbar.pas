@@ -92,6 +92,8 @@ type
     FIndentArrow: Integer;
     FIndentArrLonger: Integer;
     FTimerDelay: Integer;
+    FScalePercents: Integer;
+    FWidthInitial: Integer;
 
     FPos: Integer;
     FMin: Integer;
@@ -143,6 +145,8 @@ type
     procedure DoUpdatePosOnDrag(X, Y: Integer);
     procedure DoScrollBy(NDelta: Integer);
     function GetPxAtScroll(APos: Integer): Integer;
+    function DoScale(AValue: integer): integer;
+    procedure SetScalePercents(AValue: Integer);
 
     procedure TimerTimer(Sender: TObject);
     procedure SetKind(AValue: TScrollBarKind);
@@ -156,8 +160,10 @@ type
   public
     constructor Create(AOnwer: TComponent); override;
     destructor Destroy; override;
-    procedure AutoAdjustLayout(AMode: TLayoutAdjustmentPolicy; const AFromPPI, AToPPI,
-      AOldFormWidth, ANewFormWidth: Integer); override;
+    function CanFocus: boolean; override;
+    property WidthInitial: Integer read FWidthInitial write FWidthInitial;
+    property ScalePercents: Integer read FScalePercents write SetScalePercents;
+
   protected
     procedure Paint; override;
     procedure Resize; override;
@@ -180,11 +186,11 @@ type
     property ShowHint;
     property Visible;
 
-    property Position: Integer read FPos write SetPos;
-    property Min: Integer read FMin write SetMin;
-    property Max: Integer read FMax write SetMax;
-    property LineSize: Integer read FLineSize write FLineSize;
-    property PageSize: Integer read FPageSize write SetPageSize;
+    property Position: Integer read FPos write SetPos default 0;
+    property Min: Integer read FMin write SetMin default 0;
+    property Max: Integer read FMax write SetMax default 100;
+    property LineSize: Integer read FLineSize write FLineSize default 1;
+    property PageSize: Integer read FPageSize write SetPageSize default 20;
     property MinSizeToShowThumb: Integer read FMinSizeToShowThumb write FMinSizeToShowThumb default 10;
     property MinSizeOfThumb: Integer read FMinSizeOfThumb write FMinSizeOfThumb default 4;
     property Kind: TScrollBarKind read FKind write SetKind default sbHorizontal;
@@ -227,7 +233,9 @@ begin
   DoubleBuffered:= IsDoubleBufferedNeeded;
   Width:= 200;
   Height:= 20;
+  FWidthInitial:= Height;
 
+  FScalePercents:= 100;
   FKind:= sbHorizontal;
   FKindArrows:= asaArrowsNormal;
   FIndentBorder:= 1;
@@ -265,18 +273,14 @@ begin
   FreeAndNil(FBitmap);
   inherited;
 end;
-
-procedure TATScroll.AutoAdjustLayout(AMode: TLayoutAdjustmentPolicy;
-  const AFromPPI, AToPPI, AOldFormWidth, ANewFormWidth: Integer);
+function TATScroll.CanFocus: boolean;
 begin
-  //inherited; //dont call
+  Result:= false;
+end;
 
-  Width:= MulDiv(Width, AToPPI, AFromPPI);
-  Height:= MulDiv(Height, AToPPI, AFromPPI);
-
-  IndentArrow:= MulDiv(IndentArrow, AToPPI, AFromPPI);
-  IndentArrLonger:= MulDiv(IndentArrLonger, AToPPI, AFromPPI);
-  IndentCorner:= MulDiv(IndentCorner, AToPPI, AFromPPI);
+function TATScroll.DoScale(AValue: integer): integer; inline;
+begin
+  Result:= AValue*FScalePercents div 100;
 end;
 
 procedure TATScroll.Paint;
@@ -309,13 +313,13 @@ begin
   C.Brush.Color:= ColorToRGB(ATScrollbarTheme.ColorBorder);
   C.FillRect(FRectMain);
 
-  InflateRect(FRectMain, -FIndentBorder, -FIndentBorder);
+  InflateRect(FRectMain, -DoScale(FIndentBorder), -DoScale(FIndentBorder));
 
   if IsHorz then
   begin
     //horz kind
     FSize:= Math.Min(FRectMain.Height, FRectMain.Width div 2);
-    Inc(FSize, FIndentArrLonger);
+    Inc(FSize, DoScale(FIndentArrLonger));
     case FKindArrows of
       asaArrowsNormal:
         begin
@@ -344,7 +348,7 @@ begin
   begin
     //vertical kind
     FSize:= Math.Min(FRectMain.Width, FRectMain.Height div 2);
-    Inc(FSize, FIndentArrLonger);
+    Inc(FSize, DoScale(FIndentArrLonger));
     case FKindArrows of
       asaArrowsNormal:
         begin
@@ -513,7 +517,7 @@ begin
   C.FillRect(R);
 
   P:= CenterPoint(R);
-  cc:= FIndentArrow;
+  cc:= DoScale(FIndentArrow);
 
   case Typ of
     aseArrowUp:
@@ -569,6 +573,18 @@ begin
     NLen:= FRectMain.Height;
   end;
   Result:= N0 + (APos-FMin) * NLen div Math.Max(1, FMax-FMin);
+end;
+
+procedure TATScroll.SetScalePercents(AValue: Integer);
+begin
+  if FScalePercents=AValue then Exit;
+  FScalePercents:= AValue;
+
+  //usually controls don't scale Width/Height, but it's handy for scrollbars
+  if IsHorz then
+    Height:= DoScale(FWidthInitial)
+  else
+    Width:= DoScale(FWidthInitial);
 end;
 
 procedure TATScroll.DoUpdateThumbRect;
@@ -794,34 +810,37 @@ begin
 end;
 
 procedure TATScroll.DoUpdateCornerRect;
+var
+  Delta: integer;
 begin
   FRectCorner:= Rect(0, 0, 0, 0);
+  Delta:= DoScale(FIndentCorner);
   if IsHorz then
   begin
-    if FIndentCorner>0 then
+    if Delta>0 then
     begin
-      FRectCorner:= Rect(ClientWidth-FIndentCorner, 0, ClientWidth, ClientHeight);
-      Dec(FRectMain.Right, FIndentCorner);
+      FRectCorner:= Rect(ClientWidth-Delta, 0, ClientWidth, ClientHeight);
+      Dec(FRectMain.Right, Delta);
     end
     else
-    if FIndentCorner<0 then
+    if Delta<0 then
     begin
-      FRectCorner:= Rect(0, 0, Abs(FIndentCorner), ClientHeight);
-      Inc(FRectMain.Left, Abs(FIndentCorner));
+      FRectCorner:= Rect(0, 0, Abs(Delta), ClientHeight);
+      Inc(FRectMain.Left, Abs(Delta));
     end;
   end
   else
   begin
-    if FIndentCorner>0 then
+    if Delta>0 then
     begin
-      FRectCorner:= Rect(0, ClientHeight-FIndentCorner, ClientWidth, ClientHeight);
-      Dec(FRectMain.Bottom, FIndentCorner);
+      FRectCorner:= Rect(0, ClientHeight-Delta, ClientWidth, ClientHeight);
+      Dec(FRectMain.Bottom, Delta);
     end
     else
-    if FIndentCorner<0 then
+    if Delta<0 then
     begin
-      FRectCorner:= Rect(0, 0, ClientWidth, Abs(FIndentCorner));
-      Inc(FRectMain.Top, Abs(FIndentCorner));
+      FRectCorner:= Rect(0, 0, ClientWidth, Abs(Delta));
+      Inc(FRectMain.Top, Abs(Delta));
     end;
   end;
 end;

@@ -10,7 +10,7 @@ object FormDemo: TFormDemo
   Font.Name = 'Default'
   OnCreate = FormCreate
   Position = poScreenCenter
-  LCLVersion = '1.7'
+  LCLVersion = '2.1.0.0'
   object Splitter1: TSplitter
     Left = 257
     Height = 421
@@ -31,15 +31,15 @@ object FormDemo: TFormDemo
     TabOrder = 0
     object Label1: TLabel
       Left = 8
-      Height = 17
+      Height = 16
       Top = 160
-      Width = 73
+      Width = 66
       Caption = 'Border size'
       ParentColor = False
     end
     object labv: TLabel
       Left = 24
-      Height = 17
+      Height = 16
       Top = 8
       Width = 9
       Caption = 'V'
@@ -47,41 +47,41 @@ object FormDemo: TFormDemo
     end
     object labh: TLabel
       Left = 25
-      Height = 17
+      Height = 16
       Top = 30
-      Width = 10
+      Width = 9
       Caption = 'H'
       ParentColor = False
     end
     object Label2: TLabel
       Left = 8
-      Height = 17
+      Height = 16
       Top = 120
-      Width = 61
+      Width = 55
       Caption = 'Page size'
       ParentColor = False
     end
     object Label3: TLabel
       Left = 8
-      Height = 17
+      Height = 16
       Top = 72
-      Width = 27
-      Caption = 'Size'
+      Width = 58
+      Caption = 'Scale in %'
       ParentColor = False
     end
     object Label4: TLabel
       Left = 8
-      Height = 17
+      Height = 16
       Top = 200
-      Width = 83
+      Width = 79
       Caption = 'Arrow longer'
       ParentColor = False
     end
     object Label5: TLabel
       Left = 8
-      Height = 17
+      Height = 16
       Top = 240
-      Width = 88
+      Width = 80
       Caption = 'Corner indent'
       ParentColor = False
     end
@@ -89,7 +89,7 @@ object FormDemo: TFormDemo
       Left = 8
       Height = 24
       Top = 296
-      Width = 108
+      Width = 99
       Caption = 'Owner-draw'
       OnClick = chkDrawClick
       TabOrder = 6
@@ -124,11 +124,11 @@ object FormDemo: TFormDemo
       Top = 48
       Width = 113
       Frequency = 20
-      Max = 40
-      Min = 8
+      Max = 300
+      Min = 100
       OnChange = trackSizeChange
       PageSize = 5
-      Position = 20
+      Position = 100
       TabOrder = 0
     end
     object trackLonger: TTrackBar
@@ -180,10 +180,9 @@ object FormDemo: TFormDemo
         'arrows above'
         'no arrows'
       )
-      ItemHeight = 23
+      ItemHeight = 22
       ItemIndex = 0
       OnClick = ListArrowsClick
-      Options = [lboDrawFocusRect]
       ScrollWidth = 198
       TabOrder = 7
     end

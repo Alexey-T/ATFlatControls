@@ -81,7 +81,9 @@ begin
   bv.Max:= 100;
 
   bv.Width:= 22;
+  bv.WidthInitial:= bv.Width;
   bh.Height:= bv.Width;
+  bh.WidthInitial:= bv.Width;
   bh.IndentCorner:= bv.Width; //positive
 
   //--------------
@@ -186,11 +188,8 @@ var
   n: Integer;
 begin
   n:= trackSize.Position;
-  bv.IndentArrow:= n div 5;
-  bh.IndentArrow:= bv.IndentArrow;
-  bv.Width:= n;
-  bh.IndentCorner:= n;
-  bh.Height:= n;
+  bv.ScalePercents:= n;
+  bh.ScalePercents:= n;
 end;
 
 procedure TFormDemo.trackLongerChange(Sender: TObject);
