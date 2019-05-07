@@ -40,6 +40,8 @@ type
     ChoiceBorderWidth: integer;
     ArrowSize: integer;
     GapForAutoSize: integer;
+    ScalePercents: integer;
+    ScaleFontPercents: integer;
   end;
 
 var
@@ -76,13 +78,11 @@ type
 
   TATButton = class(TCustomControl)
   private
-    FPressed,
-    FOver,
-    FChecked,
-    FCheckable,
+    FPressed: boolean;
+    FOver: boolean;
+    FChecked: boolean;
+    FCheckable: boolean;
     FFocusable: boolean;
-    FScalePercents: integer;
-    FScaleFontPercents: integer;
     FPicture: TPicture;
     FImages: TImageList;
     FImageIndex: integer;
@@ -102,6 +102,7 @@ type
     FPaddingBig: integer;
     FTheme: PATButtonTheme;
     FTimerMouseover: TFPTimer;
+    FWidthInitial: integer;
     procedure DoChoiceClick(Sender: TObject);
     function GetIconHeight: integer;
     function GetIconWidth: integer;
@@ -147,8 +148,7 @@ type
     property Items: TStringList read FItems;
     property ItemIndex: integer read FItemIndex write FItemIndex;
     property Theme: PATButtonTheme read FTheme write SetTheme;
-    property ScalePercents: integer read FScalePercents write FScalePercents;
-    property ScaleFontPercents: integer read FScaleFontPercents write FScaleFontPercents;
+    property WidthInitial: integer read FWidthInitial write FWidthInitial;
   published
     property Align;
     property Anchors;
@@ -622,8 +622,9 @@ begin
   if not AValue then exit;
 
   Canvas.Font.Name:= Theme^.FontName;
-  Canvas.Font.Size:= Theme^.FontSize;
+  Canvas.Font.Size:= DoScaleFont(Theme^.FontSize);
   Canvas.Font.Style:= [];
+
   //if FBoldFont then
   //  Canvas.Font.Style:= [fsBold]
   //else
@@ -656,8 +657,6 @@ begin
   TabStop:= true;
   Width:= 100;
   Height:= 25;
-  FScalePercents:= 100;
-  FScaleFontPercents:= 0;
 
   Caption:= 'Button';
   FPicture:= TPicture.Create;
@@ -678,6 +677,7 @@ begin
   FItems:= TStringList.Create;
   FItemIndex:= -1;
   FTheme:= @ATButtonTheme;
+  FWidthInitial:= 0;
 
   FTimerMouseover:= TFPTimer.Create(Self);
   FTimerMouseover.Enabled:= false;
@@ -699,11 +699,13 @@ begin
   Result.cy:= 0;
   if S='' then exit;
   Canvas.Font.Name:= Theme^.FontName;
-  Canvas.Font.Size:= Theme^.FontSize;
+  Canvas.Font.Size:= DoScaleFont(Theme^.FontSize);
+
   if BoldFont then
     Canvas.Font.Style:= [fsBold]
   else
     Canvas.Font.Style:= Theme^.FontStyles;
+
   Result:= Canvas.TextExtent(S);
 end;
 
@@ -752,15 +754,15 @@ end;
 
 function TATButton.DoScale(AValue: integer): integer; inline;
 begin
-  Result:= AValue*FScalePercents div 100;
+  Result:= AValue * Theme^.ScalePercents div 100;
 end;
 
 function TATButton.DoScaleFont(AValue: integer): integer;
 begin
-  if FScaleFontPercents=0 then
+  if Theme^.ScaleFontPercents=0 then
     Result:= DoScale(AValue)
   else
-    Result:= AValue*FScaleFontPercents div 100;
+    Result:= AValue * Theme^.ScaleFontPercents div 100;
 end;
 
 
@@ -790,6 +792,8 @@ initialization
     ChoiceBorderWidth:= 1;
     ArrowSize:= 2;
     GapForAutoSize:= 10;
+    ScalePercents:= 100;
+    ScaleFontPercents:= 0;
   end;
 
 end.

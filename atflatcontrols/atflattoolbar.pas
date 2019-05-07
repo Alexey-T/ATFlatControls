@@ -21,8 +21,6 @@ type
   private
     FImages: TImageList;
     FVertical: boolean;
-    FScalePercents: integer;
-    FScaleFontPercents: integer;
     FButtonWidth: integer;
     FThemed: boolean; //for use in CudaText
     FWrapable: boolean;
@@ -63,8 +61,6 @@ type
     function ButtonCount: integer;
     function IsIndexOk(AIndex: integer): boolean;
     property Buttons[AIndex: integer]: TATButton read GetButton;
-    property ScalePercents: integer read FScalePercents write FScalePercents;
-    property ScaleFontPercents: integer read FScaleFontPercents write FScaleFontPercents;
     property Themed: boolean read FThemed write FThemed;
   published
     property Align;
@@ -96,8 +92,6 @@ begin
   Caption:= '';
   FImages:= nil;
   FVertical:= false;
-  FScalePercents:= 100;
-  FScaleFontPercents:= 0;
   FButtonWidth:= 50;
   FWrapable:= false;
 end;
@@ -122,8 +116,6 @@ begin
   for i:= ControlCount-1 downto 0 do
   begin
     btn:= Controls[i] as TATButton;
-    btn.ScalePercents:= FScalePercents;
-    btn.ScaleFontPercents:= FScaleFontPercents;
 
     if Vertical then
       btn.Width:= FButtonWidth
@@ -171,6 +163,12 @@ begin
             btn.Height:= Max(btn.GetTextSize(btn.Caption).cy, FButtonWidth)
           else
             btn.Width:= btn.GetTextSize(btn.Caption).cx+FButtonWidth+DoScale(2*btn.Padding);
+        end;
+
+      abuTextChoice:
+        begin
+          btn.Width:= btn.WidthInitial;
+          btn.Height:= FButtonWidth;
         end;
     end;
 
@@ -278,7 +276,7 @@ end;
 
 function TATFlatToolbar.DoScale(AValue: integer): integer; inline;
 begin
-  Result:= AValue*FScalePercents div 100;
+  Result:= AValue * ATButtonTheme.ScalePercents div 100;
 end;
 
 procedure TATFlatToolbar.SetButtonWidth(AValue: integer);
@@ -398,6 +396,7 @@ begin
   b.Parent:= Self;
   b.Caption:= '';
   b.Width:= AWidth;
+  b.WidthInitial:= AWidth;
   b.OnClick:= AOnClick;
   b.Focusable:= false;
   b.Flat:= true;

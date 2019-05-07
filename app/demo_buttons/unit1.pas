@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls, Menus, ATButtons, ATFlatToolbar;
+  ExtCtrls, Menus, ComCtrls, ATButtons, ATFlatToolbar;
 
 type
   { TfmMain }
@@ -16,16 +16,19 @@ type
     chkEn: TCheckBox;
     chkFocus: TCheckBox;
     ImageList1: TImageList;
+    Label1: TLabel;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
     PanelRight: TPanel;
     PanelToolbar: TPanel;
     PopupMenu1: TPopupMenu;
+    TrackScale: TTrackBar;
     procedure btnAutosizeClick(Sender: TObject);
     procedure chkEnChange(Sender: TObject);
     procedure chkFocusChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure TrackScaleChange(Sender: TObject);
   private
     { private declarations }
     procedure BtnToggleClick(Sender: TObject);
@@ -139,6 +142,25 @@ procedure TfmMain.FormShow(Sender: TObject);
 begin
   bar.UpdateControls;
   bar2.UpdateControls;
+end;
+
+procedure TfmMain.TrackScaleChange(Sender: TObject);
+var
+  C: TComponent;
+  i: integer;
+begin
+  ATButtonTheme.ScalePercents:= TrackScale.Position;
+
+  for i:= 0 to ComponentCount-1 do
+  begin
+    C:= Components[i];
+
+    if C is TATButton then
+      TATButton(C).Invalidate;
+
+    if C is TATFlatToolbar then
+      TATFlatToolbar(C).UpdateControls(true);
+  end;
 end;
 
 procedure TfmMain.chkFocusChange(Sender: TObject);
