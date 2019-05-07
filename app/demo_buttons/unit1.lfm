@@ -1,7 +1,7 @@
 object fmMain: TfmMain
-  Left = 1460
+  Left = 756
   Height = 469
-  Top = 357
+  Top = 269
   Width = 610
   Caption = 'ATButton demo'
   ClientHeight = 469
@@ -67,8 +67,8 @@ object fmMain: TfmMain
     AllocBy = 10
     Height = 28
     Width = 28
-    left = 352
-    top = 344
+    Left = 352
+    Top = 344
     Bitmap = {
       4C69030000001C0000001C000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -368,8 +368,8 @@ object fmMain: TfmMain
     }
   end
   object PopupMenu1: TPopupMenu
-    left = 400
-    top = 344
+    Left = 400
+    Top = 344
     object MenuItem1: TMenuItem
       Caption = 'Test menu'
     end

@@ -313,7 +313,7 @@ begin
   inherited;
 
   if FArrow then
-    NSizeArrow:= 4*Theme^.ArrowSize
+    NSizeArrow:= DoScale(4*Theme^.ArrowSize)
   else
     NSizeArrow:= 0;
 
@@ -431,7 +431,7 @@ begin
     abuTextChoice:
       begin
         pnt1.x:= FPadding +
-          IfThen(FArrowAlign=taLeftJustify, FPadding + DoScale(Theme^.ArrowSize*4)) +
+          IfThen(FArrowAlign=taLeftJustify, FPadding + NSizeArrow) +
           IfThen(IsPressed, Theme^.PressedCaptionShiftX);
         pnt1.y:= (ClientHeight-GetTextSize('W').cy) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftY);
@@ -465,11 +465,11 @@ begin
   begin
     case FArrowAlign of
       taLeftJustify:
-        pnt1.x:= DoScale(Theme^.ArrowSize*4);
+        pnt1.x:= NSizeArrow;
       taRightJustify:
-        pnt1.x:= ClientWidth - DoScale(Theme^.ArrowSize*4);
+        pnt1.x:= ClientWidth - NSizeArrow;
       taCenter:
-        pnt1.x:= (ClientWidth - DoScale(Theme^.ArrowSize)) div 2;
+        pnt1.x:= (ClientWidth - NSizeArrow div 4) div 2;
     end;
 
     pnt1.y:= ClientHeight div 2 +
