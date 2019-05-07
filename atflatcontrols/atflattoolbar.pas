@@ -148,15 +148,15 @@ begin
       abuTextOnly:
         begin
           if Vertical then
-            btn.Height:= btn.GetTextSize(btn.Caption).cy+2*btn.Padding
+            btn.Height:= btn.GetTextSize(btn.Caption).cy+DoScale(2*btn.Padding)
           else
-            btn.Width:= btn.GetTextSize(btn.Caption).cx+2*btn.Padding;
+            btn.Width:= btn.GetTextSize(btn.Caption).cx+DoScale(2*btn.Padding);
         end;
 
       abuTextIconVert:
         begin
           if Vertical then
-            btn.Height:= btn.GetTextSize(btn.Caption).cy+FButtonWidth+btn.Padding
+            btn.Height:= btn.GetTextSize(btn.Caption).cy+FButtonWidth+DoScale(2*btn.Padding)
           else
             btn.Width:= Max(btn.GetTextSize(btn.Caption).cx, FButtonWidth);
         end;
@@ -166,7 +166,7 @@ begin
           if Vertical then
             btn.Height:= Max(btn.GetTextSize(btn.Caption).cy, FButtonWidth)
           else
-            btn.Width:= btn.GetTextSize(btn.Caption).cx+FButtonWidth+btn.Padding;
+            btn.Width:= btn.GetTextSize(btn.Caption).cx+FButtonWidth+DoScale(2*btn.Padding);
         end;
     end;
 
@@ -180,7 +180,9 @@ begin
 
     //scale
     btn.Height:= DoScale(btn.Height);
-    btn.Width:= DoScale(btn.Width);
+
+    if not (btn.Kind in [abuTextOnly, abuTextIconHorz, abuTextIconVert]) then
+      btn.Width:= DoScale(btn.Width);
   end;
 
   //anchor buttons in row
