@@ -120,10 +120,10 @@ begin
     btn:= Controls[i] as TATButton;
 
     if Vertical then
-      btn.Width:= FButtonWidth
+      btn.Width:= ATButtonTheme.DoScale(FButtonWidth)
     else
     if Assigned(FImages) then
-      btn.Height:= FButtonWidth;
+      btn.Height:= ATButtonTheme.DoScale(FButtonWidth);
 
     case btn.Kind of
       abuSeparatorVert:
@@ -186,7 +186,7 @@ begin
     //horz bar: can be wrappable
     //vert bar: cannot be wrappable
 
-    if not (Vertical and (btn.Kind in [abuTextOnly, abuTextIconHorz, abuTextIconVert])) then
+    if Vertical then
       btn.Height:= ATButtonTheme.DoScale(btn.Height);
 
     if not Vertical then
@@ -282,10 +282,10 @@ begin
   FButtonWidth:= AValue;
 
   if Vertical then
-    Width:= AValue
+    Width:= ATButtonTheme.DoScale(AValue)
   else
   if not Wrapable then
-    Height:= AValue;
+    Height:= ATButtonTheme.DoScale(AValue);
 end;
 
 procedure TATFlatToolbar.SetVertical(AValue: boolean);
