@@ -32,7 +32,6 @@ type
     procedure UpdateAnchors;
   protected
     procedure Resize; override;
-    function DoScale(AValue: integer): integer;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -113,6 +112,9 @@ var
 begin
   if ControlCount=0 then exit;
 
+  Canvas.Font.Name:= ATButtonTheme.FontName;
+  Canvas.Font.Size:= ATButtonTheme.DoScaleFont(ATButtonTheme.FontSize);
+
   for i:= ControlCount-1 downto 0 do
   begin
     btn:= Controls[i] as TATButton;
@@ -144,25 +146,25 @@ begin
       abuTextOnly:
         begin
           if Vertical then
-            btn.Height:= btn.GetTextSize(btn.Caption).cy+DoScale(2*btn.Padding)
+            btn.Height:= btn.GetTextSize(Canvas, btn.Caption).cy+ATButtonTheme.DoScale(2*btn.Padding)
           else
-            btn.Width:= btn.GetTextSize(btn.Caption).cx+DoScale(2*btn.Padding);
+            btn.Width:= btn.GetTextSize(Canvas, btn.Caption).cx+ATButtonTheme.DoScale(2*btn.Padding);
         end;
 
       abuTextIconVert:
         begin
           if Vertical then
-            btn.Height:= btn.GetTextSize(btn.Caption).cy+FButtonWidth+DoScale(2*btn.Padding)
+            btn.Height:= btn.GetTextSize(Canvas, btn.Caption).cy+FButtonWidth+ATButtonTheme.DoScale(2*btn.Padding)
           else
-            btn.Width:= Max(btn.GetTextSize(btn.Caption).cx, FButtonWidth);
+            btn.Width:= Max(btn.GetTextSize(Canvas, btn.Caption).cx, FButtonWidth);
         end;
 
       abuTextIconHorz:
         begin
           if Vertical then
-            btn.Height:= Max(btn.GetTextSize(btn.Caption).cy, FButtonWidth)
+            btn.Height:= Max(btn.GetTextSize(Canvas, btn.Caption).cy, FButtonWidth)
           else
-            btn.Width:= btn.GetTextSize(btn.Caption).cx+FButtonWidth+DoScale(2*btn.Padding);
+            btn.Width:= btn.GetTextSize(Canvas, btn.Caption).cx+FButtonWidth+ATButtonTheme.DoScale(2*btn.Padding);
         end;
 
       abuTextChoice:
@@ -185,11 +187,11 @@ begin
     //vert bar: cannot be wrappable
 
     if not (Vertical and (btn.Kind in [abuTextOnly, abuTextIconHorz, abuTextIconVert])) then
-      btn.Height:= DoScale(btn.Height);
+      btn.Height:= ATButtonTheme.DoScale(btn.Height);
 
     if not Vertical then
       if not (btn.Kind in [abuTextOnly, abuTextIconHorz, abuTextIconVert]) then
-        btn.Width:= DoScale(btn.Width);
+        btn.Width:= ATButtonTheme.DoScale(btn.Width);
   end;
 
   //anchor buttons in row
@@ -272,11 +274,6 @@ begin
   if (AIndex>=0) and (AIndex<ControlCount) then
     if Controls[AIndex] is TATButton then
       Result:= Controls[AIndex] as TATButton;
-end;
-
-function TATFlatToolbar.DoScale(AValue: integer): integer; inline;
-begin
-  Result:= AValue * ATButtonTheme.ScalePercents div 100;
 end;
 
 procedure TATFlatToolbar.SetButtonWidth(AValue: integer);

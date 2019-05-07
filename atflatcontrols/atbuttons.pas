@@ -6,6 +6,7 @@ License: MPL 2.0 or LGPL
 unit ATButtons;
 
 {$mode objfpc}{$H+}
+{$ModeSwitch advancedrecords}
 
 interface
 
@@ -17,6 +18,9 @@ uses
 
 type
   PATButtonTheme = ^TATButtonTheme;
+
+  { TATButtonTheme }
+
   TATButtonTheme = record
     FontName: string;
     FontSize: integer;
@@ -42,6 +46,8 @@ type
     GapForAutoSize: integer;
     ScalePercents: integer;
     ScaleFontPercents: integer;
+    function DoScale(AValue: integer): integer;
+    function DoScaleFont(AValue: integer): integer;
   end;
 
 var
@@ -144,7 +150,7 @@ type
     property DataString: string read FDataString write FDataString;
     property DataString2: string read FDataString2 write FDataString2;
     property DataString3: string read FDataString3 write FDataString3;
-    function GetTextSize(const S: string): TSize;
+    function GetTextSize(C: TCanvas; const S: string): TSize;
     property Items: TStringList read FItems;
     property ItemIndex: integer read FItemIndex write FItemIndex;
     property Theme: PATButtonTheme read FTheme write SetTheme;
@@ -200,6 +206,21 @@ begin
     Point(ACoord.X + ASize*2, ACoord.Y - ASize),
     Point(ACoord.X, ACoord.Y + ASize)
     ]);
+end;
+
+{ TATButtonTheme }
+
+function TATButtonTheme.DoScale(AValue: integer): integer;
+begin
+  Result:= AValue * ScalePercents div 100;
+end;
+
+function TATButtonTheme.DoScaleFont(AValue: integer): integer;
+begin
+  if ScaleFontPercents=0 then
+    Result:= DoScale(AValue)
+  else
+    Result:= AValue * ScaleFontPercents div 100;
 end;
 
 { TATButton }
@@ -394,7 +415,7 @@ begin
 
     abuTextOnly:
       begin
-        TextSize:= GetTextSize(Caption);
+        TextSize:= GetTextSize(Canvas, Caption);
         pnt1.x:= (ClientWidth-TextSize.cx-NSizeArrow) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftX);
         pnt1.y:= (ClientHeight-TextSize.cy) div 2 +
@@ -404,7 +425,7 @@ begin
 
     abuTextIconHorz:
       begin
-        TextSize:= GetTextSize(Caption);
+        TextSize:= GetTextSize(Canvas, Caption);
         pnt1.x:= FPadding +
           IfThen(IsPressed, Theme^.PressedCaptionShiftX);
         pnt1.y:= (ClientHeight-GetIconHeight) div 2 +
@@ -419,7 +440,7 @@ begin
 
     abuTextIconVert:
       begin
-        TextSize:= GetTextSize(Caption);
+        TextSize:= GetTextSize(Canvas, Caption);
         pnt1.x:= (ClientWidth-GetIconWidth-NSizeArrow) div 2+
           IfThen(IsPressed, Theme^.PressedCaptionShiftX);
         pnt1.y:= FPadding +
@@ -437,7 +458,7 @@ begin
         pnt1.x:= FPadding +
           IfThen(FArrowAlign=taLeftJustify, FPadding + NSizeArrow) +
           IfThen(IsPressed, Theme^.PressedCaptionShiftX);
-        pnt1.y:= (ClientHeight-GetTextSize('W').cy) div 2 +
+        pnt1.y:= (ClientHeight-GetTextSize(Canvas, 'W').cy) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftY);
         if (FItemIndex>=0) and (FItemIndex<FItems.Count) then
           S:= FItems[FItemIndex]
@@ -693,20 +714,18 @@ begin
   inherited;
 end;
 
-function TATButton.GetTextSize(const S: string): TSize;
+function TATButton.GetTextSize(C: TCanvas; const S: string): TSize;
 begin
   Result.cx:= 0;
   Result.cy:= 0;
   if S='' then exit;
-  Canvas.Font.Name:= Theme^.FontName;
-  Canvas.Font.Size:= DoScaleFont(Theme^.FontSize);
 
   if BoldFont then
-    Canvas.Font.Style:= [fsBold]
+    C.Font.Style:= [fsBold]
   else
-    Canvas.Font.Style:= Theme^.FontStyles;
+    C.Font.Style:= Theme^.FontStyles;
 
-  Result:= Canvas.TextExtent(S);
+  Result:= C.TextExtent(S);
 end;
 
 procedure TATButton.DoChoiceClick(Sender: TObject);
@@ -754,15 +773,12 @@ end;
 
 function TATButton.DoScale(AValue: integer): integer; inline;
 begin
-  Result:= AValue * Theme^.ScalePercents div 100;
+  Result:= Theme^.DoScale(AValue);
 end;
 
-function TATButton.DoScaleFont(AValue: integer): integer;
+function TATButton.DoScaleFont(AValue: integer): integer; inline;
 begin
-  if Theme^.ScaleFontPercents=0 then
-    Result:= DoScale(AValue)
-  else
-    Result:= AValue * Theme^.ScaleFontPercents div 100;
+  Result:= Theme^.DoScaleFont(AValue);
 end;
 
 
