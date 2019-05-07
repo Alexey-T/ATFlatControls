@@ -130,16 +130,6 @@ type
     property OnMouseWheelUp;
   end;
 
-type
-  TATListboxScrollbarProps = record
-    ScrollbarWidth: integer;
-    ScrollbarBorderSize: integer;
-    ScreenScalePercents: integer;
-  end;
-
-var
-  ATListboxScrollbarProps: TATListboxScrollbarProps;
-
 
 implementation
 
@@ -421,10 +411,8 @@ begin
   FScroll.Parent:= Self;
   FScroll.Kind:= sbVertical;
   FScroll.Align:= alRight;
-  FScroll.Width:= ATListboxScrollbarProps.ScrollbarWidth;
-  FScroll.IndentBorder:= ATListboxScrollbarProps.ScrollbarBorderSize;
-  FScroll.AutoAdjustLayout(lapDefault, 100,
-    ATListboxScrollbarProps.ScreenScalePercents, 1, 1);
+  FScroll.Width:= 20;
+  FScroll.IndentBorder:= 0;
   FScroll.OnChange:= @ScrollbarChange;
 end;
 
@@ -560,13 +548,6 @@ begin
 end;
 
 initialization
-
-  with ATListboxScrollbarProps do
-  begin
-    ScrollbarWidth:= 14;
-    ScrollbarBorderSize:= 0;
-    ScreenScalePercents:= 100;
-  end;
 
 end.
 
