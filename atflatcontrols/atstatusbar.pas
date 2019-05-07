@@ -503,7 +503,7 @@ begin
   else
     Data:= FItems.Insert(APanelIndex) as TATStatusData;
 
-  Data.Width:= MulDiv(AWidth, ScalePercents,  100);
+  Data.Width:= AWidth;;
   Data.Align:= AAlign;
   Data.Caption:= ACaption;
   Data.ImageIndex:= AImageIndex;
