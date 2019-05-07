@@ -179,10 +179,15 @@ begin
     end;
 
     //scale
-    btn.Height:= DoScale(btn.Height);
+    //horz bar: can be wrappable
+    //vert bar: cannot be wrappable
 
-    if not (btn.Kind in [abuTextOnly, abuTextIconHorz, abuTextIconVert]) then
-      btn.Width:= DoScale(btn.Width);
+    if not (Vertical and (btn.Kind in [abuTextOnly, abuTextIconHorz, abuTextIconVert])) then
+      btn.Height:= DoScale(btn.Height);
+
+    if not Vertical then
+      if not (btn.Kind in [abuTextOnly, abuTextIconHorz, abuTextIconVert]) then
+        btn.Width:= DoScale(btn.Width);
   end;
 
   //anchor buttons in row
