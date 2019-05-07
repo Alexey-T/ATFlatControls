@@ -85,7 +85,6 @@ type
     function CanFocus: boolean; override;
     function CanSetFocus: boolean; override;
     function ClientWidth: integer;
-    procedure DoScaleScrollbar;
   published
     property Align;
     property Anchors;
@@ -558,11 +557,6 @@ begin
   end
   else
     FHotTrackIndex:= -1;
-end;
-
-procedure TATListbox.DoScaleScrollbar;
-begin
-  FScroll.AutoAdjustLayout(lapDefault, 96, Screen.PixelsPerInch, 100, 100);
 end;
 
 initialization
