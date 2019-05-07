@@ -80,6 +80,7 @@ type
     FColorBorderL: TColor;
     FColorBorderU: TColor;
     FColorBorderD: TColor;
+    FHeightInitial: integer;
     FPadding: integer;
     FClickedIndex: integer;
     FScalePercents: integer;
@@ -101,6 +102,7 @@ type
     function GetHint(AIndex: integer): string;
     procedure SetCaption(AIndex: integer; const AValue: TCaption);
     procedure SetHint(AIndex: integer; const AValue: string);
+    procedure SetScalePercents(AValue: integer);
   public
     constructor Create(AOnwer: TComponent); override;
     destructor Destroy; override;
@@ -120,7 +122,8 @@ type
     procedure DoPanelStretch(AIndex: integer);
     procedure DoPanelAutoWidth(AIndex: integer);
     function FindPanel(ATag: PtrInt): integer;
-    property ScalePercents: integer read FScalePercents write FScalePercents default 100;
+    property ScalePercents: integer read FScalePercents write SetScalePercents;
+    property HeightInitial: integer read FHeightInitial write FHeightInitial;
   protected
     procedure Paint; override;
     procedure Resize; override;
@@ -130,6 +133,7 @@ type
     {$ifdef windows}
     procedure WMEraseBkgnd(var Message: TMessage); message WM_ERASEBKGND;
     {$endif}
+    function DoScale(AValue: integer): integer;
   published
     property Align;
     property Anchors;
@@ -213,6 +217,7 @@ begin
   Height:= 24;
 
   FScalePercents:= 100;
+  FHeightInitial:= Height;
   FPadding:= cDefaultStatusbarPadding;
 
   Color:= cDefaultStatusbarColorBack;
@@ -368,7 +373,7 @@ end;
 
 procedure TATStatus.DoPaintTo(C: TCanvas);
 var
-  ARect: TRect;
+  PanelRect: TRect;
   D: TATStatusData;
   i: integer;
 begin
@@ -398,11 +403,11 @@ begin
   //paint panels
   for i:= 0 to PanelCount-1 do
   begin
-    ARect:= GetPanelRect(i);
-    if DoDrawBefore(i, C, ARect) then
+    PanelRect:= GetPanelRect(i);
+    if DoDrawBefore(i, C, PanelRect) then
     begin
-      DoPaintPanelTo(C, ARect, TATStatusData(FItems.Items[i]));
-      DoDrawAfter(i, C, ARect);
+      DoPaintPanelTo(C, PanelRect, TATStatusData(FItems.Items[i]));
+      DoDrawAfter(i, C, PanelRect);
     end;  
   end;
 
@@ -535,6 +540,11 @@ begin
     FOnPanelClick(Self, FClickedIndex);
 end;
 
+function TATStatus.DoScale(AValue: integer): integer;
+begin
+  Result:= AValue*FScalePercents div 100;
+end;
+
 function TATStatus.DoDrawBefore(AIndex: integer; ACanvas: TCanvas; const ARect: TRect): boolean;
 begin
   Result:= true;
@@ -593,6 +603,15 @@ begin
     D.Hint:= AValue;
     Invalidate;
   end;
+end;
+
+procedure TATStatus.SetScalePercents(AValue: integer);
+begin
+  if FScalePercents= AValue then Exit;
+  FScalePercents:= AValue;
+
+  Height:= DoScale(FHeightInitial);
+  Invalidate;
 end;
 
 

@@ -4,7 +4,7 @@ interface
 
 uses
   SysUtils, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, StdCtrls, ATStatusBar;
+  Dialogs, ExtCtrls, StdCtrls, ComCtrls, ATStatusBar;
 
 type
 
@@ -17,10 +17,13 @@ type
     ImageList1: TImageList;
     Label1: TLabel;
     Label2: TLabel;
+    Label3: TLabel;
+    TrackScale: TTrackBar;
     procedure FormCreate(Sender: TObject);
     procedure bAddClick(Sender: TObject);
     procedure bDelClick(Sender: TObject);
     procedure Edit1Change(Sender: TObject);
+    procedure TrackScaleChange(Sender: TObject);
   private
     { Private declarations }
     procedure StatusClick(Sender: TObject; AIndex: Integer);
@@ -72,6 +75,7 @@ begin
   t0.Font.Color:= clNavy;
   t0.Font.Size:= 13;
   t0.Height:= 32;
+  t0.HeightInitial:= 32;
 
   t0.AddPanel(-1, 50, taRightJustify, 'Rt');//, -1, 0, true);
   t0.AddPanel(-1, 50, taRightJustify, 'Rt2');//, -1, 0, true);
@@ -98,6 +102,12 @@ begin
   d:= t.GetPanelData(t.PanelCount-1);
   d.Caption:= Edit1.Text;
   t.Invalidate;
+end;
+
+procedure TForm1.TrackScaleChange(Sender: TObject);
+begin
+  t.ScalePercents:= TrackScale.Position;
+  t0.ScalePercents:= TrackScale.Position;
 end;
 
 procedure TForm1.StatusClick(Sender: TObject; AIndex: Integer);
