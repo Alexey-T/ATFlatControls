@@ -120,7 +120,7 @@ type
     property Captions[AIndex: integer]: TCaption read GetCaption write SetCaption;
     property Hints[AIndex: integer]: string read GetHint write SetHint;
     procedure DoPanelStretch(AIndex: integer);
-    procedure DoPanelAutoWidth(AIndex: integer);
+    procedure DoPanelAutoWidth(C: TCanvas; AIndex: integer);
     function FindPanel(ATag: PtrInt): integer;
     property ScalePercents: integer read FScalePercents write SetScalePercents;
     property HeightInitial: integer read FHeightInitial write FHeightInitial;
@@ -263,7 +263,7 @@ var
   RectText: TRect;
   PosIcon: TPoint;
   TextSize: TSize;
-  NOffsetLeft: integer;
+  NOffsetLeft, NPad: integer;
 begin
   if AData.ColorBack<>clNone then
     C.Brush.Color:= ColorToRGB(AData.ColorBack)
@@ -271,7 +271,8 @@ begin
     C.Brush.Color:= ColorToRGB(Color);
   C.FillRect(ARect);
 
-  RectText:= Rect(ARect.Left+FPadding, ARect.Top, ARect.Right-FPadding, ARect.Bottom);
+  NPad:= DoScale(FPadding);
+  RectText:= Rect(ARect.Left+NPad, ARect.Top, ARect.Right-NPad, ARect.Bottom);
 
   if Assigned(FImages) then
     if AData.ImageIndex>=0 then
@@ -279,14 +280,14 @@ begin
       if AData.Caption='' then
         case AData.Align of
           taLeftJustify:
-            PosIcon.x:= ARect.Left+FPadding;
+            PosIcon.x:= ARect.Left+NPad;
           taRightJustify:
-            PosIcon.x:= (ARect.Right-FImages.Width-FPadding);
+            PosIcon.x:= (ARect.Right-FImages.Width-NPad);
           taCenter:
             PosIcon.x:= (ARect.Left+ARect.Right-FImages.Width) div 2
         end
       else
-        PosIcon.x:= ARect.Left+FPadding;
+        PosIcon.x:= ARect.Left+NPad;
       PosIcon.y:= (ARect.Top+ARect.Bottom-FImages.Height) div 2;
 
       FImages.Draw(C, PosIcon.x, PosIcon.y, AData.ImageIndex);
@@ -297,7 +298,9 @@ begin
   begin
     C.FillRect(RectText);
 
-    C.Font.Assign(Self.Font);
+    C.Font.Name:= Self.Font.Name;
+    C.Font.Size:= DoScale(Self.Font.Size);
+
     if AData.ColorFont<>clNone then
       C.Font.Color:= ColorToRGB(AData.ColorFont)
     else
@@ -355,7 +358,8 @@ end;
 
 function TATStatus.GetPanelRect(AIndex: integer): TRect;
 var
-  i: integer;
+  Data: TATStatusData;
+  NSize, i: integer;
 begin
   Result.Left:= 0;
   Result.Right:= -1;
@@ -365,8 +369,14 @@ begin
   if IsIndexOk(AIndex) then
     for i:= 0 to PanelCount-1 do
     begin
+      Data:= GetPanelData(i);
       Result.Left:= Result.Right + 1;
-      Result.Right:= Result.Left + GetPanelData(i).Width - 1;
+
+      NSize:= Data.Width;
+      if not Data.AutoSize and not Data.AutoStretch then
+        NSize:= DoScale(NSize);
+
+      Result.Right:= Result.Left + NSize - 1;
       if AIndex=i then Exit;
     end;
 end;
@@ -379,14 +389,15 @@ var
 begin
   C.Brush.Color:= ColorToRGB(Color);
   C.FillRect(ClientRect);
-  C.Font.Assign(Self.Font);
+  C.Font.Name:= Self.Font.Name;
+  C.Font.Size:= DoScale(Self.Font.Size);
 
   //consider AutoSize
   for i:= 0 to PanelCount-1 do
   begin
     D:= GetPanelData(i);
     if Assigned(D) and D.AutoSize then
-      DoPanelAutoWidth(i);
+      DoPanelAutoWidth(C, i);
   end;
 
   //consider AutoStretch
@@ -637,21 +648,21 @@ begin
 end;
 
 
-procedure TATStatus.DoPanelAutoWidth(AIndex: integer);
+procedure TATStatus.DoPanelAutoWidth(C: TCanvas; AIndex: integer);
 var
-  NSize: integer;
+  NSize, NPad: integer;
   D: TATStatusData;
 begin
   D:= GetPanelData(AIndex);
   if Assigned(D) then
   begin
-    NSize:= FPadding*2+2;
+    NPad:= DoScale(FPadding);
+    NSize:= NPad*2+2;
     if D.ImageIndex>=0 then
-      Inc(NSize, Images.Width+FPadding);
+      Inc(NSize, Images.Width+NPad);
 
-    Canvas.Font.Assign(Font);
     if D.Caption<>'' then
-      Inc(NSize, Canvas.TextWidth(D.Caption));
+      Inc(NSize, C.TextWidth(D.Caption));
 
     D.Width:= NSize;
   end;

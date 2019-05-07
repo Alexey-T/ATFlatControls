@@ -12,51 +12,51 @@ object Form1: TForm1
   OnCreate = FormCreate
   LCLVersion = '2.1.0.0'
   object Label1: TLabel
-    Left = 176
+    Left = 168
     Height = 16
-    Top = 216
+    Top = 192
     Width = 86
     Caption = 'OnClick report'
     ParentColor = False
   end
   object bAdd: TButton
-    Left = 176
+    Left = 168
     Height = 25
-    Top = 80
+    Top = 56
     Width = 104
     Caption = 'add panel'
     OnClick = bAddClick
     TabOrder = 0
   end
   object bDel: TButton
-    Left = 176
+    Left = 168
     Height = 25
-    Top = 112
+    Top = 88
     Width = 104
     Caption = 'del last panel'
     OnClick = bDelClick
     TabOrder = 1
   end
   object Edit1: TEdit
-    Left = 176
+    Left = 168
     Height = 26
-    Top = 184
+    Top = 160
     Width = 225
     OnChange = Edit1Change
     TabOrder = 2
   end
   object Label2: TLabel
-    Left = 176
+    Left = 168
     Height = 16
-    Top = 165
+    Top = 141
     Width = 133
     Caption = 'change last panel text:'
     ParentColor = False
   end
   object TrackScale: TTrackBar
-    Left = 440
+    Left = 432
     Height = 46
-    Top = 168
+    Top = 144
     Width = 100
     Max = 300
     Min = 100
@@ -65,9 +65,9 @@ object Form1: TForm1
     TabOrder = 3
   end
   object Label3: TLabel
-    Left = 437
+    Left = 429
     Height = 16
-    Top = 147
+    Top = 123
     Width = 58
     Caption = 'Scale in %'
     ParentColor = False
