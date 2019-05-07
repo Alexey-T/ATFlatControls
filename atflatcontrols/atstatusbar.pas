@@ -221,6 +221,7 @@ begin
   Height:= 24;
 
   FScalePercents:= 100;
+  FScaleFontPercents:= 0;
   FHeightInitial:= Height;
   FPadding:= cDefaultStatusbarPadding;
 

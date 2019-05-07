@@ -82,6 +82,7 @@ type
     FCheckable,
     FFocusable: boolean;
     FScalePercents: integer;
+    FScaleFontPercents: integer;
     FPicture: TPicture;
     FImages: TImageList;
     FImageIndex: integer;
@@ -119,7 +120,6 @@ type
     procedure SetTheme(AValue: PATButtonTheme);
     procedure ShowChoiceMenu;
     procedure TimerMouseoverTick(Sender: TObject);
-    function DoScale(AValue: integer): integer;
   protected
     procedure Click; override;
     procedure Paint; override;
@@ -134,6 +134,8 @@ type
     procedure TextChanged; override;
     procedure Resize; override;
     procedure SetAutoSize(AValue: boolean); override;
+    function DoScale(AValue: integer): integer;
+    function DoScaleFont(AValue: integer): integer;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -146,6 +148,7 @@ type
     property ItemIndex: integer read FItemIndex write FItemIndex;
     property Theme: PATButtonTheme read FTheme write SetTheme;
     property ScalePercents: integer read FScalePercents write FScalePercents;
+    property ScaleFontPercents: integer read FScaleFontPercents write FScaleFontPercents;
   published
     property Align;
     property Anchors;
@@ -370,7 +373,8 @@ begin
 
   Canvas.Font.Name:= Theme^.FontName;
   Canvas.Font.Color:= ColorToRGB(IfThen(Enabled, Theme^.ColorFont, Theme^.ColorFontDisabled));
-  Canvas.Font.Size:= DoScale(Theme^.FontSize);
+  Canvas.Font.Size:= DoScaleFont(Theme^.FontSize);
+
   if BoldFont then
     Canvas.Font.Style:= [fsBold]
   else
@@ -653,6 +657,7 @@ begin
   Width:= 100;
   Height:= 25;
   FScalePercents:= 100;
+  FScaleFontPercents:= 0;
 
   Caption:= 'Button';
   FPicture:= TPicture.Create;
@@ -748,6 +753,14 @@ end;
 function TATButton.DoScale(AValue: integer): integer; inline;
 begin
   Result:= AValue*FScalePercents div 100;
+end;
+
+function TATButton.DoScaleFont(AValue: integer): integer;
+begin
+  if FScaleFontPercents=0 then
+    Result:= DoScale(AValue)
+  else
+    Result:= AValue*FScaleFontPercents div 100;
 end;
 
 

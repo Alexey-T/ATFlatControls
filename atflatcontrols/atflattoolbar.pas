@@ -22,18 +22,19 @@ type
     FImages: TImageList;
     FVertical: boolean;
     FScalePercents: integer;
+    FScaleFontPercents: integer;
     FButtonWidth: integer;
     FThemed: boolean; //for use in CudaText
     FWrapable: boolean;
     procedure PopupForDropdownClick(Sender: TObject);
     function GetButton(AIndex: integer): TATButton;
-    function DoScale(AValue: integer): integer;
     procedure SetButtonWidth(AValue: integer);
     procedure SetVertical(AValue: boolean);
     procedure SetWrapable(AValue: boolean);
     procedure UpdateAnchors;
   protected
     procedure Resize; override;
+    function DoScale(AValue: integer): integer;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -62,7 +63,8 @@ type
     function ButtonCount: integer;
     function IsIndexOk(AIndex: integer): boolean;
     property Buttons[AIndex: integer]: TATButton read GetButton;
-    property ScalePercents: integer read FScalePercents write FScalePercents default 100;
+    property ScalePercents: integer read FScalePercents write FScalePercents;
+    property ScaleFontPercents: integer read FScaleFontPercents write FScaleFontPercents;
     property Themed: boolean read FThemed write FThemed;
   published
     property Align;
@@ -95,6 +97,7 @@ begin
   FImages:= nil;
   FVertical:= false;
   FScalePercents:= 100;
+  FScaleFontPercents:= 0;
   FButtonWidth:= 50;
   FWrapable:= false;
 end;
@@ -120,6 +123,7 @@ begin
   begin
     btn:= Controls[i] as TATButton;
     btn.ScalePercents:= FScalePercents;
+    btn.ScaleFontPercents:= FScaleFontPercents;
 
     if Vertical then
       btn.Width:= FButtonWidth
