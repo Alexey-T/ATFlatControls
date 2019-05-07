@@ -84,6 +84,7 @@ type
     FPadding: integer;
     FClickedIndex: integer;
     FScalePercents: integer;
+    FScaleFontPercents: integer;
     FPrevPanelMouseOver: integer;
 
     FItems: TCollection;
@@ -123,6 +124,7 @@ type
     procedure DoPanelAutoWidth(C: TCanvas; AIndex: integer);
     function FindPanel(ATag: PtrInt): integer;
     property ScalePercents: integer read FScalePercents write SetScalePercents;
+    property ScaleFontPercents: integer read FScaleFontPercents write FScaleFontPercents;
     property HeightInitial: integer read FHeightInitial write FHeightInitial;
   protected
     procedure Paint; override;
@@ -133,7 +135,9 @@ type
     {$ifdef windows}
     procedure WMEraseBkgnd(var Message: TMessage); message WM_ERASEBKGND;
     {$endif}
+
     function DoScale(AValue: integer): integer;
+    function DoScaleFont(AValue: integer): integer;
   published
     property Align;
     property Anchors;
@@ -299,7 +303,7 @@ begin
     C.FillRect(RectText);
 
     C.Font.Name:= Self.Font.Name;
-    C.Font.Size:= DoScale(Self.Font.Size);
+    C.Font.Size:= DoScaleFont(Self.Font.Size);
 
     if AData.ColorFont<>clNone then
       C.Font.Color:= ColorToRGB(AData.ColorFont)
@@ -390,7 +394,7 @@ begin
   C.Brush.Color:= ColorToRGB(Color);
   C.FillRect(ClientRect);
   C.Font.Name:= Self.Font.Name;
-  C.Font.Size:= DoScale(Self.Font.Size);
+  C.Font.Size:= DoScaleFont(Self.Font.Size);
 
   //consider AutoSize
   for i:= 0 to PanelCount-1 do
@@ -551,10 +555,19 @@ begin
     FOnPanelClick(Self, FClickedIndex);
 end;
 
-function TATStatus.DoScale(AValue: integer): integer;
+function TATStatus.DoScale(AValue: integer): integer; inline;
 begin
   Result:= AValue*FScalePercents div 100;
 end;
+
+function TATStatus.DoScaleFont(AValue: integer): integer; inline;
+begin
+  if FScaleFontPercents=0 then
+    Result:= DoScale(AValue)
+  else
+    Result:= AValue*FScaleFontPercents div 100;
+end;
+
 
 function TATStatus.DoDrawBefore(AIndex: integer; ACanvas: TCanvas; const ARect: TRect): boolean;
 begin
