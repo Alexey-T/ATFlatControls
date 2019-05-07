@@ -281,11 +281,11 @@ begin
   if FButtonWidth=AValue then Exit;
   FButtonWidth:= AValue;
 
+  if Vertical then
+    Width:= AValue
+  else
   if not Wrapable then
-    if Vertical then
-      Width:= AValue
-    else
-      Height:= AValue;
+    Height:= AValue;
 end;
 
 procedure TATFlatToolbar.SetVertical(AValue: boolean);
