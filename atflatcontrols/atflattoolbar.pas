@@ -28,6 +28,7 @@ type
     procedure PopupForDropdownClick(Sender: TObject);
     function GetButton(AIndex: integer): TATButton;
     function DoScale(AValue: integer): integer;
+    procedure SetButtonWidth(AValue: integer);
     procedure SetVertical(AValue: boolean);
     procedure SetWrapable(AValue: boolean);
     procedure UpdateAnchors;
@@ -68,7 +69,7 @@ type
     property Anchors;
     property AutoSize;
     property BorderSpacing;
-    property ButtonWidth: integer read FButtonWidth write FButtonWidth default 50;
+    property ButtonWidth: integer read FButtonWidth write SetButtonWidth default 50;
     property Color;
     property Enabled;
     property Visible;
@@ -179,8 +180,7 @@ begin
 
     //scale
     btn.Height:= DoScale(btn.Height);
-    if not Vertical then
-      btn.Width:= DoScale(btn.Width);
+    btn.Width:= DoScale(btn.Width);
   end;
 
   //anchor buttons in row
@@ -268,6 +268,18 @@ end;
 function TATFlatToolbar.DoScale(AValue: integer): integer; inline;
 begin
   Result:= AValue*FScalePercents div 100;
+end;
+
+procedure TATFlatToolbar.SetButtonWidth(AValue: integer);
+begin
+  if FButtonWidth=AValue then Exit;
+  FButtonWidth:= AValue;
+
+  if not Wrapable then
+    if Vertical then
+      Width:= AValue
+    else
+      Height:= AValue;
 end;
 
 procedure TATFlatToolbar.SetVertical(AValue: boolean);
