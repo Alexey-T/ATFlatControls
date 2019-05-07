@@ -108,7 +108,7 @@ begin
 
   bar:= TATFlatToolbar.create(self);
   bar.Parent:= PanelToolbar;
-  bar.SetBounds(0, 0, 400, 50);
+  bar.Align:= alClient;
   bar.Images:= ImageList1;
   bar.AddButton(0, @BtnColorsClick, 'Open', 'hint1', '', true);
   bar.AddDropdown(-1, PopupMenu1, nil, '', 'Some menu');
