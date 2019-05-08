@@ -1,4 +1,7 @@
 
+2019.05.08
++ added items to theme record: ScalePercents, ScaleFontPercents - they allow to scale all buttons in app
+
 2018.12.30
 + ATButton: added workaround for LCL issue: MouseLeave method not called if mouse leaves app window area (Linux)
 
