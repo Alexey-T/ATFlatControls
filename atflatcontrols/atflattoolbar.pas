@@ -113,7 +113,7 @@ begin
   if ControlCount=0 then exit;
 
   if Assigned(Images) then
-    FButtonWidth:= Images.Width+ATButtonTheme.GapForIconSize;
+    FButtonWidth:= Images.Width+ATButtonTheme.GapForAutoSize;
 
   Canvas.Font.Name:= ATButtonTheme.FontName;
   Canvas.Font.Size:= ATButtonTheme.DoScaleFont(ATButtonTheme.FontSize);
