@@ -44,6 +44,7 @@ type
     ChoiceBorderWidth: integer;
     ArrowSize: integer;
     GapForAutoSize: integer;
+    GapForIconSize: integer;
     ScalePercents: integer;
     ScaleFontPercents: integer;
     function DoScale(AValue: integer): integer;
@@ -808,6 +809,7 @@ initialization
     ChoiceBorderWidth:= 1;
     ArrowSize:= 2;
     GapForAutoSize:= 10;
+    GapForIconSize:= 6;
     ScalePercents:= 100;
     ScaleFontPercents:= 0;
   end;
