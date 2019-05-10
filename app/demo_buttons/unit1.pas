@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls, Menus, ComCtrls, ATButtons, ATFlatToolbar;
+  ExtCtrls, Menus, ComCtrls, ATButtons, ATFlatToolbar, ATFlatThemes;
 
 type
   { TfmMain }
