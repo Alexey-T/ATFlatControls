@@ -23,7 +23,8 @@ uses
   LCLType,
   {$endif}
   Classes, Types, Graphics,
-  Controls, ExtCtrls;
+  Controls, ExtCtrls,
+  ATFlatThemes;
 
 type
 
@@ -83,8 +84,6 @@ type
     FHeightInitial: integer;
     FPadding: integer;
     FClickedIndex: integer;
-    FScalePercents: integer;
-    FScaleFontPercents: integer;
     FPrevPanelMouseOver: integer;
 
     FItems: TCollection;
@@ -102,8 +101,7 @@ type
     function GetCaption(AIndex: integer): TCaption;
     function GetHint(AIndex: integer): string;
     procedure SetCaption(AIndex: integer; const AValue: TCaption);
-    procedure SetHint(AIndex: integer; const AValue: string);
-    procedure SetScalePercents(AValue: integer);
+    procedure SetHint(AIndex: integer; const AValue: string); reintroduce;
   public
     constructor Create(AOnwer: TComponent); override;
     destructor Destroy; override;
@@ -113,9 +111,16 @@ type
     function GetPanelData(AIndex: integer): TATStatusData;
     function PanelCount: integer;
     function IsIndexOk(AIndex: integer): boolean;
-    procedure AddPanel(APanelIndex: integer; AWidth: integer; AAlign: TAlignment;
-      const ACaption: TCaption= ''; AImageIndex: integer= - 1; ATag: PtrInt= 0;
-      AAutoSize: boolean= false; AAutoStretch: boolean= false);
+    procedure AddPanel(
+      APanelIndex: integer;
+      AWidth: integer;
+      AAlign: TAlignment;
+      const ACaption: TCaption= '';
+      AImageIndex: integer= - 1;
+      ATag: PtrInt= 0;
+      AAutoSize: boolean= false;
+      AAutoStretch: boolean= false;
+      AFontColor: TColor=clNone);
     procedure DeletePanel(AIndex: integer);
     procedure DeletePanels;
     property Captions[AIndex: integer]: TCaption read GetCaption write SetCaption;
@@ -123,9 +128,8 @@ type
     procedure DoPanelStretch(AIndex: integer);
     procedure DoPanelAutoWidth(C: TCanvas; AIndex: integer);
     function FindPanel(ATag: PtrInt): integer;
-    property ScalePercents: integer read FScalePercents write SetScalePercents;
-    property ScaleFontPercents: integer read FScaleFontPercents write FScaleFontPercents;
     property HeightInitial: integer read FHeightInitial write FHeightInitial;
+    procedure Invalidate; override;
   protected
     procedure Paint; override;
     procedure Resize; override;
@@ -136,8 +140,6 @@ type
     procedure WMEraseBkgnd(var Message: TMessage); message WM_ERASEBKGND;
     {$endif}
 
-    function DoScale(AValue: integer): integer;
-    function DoScaleFont(AValue: integer): integer;
   published
     property Align;
     property Anchors;
@@ -145,7 +147,6 @@ type
     property DoubleBuffered;
     property Enabled;
     property Visible;
-    property Font;
     property Color default cDefaultStatusbarColorBack;
     property ColorBorderTop: TColor read FColorBorderTop write FColorBorderTop default cDefaultStatusbarColorBorderTop;
     property ColorBorderR: TColor read FColorBorderR write FColorBorderR default cDefaultStatusbarColorBorderR;
@@ -220,8 +221,6 @@ begin
   Width:= 400;
   Height:= 24;
 
-  FScalePercents:= 100;
-  FScaleFontPercents:= 0;
   FHeightInitial:= Height;
   FPadding:= cDefaultStatusbarPadding;
 
@@ -276,7 +275,7 @@ begin
     C.Brush.Color:= ColorToRGB(Color);
   C.FillRect(ARect);
 
-  NPad:= DoScale(FPadding);
+  NPad:= ATButtonTheme.DoScale(FPadding);
   RectText:= Rect(ARect.Left+NPad, ARect.Top, ARect.Right-NPad, ARect.Bottom);
 
   if Assigned(FImages) then
@@ -303,13 +302,10 @@ begin
   begin
     C.FillRect(RectText);
 
-    C.Font.Name:= Self.Font.Name;
-    C.Font.Size:= DoScaleFont(Self.Font.Size);
-
     if AData.ColorFont<>clNone then
       C.Font.Color:= ColorToRGB(AData.ColorFont)
     else
-      C.Font.Color:= ColorToRGB(Self.Font.Color);
+      C.Font.Color:= ColorToRGB(ATButtonTheme.ColorFont);
 
     TextSize:= C.TextExtent(AData.Caption);
 
@@ -379,7 +375,7 @@ begin
 
       NSize:= Data.Width;
       if not Data.AutoSize and not Data.AutoStretch then
-        NSize:= DoScale(NSize);
+        NSize:= ATButtonTheme.DoScale(NSize);
 
       Result.Right:= Result.Left + NSize - 1;
       if AIndex=i then Exit;
@@ -394,8 +390,8 @@ var
 begin
   C.Brush.Color:= ColorToRGB(Color);
   C.FillRect(ClientRect);
-  C.Font.Name:= Self.Font.Name;
-  C.Font.Size:= DoScaleFont(Self.Font.Size);
+  C.Font.Name:= ATButtonTheme.FontName;
+  C.Font.Size:= ATButtonTheme.DoScaleFont(ATButtonTheme.FontSize);
 
   //consider AutoSize
   for i:= 0 to PanelCount-1 do
@@ -494,12 +490,16 @@ begin
 end;
 
 
-procedure TATStatus.AddPanel(APanelIndex: integer; AWidth: integer; AAlign: TAlignment;
+procedure TATStatus.AddPanel(
+  APanelIndex: integer;
+  AWidth: integer;
+  AAlign: TAlignment;
   const ACaption: TCaption='';
   AImageIndex: integer=-1;
   ATag: PtrInt=0;
   AAutoSize: boolean=false;
-  AAutoStretch: boolean=false);
+  AAutoStretch: boolean=false;
+  AFontColor: TColor=clNone);
 var
   Data: TATStatusData;
 begin
@@ -511,6 +511,7 @@ begin
   Data.Width:= AWidth;;
   Data.Align:= AAlign;
   Data.Caption:= ACaption;
+  Data.ColorFont:= AFontColor;
   Data.ImageIndex:= AImageIndex;
   Data.AutoSize:= AAutoSize;
   Data.AutoStretch:= AAutoStretch;
@@ -555,20 +556,6 @@ begin
   if Assigned(FOnPanelClick) then
     FOnPanelClick(Self, FClickedIndex);
 end;
-
-function TATStatus.DoScale(AValue: integer): integer; inline;
-begin
-  Result:= AValue*FScalePercents div 100;
-end;
-
-function TATStatus.DoScaleFont(AValue: integer): integer; inline;
-begin
-  if FScaleFontPercents=0 then
-    Result:= DoScale(AValue)
-  else
-    Result:= AValue*FScaleFontPercents div 100;
-end;
-
 
 function TATStatus.DoDrawBefore(AIndex: integer; ACanvas: TCanvas; const ARect: TRect): boolean;
 begin
@@ -630,16 +617,6 @@ begin
   end;
 end;
 
-procedure TATStatus.SetScalePercents(AValue: integer);
-begin
-  if FScalePercents= AValue then Exit;
-  FScalePercents:= AValue;
-
-  Height:= DoScale(FHeightInitial);
-  Invalidate;
-end;
-
-
 procedure TATStatus.DoPanelStretch(AIndex: integer);
 var
   NSize, i: integer;
@@ -670,7 +647,7 @@ begin
   D:= GetPanelData(AIndex);
   if Assigned(D) then
   begin
-    NPad:= DoScale(FPadding);
+    NPad:= ATButtonTheme.DoScale(FPadding);
     NSize:= NPad*2+2;
     if D.ImageIndex>=0 then
       Inc(NSize, Images.Width+NPad);
@@ -694,6 +671,13 @@ begin
     D:= GetPanelData(i);
     if Assigned(D) and (D.Tag=ATag) then exit(i);
   end;
+end;
+
+procedure TATStatus.Invalidate;
+begin
+  if FHeightInitial>0 then
+    Height:= ATButtonTheme.DoScale(FHeightInitial);
+  inherited Invalidate;
 end;
 
 

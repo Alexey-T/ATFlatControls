@@ -4,7 +4,9 @@ interface
 
 uses
   SysUtils, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, StdCtrls, ComCtrls, ATStatusBar;
+  Dialogs, ExtCtrls, StdCtrls, ComCtrls,
+  ATStatusBar,
+  ATFlatThemes;
 
 type
 
@@ -72,13 +74,12 @@ begin
   t0.ColorBorderD:= clGray;
   t0.ColorBorderL:= clWhite;
   t0.ColorBorderU:= clNone;
-  t0.Font.Color:= clNavy;
   t0.Font.Size:= 13;
   t0.Height:= 32;
   t0.HeightInitial:= 32;
 
-  t0.AddPanel(-1, 50, taRightJustify, 'Rt');//, -1, 0, true);
-  t0.AddPanel(-1, 50, taRightJustify, 'Rt2');//, -1, 0, true);
+  t0.AddPanel(-1, 50, taRightJustify, 'Rt', -1, 0, false, false, clNavy);
+  t0.AddPanel(-1, 50, taRightJustify, 'Rt2', -1, 0, false, false, clGreen);
   t0.AddPanel(-1, 300, taLeftJustify, 'Long wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww', -1, 0, false, true);
   t0.AddPanel(-1, 100, taCenter, 'Center');//, -1, 0, true);
 end;
@@ -106,8 +107,10 @@ end;
 
 procedure TForm1.TrackScaleChange(Sender: TObject);
 begin
-  t.ScalePercents:= TrackScale.Position;
-  t0.ScalePercents:= TrackScale.Position;
+  ATButtonTheme.ScalePercents:= TrackScale.Position;
+  ATButtonTheme.ScaleFontPercents:= TrackScale.Position;
+  t.Invalidate;
+  t0.Invalidate;
 end;
 
 procedure TForm1.StatusClick(Sender: TObject; AIndex: Integer);
