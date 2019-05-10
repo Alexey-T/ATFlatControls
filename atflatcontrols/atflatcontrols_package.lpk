@@ -22,7 +22,7 @@
 and several simple controls."/>
     <License Value="MPL 2.0, LGPL"/>
     <Version Major="1" Minor="2"/>
-    <Files Count="10">
+    <Files Count="11">
       <Item1>
         <Filename Value="atbuttons.pas"/>
         <UnitName Value="ATButtons"/>
@@ -64,6 +64,10 @@ and several simple controls."/>
         <Filename Value="atgauge.pas"/>
         <UnitName Value="ATGauge"/>
       </Item10>
+      <Item11>
+        <Filename Value="atflatthemes.pas"/>
+        <UnitName Value="ATFlatThemes"/>
+      </Item11>
     </Files>
     <RequiredPkgs Count="1">
       <Item1>

@@ -11,8 +11,10 @@ interface
 
 uses
   Classes, SysUtils, Graphics, Controls, ExtCtrls,
-  ImgList, Menus, Math, ATButtons,
-  LclType;
+  ImgList, Menus, Math, 
+  ATButtons,
+  ATFlatThemes,
+  LCLType;
 
 type
   { TATFlatToolbar }
