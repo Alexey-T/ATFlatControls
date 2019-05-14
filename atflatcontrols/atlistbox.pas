@@ -13,7 +13,8 @@ uses
   Classes, SysUtils, Graphics, Controls,
   Forms,
   LMessages,
-  ATScrollBar;
+  ATScrollBar,
+  ATFlatThemes;
 
 type
   TATListboxDrawItemEvent = procedure(Sender: TObject; C: TCanvas; AIndex: integer; const ARect: TRect) of object;
@@ -411,7 +412,7 @@ begin
   FScroll.Parent:= Self;
   FScroll.Kind:= sbVertical;
   FScroll.Align:= alRight;
-  FScroll.Width:= 20;
+  FScroll.Width:= ATFlatTheme.ScrollbarSize;
   FScroll.IndentBorder:= 0;
   FScroll.OnChange:= @ScrollbarChange;
 end;
