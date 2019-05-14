@@ -36,11 +36,8 @@ type
     FBitmap: TBitmap;
     FBorderStyle: TBorderStyle;
     FKind: TATGaugeKind;
-    FColorBack,
-    FColorFore,
-    FColorBorder: TColor;
-    FMinValue,
-    FMaxValue,
+    FMinValue: integer;
+    FMaxValue: integer;
     FProgress: integer;
     FShowText: boolean;
     FShowTextInverted: boolean;
@@ -50,10 +47,7 @@ type
     procedure DoPaintTo(C: TCanvas; r: TRect);
     function GetPercentDone: integer;
     function GetPartDoneFloat: Double;
-    procedure SetColorBorder(AValue: TColor);
     procedure SetBorderStyle(AValue: TBorderStyle);
-    procedure SetColorBack(AValue: TColor);
-    procedure SetColorFore(AValue: TColor);
     procedure SetKind(AValue: TATGaugeKind);
     procedure SetMaxValue(AValue: integer);
     procedure SetMinValue(AValue: integer);
@@ -77,9 +71,7 @@ type
     property Color;
     property Constraints;
     property DoubleBuffered: boolean read FDoubleBuffered write FDoubleBuffered;
-    property Font;
     property ParentColor;
-    property ParentFont;
     property ParentShowHint;
     property PopupMenu;
     property ShowHint;
@@ -87,9 +79,6 @@ type
     property Progress: integer read FProgress write SetProgress default 0;
     property MinValue: integer read FMinValue write SetMinValue default 0;
     property MaxValue: integer read FMaxValue write SetMaxValue default 100;
-    property BackColor: TColor read FColorBack write SetColorBack default clWhite;
-    property ForeColor: TColor read FColorFore write SetColorFore default clNavy;
-    property BorderColor: TColor read FColorBorder write SetColorBorder default clBlack;
     property ShowText: boolean read FShowText write SetShowText default true;
     property ShowTextInverted: boolean read FShowTextInverted write SetShowTextInverted default false;
     property OnClick;
@@ -120,7 +109,8 @@ var
   StrSize: TSize;
 begin
   StrSize:= C.TextExtent(Str);
-  C.Font.Assign(Self.Font);
+  C.Font.Name:= Theme^.FontName;
+  C.Font.Size:= Theme^.DoScaleFont(Theme^.FontSize);
   C.Brush.Style:= bsClear;
   C.TextOut(
     (r.Left+r.Right-StrSize.cx) div 2,
@@ -150,8 +140,9 @@ begin
     Bmp.Canvas.Brush.Color:= ColorEmpty;
     Bmp.Canvas.FillRect(0, 0, Bmp.Width, Bmp.Height);
 
-    Bmp.Canvas.Font.Assign(Self.Font);
-    Bmp.Canvas.Font.Color:= ColorFont;
+    Bmp.Canvas.Font.Name:= Theme^.FontName;
+    Bmp.Canvas.Font.Size:= Theme^.DoScaleFont(Theme^.FontSize);
+    Bmp.Canvas.Font.Color:= Theme^.ColorFont;
     Bmp.Canvas.Font.Quality:= fqNonAntialiased; //antialias
     Bmp.Canvas.AntialiasingMode:= amOn; //antialias
     Bmp.Canvas.TextOut(0, 0, Str);
@@ -188,23 +179,23 @@ begin
   case FKind of
     gkText:
       begin
-        DoFillBG(FColorBack);
+        DoFillBG(Theme^.ColorBgPassive);
       end;
 
     gkHorizontalBar:
       begin
-        DoFillBG(FColorBack);
+        DoFillBG(Theme^.ColorBgPassive);
 
-        C.Brush.Color:= FColorFore;
+        C.Brush.Color:= Theme^.ColorBgOver;
         NSize:= Round((r.Right-r.Left) * GetPartDoneFloat);
         C.FillRect(r.Left, r.Top, r.Left+NSize, r.Bottom);
       end;
 
     gkVerticalBar:
       begin
-        DoFillBG(FColorBack);
+        DoFillBG(Theme^.ColorBgPassive);
 
-        C.Brush.Color:= FColorFore;
+        C.Brush.Color:= Theme^.ColorBgOver;
         NSize:= Round((r.Bottom-r.Top) * GetPartDoneFloat);
         C.FillRect(r.Left, r.Bottom-NSize, r.Right, r.Bottom);
       end;
@@ -219,14 +210,14 @@ begin
           r.Left+NSize, r.Top+NSize,
           r.Right-1-NSize, r.Bottom-1+(r.Bottom-r.Top)-NSize);
 
-        C.Pen.Color:= FColorFore;
-        C.Brush.Color:= FColorBack;
+        C.Pen.Color:= Theme^.ColorBgOver;
+        C.Brush.Color:= Theme^.ColorBgPassive;
         C.Pie(r2.Left, r2.Top, r2.Right, r2.Bottom,
           r.Right, r.Bottom,
           r.Left, r.Bottom);
 
         if FKind=gkHalfPie then
-          C.Brush.Color:= FColorFore;
+          C.Brush.Color:= Theme^.ColorBgOver;
 
         Alfa:= pi*GetPartDoneFloat;
         C.Pie(r2.Left, r2.Top, r2.Right, r2.Bottom,
@@ -235,7 +226,7 @@ begin
           r2.Left,
           r2.Bottom);
 
-        C.Pen.Color:= FColorFore;
+        C.Pen.Color:= Theme^.ColorBgOver;
         C.MoveTo(r2.Left, r.Bottom-1-NSize);
         C.LineTo(r2.Right, r.Bottom-1-NSize);
       end;
@@ -247,13 +238,13 @@ begin
         if FBorderStyle<>bsNone then NSize:= 1 else NSize:= 0;
         r2:= Rect(r.Left+NSize, r.Top+NSize, r.Right-NSize, r.Bottom-NSize);
 
-        C.Pen.Color:= FColorFore;
-        C.Brush.Color:= FColorBack;
+        C.Pen.Color:= Theme^.ColorBgOver;
+        C.Brush.Color:= Theme^.ColorBgPassive;
         C.Ellipse(r2);
 
         Alfa:= 360*GetPartDoneFloat;
-        C.Pen.Color:= FColorFore;
-        C.Brush.Color:= FColorFore;
+        C.Pen.Color:= Theme^.ColorBgOver;
+        C.Brush.Color:= Theme^.ColorBgOver;
         C.RadialPie(r2.Left, r2.Top, r2.Right, r2.Bottom,
           16*90, //starting angle: 90 deg
           -Round(16*Alfa) //pie angle: -Alfa deg
@@ -274,7 +265,7 @@ begin
   //paint border
   if FBorderStyle<>bsNone then
   begin
-    C.Pen.Color:= FColorBorder;
+    C.Pen.Color:= Theme^.ColorBorderPassive;
     C.Brush.Style:= bsClear;
     C.Rectangle(r);
     C.Brush.Style:= bsSolid;
@@ -291,31 +282,10 @@ begin
   Result:= Round(100 * GetPartDoneFloat);
 end;
 
-procedure TATGauge.SetColorBorder(AValue: TColor);
-begin
-  if FColorBorder=AValue then Exit;
-  FColorBorder:=AValue;
-  Invalidate;
-end;
-
 procedure TATGauge.SetBorderStyle(AValue: TBorderStyle);
 begin
   if FBorderStyle=AValue then Exit;
   FBorderStyle:=AValue;
-  Invalidate;
-end;
-
-procedure TATGauge.SetColorBack(AValue: TColor);
-begin
-  if FColorBack=AValue then Exit;
-  FColorBack:=AValue;
-  Invalidate;
-end;
-
-procedure TATGauge.SetColorFore(AValue: TColor);
-begin
-  if FColorFore=AValue then Exit;
-  FColorFore:=AValue;
   Invalidate;
 end;
 
@@ -372,7 +342,9 @@ begin
   R:= ClientRect;
   if DoubleBuffered then
   begin
-    FBitmap.Canvas.Font.Assign(Self.Font);
+    FBitmap.Canvas.Font.Name:= Theme^.FontName;
+    FBitmap.Canvas.Font.Size:= Theme^.DoScaleFont(Theme^.FontSize);
+    FBitmap.Canvas.Font.Color:= Theme^.ColorFont;
     DoPaintTo(FBitmap.Canvas, R);
     Canvas.CopyRect(R, FBitmap.Canvas, R);
   end
@@ -391,6 +363,7 @@ begin
 
   Width:= 150;
   Height:= 50;
+  Color:= clBtnFace;
 
   FBitmap:= TBitmap.Create;
   FBitmap.PixelFormat:= pf24bit;
@@ -399,11 +372,6 @@ begin
   FDoubleBuffered:= IsDoubleBufferedNeeded;
   FKind:= gkHorizontalBar;
   FBorderStyle:= bsSingle;
-
-  Color:= clBtnFace;
-  FColorBack:= clWhite;
-  FColorFore:= clNavy;
-  FColorBorder:= clBlack;
 
   FMinValue:= 0;
   FMaxValue:= 100;

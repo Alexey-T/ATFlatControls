@@ -63,9 +63,6 @@ begin
   g.align:= alClient;
   g.BorderSpacing.Around:= 6;
 
-  g.ForeColor:= clGreen;
-  g.BackColor:= clYellow;
-
   g.MinValue:= cMin;
   g.MaxValue:= cMax;
   TrackBar1.Min:= cMin;

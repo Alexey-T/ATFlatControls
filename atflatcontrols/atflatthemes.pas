@@ -73,7 +73,7 @@ initialization
     ColorFont:= $303030;
     ColorFontDisabled:= $808088;
     ColorBgPassive:= $e0e0e0;
-    ColorBgOver:= $e0e0e0;
+    ColorBgOver:= $90a080;
     ColorBgChecked:= $b0b0b0;
     ColorBgDisabled:= $c0c0d0;
     ColorArrows:= clGray;
