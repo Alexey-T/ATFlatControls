@@ -9,7 +9,7 @@ object Form1: TForm1
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '1.9.0.0'
+  LCLVersion = '2.1.0.0'
   object PanelTop: TPanel
     Left = 0
     Height = 189
@@ -54,7 +54,7 @@ object Form1: TForm1
       Left = 8
       Height = 24
       Top = 112
-      Width = 232
+      Width = 227
       Caption = 'show text inverted (gtk2: bad)'
       OnChange = chkTextInvertChange
       TabOrder = 2
@@ -63,7 +63,7 @@ object Form1: TForm1
       Left = 8
       Height = 24
       Top = 88
-      Width = 94
+      Width = 92
       Caption = 'show text'
       Checked = True
       OnChange = chkShowtextChange
@@ -94,7 +94,7 @@ object Form1: TForm1
         Left = 8
         Height = 24
         Top = 24
-        Width = 83
+        Width = 82
         Caption = 'horz bar'
         OnChange = bHorzChange
         TabOrder = 1
@@ -103,7 +103,7 @@ object Form1: TForm1
         Left = 8
         Height = 24
         Top = 48
-        Width = 80
+        Width = 79
         Caption = 'vert bar'
         OnChange = bVertChange
         TabOrder = 2
@@ -112,7 +112,7 @@ object Form1: TForm1
         Left = 8
         Height = 24
         Top = 96
-        Width = 72
+        Width = 71
         Caption = 'needle'
         OnChange = bNeedleChange
         TabOrder = 4
@@ -130,7 +130,7 @@ object Form1: TForm1
         Left = 8
         Height = 24
         Top = 120
-        Width = 74
+        Width = 73
         Caption = 'halfpie'
         OnChange = bHalfPieChange
         TabOrder = 5

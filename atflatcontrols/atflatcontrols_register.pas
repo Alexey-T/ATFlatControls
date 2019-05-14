@@ -26,7 +26,7 @@ begin
     TATPanelSimple,
     TATPanelColor,
     TATLabelLink,
-    TGauge
+    TATGauge
     ]);
 end;
 

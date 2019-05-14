@@ -41,7 +41,7 @@ type
     { private declarations }
   public
     { public declarations }
-    g: tgauge;
+    g: TATGauge;
   end;
 
 var
@@ -58,7 +58,7 @@ const
   cMin = 15;
   cMax = 122;
 begin
-  g:= TGauge.create(Self);
+  g:= TATGauge.create(Self);
   g.parent:= PanelTop;
   g.align:= alClient;
   g.BorderSpacing.Around:= 6;

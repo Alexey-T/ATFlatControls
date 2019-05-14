@@ -11,10 +11,14 @@ unit ATGauge;
 interface
 
 uses
-  Classes, SysUtils, Graphics, Controls;
+  Classes, SysUtils, Graphics, Controls,
+  Math, Types,
+  InterfaceBase,
+  LCLType,
+  LCLIntf;
 
 type
-  TGaugeKind = (
+  TATGaugeKind = (
     gkText,
     gkHorizontalBar,
     gkVerticalBar,
@@ -24,14 +28,14 @@ type
     );
 
 type
-  { TGauge }
+  { TATGauge }
 
-  TGauge = class(TGraphicControl)
+  TATGauge = class(TGraphicControl)
   private
     FDoubleBuffered: boolean;
     FBitmap: TBitmap;
     FBorderStyle: TBorderStyle;
-    FKind: TGaugeKind;
+    FKind: TATGaugeKind;
     FColorBack,
     FColorFore,
     FColorBorder: TColor;
@@ -49,7 +53,7 @@ type
     procedure SetBorderStyle(AValue: TBorderStyle);
     procedure SetColorBack(AValue: TColor);
     procedure SetColorFore(AValue: TColor);
-    procedure SetKind(AValue: TGaugeKind);
+    procedure SetKind(AValue: TATGaugeKind);
     procedure SetMaxValue(AValue: integer);
     procedure SetMinValue(AValue: integer);
     procedure SetProgress(AValue: integer);
@@ -77,7 +81,7 @@ type
     property ParentShowHint;
     property PopupMenu;
     property ShowHint;
-    property Kind: TGaugeKind read FKind write SetKind default gkHorizontalBar;
+    property Kind: TATGaugeKind read FKind write SetKind default gkHorizontalBar;
     property Progress: integer read FProgress write SetProgress default 0;
     property MinValue: integer read FMinValue write SetMinValue default 0;
     property MaxValue: integer read FMaxValue write SetMaxValue default 100;
@@ -102,19 +106,14 @@ type
 
 implementation
 
-uses
-  Math, Types,
-  InterfaceBase,
-  LCLType, LCLIntf;
-
 function IsDoubleBufferedNeeded: boolean;
 begin
   Result:= WidgetSet.GetLCLCapability(lcCanDrawOutsideOnPaint) = LCL_CAPABILITY_YES;
 end;
 
-{ TGauge }
+{ TATGauge }
 
-procedure TGauge.DoPaintTextUsual(C: TCanvas; r: TRect; const Str: string);
+procedure TATGauge.DoPaintTextUsual(C: TCanvas; r: TRect; const Str: string);
 var
   StrSize: TSize;
 begin
@@ -128,7 +127,7 @@ begin
   C.Brush.Style:= bsSolid;
 end;
 
-procedure TGauge.DoPaintTextInverted(C: TCanvas; r: TRect; const Str: string);
+procedure TATGauge.DoPaintTextInverted(C: TCanvas; r: TRect; const Str: string);
 const
   ColorEmpty = clBlack;
   ColorFont = clWhite;
@@ -169,7 +168,7 @@ begin
   end;
 end;
 
-procedure TGauge.DoPaintTo(C: TCanvas; r: TRect);
+procedure TATGauge.DoPaintTo(C: TCanvas; r: TRect);
   //
   procedure DoFillBG(AColor: TColor);
   begin
@@ -280,52 +279,52 @@ begin
   end;
 end;
 
-function TGauge.GetPartDoneFloat: Double;
+function TATGauge.GetPartDoneFloat: Double;
 begin
   Result:= (FProgress-FMinValue) / (FMaxValue-FMinValue);
 end;
 
-function TGauge.GetPercentDone: integer;
+function TATGauge.GetPercentDone: integer;
 begin
   Result:= Round(100 * GetPartDoneFloat);
 end;
 
-procedure TGauge.SetColorBorder(AValue: TColor);
+procedure TATGauge.SetColorBorder(AValue: TColor);
 begin
   if FColorBorder=AValue then Exit;
   FColorBorder:=AValue;
   Invalidate;
 end;
 
-procedure TGauge.SetBorderStyle(AValue: TBorderStyle);
+procedure TATGauge.SetBorderStyle(AValue: TBorderStyle);
 begin
   if FBorderStyle=AValue then Exit;
   FBorderStyle:=AValue;
   Invalidate;
 end;
 
-procedure TGauge.SetColorBack(AValue: TColor);
+procedure TATGauge.SetColorBack(AValue: TColor);
 begin
   if FColorBack=AValue then Exit;
   FColorBack:=AValue;
   Invalidate;
 end;
 
-procedure TGauge.SetColorFore(AValue: TColor);
+procedure TATGauge.SetColorFore(AValue: TColor);
 begin
   if FColorFore=AValue then Exit;
   FColorFore:=AValue;
   Invalidate;
 end;
 
-procedure TGauge.SetKind(AValue: TGaugeKind);
+procedure TATGauge.SetKind(AValue: TATGaugeKind);
 begin
   if FKind=AValue then Exit;
   FKind:=AValue;
   Invalidate;
 end;
 
-procedure TGauge.SetMaxValue(AValue: integer);
+procedure TATGauge.SetMaxValue(AValue: integer);
 begin
   if FMaxValue=AValue then Exit;
   FMaxValue:=Max(FMinValue+1, AValue);
@@ -333,7 +332,7 @@ begin
   Invalidate;
 end;
 
-procedure TGauge.SetMinValue(AValue: integer);
+procedure TATGauge.SetMinValue(AValue: integer);
 begin
   if FMinValue=AValue then Exit;
   FMinValue:=Min(FMaxValue-1, AValue);
@@ -341,28 +340,28 @@ begin
   Invalidate;
 end;
 
-procedure TGauge.SetProgress(AValue: integer);
+procedure TATGauge.SetProgress(AValue: integer);
 begin
   if FProgress=AValue then Exit;
   FProgress:=Max(FMinValue, Min(FMaxValue, AValue));
   Invalidate;
 end;
 
-procedure TGauge.SetShowText(AValue: boolean);
+procedure TATGauge.SetShowText(AValue: boolean);
 begin
   if FShowText=AValue then Exit;
   FShowText:=AValue;
   Invalidate;
 end;
 
-procedure TGauge.SetShowTextInverted(AValue: boolean);
+procedure TATGauge.SetShowTextInverted(AValue: boolean);
 begin
   if FShowTextInverted=AValue then Exit;
   FShowTextInverted:=AValue;
   Invalidate;
 end;
 
-procedure TGauge.Paint;
+procedure TATGauge.Paint;
 var
   R: TRect;
 begin
@@ -380,7 +379,7 @@ begin
 end;
 
 
-constructor TGauge.Create(AOwner: TComponent);
+constructor TATGauge.Create(AOwner: TComponent);
 begin
   inherited;
 
@@ -411,18 +410,18 @@ begin
   FShowTextInverted:= false;
 end;
 
-destructor TGauge.Destroy;
+destructor TATGauge.Destroy;
 begin
   FreeAndNil(FBitmap);
   inherited;
 end;
 
-procedure TGauge.AddProgress(AValue: integer);
+procedure TATGauge.AddProgress(AValue: integer);
 begin
   Progress:= Progress+AValue;
 end;
 
-procedure TGauge.DoOnResize;
+procedure TATGauge.DoOnResize;
 const
   cResizeBitmapStep = 100;
 var
