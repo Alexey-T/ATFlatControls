@@ -8,7 +8,7 @@ uses
   Classes, Graphics;
 
 type
-  PATButtonTheme = ^TATFlatTheme;
+  PATFlatTheme = ^TATFlatTheme;
 
   { TATFlatTheme }
 

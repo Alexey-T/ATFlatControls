@@ -14,8 +14,8 @@ uses
   Classes, SysUtils, Graphics, Controls,
   Math, Types,
   InterfaceBase,
-  LCLType,
-  LCLIntf;
+  LCLType, LCLIntf,
+  ATFlatThemes;
 
 type
   TATGaugeKind = (
@@ -44,6 +44,7 @@ type
     FProgress: integer;
     FShowText: boolean;
     FShowTextInverted: boolean;
+    FTheme: PATFlatTheme;
     procedure DoPaintTextInverted(C: TCanvas; r: TRect; const Str: string);
     procedure DoPaintTextUsual(C: TCanvas; r: TRect; const Str: string);
     procedure DoPaintTo(C: TCanvas; r: TRect);
@@ -67,6 +68,7 @@ type
     destructor Destroy; override;
     procedure AddProgress(AValue: integer);
     property PercentDone: integer read GetPercentDone;
+    property Theme: PATFlatTheme read FTheme write FTheme;
   published
     property Align;
     property Anchors;
@@ -408,6 +410,7 @@ begin
   FProgress:= 0;
   FShowText:= true;
   FShowTextInverted:= false;
+  FTheme:= @ATFlatTheme;
 end;
 
 destructor TATGauge.Destroy;
@@ -444,8 +447,6 @@ begin
   Invalidate;
 end;
 
-
-initialization
 
 end.
 

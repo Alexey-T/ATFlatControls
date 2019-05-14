@@ -69,7 +69,7 @@ type
     FPopup: TPopupMenu;
     FPadding: integer;
     FPaddingBig: integer;
-    FTheme: PATButtonTheme;
+    FTheme: PATFlatTheme;
     FTimerMouseover: TFPTimer;
     FWidthInitial: integer;
     procedure DoChoiceClick(Sender: TObject);
@@ -87,7 +87,7 @@ type
     procedure SetImages(AValue: TImageList);
     procedure SetKind(AValue: TATButtonKind);
     procedure SetBoldBorder(AValue: boolean);
-    procedure SetTheme(AValue: PATButtonTheme);
+    procedure SetTheme(AValue: PATFlatTheme);
     procedure ShowChoiceMenu;
     procedure TimerMouseoverTick(Sender: TObject);
   protected
@@ -116,7 +116,7 @@ type
     function GetTextSize(C: TCanvas; const S: string): TSize;
     property Items: TStringList read FItems;
     property ItemIndex: integer read FItemIndex write FItemIndex;
-    property Theme: PATButtonTheme read FTheme write SetTheme;
+    property Theme: PATFlatTheme read FTheme write SetTheme;
     property WidthInitial: integer read FWidthInitial write FWidthInitial;
   published
     property Align;
@@ -224,7 +224,7 @@ begin
   Invalidate;
 end;
 
-procedure TATButton.SetTheme(AValue: PATButtonTheme);
+procedure TATButton.SetTheme(AValue: PATFlatTheme);
 begin
   if FTheme=AValue then Exit;
   FTheme:= AValue;
