@@ -107,8 +107,8 @@ end;
 
 procedure TForm1.TrackScaleChange(Sender: TObject);
 begin
-  ATButtonTheme.ScalePercents:= TrackScale.Position;
-  ATButtonTheme.ScaleFontPercents:= TrackScale.Position;
+  ATFlatTheme.ScalePercents:= TrackScale.Position;
+  ATFlatTheme.ScaleFontPercents:= TrackScale.Position;
   t.Invalidate;
   t0.Invalidate;
 end;

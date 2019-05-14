@@ -8,11 +8,11 @@ uses
   Classes, Graphics;
 
 type
-  PATButtonTheme = ^TATButtonTheme;
+  PATButtonTheme = ^TATFlatTheme;
 
-  { TATButtonTheme }
+  { TATFlatTheme }
 
-  TATButtonTheme = record
+  TATFlatTheme = record
     FontName: string;
     FontSize: integer;
     FontStyles: TFontStyles;
@@ -42,18 +42,18 @@ type
   end;
 
 var
-  ATButtonTheme: TATButtonTheme;
+  ATFlatTheme: TATFlatTheme;
 
 implementation
 
-{ TATButtonTheme }
+{ TATFlatTheme }
 
-function TATButtonTheme.DoScale(AValue: integer): integer;
+function TATFlatTheme.DoScale(AValue: integer): integer;
 begin
   Result:= AValue * ScalePercents div 100;
 end;
 
-function TATButtonTheme.DoScaleFont(AValue: integer): integer;
+function TATFlatTheme.DoScaleFont(AValue: integer): integer;
 begin
   if ScaleFontPercents=0 then
     Result:= DoScale(AValue)
@@ -64,7 +64,7 @@ end;
 
 initialization
 
-  with ATButtonTheme do
+  with ATFlatTheme do
   begin
     FontName:= 'default';
     FontSize:= 10;

@@ -48,7 +48,7 @@ implementation
 {$R *.lfm}
 
 var
-  MyTheme: TATButtonTheme;
+  MyTheme: TATFlatTheme;
 
 { TfmMain }
 
@@ -149,7 +149,7 @@ var
   C: TComponent;
   i: integer;
 begin
-  ATButtonTheme.ScalePercents:= TrackScale.Position;
+  ATFlatTheme.ScalePercents:= TrackScale.Position;
 
   for i:= 0 to ComponentCount-1 do
   begin
@@ -206,7 +206,7 @@ procedure TfmMain.BtnColorsClick(Sender: TObject);
     Result:= $a00000+Random($fffff);
   end;
 begin
-  with ATButtonTheme do
+  with ATFlatTheme do
   begin
     ColorFont:= SomeColor;
     ColorBgPassive:= SomeColor;
@@ -223,7 +223,7 @@ end;
 
 initialization
 
-  MyTheme:= ATButtonTheme;
+  MyTheme:= ATFlatTheme;
   MyTheme.ColorBgPassive:= clGreen;
   MyTheme.ColorBgOver:= $00aa00;
 

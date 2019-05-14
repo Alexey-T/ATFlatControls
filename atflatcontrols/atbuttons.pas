@@ -645,7 +645,7 @@ begin
   FPaddingBig:= cDefaultButtonPaddingBig;
   FItems:= TStringList.Create;
   FItemIndex:= -1;
-  FTheme:= @ATButtonTheme;
+  FTheme:= @ATFlatTheme;
   FWidthInitial:= 0;
 
   FTimerMouseover:= TFPTimer.Create(Self);

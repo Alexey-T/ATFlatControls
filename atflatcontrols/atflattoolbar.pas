@@ -117,20 +117,20 @@ begin
   ImgSize:= 0;
   if Assigned(Images) then
     ImgSize:= Images.Width;
-  FButtonWidth:= ImgSize+ATButtonTheme.GapForAutoSize;
+  FButtonWidth:= ImgSize+ATFlatTheme.GapForAutoSize;
 
-  Canvas.Font.Name:= ATButtonTheme.FontName;
-  Canvas.Font.Size:= ATButtonTheme.DoScaleFont(ATButtonTheme.FontSize);
+  Canvas.Font.Name:= ATFlatTheme.FontName;
+  Canvas.Font.Size:= ATFlatTheme.DoScaleFont(ATFlatTheme.FontSize);
 
   for i:= ControlCount-1 downto 0 do
   begin
     btn:= Controls[i] as TATButton;
 
     if Vertical then
-      btn.Width:= ATButtonTheme.DoScale(FButtonWidth)
+      btn.Width:= ATFlatTheme.DoScale(FButtonWidth)
     else
     if Assigned(FImages) then
-      btn.Height:= ATButtonTheme.DoScale(FButtonWidth);
+      btn.Height:= ATFlatTheme.DoScale(FButtonWidth);
 
     case btn.Kind of
       abuSeparatorVert:
@@ -153,15 +153,15 @@ begin
       abuTextOnly:
         begin
           if Vertical then
-            btn.Height:= btn.GetTextSize(Canvas, btn.Caption).cy+ATButtonTheme.DoScale(2*btn.Padding)
+            btn.Height:= btn.GetTextSize(Canvas, btn.Caption).cy+ATFlatTheme.DoScale(2*btn.Padding)
           else
-            btn.Width:= btn.GetTextSize(Canvas, btn.Caption).cx+ATButtonTheme.DoScale(2*btn.Padding);
+            btn.Width:= btn.GetTextSize(Canvas, btn.Caption).cx+ATFlatTheme.DoScale(2*btn.Padding);
         end;
 
       abuTextIconVert:
         begin
           if Vertical then
-            btn.Height:= btn.GetTextSize(Canvas, btn.Caption).cy+ImgSize+ATButtonTheme.DoScale(2*btn.Padding)
+            btn.Height:= btn.GetTextSize(Canvas, btn.Caption).cy+ImgSize+ATFlatTheme.DoScale(2*btn.Padding)
           else
             btn.Width:= Max(btn.GetTextSize(Canvas, btn.Caption).cx, FButtonWidth);
         end;
@@ -171,7 +171,7 @@ begin
           if Vertical then
             btn.Height:= Max(btn.GetTextSize(Canvas, btn.Caption).cy, FButtonWidth)
           else
-            btn.Width:= btn.GetTextSize(Canvas, btn.Caption).cx+FButtonWidth+ATButtonTheme.DoScale(2*btn.Padding);
+            btn.Width:= btn.GetTextSize(Canvas, btn.Caption).cx+FButtonWidth+ATFlatTheme.DoScale(2*btn.Padding);
         end;
 
       abuTextChoice:
@@ -184,9 +184,9 @@ begin
     if btn.Arrow then
     begin
       if not Vertical then
-        btn.Width:= btn.Width+4*ATButtonTheme.ArrowSize;
+        btn.Width:= btn.Width+4*ATFlatTheme.ArrowSize;
       if Vertical and (btn.Caption='') and (btn.ImageIndex<0) then
-        btn.Height:= btn.Height+4*ATButtonTheme.ArrowSize;
+        btn.Height:= btn.Height+4*ATFlatTheme.ArrowSize;
     end;
 
     //scale
@@ -195,13 +195,13 @@ begin
 
     if Vertical then
       if not (btn.Kind in [abuTextIconVert]) then
-        btn.Height:= ATButtonTheme.DoScale(btn.Height);
+        btn.Height:= ATFlatTheme.DoScale(btn.Height);
 
     if not Vertical then
     begin
       if not (btn.Kind in [abuTextOnly, abuTextIconHorz, abuTextIconVert]) then
-        btn.Width:= ATButtonTheme.DoScale(btn.Width);
-      btn.Height:= ATButtonTheme.DoScale(FButtonWidth);
+        btn.Width:= ATFlatTheme.DoScale(btn.Width);
+      btn.Height:= ATFlatTheme.DoScale(FButtonWidth);
     end;
   end;
 
@@ -293,10 +293,10 @@ begin
   FButtonWidth:= AValue;
 
   if Vertical then
-    Width:= ATButtonTheme.DoScale(AValue)
+    Width:= ATFlatTheme.DoScale(AValue)
   else
   if not Wrapable then
-    Height:= ATButtonTheme.DoScale(AValue);
+    Height:= ATFlatTheme.DoScale(AValue);
 end;
 
 procedure TATFlatToolbar.SetVertical(AValue: boolean);

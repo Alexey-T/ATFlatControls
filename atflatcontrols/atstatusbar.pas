@@ -275,7 +275,7 @@ begin
     C.Brush.Color:= ColorToRGB(Color);
   C.FillRect(ARect);
 
-  NPad:= ATButtonTheme.DoScale(FPadding);
+  NPad:= ATFlatTheme.DoScale(FPadding);
   RectText:= Rect(ARect.Left+NPad, ARect.Top, ARect.Right-NPad, ARect.Bottom);
 
   if Assigned(FImages) then
@@ -305,7 +305,7 @@ begin
     if AData.ColorFont<>clNone then
       C.Font.Color:= ColorToRGB(AData.ColorFont)
     else
-      C.Font.Color:= ColorToRGB(ATButtonTheme.ColorFont);
+      C.Font.Color:= ColorToRGB(ATFlatTheme.ColorFont);
 
     TextSize:= C.TextExtent(AData.Caption);
 
@@ -375,7 +375,7 @@ begin
 
       NSize:= Data.Width;
       if not Data.AutoSize and not Data.AutoStretch then
-        NSize:= ATButtonTheme.DoScale(NSize);
+        NSize:= ATFlatTheme.DoScale(NSize);
 
       Result.Right:= Result.Left + NSize - 1;
       if AIndex=i then Exit;
@@ -390,8 +390,8 @@ var
 begin
   C.Brush.Color:= ColorToRGB(Color);
   C.FillRect(ClientRect);
-  C.Font.Name:= ATButtonTheme.FontName;
-  C.Font.Size:= ATButtonTheme.DoScaleFont(ATButtonTheme.FontSize);
+  C.Font.Name:= ATFlatTheme.FontName;
+  C.Font.Size:= ATFlatTheme.DoScaleFont(ATFlatTheme.FontSize);
 
   //consider AutoSize
   for i:= 0 to PanelCount-1 do
@@ -647,7 +647,7 @@ begin
   D:= GetPanelData(AIndex);
   if Assigned(D) then
   begin
-    NPad:= ATButtonTheme.DoScale(FPadding);
+    NPad:= ATFlatTheme.DoScale(FPadding);
     NSize:= NPad*2+2;
     if D.ImageIndex>=0 then
       Inc(NSize, Images.Width+NPad);
@@ -676,7 +676,7 @@ end;
 procedure TATStatus.Invalidate;
 begin
   if FHeightInitial>0 then
-    Height:= ATButtonTheme.DoScale(FHeightInitial);
+    Height:= ATFlatTheme.DoScale(FHeightInitial);
   inherited Invalidate;
 end;
 
