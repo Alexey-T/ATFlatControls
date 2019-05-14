@@ -23,10 +23,6 @@ type
     gkHalfPie
     );
 
-const
-  cInitGaugeValue = 20;
-  cInitGaugeKind = gkHorizontalBar;
-
 type
   { TGauge }
 
@@ -81,8 +77,8 @@ type
     property ParentShowHint;
     property PopupMenu;
     property ShowHint;
-    property Kind: TGaugeKind read FKind write SetKind default cInitGaugeKind;
-    property Progress: integer read FProgress write SetProgress default cInitGaugeValue;
+    property Kind: TGaugeKind read FKind write SetKind default gkHorizontalBar;
+    property Progress: integer read FProgress write SetProgress default 0;
     property MinValue: integer read FMinValue write SetMinValue default 0;
     property MaxValue: integer read FMaxValue write SetMaxValue default 100;
     property BackColor: TColor read FColorBack write SetColorBack default clWhite;
@@ -400,7 +396,7 @@ begin
   FBitmap.SetSize(500, 80);
 
   FDoubleBuffered:= IsDoubleBufferedNeeded;
-  FKind:= cInitGaugeKind;
+  FKind:= gkHorizontalBar;
   FBorderStyle:= bsSingle;
 
   Color:= clBtnFace;
@@ -410,7 +406,7 @@ begin
 
   FMinValue:= 0;
   FMaxValue:= 100;
-  FProgress:= cInitGaugeValue;
+  FProgress:= 0;
   FShowText:= true;
   FShowTextInverted:= false;
 end;
