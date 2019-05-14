@@ -86,6 +86,7 @@ type
     function CanFocus: boolean; override;
     function CanSetFocus: boolean; override;
     function ClientWidth: integer;
+    procedure Invalidate; override;
   published
     property Align;
     property Anchors;
@@ -466,6 +467,16 @@ begin
   Result:= inherited ClientWidth;
   if ThemedScrollbar then
     Dec(Result, FScrollbar.Width);
+end;
+
+procedure TATListbox.Invalidate;
+begin
+  if Assigned(FScrollbar) then
+  begin
+    FScrollbar.WidthInitial:= ATFlatTheme.ScrollbarSize;
+    FScrollbar.ScalePercents:= ATFlatTheme.ScalePercents;
+  end;
+  inherited Invalidate;
 end;
 
 function TATListbox.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
