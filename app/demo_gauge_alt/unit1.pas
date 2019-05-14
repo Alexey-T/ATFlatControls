@@ -13,7 +13,7 @@ type
   { TForm1 }
 
   TForm1 = class(TForm)
-    Gauge1: TGauge;
+    Gauge1: TATGauge;
     Timer1: TTimer;
     procedure Timer1Timer(Sender: TObject);
   private
