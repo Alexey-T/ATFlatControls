@@ -26,7 +26,7 @@ type
   private
     FThemedScrollbar: boolean;
     FThemedColors: boolean;
-    FScroll: TATScroll;
+    FScrollbar: TATScroll;
     FOwnerDrawn: boolean;
     FVirtualMode: boolean;
     FVirtualItemCount: integer;
@@ -82,7 +82,7 @@ type
     function GetItemIndexAt(Pnt: TPoint): integer;
     property ThemedScrollbar: boolean read FThemedScrollbar write SetThemedScrollbar;
     property ThemedColors: boolean read FThemedColors write FThemedColors;
-    property Scrollbar: TATScroll read FScroll;
+    property Scrollbar: TATScroll read FScrollbar;
     function CanFocus: boolean; override;
     function CanSetFocus: boolean; override;
     function ClientWidth: integer;
@@ -174,10 +174,10 @@ var
 begin
   if ThemedScrollbar then
   begin
-    FScroll.Min:= 0;
-    FScroll.Max:= ItemCount;
-    FScroll.PageSize:= VisibleItems;
-    FScroll.Position:= ItemTop;
+    FScrollbar.Min:= 0;
+    FScrollbar.Max:= ItemCount;
+    FScrollbar.PageSize:= VisibleItems;
+    FScrollbar.Position:= ItemTop;
   end;
 
   FillChar(si{%H-}, SizeOf(si), 0);
@@ -319,7 +319,7 @@ end;
 
 procedure TATListbox.ScrollbarChange(Sender: TObject);
 begin
-  ItemTop:= FScroll.Position;
+  ItemTop:= FScrollbar.Position;
 end;
 
 procedure TATListbox.SetCanBeFocused(AValue: boolean);
@@ -372,7 +372,7 @@ begin
   if FThemedScrollbar=AValue then Exit;
   FThemedScrollbar:= AValue;
 
-  FScroll.Visible:= AValue;
+  FScrollbar.Visible:= AValue;
   Invalidate;
 end;
 
@@ -408,13 +408,13 @@ begin
   FThemedScrollbar:= true;
   FThemedColors:= false;
 
-  FScroll:= TATScroll.Create(Self);
-  FScroll.Parent:= Self;
-  FScroll.Kind:= sbVertical;
-  FScroll.Align:= alRight;
-  FScroll.Width:= ATFlatTheme.ScrollbarSize;
-  FScroll.IndentBorder:= 0;
-  FScroll.OnChange:= @ScrollbarChange;
+  FScrollbar:= TATScroll.Create(Self);
+  FScrollbar.Parent:= Self;
+  FScrollbar.Kind:= sbVertical;
+  FScrollbar.Align:= alRight;
+  FScrollbar.Width:= ATFlatTheme.ScrollbarSize;
+  FScrollbar.IndentBorder:= 0;
+  FScrollbar.OnChange:= @ScrollbarChange;
 end;
 
 destructor TATListbox.Destroy;
@@ -465,7 +465,7 @@ function TATListbox.ClientWidth: integer;
 begin
   Result:= inherited ClientWidth;
   if ThemedScrollbar then
-    Dec(Result, FScroll.Width);
+    Dec(Result, FScrollbar.Width);
 end;
 
 function TATListbox.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
