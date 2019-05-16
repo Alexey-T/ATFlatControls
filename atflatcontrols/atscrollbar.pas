@@ -79,6 +79,7 @@ type
     InitialSize: integer;
     ScalePercents: integer;
     ArrowLengthPercents: integer;
+    BorderSize: integer;
   end;
 
 var
@@ -91,7 +92,6 @@ type
   private
     FKind: TScrollBarKind;
     FKindArrows: TATScrollbarArrowsStyle;
-    FIndentBorder: Integer;
     FIndentCorner: Integer;
     FIndentArrow: Integer;
     FTimerDelay: Integer;
@@ -196,7 +196,6 @@ type
     property MinSizeOfThumb: Integer read FMinSizeOfThumb write FMinSizeOfThumb default 4;
     property Kind: TScrollBarKind read FKind write SetKind default sbHorizontal;
     property KindArrows: TATScrollbarArrowsStyle read FKindArrows write SetKindArrows default asaArrowsNormal;
-    property IndentBorder: Integer read FIndentBorder write FIndentBorder default 1;
     property IndentCorner: Integer read FIndentCorner write FIndentCorner default 0;
     property IndentArrow: Integer read FIndentArrow write FIndentArrow default 3;
     property TimerDelay: Integer read FTimerDelay write FTimerDelay default 80;
@@ -233,7 +232,6 @@ begin
 
   FKind:= sbHorizontal;
   FKindArrows:= asaArrowsNormal;
-  FIndentBorder:= 1;
   FIndentCorner:= 0;
   FIndentArrow:= 3;
 
@@ -323,7 +321,10 @@ begin
   C.Brush.Color:= ColorToRGB(ATScrollbarTheme.ColorBorder);
   C.FillRect(FRectMain);
 
-  InflateRect(FRectMain, -DoScale(FIndentBorder), -DoScale(FIndentBorder));
+  InflateRect(FRectMain,
+    -DoScale(FTheme^.BorderSize),
+    -DoScale(FTheme^.BorderSize)
+    );
 
   if IsHorz then
   begin
@@ -862,6 +863,7 @@ initialization
     InitialSize:= 16;
     ScalePercents:= 100;
     ArrowLengthPercents:= 100;
+    BorderSize:= 1;
   end;
 
 end.

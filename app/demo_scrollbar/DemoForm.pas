@@ -159,10 +159,11 @@ end;
 
 procedure TFormDemo.trackBorChange(Sender: TObject);
 begin
-  bar_v.IndentBorder:= trackBor.Position;
-  bar_h.IndentBorder:= bar_v.IndentBorder;
+  ATScrollbarTheme.BorderSize:= trackBor.Position;
   bar_v.Invalidate;
   bar_h.Invalidate;
+  bar_v1.Invalidate;
+  bar_h1.Invalidate;
 end;
 
 procedure TFormDemo.ChangeH(S: TObject);

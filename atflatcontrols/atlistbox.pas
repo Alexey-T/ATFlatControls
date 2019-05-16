@@ -413,7 +413,6 @@ begin
   FScrollbar.Parent:= Self;
   FScrollbar.Kind:= sbVertical;
   FScrollbar.Align:= alRight;
-  FScrollbar.IndentBorder:= 0;
   FScrollbar.OnChange:= @ScrollbarChange;
 end;
 
