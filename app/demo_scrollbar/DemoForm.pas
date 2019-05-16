@@ -195,10 +195,11 @@ end;
 
 procedure TFormDemo.trackLongerChange(Sender: TObject);
 begin
-  bar_h.IndentArrLonger:= trackLonger.Position;
-  bar_v.IndentArrLonger:= trackLonger.Position;
+  ATScrollbarTheme.ArrowLengthPercents:= trackLonger.Position;
   bar_h.Invalidate;
   bar_v.Invalidate;
+  bar_h1.Invalidate;
+  bar_v1.Invalidate;
 end;
 
 procedure TFormDemo.trackCornerVChange(Sender: TObject);

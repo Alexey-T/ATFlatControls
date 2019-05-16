@@ -78,6 +78,7 @@ type
     ColorScrolled: TColor;
     InitialSize: integer;
     ScalePercents: integer;
+    ArrowLengthPercents: integer;
   end;
 
 var
@@ -93,7 +94,6 @@ type
     FIndentBorder: Integer;
     FIndentCorner: Integer;
     FIndentArrow: Integer;
-    FIndentArrLonger: Integer;
     FTimerDelay: Integer;
     FTheme: PATScrollbarTheme;
 
@@ -140,7 +140,7 @@ type
     procedure DoPaintStd_Arrow(C: TCanvas; R: TRect; Typ: TATScrollbarElemType);
     procedure DoPaintStd_Thumb(C: TCanvas; const R: TRect);
 
-    function IsHorz: boolean;
+    function IsHorz: boolean; inline;
     function MouseToPos(X, Y: Integer): Integer;
     procedure DoUpdateThumbRect;
     procedure DoUpdateCornerRect;
@@ -199,7 +199,6 @@ type
     property IndentBorder: Integer read FIndentBorder write FIndentBorder default 1;
     property IndentCorner: Integer read FIndentCorner write FIndentCorner default 0;
     property IndentArrow: Integer read FIndentArrow write FIndentArrow default 3;
-    property IndentArrLonger: Integer read FIndentArrLonger write FIndentArrLonger default 0;
     property TimerDelay: Integer read FTimerDelay write FTimerDelay default 80;
 
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
@@ -237,7 +236,6 @@ begin
   FIndentBorder:= 1;
   FIndentCorner:= 0;
   FIndentArrow:= 3;
-  FIndentArrLonger:= 0;
 
   FTheme:= @ATScrollbarTheme;
   Width:= 200;
@@ -330,8 +328,10 @@ begin
   if IsHorz then
   begin
     //horz kind
-    FSize:= Math.Min(FRectMain.Height, FRectMain.Width div 2);
-    Inc(FSize, DoScale(FIndentArrLonger));
+    FSize:= Math.Min(
+      FRectMain.Height * FTheme^.ArrowLengthPercents div 100,
+      FRectMain.Width div 2
+      );
     case FKindArrows of
       asaArrowsNormal:
         begin
@@ -359,8 +359,10 @@ begin
   else
   begin
     //vertical kind
-    FSize:= Math.Min(FRectMain.Width, FRectMain.Height div 2);
-    Inc(FSize, DoScale(FIndentArrLonger));
+    FSize:= Math.Min(
+      FRectMain.Width * FTheme^.ArrowLengthPercents div 100,
+      FRectMain.Height div 2
+      );
     case FKindArrows of
       asaArrowsNormal:
         begin
@@ -565,7 +567,7 @@ begin
   C.Polygon([P1, P2, P3]);
 end;
 
-function TATScrollbar.IsHorz: boolean;
+function TATScrollbar.IsHorz: boolean; inline;
 begin
   Result:= FKind=sbHorizontal;
 end;
@@ -859,6 +861,7 @@ initialization
     ColorScrolled:= $d0b0b0;
     InitialSize:= 16;
     ScalePercents:= 100;
+    ArrowLengthPercents:= 100;
   end;
 
 end.

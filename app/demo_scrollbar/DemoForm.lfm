@@ -73,8 +73,8 @@ object FormDemo: TFormDemo
       Left = 8
       Height = 16
       Top = 200
-      Width = 79
-      Caption = 'Arrow longer'
+      Width = 75
+      Caption = 'Arrow len, %'
       ParentColor = False
     end
     object Label5: TLabel
@@ -137,10 +137,11 @@ object FormDemo: TFormDemo
       Top = 176
       Width = 113
       Frequency = 5
-      Min = -10
+      Max = 400
+      Min = 50
       OnChange = trackLongerChange
       PageSize = 20
-      Position = 0
+      Position = 100
       TabOrder = 3
     end
     object trackCornerV: TTrackBar
