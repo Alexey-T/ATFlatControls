@@ -153,8 +153,8 @@ end;
 
 procedure TFormDemo.ListArrowsClick(Sender: TObject);
 begin
-  bar_v.KindArrows:= TATScrollbarArrowsStyle(ListArrows.ItemIndex);
-  bar_h.KindArrows:= bar_v.KindArrows;
+  bar_v.ArrowStyle:= TATScrollbarArrowsStyle(ListArrows.ItemIndex);
+  bar_h.ArrowStyle:= bar_v.ArrowStyle;
 end;
 
 procedure TFormDemo.trackBorChange(Sender: TObject);

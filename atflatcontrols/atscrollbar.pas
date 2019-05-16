@@ -96,7 +96,7 @@ type
   TATScrollbar = class(TCustomControl)
   private
     FKind: TScrollBarKind;
-    FKindArrows: TATScrollbarArrowsStyle;
+    FArrowStyle: TATScrollbarArrowsStyle;
     FIndentCorner: Integer;
     FTheme: PATScrollbarTheme;
 
@@ -154,7 +154,7 @@ type
 
     procedure TimerTimer(Sender: TObject);
     procedure SetKind(AValue: TScrollBarKind);
-    procedure SetKindArrows(AValue: TATScrollbarArrowsStyle);
+    procedure SetArrowStyle(AValue: TATScrollbarArrowsStyle);
     procedure SetPos(Value: Integer);
     procedure SetMin(Value: Integer);
     procedure SetMax(Value: Integer);
@@ -198,7 +198,7 @@ type
     property MinSizeToShowThumb: Integer read FMinSizeToShowThumb write FMinSizeToShowThumb default 10;
     property MinSizeOfThumb: Integer read FMinSizeOfThumb write FMinSizeOfThumb default 4;
     property Kind: TScrollBarKind read FKind write SetKind default sbHorizontal;
-    property KindArrows: TATScrollbarArrowsStyle read FKindArrows write SetKindArrows default asaArrowsNormal;
+    property ArrowStyle: TATScrollbarArrowsStyle read FArrowStyle write SetArrowStyle default asaArrowsNormal;
     property IndentCorner: Integer read FIndentCorner write FIndentCorner default 0;
 
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
@@ -232,7 +232,7 @@ begin
   ControlStyle:= ControlStyle+[csOpaque];
 
   FKind:= sbHorizontal;
-  FKindArrows:= asaArrowsNormal;
+  FArrowStyle:= asaArrowsNormal;
   FIndentCorner:= 0;
 
   FTheme:= @ATScrollbarTheme;
@@ -332,7 +332,7 @@ begin
       FRectMain.Height * FTheme^.ArrowLengthPercents div 100,
       FRectMain.Width div 2
       );
-    case FKindArrows of
+    case FArrowStyle of
       asaArrowsNormal:
         begin
           FRectArrUp:= Rect(FRectMain.Left, FRectMain.Top, FRectMain.Left+FSize, FRectMain.Bottom);
@@ -363,7 +363,7 @@ begin
       FRectMain.Width * FTheme^.ArrowLengthPercents div 100,
       FRectMain.Height div 2
       );
-    case FKindArrows of
+    case FArrowStyle of
       asaArrowsNormal:
         begin
           FRectArrUp:= Rect(FRectMain.Left, FRectMain.Top, FRectMain.Right, FRectMain.Top+FSize);
@@ -502,10 +502,10 @@ begin
   Invalidate;
 end;
 
-procedure TATScrollbar.SetKindArrows(AValue: TATScrollbarArrowsStyle);
+procedure TATScrollbar.SetArrowStyle(AValue: TATScrollbarArrowsStyle);
 begin
-  if FKindArrows=AValue then Exit;
-  FKindArrows:= AValue;
+  if FArrowStyle=AValue then Exit;
+  FArrowStyle:= AValue;
   Invalidate;
 end;
 
