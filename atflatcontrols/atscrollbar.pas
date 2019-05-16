@@ -277,7 +277,7 @@ end;
 
 procedure TATScrollbar.Update;
 begin
-  if FKind=sbHorizontal then
+  if IsHorz then
     Height:= DoScale(FTheme^.InitialSize)
   else
     Width:= DoScale(FTheme^.InitialSize);
@@ -317,7 +317,7 @@ begin
     if DoDrawEvent(aseCorner, C, FRectCorner) then
       DoPaintStd_Corner(C, FRectCorner);
 
-  C.Brush.Color:= ColorToRGB(ATScrollbarTheme.ColorBorder);
+  C.Brush.Color:= ColorToRGB(FTheme^.ColorBorder);
   C.FillRect(FRectMain);
 
   InflateRect(FRectMain,
@@ -524,11 +524,11 @@ var
   cc: Integer;
 begin
   if IsRectEmpty(R) then exit;
-  C.Brush.Color:= ColorToRGB(ATScrollbarTheme.ColorArrowBorder);
+  C.Brush.Color:= ColorToRGB(FTheme^.ColorArrowBorder);
   C.FillRect(R);
 
   InflateRect(R, -1, -1);
-  C.Brush.Color:= ColorToRGB(ATScrollbarTheme.ColorArrowFill);
+  C.Brush.Color:= ColorToRGB(FTheme^.ColorArrowFill);
   C.FillRect(R);
 
   P:= CenterPoint(R);
@@ -563,8 +563,8 @@ begin
       Exit;
  end;     
 
-  C.Brush.Color:= ColorToRGB(ATScrollbarTheme.ColorArrowSign);
-  C.Pen.Color:= ColorToRGB(ATScrollbarTheme.ColorArrowSign);
+  C.Brush.Color:= ColorToRGB(FTheme^.ColorArrowSign);
+  C.Pen.Color:= ColorToRGB(FTheme^.ColorArrowSign);
   C.Polygon([P1, P2, P3]);
 end;
 
@@ -653,8 +653,8 @@ var
   P: TPoint;
   NOffset, i: integer;
 begin
-  C.Brush.Color:= ColorToRGB(ATScrollbarTheme.ColorThumbFill);
-  C.Pen.Color:= ColorToRGB(ATScrollbarTheme.ColorThumbBorder);
+  C.Brush.Color:= ColorToRGB(FTheme^.ColorThumbFill);
+  C.Pen.Color:= ColorToRGB(FTheme^.ColorThumbBorder);
   C.Rectangle(R);
 
   NOffset:= FTheme^.ThumbMarkerOffset;
@@ -800,21 +800,21 @@ end;
 procedure TATScrollbar.DoPaintStd_Corner(C: TCanvas; const R: TRect);
 begin
   if IsRectEmpty(R) then exit;
-  C.Brush.Color:= ColorToRGB(ATScrollbarTheme.ColorBG);
+  C.Brush.Color:= ColorToRGB(FTheme^.ColorBG);
   C.FillRect(R);
 end;
 
 procedure TATScrollbar.DoPaintStd_Back(C: TCanvas; const R: TRect);
 begin
   if IsRectEmpty(R) then exit;
-  C.Brush.Color:= ColorToRGB(ATScrollbarTheme.ColorBG);
+  C.Brush.Color:= ColorToRGB(FTheme^.ColorBG);
   C.FillRect(R);
 end;
 
 procedure TATScrollbar.DoPaintStd_BackScrolled(C: TCanvas; const R: TRect);
 begin
   if IsRectEmpty(R) then exit;
-  C.Brush.Color:= ColorToRGB(ATScrollbarTheme.ColorScrolled);
+  C.Brush.Color:= ColorToRGB(FTheme^.ColorScrolled);
   C.FillRect(R);
 end;
 
