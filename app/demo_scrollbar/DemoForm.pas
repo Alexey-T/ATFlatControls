@@ -80,21 +80,21 @@ begin
   bar_v.Min:= 10;
   bar_v.Max:= 100;
 
-  bar_v.Width:= 22;
-  bar_h.Height:= bar_v.Width;
+  bar_v.Width:= ATScrollbarTheme.InitialSize;
+  bar_h.Height:= ATScrollbarTheme.InitialSize;
   bar_h.IndentCorner:= 100;
 
   //--------------
   bar_h1:= TATScrollbar.Create(Self);
   bar_h1.Parent:= Panel2;
-  bar_h1.Height:= 18;
+  bar_h1.Height:= ATScrollbarTheme.InitialSize;
   bar_h1.Align:= alBottom;
   bar_h1.Kind:= sbHorizontal;
   bar_h1.IndentCorner:= -100; //negative
 
   bar_v1:= TATScrollbar.Create(Self);
   bar_v1.Parent:= Panel2;
-  bar_v1.Width:= bar_h1.Height;
+  bar_v1.Width:= ATScrollbarTheme.InitialSize;
   bar_v1.Align:= alLeft;
   bar_v1.Kind:= sbVertical;
 end;

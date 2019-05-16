@@ -266,6 +266,7 @@ end;
 destructor TATScrollbar.Destroy;
 begin
   FTimer.Enabled:= false;
+  FreeAndNil(FTimer);
   FreeAndNil(FBitmap);
   inherited;
 end;
