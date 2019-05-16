@@ -664,14 +664,15 @@ begin
   begin
     if R.Width>FTheme^.ThumbMarkerMinimalSize then
     begin
-      C.MoveTo(P.X  , R.Top+NOffset);
-      C.LineTo(P.X  , R.Bottom-NOffset);
-      for i:= 1 to FTheme^.ThubmMarkerDecorSize do
+      for i:= 0 to FTheme^.ThubmMarkerDecorSize-1 do
       begin
         C.MoveTo(P.X-2*i, R.Top+NOffset);
         C.LineTo(P.X-2*i, R.Bottom-NOffset);
-        C.MoveTo(P.X+2*i, R.Top+NOffset);
-        C.LineTo(P.X+2*i, R.Bottom-NOffset);
+        if i>0 then
+        begin
+          C.MoveTo(P.X+2*i, R.Top+NOffset);
+          C.LineTo(P.X+2*i, R.Bottom-NOffset);
+        end;
       end;
     end;
   end
@@ -679,14 +680,15 @@ begin
   begin
     if R.Height>FTheme^.ThumbMarkerMinimalSize then
     begin
-      C.MoveTo(R.Left+NOffset, P.Y);
-      C.LineTo(R.Right-NOffset, P.Y);
-      for i:= 1 to FTheme^.ThubmMarkerDecorSize do
+      for i:= 0 to FTheme^.ThubmMarkerDecorSize-1 do
       begin
         C.MoveTo(R.Left+NOffset, P.Y-2*i);
         C.LineTo(R.Right-NOffset, P.Y-2*i);
-        C.MoveTo(R.Left+NOffset, P.Y+2*i);
-        C.LineTo(R.Right-NOffset, P.Y+2*i);
+        if i>0 then
+        begin
+          C.MoveTo(R.Left+NOffset, P.Y+2*i);
+          C.LineTo(R.Right-NOffset, P.Y+2*i);
+        end;
       end;
     end;
   end;
@@ -875,11 +877,11 @@ initialization
     ScalePercents:= 100;
     ArrowSize:= 3;
     ArrowLengthPercents:= 100;
-    BorderSize:= 1;
+    BorderSize:= 0;
     TimerInterval:= 80;
     ThumbMarkerOffset:= 4;
     ThumbMarkerMinimalSize:= 20;
-    ThubmMarkerDecorSize:= 1;
+    ThubmMarkerDecorSize:= 2;
   end;
 
 end.
