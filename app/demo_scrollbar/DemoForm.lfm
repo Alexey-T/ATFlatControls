@@ -171,20 +171,20 @@ object FormDemo: TFormDemo
       TabOrder = 5
     end
     object ListArrows: TListBox
-      Left = 160
-      Height = 104
-      Top = 272
-      Width = 200
+      Left = 192
+      Height = 120
+      Top = 264
+      Width = 152
       Items.Strings = (
-        'arrows at edges'
-        'arrows below'
-        'arrows above'
-        'no arrows'
+        'normal'
+        'below'
+        'above'
+        'hidden'
+        'in corner'
       )
       ItemHeight = 22
-      ItemIndex = 0
       OnClick = ListArrowsClick
-      ScrollWidth = 198
+      ScrollWidth = 150
       TabOrder = 7
     end
     object chkInstant: TCheckBox

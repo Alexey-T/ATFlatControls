@@ -78,7 +78,8 @@ type
     ColorScrolled: TColor;
     InitialSize: integer;
     ScalePercents: integer;
-    ArrowStyle: TATScrollbarArrowsStyle;
+    ArrowStyleH: TATScrollbarArrowsStyle;
+    ArrowStyleV: TATScrollbarArrowsStyle;
     ArrowSize: integer;
     ArrowLengthPercents: integer;
     BorderSize: integer;
@@ -331,7 +332,7 @@ begin
       FRectMain.Height * FTheme^.ArrowLengthPercents div 100,
       FRectMain.Width div 2
       );
-    case FTheme^.ArrowStyle of
+    case FTheme^.ArrowStyleH of
       asaArrowsNormal:
         begin
           FRectArrUp:= Rect(FRectMain.Left, FRectMain.Top, FRectMain.Left+FSize, FRectMain.Bottom);
@@ -362,7 +363,7 @@ begin
       FRectMain.Width * FTheme^.ArrowLengthPercents div 100,
       FRectMain.Height div 2
       );
-    case FTheme^.ArrowStyle of
+    case FTheme^.ArrowStyleV of
       asaArrowsNormal:
         begin
           FRectArrUp:= Rect(FRectMain.Left, FRectMain.Top, FRectMain.Right, FRectMain.Top+FSize);
@@ -896,7 +897,8 @@ initialization
     ColorScrolled:= $d0b0b0;
     InitialSize:= 16;
     ScalePercents:= 100;
-    ArrowStyle:= asaArrowsNormal;
+    ArrowStyleH:= asaArrowsNormal;
+    ArrowStyleV:= asaArrowsNormal;
     ArrowSize:= 3;
     ArrowLengthPercents:= 100;
     BorderSize:= 0;

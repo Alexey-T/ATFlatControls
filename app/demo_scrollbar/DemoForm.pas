@@ -160,7 +160,17 @@ end;
 
 procedure TFormDemo.ListArrowsClick(Sender: TObject);
 begin
-  ATScrollbarTheme.ArrowStyle:= TATScrollbarArrowsStyle(ListArrows.ItemIndex);
+  if ListArrows.ItemIndex<=Ord(High(TATScrollbarArrowsStyle)) then
+  begin
+    ATScrollbarTheme.ArrowStyleH:= TATScrollbarArrowsStyle(ListArrows.ItemIndex);
+    ATScrollbarTheme.ArrowStyleV:= ATScrollbarTheme.ArrowStyleH;
+  end
+  else
+  begin
+    ATScrollbarTheme.ArrowStyleH:= asaArrowsAbove;
+    ATScrollbarTheme.ArrowStyleV:= asaArrowsBelow;
+  end;
+
   bar_v.Invalidate;
   bar_h.Invalidate;
   bar_v1.Invalidate;
