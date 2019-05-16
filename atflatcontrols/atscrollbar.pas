@@ -84,6 +84,7 @@ type
     TimerInterval: integer;
     ThumbMarkerOffset: integer;
     ThumbMarkerMinimalSize: integer;
+    ThubmMarkerDecorSize: integer;
   end;
 
 var
@@ -650,7 +651,7 @@ end;
 procedure TATScrollbar.DoPaintStd_Thumb(C: TCanvas; const R: TRect);
 var
   P: TPoint;
-  NOffset: integer;
+  NOffset, i: integer;
 begin
   C.Brush.Color:= ColorToRGB(ATScrollbarTheme.ColorThumbFill);
   C.Pen.Color:= ColorToRGB(ATScrollbarTheme.ColorThumbBorder);
@@ -665,10 +666,13 @@ begin
     begin
       C.MoveTo(P.X  , R.Top+NOffset);
       C.LineTo(P.X  , R.Bottom-NOffset);
-      C.MoveTo(P.X-2, R.Top+NOffset);
-      C.LineTo(P.X-2, R.Bottom-NOffset);
-      C.MoveTo(P.X+2, R.Top+NOffset);
-      C.LineTo(P.X+2, R.Bottom-NOffset);
+      for i:= 1 to FTheme^.ThubmMarkerDecorSize do
+      begin
+        C.MoveTo(P.X-2*i, R.Top+NOffset);
+        C.LineTo(P.X-2*i, R.Bottom-NOffset);
+        C.MoveTo(P.X+2*i, R.Top+NOffset);
+        C.LineTo(P.X+2*i, R.Bottom-NOffset);
+      end;
     end;
   end
   else
@@ -677,10 +681,13 @@ begin
     begin
       C.MoveTo(R.Left+NOffset, P.Y);
       C.LineTo(R.Right-NOffset, P.Y);
-      C.MoveTo(R.Left+NOffset, P.Y-2);
-      C.LineTo(R.Right-NOffset, P.Y-2);
-      C.MoveTo(R.Left+NOffset, P.Y+2);
-      C.LineTo(R.Right-NOffset, P.Y+2);
+      for i:= 1 to FTheme^.ThubmMarkerDecorSize do
+      begin
+        C.MoveTo(R.Left+NOffset, P.Y-2*i);
+        C.LineTo(R.Right-NOffset, P.Y-2*i);
+        C.MoveTo(R.Left+NOffset, P.Y+2*i);
+        C.LineTo(R.Right-NOffset, P.Y+2*i);
+      end;
     end;
   end;
 end;
@@ -867,6 +874,7 @@ initialization
     TimerInterval:= 80;
     ThumbMarkerOffset:= 4;
     ThumbMarkerMinimalSize:= 20;
+    ThubmMarkerDecorSize:= 1;
   end;
 
 end.
