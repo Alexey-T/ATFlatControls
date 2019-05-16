@@ -413,7 +413,6 @@ begin
   FScrollbar.Parent:= Self;
   FScrollbar.Kind:= sbVertical;
   FScrollbar.Align:= alRight;
-  FScrollbar.Width:= ATFlatTheme.ScrollbarSize;
   FScrollbar.IndentBorder:= 0;
   FScrollbar.OnChange:= @ScrollbarChange;
 end;
@@ -473,9 +472,10 @@ procedure TATListbox.Invalidate;
 begin
   if Assigned(FScrollbar) then
   begin
-    FScrollbar.WidthInitial:= ATFlatTheme.ScrollbarSize;
-    FScrollbar.ScalePercents:= ATFlatTheme.ScalePercents;
+    ATScrollbarTheme.ScalePercents:= ATFlatTheme.ScalePercents;
+    FScrollbar.Invalidate;
   end;
+
   inherited Invalidate;
 end;
 

@@ -35,7 +35,6 @@ type
     ChoiceBorderWidth: integer;
     ArrowSize: integer;
     GapForAutoSize: integer;
-    ScrollbarSize: integer;
     ScalePercents: integer;
     ScaleFontPercents: integer;
     function DoScale(AValue: integer): integer;
@@ -89,7 +88,6 @@ initialization
     ChoiceBorderWidth:= 1;
     ArrowSize:= 2;
     GapForAutoSize:= 8;
-    ScrollbarSize:= 16;
     ScalePercents:= 100;
     ScaleFontPercents:= 0;
   end;

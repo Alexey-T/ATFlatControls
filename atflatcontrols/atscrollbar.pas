@@ -66,6 +66,7 @@ type
     ACanvas: TCanvas; const ARect: TRect; var ACanDraw: boolean) of object;
 
 type
+  PATScrollbarTheme = ^TATScrollbarTheme;
   TATScrollbarTheme = record
     ColorBG: TColor;
     ColorBorder: TColor;
@@ -75,12 +76,14 @@ type
     ColorArrowFill: TColor;
     ColorArrowSign: TColor;
     ColorScrolled: TColor;
+    InitialSize: integer;
+    ScalePercents: integer;
   end;
+
 var
   ATScrollbarTheme: TATScrollbarTheme;
 
 type
-
   { TATScrollbar }
 
   TATScrollbar = class(TCustomControl)
@@ -92,8 +95,7 @@ type
     FIndentArrow: Integer;
     FIndentArrLonger: Integer;
     FTimerDelay: Integer;
-    FScalePercents: Integer;
-    FWidthInitial: Integer;
+    FTheme: PATScrollbarTheme;
 
     FPos: Integer;
     FMin: Integer;
@@ -146,7 +148,6 @@ type
     procedure DoScrollBy(NDelta: Integer);
     function GetPxAtScroll(APos: Integer): Integer;
     function DoScale(AValue: integer): integer;
-    procedure SetScalePercents(AValue: Integer);
 
     procedure TimerTimer(Sender: TObject);
     procedure SetKind(AValue: TScrollBarKind);
@@ -161,8 +162,8 @@ type
     constructor Create(AOnwer: TComponent); override;
     destructor Destroy; override;
     function CanFocus: boolean; override;
-    property WidthInitial: Integer read FWidthInitial write FWidthInitial;
-    property ScalePercents: Integer read FScalePercents write SetScalePercents;
+    property Theme: PATScrollbarTheme read FTheme write FTheme;
+    procedure Update; reintroduce;
 
   protected
     procedure Paint; override;
@@ -230,12 +231,7 @@ begin
   Caption:= '';
   BorderStyle:= bsNone;
   ControlStyle:= ControlStyle+[csOpaque];
-  DoubleBuffered:= IsDoubleBufferedNeeded;
-  Width:= 200;
-  Height:= 20;
-  FWidthInitial:= Height;
 
-  FScalePercents:= 100;
   FKind:= sbHorizontal;
   FKindArrows:= asaArrowsNormal;
   FIndentBorder:= 1;
@@ -243,14 +239,19 @@ begin
   FIndentArrow:= 3;
   FIndentArrLonger:= 0;
 
+  FTheme:= @ATScrollbarTheme;
+  Width:= 200;
+  Height:= FTheme.InitialSize;
+  Color:= FTheme^.ColorBG;
+
+  DoubleBuffered:= IsDoubleBufferedNeeded;
+
   FMin:= 0;
   FMax:= 100;
   FLineSize:= 1;
   FPageSize:= 20;
   FMinSizeToShowThumb:= 10;
   FMinSizeOfThumb:= 4;
-
-  Color:= ATScrollbarTheme.ColorBG;
 
   FBitmap:= TBitmap.Create;
   FBitmap.PixelFormat:= pf24bit;
@@ -273,14 +274,25 @@ begin
   FreeAndNil(FBitmap);
   inherited;
 end;
+
 function TATScrollbar.CanFocus: boolean;
 begin
   Result:= false;
 end;
 
-function TATScrollbar.DoScale(AValue: integer): integer; inline;
+procedure TATScrollbar.Update;
 begin
-  Result:= AValue*FScalePercents div 100;
+  if FKind=sbHorizontal then
+    Height:= DoScale(FTheme^.InitialSize)
+  else
+    Width:= DoScale(FTheme^.InitialSize);
+
+  Invalidate;
+end;
+
+function TATScrollbar.DoScale(AValue: integer): integer;
+begin
+  Result:= AValue * FTheme^.ScalePercents div 100;
 end;
 
 procedure TATScrollbar.Paint;
@@ -575,18 +587,6 @@ begin
   Result:= N0 + (APos-FMin) * NLen div Math.Max(1, FMax-FMin);
 end;
 
-procedure TATScrollbar.SetScalePercents(AValue: Integer);
-begin
-  if FScalePercents=AValue then Exit;
-  FScalePercents:= AValue;
-
-  //usually controls don't scale Width/Height, but it's handy for scrollbars
-  if IsHorz then
-    Height:= DoScale(FWidthInitial)
-  else
-    Width:= DoScale(FWidthInitial);
-end;
-
 procedure TATScrollbar.DoUpdateThumbRect;
 var
   R: TRect;
@@ -846,13 +846,19 @@ begin
 end;
 
 initialization
-  ATScrollbarTheme.ColorBG:= $d0d0d0;
-  ATScrollbarTheme.ColorBorder:= clLtGray;
-  ATScrollbarTheme.ColorThumbBorder:= $808080;
-  ATScrollbarTheme.ColorThumbFill:= $c0c0c0;
-  ATScrollbarTheme.ColorArrowBorder:= $808080;
-  ATScrollbarTheme.ColorArrowFill:= $c0c0c0;
-  ATScrollbarTheme.ColorArrowSign:= $404040;
-  ATScrollbarTheme.ColorScrolled:= $d0b0b0;
+
+  with ATScrollbarTheme do
+  begin
+    ColorBG:= $d0d0d0;
+    ColorBorder:= clLtGray;
+    ColorThumbBorder:= $808080;
+    ColorThumbFill:= $c0c0c0;
+    ColorArrowBorder:= $808080;
+    ColorArrowFill:= $c0c0c0;
+    ColorArrowSign:= $404040;
+    ColorScrolled:= $d0b0b0;
+    InitialSize:= 16;
+    ScalePercents:= 100;
+  end;
 
 end.

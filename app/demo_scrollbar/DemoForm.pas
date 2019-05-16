@@ -49,7 +49,7 @@ type
       ACanvas: TCanvas; const ARect: TRect; var ACanDo: boolean);
   public
     { Public declarations }
-    bh, bv, bbv, bbh: TATScrollbar;
+    bar_h, bar_v, bar_h1, bar_v1: TATScrollbar;
   end;
 
 var
@@ -63,42 +63,40 @@ uses StrUtils, Math;
 
 procedure TFormDemo.FormCreate(Sender: TObject);
 begin
-  bh:= TATScrollbar.Create(Self);
-  bh.Parent:= Panel1;
-  bh.Align:= alBottom;
-  bh.Kind:= sbHorizontal;
-  bh.OnChange:= ChangeH;
-  bh.Min:= 20;
-  bh.Max:= 200;
+  bar_h:= TATScrollbar.Create(Self);
+  bar_h.Parent:= Panel1;
+  bar_h.Align:= alBottom;
+  bar_h.Kind:= sbHorizontal;
+  bar_h.OnChange:= ChangeH;
+  bar_h.Min:= 20;
+  bar_h.Max:= 200;
 
   //-----------------------------------
-  bv:= TATScrollbar.Create(Self);
-  bv.Parent:= Panel1;
-  bv.Align:= alRight;
-  bv.Kind:= sbVertical;
-  bv.OnChange:= ChangeV;
-  bv.Min:= 10;
-  bv.Max:= 100;
+  bar_v:= TATScrollbar.Create(Self);
+  bar_v.Parent:= Panel1;
+  bar_v.Align:= alRight;
+  bar_v.Kind:= sbVertical;
+  bar_v.OnChange:= ChangeV;
+  bar_v.Min:= 10;
+  bar_v.Max:= 100;
 
-  bv.Width:= 22;
-  bv.WidthInitial:= bv.Width;
-  bh.Height:= bv.Width;
-  bh.WidthInitial:= bv.Width;
-  bh.IndentCorner:= bv.Width; //positive
+  bar_v.Width:= 22;
+  bar_h.Height:= bar_v.Width;
+  bar_h.IndentCorner:= bar_v.Width; //positive
 
   //--------------
-  bbh:= TATScrollbar.Create(Self);
-  bbh.Parent:= Panel2;
-  bbh.Height:= 18;
-  bbh.Align:= alBottom;
-  bbh.Kind:= sbHorizontal;
-  bbh.IndentCorner:= -bbh.Height; //negative
+  bar_h1:= TATScrollbar.Create(Self);
+  bar_h1.Parent:= Panel2;
+  bar_h1.Height:= 18;
+  bar_h1.Align:= alBottom;
+  bar_h1.Kind:= sbHorizontal;
+  bar_h1.IndentCorner:= -bar_h1.Height; //negative
 
-  bbv:= TATScrollbar.Create(Self);
-  bbv.Parent:= Panel2;
-  bbv.Width:= bbh.Height;
-  bbv.Align:= alLeft;
-  bbv.Kind:= sbVertical;
+  bar_v1:= TATScrollbar.Create(Self);
+  bar_v1.Parent:= Panel2;
+  bar_v1.Width:= bar_h1.Height;
+  bar_v1.Align:= alLeft;
+  bar_v1.Kind:= sbVertical;
 end;
 
 procedure TFormDemo.DrawEvent(S: TObject; AType: TATScrollbarElemType;
@@ -141,46 +139,46 @@ procedure TFormDemo.chkDrawClick(Sender: TObject);
 begin
   if chkDraw.Checked then
   begin
-    bh.OnOwnerDraw:= DrawEvent;
-    bv.OnOwnerDraw:= DrawEvent;
+    bar_h.OnOwnerDraw:= DrawEvent;
+    bar_v.OnOwnerDraw:= DrawEvent;
   end
   else
   begin
-    bh.OnOwnerDraw:= nil;
-    bv.OnOwnerDraw:= nil;
+    bar_h.OnOwnerDraw:= nil;
+    bar_v.OnOwnerDraw:= nil;
   end;
-  bh.Invalidate;
-  bv.Invalidate;
+  bar_h.Invalidate;
+  bar_v.Invalidate;
 end;
 
 procedure TFormDemo.ListArrowsClick(Sender: TObject);
 begin
-  bv.KindArrows:= TATScrollbarArrowsStyle(ListArrows.ItemIndex);
-  bh.KindArrows:= bv.KindArrows;
+  bar_v.KindArrows:= TATScrollbarArrowsStyle(ListArrows.ItemIndex);
+  bar_h.KindArrows:= bar_v.KindArrows;
 end;
 
 procedure TFormDemo.trackBorChange(Sender: TObject);
 begin
-  bv.IndentBorder:= trackBor.Position;
-  bh.IndentBorder:= bv.IndentBorder;
-  bv.Invalidate;
-  bh.Invalidate;
+  bar_v.IndentBorder:= trackBor.Position;
+  bar_h.IndentBorder:= bar_v.IndentBorder;
+  bar_v.Invalidate;
+  bar_h.Invalidate;
 end;
 
 procedure TFormDemo.ChangeH(S: TObject);
 begin
-  labh.Caption:= Format('Horz %d (%d .. %d)', [bh.Position, bh.Min, bh.Max]);
+  labh.Caption:= Format('Horz %d (%d .. %d)', [bar_h.Position, bar_h.Min, bar_h.Max]);
 end;
 
 procedure TFormDemo.ChangeV(S: TObject);
 begin
-  labv.Caption:= Format('Vert %d (%d .. %d)', [bv.Position, bv.Min, bv.Max]);
+  labv.Caption:= Format('Vert %d (%d .. %d)', [bar_v.Position, bar_v.Min, bar_v.Max]);
 end;
 
 procedure TFormDemo.trackPageChange(Sender: TObject);
 begin
-  bv.PageSize:= trackPage.Position;
-  bh.PageSize:= bv.PageSize;
+  bar_v.PageSize:= trackPage.Position;
+  bar_h.PageSize:= bar_v.PageSize;
 end;
 
 procedure TFormDemo.trackSizeChange(Sender: TObject);
@@ -188,28 +186,31 @@ var
   n: Integer;
 begin
   n:= trackSize.Position;
-  bv.ScalePercents:= n;
-  bh.ScalePercents:= n;
+  ATScrollbarTheme.ScalePercents:= n;
+  bar_v.Update;
+  bar_h.Update;
+  bar_v1.Update;
+  bar_h1.Update;
 end;
 
 procedure TFormDemo.trackLongerChange(Sender: TObject);
 begin
-  bh.IndentArrLonger:= trackLonger.Position;
-  bv.IndentArrLonger:= trackLonger.Position;
-  bh.Invalidate;
-  bv.Invalidate;
+  bar_h.IndentArrLonger:= trackLonger.Position;
+  bar_v.IndentArrLonger:= trackLonger.Position;
+  bar_h.Invalidate;
+  bar_v.Invalidate;
 end;
 
 procedure TFormDemo.trackCornerVChange(Sender: TObject);
 begin
-  bv.IndentCorner:= trackCornerV.Position;
-  bv.Invalidate;
+  bar_v.IndentCorner:= trackCornerV.Position;
+  bar_v.Invalidate;
 end;
 
 procedure TFormDemo.trackCornerHChange(Sender: TObject);
 begin
-  bh.IndentCorner:= trackCornerH.Position;
-  bh.Invalidate;
+  bar_h.IndentCorner:= trackCornerH.Position;
+  bar_h.Invalidate;
 end;
 
 end.
