@@ -14,6 +14,7 @@ type
   { TFormDemo }
 
   TFormDemo = class(TForm)
+    chkInstant: TCheckBox;
     ListArrows: TListBox;
     Panel1: TPanel;
     Panel2: TPanel;
@@ -32,6 +33,7 @@ type
     Label5: TLabel;
     trackCornerV: TTrackBar;
     trackCornerH: TTrackBar;
+    procedure chkInstantChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure chkDrawClick(Sender: TObject);
     procedure ListArrowsClick(Sender: TObject);
@@ -97,6 +99,11 @@ begin
   bar_v1.Width:= ATScrollbarTheme.InitialSize;
   bar_v1.Align:= alLeft;
   bar_v1.Kind:= sbVertical;
+end;
+
+procedure TFormDemo.chkInstantChange(Sender: TObject);
+begin
+  ATScrollbarTheme.InstantMoveOnClick:= chkInstant.Checked;
 end;
 
 procedure TFormDemo.DrawEvent(S: TObject; AType: TATScrollbarElemType;
