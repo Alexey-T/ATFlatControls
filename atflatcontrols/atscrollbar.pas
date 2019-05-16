@@ -78,6 +78,7 @@ type
     ColorScrolled: TColor;
     InitialSize: integer;
     ScalePercents: integer;
+    ArrowSize: integer;
     ArrowLengthPercents: integer;
     BorderSize: integer;
     TimerInterval: integer;
@@ -94,7 +95,6 @@ type
     FKind: TScrollBarKind;
     FKindArrows: TATScrollbarArrowsStyle;
     FIndentCorner: Integer;
-    FIndentArrow: Integer;
     FTheme: PATScrollbarTheme;
 
     FPos: Integer;
@@ -197,7 +197,6 @@ type
     property Kind: TScrollBarKind read FKind write SetKind default sbHorizontal;
     property KindArrows: TATScrollbarArrowsStyle read FKindArrows write SetKindArrows default asaArrowsNormal;
     property IndentCorner: Integer read FIndentCorner write FIndentCorner default 0;
-    property IndentArrow: Integer read FIndentArrow write FIndentArrow default 3;
 
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
     property OnOwnerDraw: TATScrollbarDrawEvent read FOnOwnerDraw write FOnOwnerDraw;
@@ -232,7 +231,6 @@ begin
   FKind:= sbHorizontal;
   FKindArrows:= asaArrowsNormal;
   FIndentCorner:= 0;
-  FIndentArrow:= 3;
 
   FTheme:= @ATScrollbarTheme;
   Width:= 200;
@@ -531,7 +529,7 @@ begin
   C.FillRect(R);
 
   P:= CenterPoint(R);
-  cc:= DoScale(FIndentArrow);
+  cc:= DoScale(FTheme^.ArrowSize);
 
   case Typ of
     aseArrowUp:
@@ -861,6 +859,7 @@ initialization
     ColorScrolled:= $d0b0b0;
     InitialSize:= 16;
     ScalePercents:= 100;
+    ArrowSize:= 3;
     ArrowLengthPercents:= 100;
     BorderSize:= 1;
     TimerInterval:= 80;
