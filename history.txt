@@ -1,4 +1,9 @@
 
+2019.05.16
+* ATScrollbar: moved several props into Theme
++ ATScrollbar: prop IndentCorner is now in percents 
++ ATScrollbar: added Theme items: InstantMoveOnClick, ThumbMarker*
+
 2019.05.14
 * ATGauge: renamed type to TATGauge
 + ATGauge: gauge is now themed (uses ATFlatThemes), added Theme prop
