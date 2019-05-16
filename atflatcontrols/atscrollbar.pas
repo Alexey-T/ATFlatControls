@@ -84,7 +84,7 @@ type
     TimerInterval: integer;
     ThumbMarkerOffset: integer;
     ThumbMarkerMinimalSize: integer;
-    ThubmMarkerDecorSize: integer;
+    ThumbMarkerDecorSize: integer;
   end;
 
 var
@@ -664,7 +664,7 @@ begin
   begin
     if R.Width>FTheme^.ThumbMarkerMinimalSize then
     begin
-      for i:= 0 to FTheme^.ThubmMarkerDecorSize-1 do
+      for i:= 0 to FTheme^.ThumbMarkerDecorSize-1 do
       begin
         C.MoveTo(P.X-2*i, R.Top+NOffset);
         C.LineTo(P.X-2*i, R.Bottom-NOffset);
@@ -680,7 +680,7 @@ begin
   begin
     if R.Height>FTheme^.ThumbMarkerMinimalSize then
     begin
-      for i:= 0 to FTheme^.ThubmMarkerDecorSize-1 do
+      for i:= 0 to FTheme^.ThumbMarkerDecorSize-1 do
       begin
         C.MoveTo(R.Left+NOffset, P.Y-2*i);
         C.LineTo(R.Right-NOffset, P.Y-2*i);
@@ -881,7 +881,7 @@ initialization
     TimerInterval:= 80;
     ThumbMarkerOffset:= 4;
     ThumbMarkerMinimalSize:= 20;
-    ThubmMarkerDecorSize:= 2;
+    ThumbMarkerDecorSize:= 2;
   end;
 
 end.
