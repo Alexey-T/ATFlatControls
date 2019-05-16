@@ -82,6 +82,8 @@ type
     ArrowLengthPercents: integer;
     BorderSize: integer;
     TimerInterval: integer;
+    ThumbMarkerOffset: integer;
+    ThumbMarkerMinimalSize: integer;
   end;
 
 var
@@ -646,39 +648,39 @@ begin
 end;
 
 procedure TATScrollbar.DoPaintStd_Thumb(C: TCanvas; const R: TRect);
-const
-  cMinMark = 20; //minimial size of thumb, after which thumb disappears
-  cMarkOf = 4; //offset from thumb edge to "|||" lines
 var
   P: TPoint;
+  NOffset: integer;
 begin
   C.Brush.Color:= ColorToRGB(ATScrollbarTheme.ColorThumbFill);
   C.Pen.Color:= ColorToRGB(ATScrollbarTheme.ColorThumbBorder);
   C.Rectangle(R);
 
+  NOffset:= FTheme^.ThumbMarkerOffset;
+
   P:= CenterPoint(R);
   if IsHorz then
   begin
-    if R.Width>cMinMark then
+    if R.Width>FTheme^.ThumbMarkerMinimalSize then
     begin
-      C.MoveTo(P.X  , R.Top+cMarkOf);
-      C.LineTo(P.X  , R.Bottom-cMarkOf);
-      C.MoveTo(P.X-2, R.Top+cMarkOf);
-      C.LineTo(P.X-2, R.Bottom-cMarkOf);
-      C.MoveTo(P.X+2, R.Top+cMarkOf);
-      C.LineTo(P.X+2, R.Bottom-cMarkOf);
+      C.MoveTo(P.X  , R.Top+NOffset);
+      C.LineTo(P.X  , R.Bottom-NOffset);
+      C.MoveTo(P.X-2, R.Top+NOffset);
+      C.LineTo(P.X-2, R.Bottom-NOffset);
+      C.MoveTo(P.X+2, R.Top+NOffset);
+      C.LineTo(P.X+2, R.Bottom-NOffset);
     end;
   end
   else
   begin
-    if R.Height>cMinMark then
+    if R.Height>FTheme^.ThumbMarkerMinimalSize then
     begin
-      C.MoveTo(R.Left+cMarkOf, P.Y);
-      C.LineTo(R.Right-cMarkOf, P.Y);
-      C.MoveTo(R.Left+cMarkOf, P.Y-2);
-      C.LineTo(R.Right-cMarkOf, P.Y-2);
-      C.MoveTo(R.Left+cMarkOf, P.Y+2);
-      C.LineTo(R.Right-cMarkOf, P.Y+2);
+      C.MoveTo(R.Left+NOffset, P.Y);
+      C.LineTo(R.Right-NOffset, P.Y);
+      C.MoveTo(R.Left+NOffset, P.Y-2);
+      C.LineTo(R.Right-NOffset, P.Y-2);
+      C.MoveTo(R.Left+NOffset, P.Y+2);
+      C.LineTo(R.Right-NOffset, P.Y+2);
     end;
   end;
 end;
@@ -863,6 +865,8 @@ initialization
     ArrowLengthPercents:= 100;
     BorderSize:= 1;
     TimerInterval:= 80;
+    ThumbMarkerOffset:= 4;
+    ThumbMarkerMinimalSize:= 20;
   end;
 
 end.
