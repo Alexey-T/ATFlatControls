@@ -144,12 +144,12 @@ type
     procedure DoPaintStd_Thumb(C: TCanvas; const R: TRect);
 
     function IsHorz: boolean; inline;
-    function MouseToPos(X, Y: Integer): Integer;
+    function CoordToPos(X, Y: Integer): Integer;
     procedure DoUpdateThumbRect;
     procedure DoUpdateCornerRect;
     procedure DoUpdatePosOnDrag(X, Y: Integer);
     procedure DoScrollBy(NDelta: Integer);
-    function GetPxAtScroll(APos: Integer): Integer;
+    function PosToCoord(APos: Integer): Integer;
     function DoScale(AValue: integer): integer;
 
     procedure TimerTimer(Sender: TObject);
@@ -574,14 +574,14 @@ begin
   Result:= FKind=sbHorizontal;
 end;
 
-function TATScrollbar.GetPxAtScroll(APos: Integer): Integer;
+function TATScrollbar.PosToCoord(APos: Integer): Integer;
 var
   N0, NLen: Integer;
 begin
   if IsHorz then
   begin
     N0:= FRectMain.Left;
-    NLen:= FRectMain.Width
+    NLen:= FRectMain.Width;
   end
   else
   begin
@@ -604,9 +604,9 @@ begin
     if FRectMain.Width<FMinSizeToShowThumb then Exit;
     R.Top:= FRectMain.Top;
     R.Bottom:= FRectMain.Bottom;
-    R.Left:= GetPxAtScroll(FPos);
+    R.Left:= PosToCoord(FPos);
     R.Left:= Math.Min(R.Left, FRectMain.Right-FMinSizeOfThumb);
-    R.Right:= GetPxAtScroll(FPos+FPageSize);
+    R.Right:= PosToCoord(FPos+FPageSize);
     R.Right:= Math.Max(R.Right, R.Left+FMinSizeOfThumb);
     R.Right:= Math.Min(R.Right, FRectMain.Right);
   end
@@ -615,9 +615,9 @@ begin
     if FRectMain.Height<FMinSizeToShowThumb then Exit;
     R.Left:= FRectMain.Left;
     R.Right:= FRectMain.Right;
-    R.Top:= GetPxAtScroll(FPos);
+    R.Top:= PosToCoord(FPos);
     R.Top:= Math.Min(R.Top, FRectMain.Bottom-FMinSizeOfThumb);
-    R.Bottom:= GetPxAtScroll(FPos+FPageSize);
+    R.Bottom:= PosToCoord(FPos+FPageSize);
     R.Bottom:= Math.Max(R.Bottom, R.Top+FMinSizeOfThumb);
     R.Bottom:= Math.Min(R.Bottom, FRectMain.Bottom);
   end;
@@ -749,7 +749,7 @@ begin
   end;
 end;
 
-function TATScrollbar.MouseToPos(X, Y: Integer): Integer;
+function TATScrollbar.CoordToPos(X, Y: Integer): Integer;
 begin
   if IsHorz then
     Result:= FMin + (X-FRectMain.Left) * (FMax-FMin) div Math.Max(FRectMain.Width, 1)
@@ -761,7 +761,7 @@ procedure TATScrollbar.DoUpdatePosOnDrag(X, Y: Integer);
 var
   N: Integer;
 begin
-  N:= MouseToPos(
+  N:= CoordToPos(
     X-FMouseDragOffset,
     Y-FMouseDragOffset);
   N:= Math.Max(N, FMin);
