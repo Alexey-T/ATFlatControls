@@ -470,10 +470,7 @@ end;
 procedure TATListbox.Invalidate;
 begin
   if Assigned(FScrollbar) then
-  begin
-    ATScrollbarTheme.ScalePercents:= ATFlatTheme.ScalePercents;
     FScrollbar.Update;
-  end;
 
   inherited Invalidate;
 end;
