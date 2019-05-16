@@ -472,7 +472,7 @@ begin
   if Assigned(FScrollbar) then
   begin
     ATScrollbarTheme.ScalePercents:= ATFlatTheme.ScalePercents;
-    FScrollbar.Invalidate;
+    FScrollbar.Update;
   end;
 
   inherited Invalidate;
