@@ -21,7 +21,7 @@ begin
     TATButton,
     TATFlatToolbar,
     TATListbox,
-    TATScroll,
+    TATScrollbar,
     TATStatus,
     TATPanelSimple,
     TATPanelColor,

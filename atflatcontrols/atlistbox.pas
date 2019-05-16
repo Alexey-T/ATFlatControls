@@ -26,7 +26,7 @@ type
   private
     FThemedScrollbar: boolean;
     FThemedColors: boolean;
-    FScrollbar: TATScroll;
+    FScrollbar: TATScrollbar;
     FOwnerDrawn: boolean;
     FVirtualMode: boolean;
     FVirtualItemCount: integer;
@@ -82,7 +82,7 @@ type
     function GetItemIndexAt(Pnt: TPoint): integer;
     property ThemedScrollbar: boolean read FThemedScrollbar write SetThemedScrollbar;
     property ThemedColors: boolean read FThemedColors write FThemedColors;
-    property Scrollbar: TATScroll read FScrollbar;
+    property Scrollbar: TATScrollbar read FScrollbar;
     function CanFocus: boolean; override;
     function CanSetFocus: boolean; override;
     function ClientWidth: integer;
@@ -409,7 +409,7 @@ begin
   FThemedScrollbar:= true;
   FThemedColors:= false;
 
-  FScrollbar:= TATScroll.Create(Self);
+  FScrollbar:= TATScrollbar.Create(Self);
   FScrollbar.Parent:= Self;
   FScrollbar.Kind:= sbVertical;
   FScrollbar.Align:= alRight;

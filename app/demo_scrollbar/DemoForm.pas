@@ -45,11 +45,11 @@ type
     { Private declarations }
     procedure ChangeH(S: TObject);
     procedure ChangeV(S: TObject);
-    procedure DrawEvent(S: TObject; AType: TATScrollElemType;
+    procedure DrawEvent(S: TObject; AType: TATScrollbarElemType;
       ACanvas: TCanvas; const ARect: TRect; var ACanDo: boolean);
   public
     { Public declarations }
-    bh, bv, bbv, bbh: TATScroll;
+    bh, bv, bbv, bbh: TATScrollbar;
   end;
 
 var
@@ -63,7 +63,7 @@ uses StrUtils, Math;
 
 procedure TFormDemo.FormCreate(Sender: TObject);
 begin
-  bh:= TATScroll.Create(Self);
+  bh:= TATScrollbar.Create(Self);
   bh.Parent:= Panel1;
   bh.Align:= alBottom;
   bh.Kind:= sbHorizontal;
@@ -72,7 +72,7 @@ begin
   bh.Max:= 200;
 
   //-----------------------------------
-  bv:= TATScroll.Create(Self);
+  bv:= TATScrollbar.Create(Self);
   bv.Parent:= Panel1;
   bv.Align:= alRight;
   bv.Kind:= sbVertical;
@@ -87,24 +87,24 @@ begin
   bh.IndentCorner:= bv.Width; //positive
 
   //--------------
-  bbh:= TATScroll.Create(Self);
+  bbh:= TATScrollbar.Create(Self);
   bbh.Parent:= Panel2;
   bbh.Height:= 18;
   bbh.Align:= alBottom;
   bbh.Kind:= sbHorizontal;
   bbh.IndentCorner:= -bbh.Height; //negative
 
-  bbv:= TATScroll.Create(Self);
+  bbv:= TATScrollbar.Create(Self);
   bbv.Parent:= Panel2;
   bbv.Width:= bbh.Height;
   bbv.Align:= alLeft;
   bbv.Kind:= sbVertical;
 end;
 
-procedure TFormDemo.DrawEvent(S: TObject; AType: TATScrollElemType;
+procedure TFormDemo.DrawEvent(S: TObject; AType: TATScrollbarElemType;
   ACanvas: TCanvas; const ARect: TRect; var ACanDo: boolean);
 const
-  cc: array[TATScrollElemType] of TColor = (
+  cc: array[TATScrollbarElemType] of TColor = (
     clYellow, clYellow,
     clCream, clCream,
     $30a030, $00e000, 
@@ -155,7 +155,7 @@ end;
 
 procedure TFormDemo.ListArrowsClick(Sender: TObject);
 begin
-  bv.KindArrows:= TATScrollArrowsKind(ListArrows.ItemIndex);
+  bv.KindArrows:= TATScrollbarArrowsStyle(ListArrows.ItemIndex);
   bh.KindArrows:= bv.KindArrows;
 end;
 

@@ -39,7 +39,7 @@ uses
   Controls, ExtCtrls, Forms;
 
 type
-  TATScrollElemType = (
+  TATScrollbarElemType = (
     aseArrowUp,
     aseArrowDown,
     aseArrowLeft,
@@ -54,7 +54,7 @@ type
     );
 
 type
-  TATScrollArrowsKind = (
+  TATScrollbarArrowsStyle = (
     asaArrowsNormal,
     asaArrowsBelow,
     asaArrowsAbove,
@@ -62,7 +62,7 @@ type
     );
 
 type
-  TATScrollDrawEvent = procedure (Sender: TObject; AType: TATScrollElemType;
+  TATScrollbarDrawEvent = procedure (Sender: TObject; AType: TATScrollbarElemType;
     ACanvas: TCanvas; const ARect: TRect; var ACanDraw: boolean) of object;
 
 type
@@ -81,12 +81,12 @@ var
 
 type
 
-  { TATScroll }
+  { TATScrollbar }
 
-  TATScroll = class(TCustomControl)
+  TATScrollbar = class(TCustomControl)
   private
     FKind: TScrollBarKind;
-    FKindArrows: TATScrollArrowsKind;
+    FKindArrows: TATScrollbarArrowsStyle;
     FIndentBorder: Integer;
     FIndentCorner: Integer;
     FIndentArrow: Integer;
@@ -115,7 +115,7 @@ type
     FBitmap: TBitmap;
     FTimer: TTimer;
     FOnChange: TNotifyEvent;
-    FOnOwnerDraw: TATScrollDrawEvent;
+    FOnOwnerDraw: TATScrollbarDrawEvent;
 
     //drag-drop
     FMouseDown: boolean;
@@ -126,7 +126,7 @@ type
     FMouseDownOnPageUp,
     FMouseDownOnPageDown: boolean;
 
-    procedure DoPaintArrow(C: TCanvas; const R: TRect; Typ: TATScrollElemType);
+    procedure DoPaintArrow(C: TCanvas; const R: TRect; Typ: TATScrollbarElemType);
     procedure DoPaintThumb(C: TCanvas);
     procedure DoPaintBack(C: TCanvas);
     procedure DoPaintBackScrolled(C: TCanvas);
@@ -135,7 +135,7 @@ type
     procedure DoPaintStd_Corner(C: TCanvas; const R: TRect);
     procedure DoPaintStd_Back(C: TCanvas; const R: TRect);
     procedure DoPaintStd_BackScrolled(C: TCanvas; const R: TRect);
-    procedure DoPaintStd_Arrow(C: TCanvas; R: TRect; Typ: TATScrollElemType);
+    procedure DoPaintStd_Arrow(C: TCanvas; R: TRect; Typ: TATScrollbarElemType);
     procedure DoPaintStd_Thumb(C: TCanvas; const R: TRect);
 
     function IsHorz: boolean;
@@ -150,12 +150,12 @@ type
 
     procedure TimerTimer(Sender: TObject);
     procedure SetKind(AValue: TScrollBarKind);
-    procedure SetKindArrows(AValue: TATScrollArrowsKind);
+    procedure SetKindArrows(AValue: TATScrollbarArrowsStyle);
     procedure SetPos(Value: Integer);
     procedure SetMin(Value: Integer);
     procedure SetMax(Value: Integer);
     procedure SetPageSize(Value: Integer);
-    function DoDrawEvent(AType: TATScrollElemType;
+    function DoDrawEvent(AType: TATScrollbarElemType;
       ACanvas: TCanvas; const ARect: TRect): boolean;
   public
     constructor Create(AOnwer: TComponent); override;
@@ -194,7 +194,7 @@ type
     property MinSizeToShowThumb: Integer read FMinSizeToShowThumb write FMinSizeToShowThumb default 10;
     property MinSizeOfThumb: Integer read FMinSizeOfThumb write FMinSizeOfThumb default 4;
     property Kind: TScrollBarKind read FKind write SetKind default sbHorizontal;
-    property KindArrows: TATScrollArrowsKind read FKindArrows write SetKindArrows default asaArrowsNormal;
+    property KindArrows: TATScrollbarArrowsStyle read FKindArrows write SetKindArrows default asaArrowsNormal;
     property IndentBorder: Integer read FIndentBorder write FIndentBorder default 1;
     property IndentCorner: Integer read FIndentCorner write FIndentCorner default 0;
     property IndentArrow: Integer read FIndentArrow write FIndentArrow default 3;
@@ -202,7 +202,7 @@ type
     property TimerDelay: Integer read FTimerDelay write FTimerDelay default 80;
 
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
-    property OnOwnerDraw: TATScrollDrawEvent read FOnOwnerDraw write FOnOwnerDraw;
+    property OnOwnerDraw: TATScrollbarDrawEvent read FOnOwnerDraw write FOnOwnerDraw;
     property OnContextPopup;
     property OnResize;
   end;
@@ -221,9 +221,9 @@ begin
   {$endif}
 end;
 
-{ TATScroll }
+{ TATScrollbar }
 
-constructor TATScroll.Create(AOnwer: TComponent);
+constructor TATScrollbar.Create(AOnwer: TComponent);
 begin
   inherited;
 
@@ -267,23 +267,23 @@ begin
   FMouseDragOffset:= 0;
 end;
 
-destructor TATScroll.Destroy;
+destructor TATScrollbar.Destroy;
 begin
   FTimer.Enabled:= false;
   FreeAndNil(FBitmap);
   inherited;
 end;
-function TATScroll.CanFocus: boolean;
+function TATScrollbar.CanFocus: boolean;
 begin
   Result:= false;
 end;
 
-function TATScroll.DoScale(AValue: integer): integer; inline;
+function TATScrollbar.DoScale(AValue: integer): integer; inline;
 begin
   Result:= AValue*FScalePercents div 100;
 end;
 
-procedure TATScroll.Paint;
+procedure TATScrollbar.Paint;
 begin
   if DoubleBuffered then
   begin
@@ -297,7 +297,7 @@ begin
     DoPaintTo(Canvas);
 end;
 
-procedure TATScroll.DoPaintTo(C: TCanvas);
+procedure TATScrollbar.DoPaintTo(C: TCanvas);
 var
   FSize: Integer;
 begin
@@ -380,18 +380,18 @@ begin
   DoPaintThumb(C);
 end;
 
-procedure TATScroll.DoPaintBack(C: TCanvas);
+procedure TATScrollbar.DoPaintBack(C: TCanvas);
 var
-  Typ: TATScrollElemType;
+  Typ: TATScrollbarElemType;
 begin
   if IsHorz then Typ:= aseScrollAreaH else Typ:= aseScrollAreaV;
   if DoDrawEvent(Typ, C, FRectMain) then
     DoPaintStd_Back(C, FRectMain);
 end;
 
-procedure TATScroll.DoPaintBackScrolled(C: TCanvas);
+procedure TATScrollbar.DoPaintBackScrolled(C: TCanvas);
 var
-  Typ: TATScrollElemType;
+  Typ: TATScrollbarElemType;
 begin
   if IsHorz then Typ:= aseScrolledAreaH else Typ:= aseScrolledAreaV;
 
@@ -405,7 +405,7 @@ begin
 end;
 
 
-procedure TATScroll.MouseDown(Button: TMouseButton; Shift: TShiftState;
+procedure TATScrollbar.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
 begin
   FMouseDown:= Button=mbLeft;
@@ -427,7 +427,7 @@ begin
      FMouseDownOnPageDown);
 end;
 
-procedure TATScroll.MouseUp(Button: TMouseButton; Shift: TShiftState;
+procedure TATScrollbar.MouseUp(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
 begin
   FMouseDown:= false;
@@ -436,7 +436,7 @@ begin
   Invalidate;
 end;
 
-procedure TATScroll.Resize;
+procedure TATScrollbar.Resize;
 begin
   inherited;
 
@@ -467,12 +467,12 @@ begin
 end;
 {$endif}
 
-procedure TATScroll.Click;
+procedure TATScrollbar.Click;
 begin
   inherited;
 end;
 
-function TATScroll.DoDrawEvent(AType: TATScrollElemType;
+function TATScrollbar.DoDrawEvent(AType: TATScrollbarElemType;
   ACanvas: TCanvas; const ARect: TRect): boolean;
 begin
   Result:= true;
@@ -480,30 +480,30 @@ begin
     FOnOwnerDraw(Self, AType, ACanvas, ARect, Result);
 end;
 
-procedure TATScroll.SetKind(AValue: TScrollBarKind);
+procedure TATScrollbar.SetKind(AValue: TScrollBarKind);
 begin
   if AValue=FKind then Exit;
   FKind:= AValue;
   Invalidate;
 end;
 
-procedure TATScroll.SetKindArrows(AValue: TATScrollArrowsKind);
+procedure TATScrollbar.SetKindArrows(AValue: TATScrollbarArrowsStyle);
 begin
   if FKindArrows=AValue then Exit;
   FKindArrows:= AValue;
   Invalidate;
 end;
 
-procedure TATScroll.DoPaintArrow(C: TCanvas; const R: TRect;
-  Typ: TATScrollElemType);
+procedure TATScrollbar.DoPaintArrow(C: TCanvas; const R: TRect;
+  Typ: TATScrollbarElemType);
 begin
   if IsRectEmpty(R) then exit;
   if DoDrawEvent(Typ, C, R) then
     DoPaintStd_Arrow(C, R, Typ);
 end;    
 
-procedure TATScroll.DoPaintStd_Arrow(C: TCanvas; R: TRect;
-  Typ: TATScrollElemType);
+procedure TATScrollbar.DoPaintStd_Arrow(C: TCanvas; R: TRect;
+  Typ: TATScrollbarElemType);
 var
   P, P1, P2, P3: TPoint;
   cc: Integer;
@@ -553,12 +553,12 @@ begin
   C.Polygon([P1, P2, P3]);
 end;
 
-function TATScroll.IsHorz: boolean;
+function TATScrollbar.IsHorz: boolean;
 begin
   Result:= FKind=sbHorizontal;
 end;
 
-function TATScroll.GetPxAtScroll(APos: Integer): Integer;
+function TATScrollbar.GetPxAtScroll(APos: Integer): Integer;
 var
   N0, NLen: Integer;
 begin
@@ -575,7 +575,7 @@ begin
   Result:= N0 + (APos-FMin) * NLen div Math.Max(1, FMax-FMin);
 end;
 
-procedure TATScroll.SetScalePercents(AValue: Integer);
+procedure TATScrollbar.SetScalePercents(AValue: Integer);
 begin
   if FScalePercents=AValue then Exit;
   FScalePercents:= AValue;
@@ -587,7 +587,7 @@ begin
     Width:= DoScale(FWidthInitial);
 end;
 
-procedure TATScroll.DoUpdateThumbRect;
+procedure TATScrollbar.DoUpdateThumbRect;
 var
   R: TRect;
 begin
@@ -631,9 +631,9 @@ begin
   end;
 end;
 
-procedure TATScroll.DoPaintThumb(C: TCanvas);
+procedure TATScrollbar.DoPaintThumb(C: TCanvas);
 var
-  Typ: TATScrollElemType;
+  Typ: TATScrollbarElemType;
 begin
   if IsRectEmpty(FRectThumb) then Exit;
   if IsHorz then
@@ -645,7 +645,7 @@ begin
     DoPaintStd_Thumb(C, FRectThumb);
 end;
 
-procedure TATScroll.DoPaintStd_Thumb(C: TCanvas; const R: TRect);
+procedure TATScrollbar.DoPaintStd_Thumb(C: TCanvas; const R: TRect);
 const
   cMinMark = 20; //minimial size of thumb, after which thumb disappears
   cMarkOf = 4; //offset from thumb edge to "|||" lines
@@ -684,7 +684,7 @@ begin
 end;
 
 
-procedure TATScroll.SetMax(Value: Integer);
+procedure TATScrollbar.SetMax(Value: Integer);
 begin
   if FMax<>Value then
   begin
@@ -694,7 +694,7 @@ begin
   end;
 end;
 
-procedure TATScroll.SetMin(Value: Integer);
+procedure TATScrollbar.SetMin(Value: Integer);
 begin
   if FMin<>Value then
   begin
@@ -704,7 +704,7 @@ begin
   end;
 end;
 
-procedure TATScroll.SetPageSize(Value: Integer);
+procedure TATScrollbar.SetPageSize(Value: Integer);
 begin
   if FPageSize<>Value then
   begin
@@ -713,7 +713,7 @@ begin
   end;
 end;
 
-procedure TATScroll.SetPos(Value: Integer);
+procedure TATScrollbar.SetPos(Value: Integer);
 begin
   Value:= Math.Min(Value, FMax);
   Value:= Math.Max(Value, FMin);
@@ -726,7 +726,7 @@ begin
   end;
 end;
 
-procedure TATScroll.MouseMove(Shift: TShiftState; X, Y: Integer);
+procedure TATScrollbar.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
 
@@ -737,7 +737,7 @@ begin
   end;
 end;
 
-function TATScroll.MouseToPos(X, Y: Integer): Integer;
+function TATScrollbar.MouseToPos(X, Y: Integer): Integer;
 begin
   if IsHorz then
     Result:= FMin + (X-FRectMain.Left) * (FMax-FMin) div Math.Max(FRectMain.Width, 1)
@@ -745,7 +745,7 @@ begin
     Result:= FMin + (Y-FRectMain.Top) * (FMax-FMin) div Math.Max(FRectMain.Height, 1);
 end;
 
-procedure TATScroll.DoUpdatePosOnDrag(X, Y: Integer);
+procedure TATScrollbar.DoUpdatePosOnDrag(X, Y: Integer);
 var
   N: Integer;
 begin
@@ -757,7 +757,7 @@ begin
   SetPos(N);
 end;
 
-procedure TATScroll.DoScrollBy(NDelta: Integer);
+procedure TATScrollbar.DoScrollBy(NDelta: Integer);
 var
   N: Integer;
 begin
@@ -768,7 +768,7 @@ begin
   SetPos(N);
 end;
 
-procedure TATScroll.TimerTimer(Sender: TObject);
+procedure TATScrollbar.TimerTimer(Sender: TObject);
 var
   P: TPoint;
 begin
@@ -788,28 +788,28 @@ begin
     DoScrollBy(-FPageSize);
 end;
 
-procedure TATScroll.DoPaintStd_Corner(C: TCanvas; const R: TRect);
+procedure TATScrollbar.DoPaintStd_Corner(C: TCanvas; const R: TRect);
 begin
   if IsRectEmpty(R) then exit;
   C.Brush.Color:= ColorToRGB(ATScrollbarTheme.ColorBG);
   C.FillRect(R);
 end;
 
-procedure TATScroll.DoPaintStd_Back(C: TCanvas; const R: TRect);
+procedure TATScrollbar.DoPaintStd_Back(C: TCanvas; const R: TRect);
 begin
   if IsRectEmpty(R) then exit;
   C.Brush.Color:= ColorToRGB(ATScrollbarTheme.ColorBG);
   C.FillRect(R);
 end;
 
-procedure TATScroll.DoPaintStd_BackScrolled(C: TCanvas; const R: TRect);
+procedure TATScrollbar.DoPaintStd_BackScrolled(C: TCanvas; const R: TRect);
 begin
   if IsRectEmpty(R) then exit;
   C.Brush.Color:= ColorToRGB(ATScrollbarTheme.ColorScrolled);
   C.FillRect(R);
 end;
 
-procedure TATScroll.DoUpdateCornerRect;
+procedure TATScrollbar.DoUpdateCornerRect;
 var
   Delta: integer;
 begin
