@@ -160,8 +160,11 @@ end;
 
 procedure TFormDemo.ListArrowsClick(Sender: TObject);
 begin
-  bar_v.ArrowStyle:= TATScrollbarArrowsStyle(ListArrows.ItemIndex);
-  bar_h.ArrowStyle:= bar_v.ArrowStyle;
+  ATScrollbarTheme.ArrowStyle:= TATScrollbarArrowsStyle(ListArrows.ItemIndex);
+  bar_v.Invalidate;
+  bar_h.Invalidate;
+  bar_v1.Invalidate;
+  bar_h1.Invalidate;
 end;
 
 procedure TFormDemo.trackBorChange(Sender: TObject);

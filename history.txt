@@ -3,7 +3,6 @@
 * ATScrollbar: moved several props into Theme
 + ATScrollbar: prop IndentCorner is now in percents 
 + ATScrollbar: added Theme items: InstantMoveOnClick, ThumbMarker*
-* ATScrollbar: renamed KindArrows to ArrowStyle
 
 2019.05.14
 * ATGauge: renamed type to TATGauge

@@ -78,6 +78,7 @@ type
     ColorScrolled: TColor;
     InitialSize: integer;
     ScalePercents: integer;
+    ArrowStyle: TATScrollbarArrowsStyle;
     ArrowSize: integer;
     ArrowLengthPercents: integer;
     BorderSize: integer;
@@ -97,7 +98,6 @@ type
   TATScrollbar = class(TCustomControl)
   private
     FKind: TScrollBarKind;
-    FArrowStyle: TATScrollbarArrowsStyle;
     FIndentCorner: Integer;
     FTheme: PATScrollbarTheme;
 
@@ -155,7 +155,6 @@ type
 
     procedure TimerTimer(Sender: TObject);
     procedure SetKind(AValue: TScrollBarKind);
-    procedure SetArrowStyle(AValue: TATScrollbarArrowsStyle);
     procedure SetPos(Value: Integer);
     procedure SetMin(Value: Integer);
     procedure SetMax(Value: Integer);
@@ -199,7 +198,6 @@ type
     property MinSizeToShowThumb: Integer read FMinSizeToShowThumb write FMinSizeToShowThumb default 10;
     property MinSizeOfThumb: Integer read FMinSizeOfThumb write FMinSizeOfThumb default 4;
     property Kind: TScrollBarKind read FKind write SetKind default sbHorizontal;
-    property ArrowStyle: TATScrollbarArrowsStyle read FArrowStyle write SetArrowStyle default asaArrowsNormal;
     property IndentCorner: Integer read FIndentCorner write FIndentCorner default 0;
 
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
@@ -233,7 +231,6 @@ begin
   ControlStyle:= ControlStyle+[csOpaque];
 
   FKind:= sbHorizontal;
-  FArrowStyle:= asaArrowsNormal;
   FIndentCorner:= 0;
 
   FTheme:= @ATScrollbarTheme;
@@ -334,7 +331,7 @@ begin
       FRectMain.Height * FTheme^.ArrowLengthPercents div 100,
       FRectMain.Width div 2
       );
-    case FArrowStyle of
+    case FTheme^.ArrowStyle of
       asaArrowsNormal:
         begin
           FRectArrUp:= Rect(FRectMain.Left, FRectMain.Top, FRectMain.Left+FSize, FRectMain.Bottom);
@@ -365,7 +362,7 @@ begin
       FRectMain.Width * FTheme^.ArrowLengthPercents div 100,
       FRectMain.Height div 2
       );
-    case FArrowStyle of
+    case FTheme^.ArrowStyle of
       asaArrowsNormal:
         begin
           FRectArrUp:= Rect(FRectMain.Left, FRectMain.Top, FRectMain.Right, FRectMain.Top+FSize);
@@ -528,13 +525,6 @@ procedure TATScrollbar.SetKind(AValue: TScrollBarKind);
 begin
   if AValue=FKind then Exit;
   FKind:= AValue;
-  Invalidate;
-end;
-
-procedure TATScrollbar.SetArrowStyle(AValue: TATScrollbarArrowsStyle);
-begin
-  if FArrowStyle=AValue then Exit;
-  FArrowStyle:= AValue;
   Invalidate;
 end;
 
@@ -906,6 +896,7 @@ initialization
     ColorScrolled:= $d0b0b0;
     InitialSize:= 16;
     ScalePercents:= 100;
+    ArrowStyle:= asaArrowsNormal;
     ArrowSize:= 3;
     ArrowLengthPercents:= 100;
     BorderSize:= 0;
