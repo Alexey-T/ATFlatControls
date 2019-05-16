@@ -823,26 +823,28 @@ end;
 
 procedure TATScrollbar.DoUpdateCornerRect;
 var
-  Delta: integer;
+  w, h, Delta: integer;
 begin
+  w:= Width;
+  h:= Height;
   FRectCorner:= Rect(0, 0, 0, 0);
 
   if IsHorz then
-    Delta:= FIndentCorner * Height div 100
+    Delta:= FIndentCorner * h div 100
   else
-    Delta:= FIndentCorner * Width div 100;
+    Delta:= FIndentCorner * w div 100;
 
   if IsHorz then
   begin
     if Delta>0 then
     begin
-      FRectCorner:= Rect(ClientWidth-Delta, 0, ClientWidth, ClientHeight);
+      FRectCorner:= Rect(w-Delta, 0, w, h);
       Dec(FRectMain.Right, Delta);
     end
     else
     if Delta<0 then
     begin
-      FRectCorner:= Rect(0, 0, Abs(Delta), ClientHeight);
+      FRectCorner:= Rect(0, 0, Abs(Delta), h);
       Inc(FRectMain.Left, Abs(Delta));
     end;
   end
@@ -850,13 +852,13 @@ begin
   begin
     if Delta>0 then
     begin
-      FRectCorner:= Rect(0, ClientHeight-Delta, ClientWidth, ClientHeight);
+      FRectCorner:= Rect(0, h-Delta, w, h);
       Dec(FRectMain.Bottom, Delta);
     end
     else
     if Delta<0 then
     begin
-      FRectCorner:= Rect(0, 0, ClientWidth, Abs(Delta));
+      FRectCorner:= Rect(0, 0, w, Abs(Delta));
       Inc(FRectMain.Top, Abs(Delta));
     end;
   end;
