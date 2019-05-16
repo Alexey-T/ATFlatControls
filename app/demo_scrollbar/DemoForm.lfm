@@ -65,8 +65,8 @@ object FormDemo: TFormDemo
       Left = 8
       Height = 16
       Top = 72
-      Width = 58
-      Caption = 'Scale in %'
+      Width = 48
+      Caption = 'Scale, %'
       ParentColor = False
     end
     object Label4: TLabel
@@ -81,8 +81,8 @@ object FormDemo: TFormDemo
       Left = 8
       Height = 16
       Top = 240
-      Width = 80
-      Caption = 'Corner indent'
+      Width = 82
+      Caption = 'Corner size, %'
       ParentColor = False
     end
     object chkDraw: TCheckBox
@@ -150,8 +150,8 @@ object FormDemo: TFormDemo
       Top = 216
       Width = 113
       Frequency = 10
-      Max = 30
-      Min = -30
+      Max = 300
+      Min = -300
       OnChange = trackCornerVChange
       PageSize = 20
       Position = 0
@@ -163,8 +163,8 @@ object FormDemo: TFormDemo
       Top = 216
       Width = 113
       Frequency = 10
-      Max = 30
-      Min = -30
+      Max = 300
+      Min = -300
       OnChange = trackCornerHChange
       PageSize = 40
       Position = 0

@@ -82,7 +82,7 @@ begin
 
   bar_v.Width:= 22;
   bar_h.Height:= bar_v.Width;
-  bar_h.IndentCorner:= bar_v.Width; //positive
+  bar_h.IndentCorner:= 100;
 
   //--------------
   bar_h1:= TATScrollbar.Create(Self);
@@ -90,7 +90,7 @@ begin
   bar_h1.Height:= 18;
   bar_h1.Align:= alBottom;
   bar_h1.Kind:= sbHorizontal;
-  bar_h1.IndentCorner:= -bar_h1.Height; //negative
+  bar_h1.IndentCorner:= -100; //negative
 
   bar_v1:= TATScrollbar.Create(Self);
   bar_v1.Parent:= Panel2;

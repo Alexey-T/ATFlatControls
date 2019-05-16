@@ -823,7 +823,12 @@ var
   Delta: integer;
 begin
   FRectCorner:= Rect(0, 0, 0, 0);
-  Delta:= DoScale(FIndentCorner);
+
+  if IsHorz then
+    Delta:= FIndentCorner * Height div 100
+  else
+    Delta:= FIndentCorner * Width div 100;
+
   if IsHorz then
   begin
     if Delta>0 then
