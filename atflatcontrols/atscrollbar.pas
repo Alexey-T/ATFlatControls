@@ -80,6 +80,7 @@ type
     ScalePercents: integer;
     ArrowLengthPercents: integer;
     BorderSize: integer;
+    TimerInterval: integer;
   end;
 
 var
@@ -94,7 +95,6 @@ type
     FKindArrows: TATScrollbarArrowsStyle;
     FIndentCorner: Integer;
     FIndentArrow: Integer;
-    FTimerDelay: Integer;
     FTheme: PATScrollbarTheme;
 
     FPos: Integer;
@@ -198,7 +198,6 @@ type
     property KindArrows: TATScrollbarArrowsStyle read FKindArrows write SetKindArrows default asaArrowsNormal;
     property IndentCorner: Integer read FIndentCorner write FIndentCorner default 0;
     property IndentArrow: Integer read FIndentArrow write FIndentArrow default 3;
-    property TimerDelay: Integer read FTimerDelay write FTimerDelay default 80;
 
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
     property OnOwnerDraw: TATScrollbarDrawEvent read FOnOwnerDraw write FOnOwnerDraw;
@@ -254,10 +253,9 @@ begin
   FBitmap.Width:= 1600;
   FBitmap.Height:= 60;
 
-  FTimerDelay:= 80;
   FTimer:= TTimer.Create(Self);
   FTimer.Enabled:= false;
-  FTimer.Interval:= FTimerDelay;
+  FTimer.Interval:= 100;
   FTimer.OnTimer:= TimerTimer;
 
   FMouseDown:= false;
@@ -435,6 +433,7 @@ begin
   else
     FMouseDragOffset:= Y-FRectThumb.Top;
 
+  FTimer.Interval:= FTheme^.TimerInterval;
   FTimer.Enabled:= FMouseDown and
     (FMouseDownOnUp or
      FMouseDownOnDown or
@@ -864,6 +863,7 @@ initialization
     ScalePercents:= 100;
     ArrowLengthPercents:= 100;
     BorderSize:= 1;
+    TimerInterval:= 80;
   end;
 
 end.
