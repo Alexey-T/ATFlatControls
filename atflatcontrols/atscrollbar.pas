@@ -82,6 +82,7 @@ type
     ArrowLengthPercents: integer;
     BorderSize: integer;
     TimerInterval: integer;
+    InstantMoveOnClick: boolean;
     ThumbMarkerOffset: integer;
     ThumbMarkerMinimalSize: integer;
     ThumbMarkerDecorSize: integer;
@@ -422,6 +423,8 @@ end;
 
 procedure TATScrollbar.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
+var
+  bInstant: boolean;
 begin
   FMouseDown:= Button=mbLeft;
   FMouseDownOnThumb:= PtInRect(FRectThumb, Point(X, Y));
@@ -435,12 +438,37 @@ begin
   else
     FMouseDragOffset:= Y-FRectThumb.Top;
 
-  FTimer.Interval:= FTheme^.TimerInterval;
-  FTimer.Enabled:= FMouseDown and
-    (FMouseDownOnUp or
-     FMouseDownOnDown or
-     FMouseDownOnPageUp or
-     FMouseDownOnPageDown);
+  if FMouseDown then
+  begin
+    FTimer.Interval:= FTheme^.TimerInterval;
+    bInstant:= FTheme^.InstantMoveOnClick;
+
+    if FMouseDownOnUp then
+    begin
+      if bInstant then
+        DoScrollBy(-FLineSize)
+      else
+        FTimer.Enabled:= true;
+    end
+    else
+    if FMouseDownOnDown then
+    begin
+      if bInstant then
+        DoScrollBy(FLineSize)
+      else
+        FTimer.Enabled:= true;
+    end
+    else
+    if FMouseDownOnPageUp or FMouseDownOnPageDown then
+    begin
+      if bInstant then
+        Position:= Math.Min(FMax-FPageSize,
+                   Math.Max(FMin,
+                   CoordToPos(X, Y)))
+      else
+        FTimer.Enabled:= true;
+    end;
+  end;
 end;
 
 procedure TATScrollbar.MouseUp(Button: TMouseButton; Shift: TShiftState;
@@ -881,7 +909,8 @@ initialization
     ArrowSize:= 3;
     ArrowLengthPercents:= 100;
     BorderSize:= 0;
-    TimerInterval:= 80;
+    TimerInterval:= 120;
+    InstantMoveOnClick:= false;
     ThumbMarkerOffset:= 4;
     ThumbMarkerMinimalSize:= 20;
     ThumbMarkerDecorSize:= 2;
