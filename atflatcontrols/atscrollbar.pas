@@ -503,7 +503,7 @@ end;
 
 {$ifdef windows}
 //needed to remove flickering on resize and mouse-over
-procedure TATScroll.WMEraseBkgnd(var Message: TMessage);
+procedure TATScrollbar.WMEraseBkgnd(var Message: TMessage);
 begin
   Message.Result:= 1;
 end;
