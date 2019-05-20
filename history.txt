@@ -1,4 +1,7 @@
 
+2019.05.20
++ ATStatusbar: added Theme prop
+
 2019.05.16
 * ATScrollbar: moved several props into Theme
 + ATScrollbar: prop IndentCorner is now in percents 

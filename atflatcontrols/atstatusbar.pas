@@ -89,6 +89,7 @@ type
     FItems: TCollection;
     FBitmap: TBitmap;
     FImages: TImageList;
+    FTheme: PATFlatTheme;
 
     FOnPanelClick: TATStatusClickEvent;
     FOnPanelDrawBefore: TATStatusDrawEvent;
@@ -123,6 +124,7 @@ type
       AFontColor: TColor=clNone);
     procedure DeletePanel(AIndex: integer);
     procedure DeletePanels;
+    property Theme: PATFlatTheme read FTheme write FTheme;
     property Captions[AIndex: integer]: TCaption read GetCaption write SetCaption;
     property Hints[AIndex: integer]: string read GetHint write SetHint;
     procedure DoPanelStretch(AIndex: integer);
@@ -221,6 +223,7 @@ begin
   Width:= 400;
   Height:= 24;
 
+  FTheme:= @ATFlatTheme;
   FHeightInitial:= Height;
   FPadding:= cDefaultStatusbarPadding;
 
@@ -275,7 +278,7 @@ begin
     C.Brush.Color:= ColorToRGB(Color);
   C.FillRect(ARect);
 
-  NPad:= ATFlatTheme.DoScale(FPadding);
+  NPad:= Theme^.DoScale(FPadding);
   RectText:= Rect(ARect.Left+NPad, ARect.Top, ARect.Right-NPad, ARect.Bottom);
 
   if Assigned(FImages) then
@@ -305,7 +308,7 @@ begin
     if AData.ColorFont<>clNone then
       C.Font.Color:= ColorToRGB(AData.ColorFont)
     else
-      C.Font.Color:= ColorToRGB(ATFlatTheme.ColorFont);
+      C.Font.Color:= ColorToRGB(Theme^.ColorFont);
 
     TextSize:= C.TextExtent(AData.Caption);
 
@@ -375,7 +378,7 @@ begin
 
       NSize:= Data.Width;
       if not Data.AutoSize and not Data.AutoStretch then
-        NSize:= ATFlatTheme.DoScale(NSize);
+        NSize:= Theme^.DoScale(NSize);
 
       Result.Right:= Result.Left + NSize - 1;
       if AIndex=i then Exit;
@@ -390,8 +393,8 @@ var
 begin
   C.Brush.Color:= ColorToRGB(Color);
   C.FillRect(ClientRect);
-  C.Font.Name:= ATFlatTheme.FontName;
-  C.Font.Size:= ATFlatTheme.DoScaleFont(ATFlatTheme.FontSize);
+  C.Font.Name:= Theme^.FontName;
+  C.Font.Size:= Theme^.DoScaleFont(Theme^.FontSize);
 
   //consider AutoSize
   for i:= 0 to PanelCount-1 do
@@ -647,7 +650,7 @@ begin
   D:= GetPanelData(AIndex);
   if Assigned(D) then
   begin
-    NPad:= ATFlatTheme.DoScale(FPadding);
+    NPad:= Theme^.DoScale(FPadding);
     NSize:= NPad*2+2;
     if D.ImageIndex>=0 then
       Inc(NSize, Images.Width+NPad);
@@ -676,7 +679,7 @@ end;
 procedure TATStatus.Invalidate;
 begin
   if FHeightInitial>0 then
-    Height:= ATFlatTheme.DoScale(FHeightInitial);
+    Height:= Theme^.DoScale(FHeightInitial);
   inherited Invalidate;
 end;
 
