@@ -33,6 +33,7 @@ type
     FItemIndex: integer;
     FItemHeightPercents: integer;
     FItemHeight: integer;
+    FItemHeightIsFixed: boolean;
     FItemTop: integer;
     FBitmap: TBitmap;
     FCanGetFocus: boolean;
@@ -49,16 +50,18 @@ type
     function ItemBottom: integer;
     procedure ScrollbarChange(Sender: TObject);
     procedure SetCanBeFocused(AValue: boolean);
+    procedure SetItemHeightPercents(AValue: integer);
     procedure SetVirtualItemCount(AValue: integer);
     procedure SetItemIndex(AValue: integer);
     procedure SetItemTop(AValue: integer);
+    procedure SetItemHeight(AValue: integer);
     procedure SetThemedScrollbar(AValue: boolean);
     procedure UpdateFromScrollbarMsg(const Msg: TLMScroll);
     procedure UpdateScrollbar;
     function GetVisibleItems: integer;
     function IsIndexValid(N: integer): boolean;
     function GetItemHeightDefault: integer;
-    function GetItemHeight: integer;
+    procedure UpdateItemHeight;
   protected
     procedure Paint; override;
     procedure Click; override;
@@ -75,7 +78,7 @@ type
     property Items: TStringList read FList;
     property ItemIndex: integer read FItemIndex write SetItemIndex;
     property ItemTop: integer read FItemTop write SetItemTop;
-    property ItemHeight: integer read FItemHeight;
+    property ItemHeight: integer read FItemHeight write SetItemHeight;
     property ItemHeightDefault: integer read GetItemHeightDefault;
     function ItemCount: integer;
     property HotTrackIndex: integer read FHotTrackIndex;
@@ -100,7 +103,7 @@ type
     property HotTrack: boolean read FHotTrack write FHotTrack default false;
     property IndentLeft: integer read FIndentLeft write FIndentLeft default 4;
     property IndentTop: integer read FIndentTop write FIndentTop default 2;
-    property ItemHeightPercents: integer read FItemHeightPercents write FItemHeightPercents default 100;
+    property ItemHeightPercents: integer read FItemHeightPercents write SetItemHeightPercents default 100;
     property OwnerDrawn: boolean read FOwnerDrawn write FOwnerDrawn default false;
     property ParentColor;
     property ParentFont;
@@ -163,9 +166,10 @@ begin
   {$endif}
 end;
 
-function TATListbox.GetItemHeight: integer;
+procedure TATListbox.UpdateItemHeight;
 begin
-  Result:= GetItemHeightDefault * FItemHeightPercents div 100;
+  if not FItemHeightIsFixed then
+    FItemHeight:= GetItemHeightDefault * FItemHeightPercents div 100;
 end;
 
 procedure TATListbox.ChangedSelection;
@@ -286,8 +290,7 @@ var
 begin
   inherited;
   UpdateScrollbar;
-
-  FItemHeight:= GetItemHeight;
+  UpdateItemHeight;
 
   R:= ClientRect;
   if DoubleBuffered then
@@ -347,6 +350,13 @@ begin
     ControlStyle:= ControlStyle+[csNoFocus];
 end;
 
+procedure TATListbox.SetItemHeightPercents(AValue: integer);
+begin
+  if FItemHeightPercents=AValue then Exit;
+  FItemHeightPercents:= AValue;
+  FItemHeightIsFixed:= false;
+end;
+
 procedure TATListbox.SetVirtualItemCount(AValue: integer);
 begin
   if FVirtualItemCount=AValue then Exit;
@@ -380,6 +390,13 @@ begin
   FItemTop:= Max(0, AValue);
   Scrolled;
   Invalidate;
+end;
+
+procedure TATListbox.SetItemHeight(AValue: integer);
+begin
+  if AValue=FItemHeight then exit;
+  FItemHeight:= AValue;
+  FItemHeightIsFixed:= true;
 end;
 
 procedure TATListbox.SetThemedScrollbar(AValue: boolean);
