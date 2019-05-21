@@ -235,18 +235,18 @@ begin
   if AIndex=FItemIndex then
   begin
     C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListboxSel);
-    C.Font.Color:= ColorToRGB(FTheme^.ColorFontSelected);
+    C.Font.Color:= ColorToRGB(FTheme^.ColorFontListboxSel);
   end
   else
   if FHotTrack and (AIndex=FHotTrackIndex) then
   begin
     C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListboxHottrack);
-    C.Font.Color:= ColorToRGB(FTheme^.ColorFont);
+    C.Font.Color:= ColorToRGB(FTheme^.ColorFontListbox);
   end
   else
   begin
     C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListbox);
-    C.Font.Color:= ColorToRGB(FTheme^.ColorFont);
+    C.Font.Color:= ColorToRGB(FTheme^.ColorFontListbox);
   end;
   C.FillRect(R);
 
