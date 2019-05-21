@@ -90,6 +90,7 @@ type
     property BorderStyle;
     property BorderSpacing;
     property CanGetFocus: boolean read FCanGetFocus write SetCanBeFocused default false;
+    property Color;
     property DoubleBuffered;
     property Enabled;
     property HotTrack: boolean read FHotTrack write FHotTrack default false;
