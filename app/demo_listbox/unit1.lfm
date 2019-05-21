@@ -1,22 +1,22 @@
 object fmMain: TfmMain
   Left = 428
-  Height = 376
+  Height = 440
   Top = 250
-  Width = 448
+  Width = 492
   Caption = 'ATListbox demo'
-  ClientHeight = 376
-  ClientWidth = 448
+  ClientHeight = 440
+  ClientWidth = 492
   OnCreate = FormCreate
   Position = poScreenCenter
-  LCLVersion = '1.9.0.0'
+  LCLVersion = '2.1.0.0'
   object Panel1: TPanel
     Left = 0
-    Height = 99
-    Top = 277
-    Width = 448
+    Height = 168
+    Top = 272
+    Width = 492
     Align = alBottom
-    ClientHeight = 99
-    ClientWidth = 448
+    ClientHeight = 168
+    ClientWidth = 492
     TabOrder = 0
     object chkThemedScroll: TCheckBox
       Left = 8
@@ -59,6 +59,35 @@ object fmMain: TfmMain
       Caption = 'hot track'
       OnChange = chkHotTrackChange
       TabOrder = 3
+    end
+    object chkDoubleSize: TCheckBox
+      Left = 8
+      Height = 24
+      Top = 96
+      Width = 152
+      Caption = 'double item height'
+      OnChange = chkDoubleSizeChange
+      TabOrder = 4
+    end
+    object TrackScale: TTrackBar
+      Left = 112
+      Height = 46
+      Top = 120
+      Width = 128
+      Max = 300
+      Min = 100
+      OnChange = TrackScaleChange
+      Position = 100
+      TickStyle = tsNone
+      TabOrder = 5
+    end
+    object Label1: TLabel
+      Left = 12
+      Height = 17
+      Top = 132
+      Width = 65
+      Caption = 'scale in %'
+      ParentColor = False
     end
   end
 end

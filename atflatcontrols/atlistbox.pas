@@ -31,6 +31,7 @@ type
     FVirtualMode: boolean;
     FVirtualItemCount: integer;
     FItemIndex: integer;
+    FItemHeightPercents: integer;
     FItemHeight: integer;
     FItemTop: integer;
     FBitmap: TBitmap;
@@ -56,6 +57,7 @@ type
     procedure UpdateScrollbar;
     function GetVisibleItems: integer;
     function IsIndexValid(N: integer): boolean;
+    function GetItemHeight: integer;
   protected
     procedure Paint; override;
     procedure Click; override;
@@ -72,6 +74,7 @@ type
     property Items: TStringList read FList;
     property ItemIndex: integer read FItemIndex write SetItemIndex;
     property ItemTop: integer read FItemTop write SetItemTop;
+    property ItemHeight: integer read FItemHeight;
     function ItemCount: integer;
     property HotTrackIndex: integer read FHotTrackIndex;
     property VirtualItemCount: integer read FVirtualItemCount write SetVirtualItemCount;
@@ -90,13 +93,12 @@ type
     property BorderStyle;
     property BorderSpacing;
     property CanGetFocus: boolean read FCanGetFocus write SetCanBeFocused default false;
-    property Color;
     property DoubleBuffered;
     property Enabled;
     property HotTrack: boolean read FHotTrack write FHotTrack default false;
     property IndentLeft: integer read FIndentLeft write FIndentLeft default 4;
     property IndentTop: integer read FIndentTop write FIndentTop default 2;
-    property ItemHeight: integer read FItemHeight write FItemHeight default 21;
+    property ItemHeightPercents: integer read FItemHeightPercents write FItemHeightPercents default 100;
     property OwnerDrawn: boolean read FOwnerDrawn write FOwnerDrawn default false;
     property ParentColor;
     property ParentFont;
@@ -148,6 +150,17 @@ end;
 function TATListbox.IsIndexValid(N: integer): boolean;
 begin
   Result:= (N>=0) and (N<ItemCount);
+end;
+
+function TATListbox.GetItemHeight: integer;
+begin
+  Result:= FTheme^.DoScaleFont(FTheme^.FontSize) * 18 div 10 + 2;
+
+  {$ifdef windows}
+  Result:= Result * Screen.PixelsPerInch div 96;
+  {$endif}
+
+  Result:= Result * FItemHeightPercents div 100;
 end;
 
 procedure TATListbox.ChangedSelection;
@@ -269,6 +282,8 @@ begin
   inherited;
   UpdateScrollbar;
 
+  FItemHeight:= GetItemHeight;
+
   R:= ClientRect;
   if DoubleBuffered then
   begin
@@ -385,7 +400,8 @@ begin
   FList:= TStringList.Create;
   FVirtualItemCount:= 0;
   FItemIndex:= 0;
-  FItemHeight:= 21;
+  FItemHeightPercents:= 100;
+  FItemHeight:= 17;
   FItemTop:= 0;
   FIndentLeft:= 4;
   FIndentTop:= 2;

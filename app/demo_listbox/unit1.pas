@@ -6,22 +6,30 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls, ATListbox;
+  ExtCtrls, ComCtrls,
+  ATListbox,
+  ATScrollbar,
+  ATFlatThemes;
 
 type
   { TfmMain }
 
   TfmMain = class(TForm)
+    chkDoubleSize: TCheckBox;
     chkHotTrack: TCheckBox;
     chkVirtual: TCheckBox;
     chkOwnerDrawn: TCheckBox;
     chkThemedScroll: TCheckBox;
+    Label1: TLabel;
     Panel1: TPanel;
+    TrackScale: TTrackBar;
+    procedure chkDoubleSizeChange(Sender: TObject);
     procedure chkHotTrackChange(Sender: TObject);
     procedure chkOwnerDrawnChange(Sender: TObject);
     procedure chkThemedScrollChange(Sender: TObject);
     procedure chkVirtualChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure TrackScaleChange(Sender: TObject);
   private
     { private declarations }
     procedure ListDraw(Sender: TObject; C: TCanvas; AIndex: integer; const ARect: TRect);
@@ -59,7 +67,6 @@ begin
   list.OwnerDrawn:= true;
   list.Color:= $e0e0e0;
   list.VirtualItemCount:= 21;
-  list.ItemHeight:= 26;
 
   list.Items.Add('real item first');
   list.Items.Add('real item 1');
@@ -67,6 +74,13 @@ begin
   list.Items.Add('real item last');
 
   ActiveControl:= list;
+end;
+
+procedure TfmMain.TrackScaleChange(Sender: TObject);
+begin
+  ATFlatTheme.ScalePercents:= TrackScale.Position;
+  ATScrollbarTheme.ScalePercents:= TrackScale.Position;
+  List.Invalidate;
 end;
 
 procedure TfmMain.chkThemedScrollChange(Sender: TObject);
@@ -90,6 +104,15 @@ procedure TfmMain.chkHotTrackChange(Sender: TObject);
 begin
   list.HotTrack:= chkHotTrack.Checked;
   list.Invalidate;
+end;
+
+procedure TfmMain.chkDoubleSizeChange(Sender: TObject);
+begin
+  if chkDoubleSize.Checked then
+    List.ItemHeightPercents:= 200
+  else
+    List.ItemHeightPercents:= 100;
+  List.Update;
 end;
 
 procedure TfmMain.ListDraw(Sender: TObject; C: TCanvas; AIndex: integer;
