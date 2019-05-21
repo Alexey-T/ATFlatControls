@@ -24,8 +24,8 @@ type
 
   TATListbox = class(TCustomControl)
   private
+    FTheme: PATFlatTheme;
     FThemedScrollbar: boolean;
-    FThemedColors: boolean;
     FScrollbar: TATScrollbar;
     FOwnerDrawn: boolean;
     FVirtualMode: boolean;
@@ -36,9 +36,6 @@ type
     FBitmap: TBitmap;
     FCanGetFocus: boolean;
     FList: TStringList;
-    FColorSelFont: TColor;
-    FColorSelBack: TColor;
-    FColorHotTrackBack: TColor;
     FHotTrack: boolean;
     FHotTrackIndex: integer;
     FIndentLeft: integer;
@@ -80,8 +77,8 @@ type
     property VirtualItemCount: integer read FVirtualItemCount write SetVirtualItemCount;
     property VisibleItems: integer read GetVisibleItems;
     function GetItemIndexAt(Pnt: TPoint): integer;
+    property Theme: PATFlatTheme read FTheme write FTheme;
     property ThemedScrollbar: boolean read FThemedScrollbar write SetThemedScrollbar;
-    property ThemedColors: boolean read FThemedColors write FThemedColors;
     property Scrollbar: TATScrollbar read FScrollbar;
     function CanFocus: boolean; override;
     function CanSetFocus: boolean; override;
@@ -93,13 +90,8 @@ type
     property BorderStyle;
     property BorderSpacing;
     property CanGetFocus: boolean read FCanGetFocus write SetCanBeFocused default false;
-    property Color;
-    property ColorSelFont: TColor read FColorSelFont write FColorSelFont default clWhite;
-    property ColorSelBack: TColor read FColorSelBack write FColorSelBack default clMedGray;
-    property ColorHotTrackBack: TColor read FColorHotTrackBack write FColorHotTrackBack default clMoneyGreen;
     property DoubleBuffered;
     property Enabled;
-    property Font;
     property HotTrack: boolean read FHotTrack write FHotTrack default false;
     property IndentLeft: integer read FIndentLeft write FIndentLeft default 4;
     property IndentTop: integer read FIndentTop write FIndentTop default 2;
@@ -215,7 +207,7 @@ procedure TATListbox.DoPaintTo(C: TCanvas; r: TRect);
 var
   Index: integer;
 begin
-  C.Brush.Color:= ColorToRGB(Color);
+  C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListbox);
   C.FillRect(r);
 
   for Index:= FItemTop to ItemCount-1 do
@@ -242,19 +234,19 @@ var
 begin
   if AIndex=FItemIndex then
   begin
-    C.Brush.Color:= ColorToRGB(FColorSelBack);
-    C.Font.Color:= ColorToRGB(FColorSelFont);
+    C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListboxSel);
+    C.Font.Color:= ColorToRGB(FTheme^.ColorFontSelected);
   end
   else
   if FHotTrack and (AIndex=FHotTrackIndex) then
   begin
-    C.Brush.Color:= ColorToRGB(ColorHotTrackBack);
-    C.Font.Color:= ColorToRGB(Self.Font.Color);
+    C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListboxHottrack);
+    C.Font.Color:= ColorToRGB(FTheme^.ColorFont);
   end
   else
   begin
-    C.Brush.Color:= ColorToRGB(Color);
-    C.Font.Color:= ColorToRGB(Self.Font.Color);
+    C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListbox);
+    C.Font.Color:= ColorToRGB(FTheme^.ColorFont);
   end;
   C.FillRect(R);
 
@@ -279,7 +271,8 @@ begin
   R:= ClientRect;
   if DoubleBuffered then
   begin
-    FBitmap.Canvas.Font.Assign(Self.Font);
+    FBitmap.Canvas.Font.Name:= FTheme^.FontName;
+    FBitmap.Canvas.Font.Size:= FTheme^.DoScaleFont(FTheme^.FontSize);
     DoPaintTo(FBitmap.Canvas, R);
     Canvas.CopyRect(R, FBitmap.Canvas, R);
   end
@@ -387,10 +380,6 @@ begin
   Width:= 180;
   Height:= 150;
 
-  Color:= clWhite;
-  ColorSelFont:= clWhite;
-  ColorSelBack:= clMedGray;
-  ColorHotTrackBack:= clMoneyGreen;
   CanGetFocus:= false;
   FList:= TStringList.Create;
   FVirtualItemCount:= 0;
@@ -406,8 +395,8 @@ begin
   FBitmap:= TBitmap.Create;
   FBitmap.SetSize(1600, 1200);
 
+  FTheme:= @ATFlatTheme;
   FThemedScrollbar:= true;
-  FThemedColors:= false;
 
   FScrollbar:= TATScrollbar.Create(Self);
   FScrollbar.Parent:= Self;

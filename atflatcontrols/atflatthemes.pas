@@ -16,17 +16,23 @@ type
     FontName: string;
     FontSize: integer;
     FontStyles: TFontStyles;
-    ColorFont,
-    ColorFontDisabled,
-    ColorBgPassive,
-    ColorBgOver,
-    ColorBgChecked,
-    ColorBgDisabled,
-    ColorArrows,
-    ColorSeparators,
-    ColorBorderPassive,
-    ColorBorderOver,
+
+    ColorFont: TColor;
+    ColorFontDisabled: TColor;
+    ColorFontSelected: TColor;
+    ColorBgPassive: TColor;
+    ColorBgOver: TColor;
+    ColorBgChecked: TColor;
+    ColorBgDisabled: TColor;
+    ColorBgListbox: TColor;
+    ColorBgListboxSel: TColor;
+    ColorBgListboxHottrack: TColor;
+    ColorArrows: TColor;
+    ColorSeparators: TColor;
+    ColorBorderPassive: TColor;
+    ColorBorderOver: TColor;
     ColorBorderFocused: TColor;
+
     MouseoverBorderWidth: integer;
     PressedBorderWidth: integer;
     PressedCaptionShiftY: integer;
@@ -69,17 +75,23 @@ initialization
     FontName:= 'default';
     FontSize:= 10;
     FontStyles:= [];
+
     ColorFont:= $303030;
     ColorFontDisabled:= $808088;
+    ColorFontSelected:= clWhite;
     ColorBgPassive:= $e0e0e0;
     ColorBgOver:= $90a080;
     ColorBgChecked:= $b0b0b0;
     ColorBgDisabled:= $c0c0d0;
+    ColorBgListbox:= ColorBgPassive;
+    ColorBgListboxSel:= clMedGray;
+    ColorBgListboxHottrack:= clMoneyGreen;
     ColorArrows:= clGray;
     ColorSeparators:= clDkGray;
     ColorBorderPassive:= $a0a0a0;
     ColorBorderOver:= $d0d0d0;
     ColorBorderFocused:= clNavy;
+
     MouseoverBorderWidth:= 1;
     PressedBorderWidth:= 3;
     PressedCaptionShiftX:= 0;
