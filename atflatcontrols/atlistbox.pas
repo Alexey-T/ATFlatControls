@@ -57,6 +57,7 @@ type
     procedure UpdateScrollbar;
     function GetVisibleItems: integer;
     function IsIndexValid(N: integer): boolean;
+    function GetItemHeightDefault: integer;
     function GetItemHeight: integer;
   protected
     procedure Paint; override;
@@ -75,6 +76,7 @@ type
     property ItemIndex: integer read FItemIndex write SetItemIndex;
     property ItemTop: integer read FItemTop write SetItemTop;
     property ItemHeight: integer read FItemHeight;
+    property ItemHeightDefault: integer read GetItemHeightDefault;
     function ItemCount: integer;
     property HotTrackIndex: integer read FHotTrackIndex;
     property VirtualItemCount: integer read FVirtualItemCount write SetVirtualItemCount;
@@ -152,15 +154,18 @@ begin
   Result:= (N>=0) and (N<ItemCount);
 end;
 
-function TATListbox.GetItemHeight: integer;
+function TATListbox.GetItemHeightDefault: integer;
 begin
   Result:= FTheme^.DoScaleFont(FTheme^.FontSize) * 18 div 10 + 2;
 
   {$ifdef windows}
   Result:= Result * Screen.PixelsPerInch div 96;
   {$endif}
+end;
 
-  Result:= Result * FItemHeightPercents div 100;
+function TATListbox.GetItemHeight: integer;
+begin
+  Result:= GetItemHeightDefault * FItemHeightPercents div 100;
 end;
 
 procedure TATListbox.ChangedSelection;
