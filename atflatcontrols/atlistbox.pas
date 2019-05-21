@@ -93,7 +93,7 @@ type
     property BorderStyle;
     property BorderSpacing;
     property CanGetFocus: boolean read FCanGetFocus write SetCanBeFocused default false;
-    property DoubleBuffered;
+    property DoubleBuffered stored false;
     property Enabled;
     property HotTrack: boolean read FHotTrack write FHotTrack default false;
     property IndentLeft: integer read FIndentLeft write FIndentLeft default 4;
