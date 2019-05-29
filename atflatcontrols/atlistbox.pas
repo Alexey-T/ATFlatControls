@@ -372,7 +372,12 @@ begin
   if not IsIndexValid(AValue) then Exit;
   FItemIndex:= AValue;
 
+  UpdateItemHeight; //needed, ItemHeight may be not calculated yet
+
   //scroll if needed
+  if FItemIndex=0 then
+    FItemTop:= 0
+  else
   if FItemIndex<FItemTop then
     FItemTop:= FItemIndex
   else
