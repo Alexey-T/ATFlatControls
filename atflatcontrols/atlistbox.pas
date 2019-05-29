@@ -59,7 +59,6 @@ type
     procedure UpdateFromScrollbarMsg(const Msg: TLMScroll);
     procedure UpdateScrollbar;
     function GetVisibleItems: integer;
-    function IsIndexValid(N: integer): boolean;
     function GetItemHeightDefault: integer;
     procedure UpdateItemHeight;
   protected
@@ -81,6 +80,7 @@ type
     property ItemHeight: integer read FItemHeight write SetItemHeight;
     property ItemHeightDefault: integer read GetItemHeightDefault;
     function ItemCount: integer;
+    function IsIndexValid(AValue: integer): boolean;
     property HotTrackIndex: integer read FHotTrackIndex;
     property VirtualItemCount: integer read FVirtualItemCount write SetVirtualItemCount;
     property VisibleItems: integer read GetVisibleItems;
@@ -152,9 +152,9 @@ begin
   Result:= ClientHeight div FItemHeight;
 end;
 
-function TATListbox.IsIndexValid(N: integer): boolean;
+function TATListbox.IsIndexValid(AValue: integer): boolean;
 begin
-  Result:= (N>=0) and (N<ItemCount);
+  Result:= (AValue>=0) and (AValue<ItemCount);
 end;
 
 function TATListbox.GetItemHeightDefault: integer;

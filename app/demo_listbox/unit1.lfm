@@ -89,5 +89,14 @@ object fmMain: TfmMain
       Caption = 'scale in %'
       ParentColor = False
     end
+    object ButtonGoto: TButton
+      Left = 332
+      Height = 25
+      Top = 110
+      Width = 108
+      Caption = 'scroll to...'
+      OnClick = ButtonGotoClick
+      TabOrder = 6
+    end
   end
 end

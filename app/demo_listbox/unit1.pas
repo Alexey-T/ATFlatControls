@@ -15,6 +15,7 @@ type
   { TfmMain }
 
   TfmMain = class(TForm)
+    ButtonGoto: TButton;
     chkDoubleSize: TCheckBox;
     chkHotTrack: TCheckBox;
     chkVirtual: TCheckBox;
@@ -23,6 +24,7 @@ type
     Label1: TLabel;
     Panel1: TPanel;
     TrackScale: TTrackBar;
+    procedure ButtonGotoClick(Sender: TObject);
     procedure chkDoubleSizeChange(Sender: TObject);
     procedure chkHotTrackChange(Sender: TObject);
     procedure chkOwnerDrawnChange(Sender: TObject);
@@ -113,6 +115,18 @@ begin
   else
     List.ItemHeightPercents:= 100;
   List.Update;
+end;
+
+procedure TfmMain.ButtonGotoClick(Sender: TObject);
+var
+  S: string;
+  N: integer;
+begin
+  S:= IntToStr(List.ItemTop);
+  S:= InputBox('Go to', 'Scroll to item index (0-based):', S);
+  N:= StrToIntDef(S, -1);
+  if List.IsIndexValid(N) then
+    List.ItemIndex:= N;
 end;
 
 procedure TfmMain.ListDraw(Sender: TObject; C: TCanvas; AIndex: integer;
