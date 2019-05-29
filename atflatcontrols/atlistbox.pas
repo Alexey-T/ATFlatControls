@@ -60,7 +60,6 @@ type
     procedure UpdateScrollbar;
     function GetVisibleItems: integer;
     function GetItemHeightDefault: integer;
-    procedure UpdateItemHeight;
   protected
     procedure Paint; override;
     procedure Click; override;
@@ -92,6 +91,7 @@ type
     function CanSetFocus: boolean; override;
     function ClientWidth: integer;
     procedure Invalidate; override;
+    procedure UpdateItemHeight;
   published
     property Align;
     property Anchors;
