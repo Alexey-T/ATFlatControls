@@ -20,6 +20,9 @@ type
   TATListboxDrawItemEvent = procedure(Sender: TObject; C: TCanvas; AIndex: integer; const ARect: TRect) of object;
 
 type
+  TATIntArray = array of integer;
+
+type
   { TATListbox }
 
   TATListbox = class(TCustomControl)
@@ -42,11 +45,14 @@ type
     FHotTrackIndex: integer;
     FIndentLeft: integer;
     FIndentTop: integer;
+    FColumnSep: char;
+    FColumnSizes: TATIntArray;
     FOnDrawItem: TATListboxDrawItemEvent;
     FOnChangeSel: TNotifyEvent;
     FOnScroll: TNotifyEvent;
     procedure DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
     procedure DoPaintTo(C: TCanvas; r: TRect);
+    function ColumnWidth(AIndex: integer): integer;
     function ItemBottom: integer;
     procedure ScrollbarChange(Sender: TObject);
     procedure SetCanBeFocused(AValue: boolean);
@@ -87,6 +93,8 @@ type
     property Theme: PATFlatTheme read FTheme write FTheme;
     property ThemedScrollbar: boolean read FThemedScrollbar write SetThemedScrollbar;
     property Scrollbar: TATScrollbar read FScrollbar;
+    property ColumnSeparator: char read FColumnSep write FColumnSep;
+    property ColumnSizes: TATIntArray read FColumnSizes write FColumnSizes;
     function CanFocus: boolean; override;
     function CanSetFocus: boolean; override;
     function ClientWidth: integer;
@@ -251,9 +259,20 @@ begin
   end;
 end;
 
+function TATListbox.ColumnWidth(AIndex: integer): integer;
+begin
+  if (AIndex<0) or (AIndex>=Length(FColumnSizes)) then
+    exit(10);
+
+  Result:= FColumnSizes[AIndex];
+  if Result<0 then
+    Result:= ClientWidth * -Result div 100;
+end;
+
 procedure TATListbox.DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
 var
-  S: string;
+  S, SItem: string;
+  NPos, NColOffset, NColWidth, NAllWidth, i: integer;
 begin
   if AIndex=FItemIndex then
   begin
@@ -278,10 +297,45 @@ begin
   else
     S:= '('+IntToStr(AIndex)+')';
 
-  C.TextOut(
-    R.Left+FIndentLeft,
-    R.Top+FIndentTop,
-    S);
+  if Length(FColumnSizes)=0 then
+  begin
+    C.TextOut(
+      R.Left+FIndentLeft,
+      R.Top+FIndentTop,
+      S);
+  end
+  else
+  begin
+    NAllWidth:= ClientWidth;
+    NColOffset:= R.Left+FIndentLeft;
+    C.Pen.Color:= Theme^.ColorSeparators;
+
+    for i:= 0 to Length(FColumnSizes)-1 do
+    begin
+      NColWidth:= ColumnWidth(i);
+
+      NPos:= Pos(FColumnSep, S);
+      if NPos=0 then
+        NPos:= Length(S)+1;
+      SItem:= Copy(S, 1, NPos-1);
+      Delete(S, 1, NPos);
+
+      C.FillRect(
+        NColOffset,
+        R.Top,
+        NAllWidth,
+        R.Bottom
+        );
+      C.TextOut(
+        NColOffset+1,
+        R.Top+FIndentTop,
+        SItem
+        );
+
+      Inc(NColOffset, NColWidth);
+      C.Line(NColOffset-1, R.Top, NColOffset-1, R.Bottom);
+    end;
+  end;
 end;
 
 procedure TATListbox.Paint;
@@ -435,6 +489,8 @@ begin
   FOwnerDrawn:= false;
   FVirtualMode:= true;
   FHotTrack:= false;
+  FColumnSep:= #9;
+  SetLength(FColumnSizes, 0);
 
   FBitmap:= TBitmap.Create;
   FBitmap.SetSize(1600, 1200);
