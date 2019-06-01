@@ -33,23 +33,23 @@ implementation
 
 procedure TForm1.FormCreate(Sender: TObject);
 var
-  cols: TATIntArray;
-  sep: char;
+  Cols: TATIntArray;
 begin
-  sep:= '|';
-  SetLength(cols, 4);
-  cols[0]:= -40; //percents
-  cols[1]:= 0; //autosize
-  cols[2]:= 0; //autosize
-  cols[3]:= 50; //pixels
+  SetLength(Cols, 4);
+  Cols[0]:= -40; //percents
+  Cols[1]:= 0; //autosize
+  Cols[2]:= 0; //autosize
+  Cols[3]:= 50; //pixels
 
-  List.ColumnSeparator:= sep;
+  List.VirtualMode:= false; //must have for columns
+  List.ColumnSizes:= Cols;
+  List.ColumnSeparator:= '|';
+
   List.Items.Add('aaaaaaaaaaaa1|aa2|aaaaaaaaaaaaaaaaaaaaaaaaaaaa3|aa4|aaaaaaaaaaaaaaaaaaaaaaaaaaaa5');
   List.Items.Add('bb1|bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb2');
   List.Items.Add('dddddddddddddddddddddddddddddddddddddddd1|dd2|dddddddddddddddddddddddddddd3|dddddddddddd4');
   List.Items.Add('ee1|||ee4');
-  List.VirtualMode:= false;
-  List.ColumnSizes:= cols;
+
   List.Invalidate;
 end;
 
