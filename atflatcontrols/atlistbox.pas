@@ -151,6 +151,24 @@ uses
   InterfaceBase, 
   LCLType, LCLIntf;
 
+
+function SGetItem(var S: string; const ch: Char): string;
+var
+  i: integer;
+begin
+  i:= Pos(ch, S);
+  if i=0 then
+  begin
+    Result:= S;
+    S:= '';
+  end
+  else
+  begin
+    Result:= Copy(S, 1, i-1);
+    Delete(S, 1, i);
+  end;
+end;
+
 function IsDoubleBufferedNeeded: boolean;
 begin
   Result:= WidgetSet.GetLCLCapability(lcCanDrawOutsideOnPaint) = LCL_CAPABILITY_YES;
@@ -347,12 +365,7 @@ begin
     for i:= 0 to Length(FColumnSizes)-1 do
     begin
       NColWidth:= FColumnWidths[i];
-
-      NPos:= Pos(FColumnSep, S);
-      if NPos=0 then
-        NPos:= Length(S)+1;
-      SItem:= Copy(S, 1, NPos-1);
-      Delete(S, 1, NPos);
+      SItem:= SGetItem(S, FColumnSep);
 
       C.FillRect(
         NColOffset,
