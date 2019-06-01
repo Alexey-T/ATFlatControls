@@ -52,7 +52,6 @@ type
     FOnScroll: TNotifyEvent;
     procedure DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
     procedure DoPaintTo(C: TCanvas; r: TRect);
-    function ColumnWidth(AIndex: integer): integer;
     function ItemBottom: integer;
     procedure ScrollbarChange(Sender: TObject);
     procedure SetCanBeFocused(AValue: boolean);
@@ -100,6 +99,7 @@ type
     function ClientWidth: integer;
     procedure Invalidate; override;
     procedure UpdateItemHeight;
+    function ColumnWidth(AIndex: integer): integer;
   published
     property Align;
     property Anchors;
@@ -260,13 +260,42 @@ begin
 end;
 
 function TATListbox.ColumnWidth(AIndex: integer): integer;
+var
+  NTotalWidth, NAutoSized, NSize, NSizeAll, i: integer;
 begin
   if (AIndex<0) or (AIndex>=Length(FColumnSizes)) then
-    exit(10);
+    exit(0);
 
+  NTotalWidth:= ClientWidth;
   Result:= FColumnSizes[AIndex];
+
+  //In percents?
   if Result<0 then
-    Result:= ClientWidth * -Result div 100;
+  begin
+    Result:= NTotalWidth * -Result div 100;
+    Exit
+  end;
+
+  //Auto-sized column?
+  if Result=0 then
+  begin
+    NAutoSized:= 0;
+    NSizeAll:= 0;
+    for i:= 0 to Length(FColumnSizes)-1 do
+    begin
+      NSize:= FColumnSizes[i];
+      if NSize=0 then
+        Inc(NAutoSized)
+      else
+      begin
+        if NSize<0 then
+          NSize:= NTotalWidth * -NSize div 100;
+        Inc(NSizeAll, NSize);
+      end;
+    end;
+    Result:= Max(0, NTotalWidth-NSizeAll) div NAutoSized;
+    Exit
+  end;
 end;
 
 procedure TATListbox.DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
