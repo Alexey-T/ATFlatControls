@@ -47,6 +47,7 @@ type
     FIndentTop: integer;
     FColumnSep: char;
     FColumnSizes: TATIntArray;
+    FColumnWidths: TATIntArray;
     FOnDrawItem: TATListboxDrawItemEvent;
     FOnChangeSel: TNotifyEvent;
     FOnScroll: TNotifyEvent;
@@ -61,10 +62,12 @@ type
     procedure SetItemTop(AValue: integer);
     procedure SetItemHeight(AValue: integer);
     procedure SetThemedScrollbar(AValue: boolean);
+    procedure UpdateColumnWidths;
     procedure UpdateFromScrollbarMsg(const Msg: TLMScroll);
     procedure UpdateScrollbar;
     function GetVisibleItems: integer;
     function GetItemHeightDefault: integer;
+    function GetColumnWidth(AIndex: integer): integer;
   protected
     procedure Paint; override;
     procedure Click; override;
@@ -94,12 +97,12 @@ type
     property Scrollbar: TATScrollbar read FScrollbar;
     property ColumnSeparator: char read FColumnSep write FColumnSep;
     property ColumnSizes: TATIntArray read FColumnSizes write FColumnSizes;
+    property ColumnWidth[AIndex: integer]: integer read GetColumnWidth;
     function CanFocus: boolean; override;
     function CanSetFocus: boolean; override;
     function ClientWidth: integer;
     procedure Invalidate; override;
     procedure UpdateItemHeight;
-    function ColumnWidth(AIndex: integer): integer;
   published
     property Align;
     property Anchors;
@@ -259,44 +262,49 @@ begin
   end;
 end;
 
-function TATListbox.ColumnWidth(AIndex: integer): integer;
-var
-  NTotalWidth, NAutoSized, NSize, NSizeAll, i: integer;
+function TATListbox.GetColumnWidth(AIndex: integer): integer;
 begin
-  if (AIndex<0) or (AIndex>=Length(FColumnSizes)) then
-    exit(0);
+  if (AIndex>=0) and (AIndex<Length(FColumnSizes)) then
+    Result:= FColumnWidths[AIndex]
+  else
+    Result:= 0;
+end;
 
+procedure TATListbox.UpdateColumnWidths;
+var
+  NTotalWidth, NAutoSized, NSize, NFixedSize, i: integer;
+begin
   NTotalWidth:= ClientWidth;
-  Result:= FColumnSizes[AIndex];
+  NAutoSized:= 0;
+  NFixedSize:= 0;
 
-  //In percents?
-  if Result<0 then
+  SetLength(FColumnWidths, Length(FColumnSizes));
+
+  //set width of fixed columns
+  for i:= 0 to Length(FColumnSizes)-1 do
   begin
-    Result:= NTotalWidth * -Result div 100;
-    Exit
+    NSize:= FColumnSizes[i];
+
+    //auto-sized?
+    if NSize=0 then
+      Inc(NAutoSized)
+    else
+    //in percents?
+    if NSize<0 then
+      NSize:= NTotalWidth * -NSize div 100;
+
+    Inc(NFixedSize, NSize);
+    FColumnWidths[i]:= NSize;
   end;
 
-  //Auto-sized column?
-  if Result=0 then
+  //set width of auto-sized columns
+  for i:= 0 to Length(FColumnSizes)-1 do
   begin
-    NAutoSized:= 0;
-    NSizeAll:= 0;
-    for i:= 0 to Length(FColumnSizes)-1 do
-    begin
-      NSize:= FColumnSizes[i];
-      if NSize=0 then
-        Inc(NAutoSized)
-      else
-      begin
-        if NSize<0 then
-          NSize:= NTotalWidth * -NSize div 100;
-        Inc(NSizeAll, NSize);
-      end;
-    end;
-    Result:= Max(0, NTotalWidth-NSizeAll) div NAutoSized;
-    Exit
+    if FColumnSizes[i]=0 then
+      FColumnWidths[i]:= Max(0, NTotalWidth-NFixedSize) div NAutoSized;
   end;
 end;
+
 
 procedure TATListbox.DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
 var
@@ -341,7 +349,7 @@ begin
 
     for i:= 0 to Length(FColumnSizes)-1 do
     begin
-      NColWidth:= ColumnWidth(i);
+      NColWidth:= FColumnWidths[i];
 
       NPos:= Pos(FColumnSep, S);
       if NPos=0 then
@@ -374,6 +382,7 @@ begin
   inherited;
   UpdateScrollbar;
   UpdateItemHeight;
+  UpdateColumnWidths;
 
   R:= ClientRect;
   if DoubleBuffered then
@@ -520,6 +529,7 @@ begin
   FHotTrack:= false;
   FColumnSep:= #9;
   SetLength(FColumnSizes, 0);
+  SetLength(FColumnWidths, 0);
 
   FBitmap:= TBitmap.Create;
   FBitmap.SetSize(1600, 1200);
