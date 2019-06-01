@@ -171,10 +171,7 @@ end;
 function TATListbox.GetItemHeightDefault: integer;
 begin
   Result:= FTheme^.DoScaleFont(FTheme^.FontSize) * 18 div 10 + 2;
-
-  {$ifdef windows}
   Result:= Result * Screen.PixelsPerInch div 96;
-  {$endif}
 end;
 
 procedure TATListbox.UpdateItemHeight;
