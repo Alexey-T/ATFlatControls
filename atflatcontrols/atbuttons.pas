@@ -88,6 +88,7 @@ type
     procedure SetImages(AValue: TImageList);
     procedure SetKind(AValue: TATButtonKind);
     procedure SetBoldBorder(AValue: boolean);
+    procedure SetTextOverlay(const AValue: string);
     procedure SetTheme(AValue: PATFlatTheme);
     procedure ShowChoiceMenu;
     procedure TimerMouseoverTick(Sender: TObject);
@@ -119,7 +120,7 @@ type
     property ItemIndex: integer read FItemIndex write FItemIndex;
     property Theme: PATFlatTheme read FTheme write SetTheme;
     property WidthInitial: integer read FWidthInitial write FWidthInitial;
-    property TextOverlay: string read FTextOverlay write FTextOverlay;
+    property TextOverlay: string read FTextOverlay write SetTextOverlay;
   published
     property Align;
     property Anchors;
@@ -223,6 +224,13 @@ procedure TATButton.SetBoldBorder(AValue: boolean);
 begin
   if FBoldBorder=AValue then Exit;
   FBoldBorder:= AValue;
+  Invalidate;
+end;
+
+procedure TATButton.SetTextOverlay(const AValue: string);
+begin
+  if FTextOverlay=AValue then Exit;
+  FTextOverlay:= AValue;
   Invalidate;
 end;
 
