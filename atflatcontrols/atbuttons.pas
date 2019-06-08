@@ -72,6 +72,7 @@ type
     FTheme: PATFlatTheme;
     FTimerMouseover: TFPTimer;
     FWidthInitial: integer;
+    FTextOverlay: string;
     procedure DoChoiceClick(Sender: TObject);
     function GetIconHeight: integer;
     function GetIconWidth: integer;
@@ -118,6 +119,7 @@ type
     property ItemIndex: integer read FItemIndex write FItemIndex;
     property Theme: PATFlatTheme read FTheme write SetTheme;
     property WidthInitial: integer read FWidthInitial write FWidthInitial;
+    property TextOverlay: string read FTextOverlay write FTextOverlay;
   published
     property Align;
     property Anchors;
@@ -449,6 +451,38 @@ begin
       IfThen(IsPressed, Theme^.PressedCaptionShiftY);
 
     PaintArrow(pnt1.x, pnt1.y);
+  end;
+
+  if FTextOverlay<>'' then
+  begin
+    TextSize:= Canvas.TextExtent(FTextOverlay);
+    Canvas.Brush.Color:= Theme^.ColorBgOverlay;
+    Canvas.Font.Color:= Theme^.ColorFontOverlay;
+
+    case Theme^.TextOverlayPosition of
+      bopLeftTop:
+        begin
+          pnt1.x:= 0;
+          pnt1.y:= 0;
+        end;
+      bopRightTop:
+        begin
+          pnt1.x:= Width-TextSize.cx;
+          pnt1.y:= 0;
+        end;
+      bopLeftBottom:
+        begin
+          pnt1.x:= 0;
+          pnt1.y:= Height-TextSize.cy;
+        end;
+      bopRightBottom:
+        begin
+          pnt1.x:= Width-TextSize.cx;
+          pnt1.y:= Height-TextSize.cy;
+        end;
+    end;
+
+    Canvas.TextOut(pnt1.x, pnt1.y, FTextOverlay);
   end;
 end;
 

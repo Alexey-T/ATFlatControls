@@ -1,4 +1,8 @@
 
+2019.06.08
++ ATButton: added prop TextOverlay (to show in the button corner)
++ added theme props: ColorFontOverlay, ColorBgOverlay, TextOverlayPosition
+
 2019.06.01
 + ATListbox: added prop ColumnSizes (array of integer, size<0 means percents)
 + ATListbox: added prop ColumnSeparator

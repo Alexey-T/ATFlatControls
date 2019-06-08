@@ -10,6 +10,13 @@ uses
 type
   PATFlatTheme = ^TATFlatTheme;
 
+  TATButtonOverlayPosition = (
+    bopLeftTop,
+    bopRightTop,
+    bopLeftBottom,
+    bopRightBottom
+    );
+
   { TATFlatTheme }
 
   TATFlatTheme = record
@@ -21,6 +28,7 @@ type
     ColorFontDisabled: TColor;
     ColorFontListbox: TColor;
     ColorFontListboxSel: TColor;
+    ColorFontOverlay: TColor;
     ColorBgPassive: TColor;
     ColorBgOver: TColor;
     ColorBgChecked: TColor;
@@ -28,6 +36,7 @@ type
     ColorBgListbox: TColor;
     ColorBgListboxSel: TColor;
     ColorBgListboxHottrack: TColor;
+    ColorBgOverlay: TColor;
     ColorArrows: TColor;
     ColorSeparators: TColor;
     ColorBorderPassive: TColor;
@@ -42,6 +51,7 @@ type
     ChoiceBorderWidth: integer;
     ArrowSize: integer;
     GapForAutoSize: integer;
+    TextOverlayPosition: TATButtonOverlayPosition;
     ScalePercents: integer;
     ScaleFontPercents: integer;
     function DoScale(AValue: integer): integer;
@@ -81,6 +91,7 @@ initialization
     ColorFontDisabled:= $808088;
     ColorFontListbox:= ColorFont;
     ColorFontListboxSel:= clWhite;
+    ColorFontOverlay:= clWhite;
     ColorBgPassive:= $e0e0e0;
     ColorBgOver:= $90a080;
     ColorBgChecked:= $b0b0b0;
@@ -88,6 +99,7 @@ initialization
     ColorBgListbox:= ColorBgPassive;
     ColorBgListboxSel:= clMedGray;
     ColorBgListboxHottrack:= clMoneyGreen;
+    ColorBgOverlay:= clRed;
     ColorArrows:= clGray;
     ColorSeparators:= clDkGray;
     ColorBorderPassive:= $a0a0a0;
@@ -102,6 +114,8 @@ initialization
     ChoiceBorderWidth:= 1;
     ArrowSize:= 2;
     GapForAutoSize:= 8;
+    TextOverlayPosition:= bopRightBottom;
+
     ScalePercents:= 100;
     ScaleFontPercents:= 0;
   end;

@@ -205,6 +205,9 @@ procedure TfmMain.BtnColorsClick(Sender: TObject);
   begin
     Result:= $a00000+Random($fffff);
   end;
+var
+  N: integer;
+  Btn: TATButton;
 begin
   with ATFlatTheme do
   begin
@@ -213,6 +216,11 @@ begin
     ColorBgOver:= SomeColor;
     ColorBgChecked:= SomeColor;
   end;
+
+  Btn:= bar.Buttons[0];
+  N:= StrToIntDef(Trim(Btn.TextOverlay), 0)+1;
+  Btn.TextOverlay:= ' '+IntToStr(N)+' ';
+
   Invalidate;
 end;
 
