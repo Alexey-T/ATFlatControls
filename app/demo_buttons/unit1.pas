@@ -89,14 +89,17 @@ begin
 
   b_choice:= TATButton.create(self);
   b_choice.parent:= self;
-  b_choice.SetBounds(210, 190, 100, 30);
+  b_choice.SetBounds(210, 190, 50, 30);
   b_choice.Caption:= '_________';
-  b_choice.Kind:= abuTextChoice;
+  b_choice.Kind:= abuTextChoiceShort;
   b_choice.Arrow:= true;
   b_choice.Focusable:= false;
   b_choice.Items.Add('item-a');
   b_choice.Items.Add('item-b');
   b_choice.Items.Add('item-c');
+  b_choice.ItemsShort.Add('AA');
+  b_choice.ItemsShort.Add('BB');
+  b_choice.ItemsShort.Add('CC');
   b_choice.ItemIndex:= 1;
 
   b_colors:= TATButton.create(self);

@@ -1,4 +1,7 @@
 
+2019.06.11
++ ATButton: added Kind=abuTextChoiceShort (and ItemsShort for captions)
+
 2019.06.08
 + ATButton: added prop TextOverlay (to show in the button corner)
 + added theme props: ColorFontOverlay, ColorBgOverlay, TextOverlayPosition

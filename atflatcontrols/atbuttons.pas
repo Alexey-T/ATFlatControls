@@ -24,7 +24,8 @@ type
     abuTextIconVert,
     abuSeparatorHorz,
     abuSeparatorVert,
-    abuTextChoice
+    abuTextChoice,
+    abuTextChoiceShort
     );
 
 const
@@ -35,7 +36,8 @@ const
     'text_icon_v',
     'sep_h',
     'sep_v',
-    'text_choice'
+    'text_choice',
+    'text_choice_sh'
     );
 
 const
@@ -65,6 +67,7 @@ type
     FDataString2: string;
     FDataString3: string;
     FItems: TStringList;
+    FItemsShort: TStringList;
     FItemIndex: integer;
     FPopup: TPopupMenu;
     FPadding: integer;
@@ -117,6 +120,7 @@ type
     property DataString3: string read FDataString3 write FDataString3;
     function GetTextSize(C: TCanvas; const S: string): TSize;
     property Items: TStringList read FItems;
+    property ItemsShort: TStringList read FItemsShort;
     property ItemIndex: integer read FItemIndex write FItemIndex;
     property Theme: PATFlatTheme read FTheme write SetTheme;
     property WidthInitial: integer read FWidthInitial write FWidthInitial;
@@ -243,7 +247,7 @@ end;
 
 procedure TATButton.Click;
 begin
-  if FKind=abuTextChoice then
+  if FKind in [abuTextChoice, abuTextChoiceShort] then
   begin
     ShowChoiceMenu;
     exit
@@ -304,7 +308,7 @@ begin
     or FChecked
     or (FOver and not (FKind in [abuSeparatorHorz, abuSeparatorVert]));
   bUseBorder:= bUseBack
-    or (FKind=abuTextChoice);
+    or (FKind in [abuTextChoice, abuTextChoiceShort]);
 
   r:= ClientRect;
 
@@ -341,7 +345,7 @@ begin
     if BoldBorder then
       NSize:= Theme^.BoldBorderWidth
     else
-    if Kind=abuTextChoice then
+    if Kind in [abuTextChoice, abuTextChoiceShort] then
       NSize:= Theme^.ChoiceBorderWidth
     else
     if FOver then
@@ -418,10 +422,24 @@ begin
           IfThen(IsPressed, Theme^.PressedCaptionShiftX);
         pnt1.y:= (ClientHeight-GetTextSize(Canvas, 'W').cy) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftY);
+        S:= '?';
         if (FItemIndex>=0) and (FItemIndex<FItems.Count) then
-          S:= FItems[FItemIndex]
-        else
-          S:= '?';
+          S:= FItems[FItemIndex];
+        Canvas.TextOut(pnt1.x, pnt1.y, S);
+      end;
+
+    abuTextChoiceShort:
+      begin
+        S:= '?';
+        if (FItemIndex>=0) and (FItemIndex<FItemsShort.Count) then
+          S:= FItemsShort[FItemIndex];
+        dy:= Canvas.TextWidth(S);
+        dy:= (ClientWidth-dy-NSizeArrow) div 2;
+        pnt1.x:= dy +
+          IfThen(FArrowAlign=taLeftJustify, FPadding + NSizeArrow) +
+          IfThen(IsPressed, Theme^.PressedCaptionShiftX);
+        pnt1.y:= (ClientHeight-GetTextSize(Canvas, 'W').cy) div 2 +
+          IfThen(IsPressed, Theme^.PressedCaptionShiftY);
         Canvas.TextOut(pnt1.x, pnt1.y, S);
       end;
 
@@ -686,6 +704,7 @@ begin
   FPadding:= cDefaultButtonPadding;
   FPaddingBig:= cDefaultButtonPaddingBig;
   FItems:= TStringList.Create;
+  FItemsShort:= TStringList.Create;
   FItemIndex:= -1;
   FTheme:= @ATFlatTheme;
   FWidthInitial:= 0;
@@ -698,6 +717,7 @@ end;
 
 destructor TATButton.Destroy;
 begin
+  FItemsShort.Free;
   FItems.Free;
   FPicture.Free;
 
