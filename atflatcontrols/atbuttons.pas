@@ -83,7 +83,7 @@ type
     function IsPressed: boolean;
     procedure PaintBorder(C: TCanvas; R: TRect; AColor: TColor; AWidth: integer);
     procedure PaintIcon(C: TCanvas; AX, AY: integer);
-    procedure PaintArrow(C: TCanvas; AX, AY: integer);
+    procedure PaintArrow(C: TCanvas; AX, AY: integer; AColorBg, AColorArrow: TColor);
     procedure PaintTo(C: TCanvas);
     procedure SetBoldFont(AValue: boolean);
     procedure SetChecked(AValue: boolean);
@@ -301,7 +301,7 @@ var
   NWidth, NHeight: integer;
   NSize, NSizeArrow: integer;
   bUseBack, bUseBorder: boolean;
-  NColor: TColor;
+  NColorBg, NColor: TColor;
   TextSize: TSize;
   pnt1, pnt2: TPoint;
   RectAll, RectText: TRect;
@@ -326,18 +326,21 @@ begin
   if bUseBack then
   begin
     if not Enabled then
-      NColor:= Theme^.ColorBgDisabled
+      NColorBg:= Theme^.ColorBgDisabled
     else
     if FChecked then
-      NColor:= Theme^.ColorBgChecked
+      NColorBg:= Theme^.ColorBgChecked
     else
     if FOver then
-      NColor:= Theme^.ColorBgOver
+      NColorBg:= Theme^.ColorBgOver
     else
-      NColor:= Theme^.ColorBgPassive;
-    C.Brush.Color:= ColorToRGB(NColor);
+      NColorBg:= Theme^.ColorBgPassive;
+    NColorBg:= ColorToRGB(NColorBg);
+    C.Brush.Color:= NColorBg;
     C.FillRect(RectAll);
-  end;
+  end
+  else
+    NColorBg:= clNone;
 
   if bUseBorder then
   begin
@@ -477,15 +480,15 @@ begin
       taLeftJustify:
         pnt1.x:= NSizeArrow;
       taRightJustify:
-        pnt1.x:= NWidth - NSizeArrow;
+        pnt1.x:= NWidth-NSizeArrow;
       taCenter:
-        pnt1.x:= (NWidth - NSizeArrow div 4) div 2;
+        pnt1.x:= (NWidth-NSizeArrow div 4) div 2;
     end;
 
     pnt1.y:= NHeight div 2 +
       IfThen(IsPressed, Theme^.PressedCaptionShiftY);
 
-    PaintArrow(C, pnt1.x, pnt1.y);
+    PaintArrow(C, pnt1.x, pnt1.y, clNone{NColorBg}, Theme^.ColorArrows);
   end;
 
   if FTextOverlay<>'' then
@@ -530,13 +533,23 @@ begin
     C.Draw(AX, AY, FPicture.Graphic);
 end;
 
-procedure TATButton.PaintArrow(C: TCanvas; AX, AY: integer);
+procedure TATButton.PaintArrow(C: TCanvas; AX, AY: integer; AColorBg, AColorArrow: TColor);
 var
   NSize: integer;
 begin
   NSize:= DoScale(Theme^.ArrowSize);
-  CanvasPaintTriangleDown(C, Theme^.ColorArrows,
-    Point(AX, AY), NSize);
+
+  if AColorBg<>clNone then
+  begin
+    C.Brush.Color:= AColorBg;
+    C.FillRect(
+      AX-NSize*2-1,
+      AY-NSize*2-1,
+      AX+NSize*2+2,
+      AY+NSize*2+1);
+  end;
+
+  CanvasPaintTriangleDown(C, AColorArrow, Point(AX, AY), NSize);
 end;
 
 procedure TATButton.SetBoldFont(AValue: boolean);
