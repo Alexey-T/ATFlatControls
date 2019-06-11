@@ -91,7 +91,9 @@ begin
   b_choice.parent:= self;
   b_choice.SetBounds(210, 190, 50, 30);
   b_choice.Caption:= '_________';
-  b_choice.Kind:= abuTextChoiceShort;
+  b_choice.Kind:= abuTextChoice;
+  b_choice.ShowShortItems:= true;
+  b_choice.TextAlign:= taCenter;
   b_choice.Arrow:= true;
   b_choice.Focusable:= false;
   b_choice.Items.Add('item-a');

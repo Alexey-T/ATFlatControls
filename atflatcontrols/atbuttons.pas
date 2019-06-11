@@ -24,8 +24,7 @@ type
     abuTextIconVert,
     abuSeparatorHorz,
     abuSeparatorVert,
-    abuTextChoice,
-    abuTextChoiceShort
+    abuTextChoice
     );
 
 const
@@ -36,8 +35,7 @@ const
     'text_icon_v',
     'sep_h',
     'sep_v',
-    'text_choice',
-    'text_choice_sh'
+    'text_choice'
     );
 
 const
@@ -76,6 +74,8 @@ type
     FTimerMouseover: TFPTimer;
     FWidthInitial: integer;
     FTextOverlay: string;
+    FTextAlign: TAlignment;
+    FShowShortItems: boolean;
     procedure DoChoiceClick(Sender: TObject);
     function GetIconHeight: integer;
     function GetIconWidth: integer;
@@ -125,6 +125,7 @@ type
     property Theme: PATFlatTheme read FTheme write SetTheme;
     property WidthInitial: integer read FWidthInitial write FWidthInitial;
     property TextOverlay: string read FTextOverlay write SetTextOverlay;
+    property ShowShortItems: boolean read FShowShortItems write FShowShortItems;
   published
     property Align;
     property Anchors;
@@ -145,6 +146,7 @@ type
     property Flat: boolean read FFlat write SetFlat default false;
     property Arrow: boolean read FArrow write FArrow default false;
     property ArrowAlign: TAlignment read FArrowAlign write FArrowAlign default taRightJustify;
+    property TextAlign: TAlignment read FTextAlign write FTextAlign default taLeftJustify;
     property Kind: TATButtonKind read FKind write SetKind default abuTextOnly;
     property BoldBorder: boolean read FBoldBorder write SetBoldBorder default false;
     property BoldFont: boolean read FBoldFont write SetBoldFont default false;
@@ -247,7 +249,7 @@ end;
 
 procedure TATButton.Click;
 begin
-  if FKind in [abuTextChoice, abuTextChoiceShort] then
+  if FKind=abuTextChoice then
   begin
     ShowChoiceMenu;
     exit
@@ -308,7 +310,7 @@ begin
     or FChecked
     or (FOver and not (FKind in [abuSeparatorHorz, abuSeparatorVert]));
   bUseBorder:= bUseBack
-    or (FKind in [abuTextChoice, abuTextChoiceShort]);
+    or (FKind=abuTextChoice);
 
   r:= ClientRect;
 
@@ -345,7 +347,7 @@ begin
     if BoldBorder then
       NSize:= Theme^.BoldBorderWidth
     else
-    if Kind in [abuTextChoice, abuTextChoiceShort] then
+    if Kind=abuTextChoice then
       NSize:= Theme^.ChoiceBorderWidth
     else
     if FOver then
@@ -417,29 +419,39 @@ begin
 
     abuTextChoice:
       begin
-        pnt1.x:= FPadding +
-          IfThen(FArrowAlign=taLeftJustify, FPadding + NSizeArrow) +
-          IfThen(IsPressed, Theme^.PressedCaptionShiftX);
-        pnt1.y:= (ClientHeight-GetTextSize(Canvas, 'W').cy) div 2 +
-          IfThen(IsPressed, Theme^.PressedCaptionShiftY);
         S:= '?';
-        if (FItemIndex>=0) and (FItemIndex<FItems.Count) then
-          S:= FItems[FItemIndex];
-        Canvas.TextOut(pnt1.x, pnt1.y, S);
-      end;
+        if FShowShortItems then
+        begin
+          if (FItemIndex>=0) and (FItemIndex<FItemsShort.Count) then
+            S:= FItemsShort[FItemIndex];
+        end
+        else
+        begin
+          if (FItemIndex>=0) and (FItemIndex<FItems.Count) then
+            S:= FItems[FItemIndex];
+        end;
 
-    abuTextChoiceShort:
-      begin
-        S:= '?';
-        if (FItemIndex>=0) and (FItemIndex<FItemsShort.Count) then
-          S:= FItemsShort[FItemIndex];
-        dy:= Canvas.TextWidth(S);
-        dy:= (ClientWidth-dy-NSizeArrow) div 2;
-        pnt1.x:= dy +
-          IfThen(FArrowAlign=taLeftJustify, FPadding + NSizeArrow) +
-          IfThen(IsPressed, Theme^.PressedCaptionShiftX);
+        case FTextAlign of
+          taLeftJustify:
+            begin
+              pnt1.x:= FPadding +
+                IfThen(FArrowAlign=taLeftJustify, FPadding + NSizeArrow) +
+                IfThen(IsPressed, Theme^.PressedCaptionShiftX);
+            end;
+          taCenter,
+          taRightJustify:
+            begin
+              dy:= Canvas.TextWidth(S);
+              dy:= (ClientWidth-dy-NSizeArrow) div 2;
+              pnt1.x:= dy +
+                IfThen(FArrowAlign=taLeftJustify, FPadding + NSizeArrow) +
+                IfThen(IsPressed, Theme^.PressedCaptionShiftX);
+            end;
+        end;
+
         pnt1.y:= (ClientHeight-GetTextSize(Canvas, 'W').cy) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftY);
+
         Canvas.TextOut(pnt1.x, pnt1.y, S);
       end;
 
@@ -701,6 +713,7 @@ begin
   FBoldBorder:= false;
   FArrow:= false;
   FArrowAlign:= taRightJustify;
+  FTextAlign:= taLeftJustify;
   FPadding:= cDefaultButtonPadding;
   FPaddingBig:= cDefaultButtonPaddingBig;
   FItems:= TStringList.Create;
