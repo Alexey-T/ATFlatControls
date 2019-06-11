@@ -82,8 +82,9 @@ type
     function GetTextItem(AIndex: integer; const ADefault: string): string;
     function IsPressed: boolean;
     procedure PaintBorder(C: TCanvas; R: TRect; AColor: TColor; AWidth: integer);
-    procedure PaintIcon(AX, AY: integer);
-    procedure PaintArrow(AX, AY: integer);
+    procedure PaintIcon(C: TCanvas; AX, AY: integer);
+    procedure PaintArrow(C: TCanvas; AX, AY: integer);
+    procedure PaintTo(C: TCanvas);
     procedure SetBoldFont(AValue: boolean);
     procedure SetChecked(AValue: boolean);
     procedure SetFlat(AValue: boolean);
@@ -290,6 +291,12 @@ begin
 end;
 
 procedure TATButton.Paint;
+begin
+  inherited;
+  PaintTo(Canvas);
+end;
+
+procedure TATButton.PaintTo(C: TCanvas);
 var
   NWidth, NHeight: integer;
   NSize, dy, NSizeArrow: integer;
@@ -300,8 +307,6 @@ var
   RectAll, RectText: TRect;
   S: string;
 begin
-  inherited;
-
   NWidth:= ClientWidth;
   NHeight:= ClientHeight;
   RectAll:= ClientRect;
@@ -330,8 +335,8 @@ begin
       NColor:= Theme^.ColorBgOver
     else
       NColor:= Theme^.ColorBgPassive;
-    Canvas.Brush.Color:= ColorToRGB(NColor);
-    Canvas.FillRect(RectAll);
+    C.Brush.Color:= ColorToRGB(NColor);
+    C.FillRect(RectAll);
   end;
 
   if bUseBorder then
@@ -357,18 +362,18 @@ begin
     if FOver then
       NSize:= Theme^.MouseoverBorderWidth;
 
-    PaintBorder(Canvas, RectAll, NColor, NSize);
+    PaintBorder(C, RectAll, NColor, NSize);
   end;
 
-  Canvas.Font.Name:= Theme^.FontName;
-  Canvas.Font.Color:= ColorToRGB(IfThen(Enabled, Theme^.ColorFont, Theme^.ColorFontDisabled));
-  Canvas.Font.Size:= DoScaleFont(Theme^.FontSize);
+  C.Font.Name:= Theme^.FontName;
+  C.Font.Color:= ColorToRGB(IfThen(Enabled, Theme^.ColorFont, Theme^.ColorFontDisabled));
+  C.Font.Size:= DoScaleFont(Theme^.FontSize);
 
   if BoldFont then
-    Canvas.Font.Style:= [fsBold]
+    C.Font.Style:= [fsBold]
   else
-    Canvas.Font.Style:= Theme^.FontStyles;
-  Canvas.Brush.Style:= bsClear;
+    C.Font.Style:= Theme^.FontStyles;
+  C.Brush.Style:= bsClear;
 
   case FKind of
     abuIconOnly:
@@ -378,53 +383,53 @@ begin
           IfThen(Arrow, Padding);
         pnt1.y:= (NHeight-GetIconHeight) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftY);
-        PaintIcon(pnt1.x, pnt1.y);
+        PaintIcon(C, pnt1.x, pnt1.y);
       end;
 
     abuTextOnly:
       begin
-        TextSize:= GetTextSize(Canvas, Caption);
+        TextSize:= GetTextSize(C, Caption);
         pnt1.x:= (NWidth-TextSize.cx-NSizeArrow) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftX);
         pnt1.y:= (NHeight-TextSize.cy) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftY);
-        Canvas.TextOut(pnt1.x, pnt1.y, Caption);
+        C.TextOut(pnt1.x, pnt1.y, Caption);
       end;
 
     abuTextIconHorz:
       begin
-        TextSize:= GetTextSize(Canvas, Caption);
+        TextSize:= GetTextSize(C, Caption);
         pnt1.x:= FPadding +
           IfThen(IsPressed, Theme^.PressedCaptionShiftX);
         pnt1.y:= (NHeight-GetIconHeight) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftY);
-        PaintIcon(pnt1.x, pnt1.y);
+        PaintIcon(C, pnt1.x, pnt1.y);
 
         Inc(pnt1.x, GetIconWidth+FPadding);
         pnt1.y:= (NHeight-TextSize.cy) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftY);
-        Canvas.TextOut(pnt1.x, pnt1.y, Caption);
+        C.TextOut(pnt1.x, pnt1.y, Caption);
       end;
 
     abuTextIconVert:
       begin
-        TextSize:= GetTextSize(Canvas, Caption);
+        TextSize:= GetTextSize(C, Caption);
         pnt1.x:= (NWidth-GetIconWidth-NSizeArrow) div 2+
           IfThen(IsPressed, Theme^.PressedCaptionShiftX);
         pnt1.y:= FPadding +
           IfThen(IsPressed, Theme^.PressedCaptionShiftY);
-        PaintIcon(pnt1.x, pnt1.y);
+        PaintIcon(C, pnt1.x, pnt1.y);
 
         Inc(pnt1.y, GetIconHeight+FPadding);
         pnt1.x:= (NWidth-TextSize.cx-NSizeArrow) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftX);
-        Canvas.TextOut(pnt1.x, pnt1.y, Caption);
+        C.TextOut(pnt1.x, pnt1.y, Caption);
       end;
 
     abuTextChoice:
       begin
         S:= GetTextItem(FItemIndex, '?');
-        TextSize:= Canvas.TextExtent(S);
+        TextSize:= C.TextExtent(S);
 
         RectText.Left:=
           IfThen(FArrowAlign=taLeftJustify, FPadding+NSizeArrow) +
@@ -446,7 +451,7 @@ begin
         pnt1.y:= (NHeight-TextSize.cy) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftY);
 
-        Canvas.TextOut(pnt1.x, pnt1.y, S);
+        C.TextOut(pnt1.x, pnt1.y, S);
       end;
 
     abuSeparatorVert:
@@ -454,8 +459,8 @@ begin
         dy:= 2;
         pnt1:= Point(dy, Height div 2);
         pnt2:= Point(Width-dy, Height div 2);
-        Canvas.Pen.Color:= ColorToRGB(Theme^.ColorSeparators);
-        Canvas.Line(pnt1, pnt2);
+        C.Pen.Color:= ColorToRGB(Theme^.ColorSeparators);
+        C.Line(pnt1, pnt2);
       end;
 
     abuSeparatorHorz:
@@ -463,8 +468,8 @@ begin
         dy:= 2;
         pnt1:= Point(Width div 2, dy);
         pnt2:= Point(Width div 2, Height-dy);
-        Canvas.Pen.Color:= ColorToRGB(Theme^.ColorSeparators);
-        Canvas.Line(pnt1, pnt2);
+        C.Pen.Color:= ColorToRGB(Theme^.ColorSeparators);
+        C.Line(pnt1, pnt2);
       end;
   end;
 
@@ -482,14 +487,14 @@ begin
     pnt1.y:= NHeight div 2 +
       IfThen(IsPressed, Theme^.PressedCaptionShiftY);
 
-    PaintArrow(pnt1.x, pnt1.y);
+    PaintArrow(C, pnt1.x, pnt1.y);
   end;
 
   if FTextOverlay<>'' then
   begin
-    TextSize:= Canvas.TextExtent(FTextOverlay);
-    Canvas.Brush.Color:= Theme^.ColorBgOverlay;
-    Canvas.Font.Color:= Theme^.ColorFontOverlay;
+    TextSize:= C.TextExtent(FTextOverlay);
+    C.Brush.Color:= Theme^.ColorBgOverlay;
+    C.Font.Color:= Theme^.ColorFontOverlay;
 
     case Theme^.TextOverlayPosition of
       bopLeftTop:
@@ -514,25 +519,25 @@ begin
         end;
     end;
 
-    Canvas.TextOut(pnt1.x, pnt1.y, FTextOverlay);
+    C.TextOut(pnt1.x, pnt1.y, FTextOverlay);
   end;
 end;
 
-procedure TATButton.PaintIcon(AX, AY: integer);
+procedure TATButton.PaintIcon(C: TCanvas; AX, AY: integer);
 begin
   if Assigned(FImages) and (FImageIndex>=0) and (FImageIndex<FImages.Count) then
-    FImages.Draw(Canvas, AX, AY, FImageIndex)
+    FImages.Draw(C, AX, AY, FImageIndex)
   else
   if Assigned(FPicture) then
-    Canvas.Draw(AX, AY, FPicture.Graphic);
+    C.Draw(AX, AY, FPicture.Graphic);
 end;
 
-procedure TATButton.PaintArrow(AX, AY: integer);
+procedure TATButton.PaintArrow(C: TCanvas; AX, AY: integer);
 var
   NSize: integer;
 begin
   NSize:= DoScale(Theme^.ArrowSize);
-  CanvasPaintTriangleDown(Canvas, Theme^.ColorArrows,
+  CanvasPaintTriangleDown(C, Theme^.ColorArrows,
     Point(AX, AY), NSize);
 end;
 
@@ -651,21 +656,23 @@ end;
 
 procedure TATButton.SetAutoSize(AValue: boolean);
 var
+  C: TCanvas;
   NText, NIcon, NGap: integer;
 begin
   inherited;
   if not AValue then exit;
 
-  Canvas.Font.Name:= Theme^.FontName;
-  Canvas.Font.Size:= DoScaleFont(Theme^.FontSize);
-  Canvas.Font.Style:= [];
+  C:= Canvas;
+  C.Font.Name:= Theme^.FontName;
+  C.Font.Size:= DoScaleFont(Theme^.FontSize);
+  C.Font.Style:= [];
 
   //if FBoldFont then
-  //  Canvas.Font.Style:= [fsBold]
+  //  C.Font.Style:= [fsBold]
   //else
-  //  Canvas.Font.Style:= [];
+  //  C.Font.Style:= [];
 
-  NText:= Canvas.TextWidth(Caption);
+  NText:= C.TextWidth(Caption);
   NIcon:= GetIconWidth;
   NGap:= Theme^.GapForAutoSize;
 
