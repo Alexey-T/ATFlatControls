@@ -89,8 +89,8 @@ begin
 
   b_choice:= TATButton.create(self);
   b_choice.parent:= self;
-  b_choice.SetBounds(210, 190, 50, 30);
-  b_choice.Caption:= '_________';
+  b_choice.SetBounds(210, 190, 70, 30);
+  b_choice.Caption:= '?';
   b_choice.Kind:= abuTextChoice;
   b_choice.ShowShortItems:= true;
   b_choice.TextAlign:= taCenter;

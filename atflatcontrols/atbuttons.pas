@@ -297,13 +297,14 @@ var
   NColor: TColor;
   TextSize: TSize;
   pnt1, pnt2: TPoint;
-  r: TRect;
+  RectAll, RectText: TRect;
   S: string;
 begin
   inherited;
 
   NWidth:= ClientWidth;
   NHeight:= ClientHeight;
+  RectAll:= ClientRect;
 
   if FArrow then
     NSizeArrow:= DoScale(4*Theme^.ArrowSize)
@@ -316,8 +317,6 @@ begin
     or (FOver and not (FKind in [abuSeparatorHorz, abuSeparatorVert]));
   bUseBorder:= bUseBack
     or (FKind=abuTextChoice);
-
-  r:= ClientRect;
 
   if bUseBack then
   begin
@@ -332,7 +331,7 @@ begin
     else
       NColor:= Theme^.ColorBgPassive;
     Canvas.Brush.Color:= ColorToRGB(NColor);
-    Canvas.FillRect(r);
+    Canvas.FillRect(RectAll);
   end;
 
   if bUseBorder then
@@ -358,7 +357,7 @@ begin
     if FOver then
       NSize:= Theme^.MouseoverBorderWidth;
 
-    PaintBorder(Canvas, R, NColor, NSize);
+    PaintBorder(Canvas, RectAll, NColor, NSize);
   end;
 
   Canvas.Font.Name:= Theme^.FontName;
@@ -425,26 +424,26 @@ begin
     abuTextChoice:
       begin
         S:= GetTextItem(FItemIndex, '?');
+        TextSize:= Canvas.TextExtent(S);
+
+        RectText.Left:=
+          IfThen(FArrowAlign=taLeftJustify, FPadding+NSizeArrow) +
+          IfThen(IsPressed, Theme^.PressedCaptionShiftX);
+        RectText.Right:=
+          IfThen(FArrowAlign=taLeftJustify, NWidth, NWidth-NSizeArrow-FPadding);
+        RectText.Top:=
+          IfThen(IsPressed, Theme^.PressedCaptionShiftY);
+        RectText.Bottom:= NHeight;
+
         case FTextAlign of
           taLeftJustify:
-            begin
-              pnt1.x:= FPadding +
-                IfThen(FArrowAlign=taLeftJustify, FPadding + NSizeArrow) +
-                IfThen(IsPressed, Theme^.PressedCaptionShiftX);
-            end;
-          taCenter,
+            pnt1.x:= RectText.Left+FPadding;
+          taCenter:
+            pnt1.x:= (RectText.Width-TextSize.cx) div 2;
           taRightJustify:
-            begin
-              dy:= Canvas.TextWidth(S);
-              dy:= (NWidth-dy-NSizeArrow) div 2;
-              pnt1.x:= dy +
-                IfThen(FArrowAlign=taLeftJustify, FPadding + NSizeArrow) +
-                IfThen(IsPressed, Theme^.PressedCaptionShiftX);
-            end;
+            pnt1.x:= RectText.Right-FPadding-TextSize.cx;
         end;
-
-        pnt1.y:= (NHeight-GetTextSize(Canvas, 'W').cy) div 2 +
-          IfThen(IsPressed, Theme^.PressedCaptionShiftY);
+        pnt1.y:= (RectText.Height-TextSize.cy) div 2;
 
         Canvas.TextOut(pnt1.x, pnt1.y, S);
       end;
