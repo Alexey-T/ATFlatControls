@@ -431,8 +431,7 @@ begin
           IfThen(IsPressed, Theme^.PressedCaptionShiftX);
         RectText.Right:=
           IfThen(FArrowAlign=taLeftJustify, NWidth, NWidth-NSizeArrow-FPadding);
-        RectText.Top:=
-          IfThen(IsPressed, Theme^.PressedCaptionShiftY);
+        RectText.Top:= 0;
         RectText.Bottom:= NHeight;
 
         case FTextAlign of
@@ -443,7 +442,9 @@ begin
           taRightJustify:
             pnt1.x:= RectText.Right-FPadding-TextSize.cx;
         end;
-        pnt1.y:= (RectText.Height-TextSize.cy) div 2;
+
+        pnt1.y:= (NHeight-TextSize.cy) div 2 +
+          IfThen(IsPressed, Theme^.PressedCaptionShiftY);
 
         Canvas.TextOut(pnt1.x, pnt1.y, S);
       end;
