@@ -79,6 +79,7 @@ type
     procedure DoChoiceClick(Sender: TObject);
     function GetIconHeight: integer;
     function GetIconWidth: integer;
+    function GetTextItem(AIndex: integer; const ADefault: string): string;
     function IsPressed: boolean;
     procedure PaintBorder(C: TCanvas; R: TRect; AColor: TColor; AWidth: integer);
     procedure PaintIcon(AX, AY: integer);
@@ -419,18 +420,7 @@ begin
 
     abuTextChoice:
       begin
-        S:= '?';
-        if FShowShortItems then
-        begin
-          if (FItemIndex>=0) and (FItemIndex<FItemsShort.Count) then
-            S:= FItemsShort[FItemIndex];
-        end
-        else
-        begin
-          if (FItemIndex>=0) and (FItemIndex<FItems.Count) then
-            S:= FItems[FItemIndex];
-        end;
-
+        S:= GetTextItem(FItemIndex, '?');
         case FTextAlign of
           taLeftJustify:
             begin
@@ -802,6 +792,21 @@ end;
 function TATButton.DoScaleFont(AValue: integer): integer; inline;
 begin
   Result:= Theme^.DoScaleFont(AValue);
+end;
+
+function TATButton.GetTextItem(AIndex: integer; const ADefault: string): string;
+begin
+  Result:= ADefault;
+  if FShowShortItems then
+  begin
+    if (AIndex>=0) and (AIndex<FItemsShort.Count) then
+      Result:= FItemsShort[AIndex];
+  end
+  else
+  begin
+    if (AIndex>=0) and (AIndex<FItems.Count) then
+      Result:= FItems[AIndex];
+  end;
 end;
 
 end.
