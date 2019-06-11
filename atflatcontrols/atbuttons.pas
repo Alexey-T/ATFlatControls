@@ -291,15 +291,19 @@ end;
 
 procedure TATButton.Paint;
 var
-  r: TRect;
-  pnt1, pnt2: TPoint;
+  NWidth, NHeight: integer;
   NSize, dy, NSizeArrow: integer;
   bUseBack, bUseBorder: boolean;
   NColor: TColor;
   TextSize: TSize;
+  pnt1, pnt2: TPoint;
+  r: TRect;
   S: string;
 begin
   inherited;
+
+  NWidth:= ClientWidth;
+  NHeight:= ClientHeight;
 
   if FArrow then
     NSizeArrow:= DoScale(4*Theme^.ArrowSize)
@@ -370,10 +374,10 @@ begin
   case FKind of
     abuIconOnly:
       begin
-        pnt1.x:= (ClientWidth-GetIconWidth) div 2 +
+        pnt1.x:= (NWidth-GetIconWidth) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftX) -
           IfThen(Arrow, Padding);
-        pnt1.y:= (ClientHeight-GetIconHeight) div 2 +
+        pnt1.y:= (NHeight-GetIconHeight) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftY);
         PaintIcon(pnt1.x, pnt1.y);
       end;
@@ -381,9 +385,9 @@ begin
     abuTextOnly:
       begin
         TextSize:= GetTextSize(Canvas, Caption);
-        pnt1.x:= (ClientWidth-TextSize.cx-NSizeArrow) div 2 +
+        pnt1.x:= (NWidth-TextSize.cx-NSizeArrow) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftX);
-        pnt1.y:= (ClientHeight-TextSize.cy) div 2 +
+        pnt1.y:= (NHeight-TextSize.cy) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftY);
         Canvas.TextOut(pnt1.x, pnt1.y, Caption);
       end;
@@ -393,12 +397,12 @@ begin
         TextSize:= GetTextSize(Canvas, Caption);
         pnt1.x:= FPadding +
           IfThen(IsPressed, Theme^.PressedCaptionShiftX);
-        pnt1.y:= (ClientHeight-GetIconHeight) div 2 +
+        pnt1.y:= (NHeight-GetIconHeight) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftY);
         PaintIcon(pnt1.x, pnt1.y);
 
         Inc(pnt1.x, GetIconWidth+FPadding);
-        pnt1.y:= (ClientHeight-TextSize.cy) div 2 +
+        pnt1.y:= (NHeight-TextSize.cy) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftY);
         Canvas.TextOut(pnt1.x, pnt1.y, Caption);
       end;
@@ -406,14 +410,14 @@ begin
     abuTextIconVert:
       begin
         TextSize:= GetTextSize(Canvas, Caption);
-        pnt1.x:= (ClientWidth-GetIconWidth-NSizeArrow) div 2+
+        pnt1.x:= (NWidth-GetIconWidth-NSizeArrow) div 2+
           IfThen(IsPressed, Theme^.PressedCaptionShiftX);
         pnt1.y:= FPadding +
           IfThen(IsPressed, Theme^.PressedCaptionShiftY);
         PaintIcon(pnt1.x, pnt1.y);
 
         Inc(pnt1.y, GetIconHeight+FPadding);
-        pnt1.x:= (ClientWidth-TextSize.cx-NSizeArrow) div 2 +
+        pnt1.x:= (NWidth-TextSize.cx-NSizeArrow) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftX);
         Canvas.TextOut(pnt1.x, pnt1.y, Caption);
       end;
@@ -432,14 +436,14 @@ begin
           taRightJustify:
             begin
               dy:= Canvas.TextWidth(S);
-              dy:= (ClientWidth-dy-NSizeArrow) div 2;
+              dy:= (NWidth-dy-NSizeArrow) div 2;
               pnt1.x:= dy +
                 IfThen(FArrowAlign=taLeftJustify, FPadding + NSizeArrow) +
                 IfThen(IsPressed, Theme^.PressedCaptionShiftX);
             end;
         end;
 
-        pnt1.y:= (ClientHeight-GetTextSize(Canvas, 'W').cy) div 2 +
+        pnt1.y:= (NHeight-GetTextSize(Canvas, 'W').cy) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftY);
 
         Canvas.TextOut(pnt1.x, pnt1.y, S);
@@ -470,12 +474,12 @@ begin
       taLeftJustify:
         pnt1.x:= NSizeArrow;
       taRightJustify:
-        pnt1.x:= ClientWidth - NSizeArrow;
+        pnt1.x:= NWidth - NSizeArrow;
       taCenter:
-        pnt1.x:= (ClientWidth - NSizeArrow div 4) div 2;
+        pnt1.x:= (NWidth - NSizeArrow div 4) div 2;
     end;
 
-    pnt1.y:= ClientHeight div 2 +
+    pnt1.y:= NHeight div 2 +
       IfThen(IsPressed, Theme^.PressedCaptionShiftY);
 
     PaintArrow(pnt1.x, pnt1.y);
