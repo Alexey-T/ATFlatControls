@@ -299,7 +299,7 @@ end;
 procedure TATButton.PaintTo(C: TCanvas);
 var
   NWidth, NHeight: integer;
-  NSize, dy, NSizeArrow: integer;
+  NSize, NSizeArrow: integer;
   bUseBack, bUseBorder: boolean;
   NColor: TColor;
   TextSize: TSize;
@@ -456,18 +456,16 @@ begin
 
     abuSeparatorVert:
       begin
-        dy:= 2;
-        pnt1:= Point(dy, Height div 2);
-        pnt2:= Point(Width-dy, Height div 2);
+        pnt1:= Point(Theme^.SeparatorOffset, NHeight div 2);
+        pnt2:= Point(NWidth-Theme^.SeparatorOffset, NHeight div 2);
         C.Pen.Color:= ColorToRGB(Theme^.ColorSeparators);
         C.Line(pnt1, pnt2);
       end;
 
     abuSeparatorHorz:
       begin
-        dy:= 2;
-        pnt1:= Point(Width div 2, dy);
-        pnt2:= Point(Width div 2, Height-dy);
+        pnt1:= Point(NWidth div 2, Theme^.SeparatorOffset);
+        pnt2:= Point(NWidth div 2, NHeight-Theme^.SeparatorOffset);
         C.Pen.Color:= ColorToRGB(Theme^.ColorSeparators);
         C.Line(pnt1, pnt2);
       end;
@@ -504,18 +502,18 @@ begin
         end;
       bopRightTop:
         begin
-          pnt1.x:= Width-TextSize.cx;
+          pnt1.x:= NWidth-TextSize.cx;
           pnt1.y:= 0;
         end;
       bopLeftBottom:
         begin
           pnt1.x:= 0;
-          pnt1.y:= Height-TextSize.cy;
+          pnt1.y:= NHeight-TextSize.cy;
         end;
       bopRightBottom:
         begin
-          pnt1.x:= Width-TextSize.cx;
-          pnt1.y:= Height-TextSize.cy;
+          pnt1.x:= NWidth-TextSize.cx;
+          pnt1.y:= NHeight-TextSize.cy;
         end;
     end;
 

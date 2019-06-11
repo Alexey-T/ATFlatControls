@@ -99,9 +99,9 @@ begin
   b_choice.Items.Add('item-a');
   b_choice.Items.Add('item-b');
   b_choice.Items.Add('item-c');
-  b_choice.ItemsShort.Add('AA');
+  b_choice.ItemsShort.Add('AAA');
   b_choice.ItemsShort.Add('BB');
-  b_choice.ItemsShort.Add('CC');
+  b_choice.ItemsShort.Add('CCCC');
   b_choice.ItemIndex:= 1;
 
   b_colors:= TATButton.create(self);

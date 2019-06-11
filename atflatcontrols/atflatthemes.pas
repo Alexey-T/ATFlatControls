@@ -52,6 +52,7 @@ type
     ArrowSize: integer;
     GapForAutoSize: integer;
     TextOverlayPosition: TATButtonOverlayPosition;
+    SeparatorOffset: integer;
     ScalePercents: integer;
     ScaleFontPercents: integer;
     function DoScale(AValue: integer): integer;
@@ -115,6 +116,7 @@ initialization
     ArrowSize:= 2;
     GapForAutoSize:= 8;
     TextOverlayPosition:= bopRightBottom;
+    SeparatorOffset:= 2;
 
     ScalePercents:= 100;
     ScaleFontPercents:= 0;
