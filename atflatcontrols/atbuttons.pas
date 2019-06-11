@@ -434,13 +434,15 @@ begin
         S:= GetTextItem(FItemIndex, '?');
         TextSize:= C.TextExtent(S);
 
-        RectText.Left:=
-          IfThen(FArrowAlign=taLeftJustify, FPadding+NSizeArrow) +
-          IfThen(IsPressed, Theme^.PressedCaptionShiftX);
-        RectText.Right:=
-          IfThen(FArrowAlign=taLeftJustify, NWidth, NWidth-NSizeArrow-FPadding);
         RectText.Top:= 0;
         RectText.Bottom:= NHeight;
+        RectText.Left:= IfThen(IsPressed, Theme^.PressedCaptionShiftX);
+        RectText.Right:= NWidth;
+
+        if FArrowAlign=taLeftJustify then
+          Inc(RectText.Left, NSizeArrow)
+        else
+          Dec(RectText.Right, NSizeArrow);
 
         case FTextAlign of
           taLeftJustify:
