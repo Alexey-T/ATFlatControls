@@ -91,6 +91,7 @@ type
     procedure SetFocusable(AValue: boolean);
     procedure SetImageIndex(AValue: integer);
     procedure SetImages(AValue: TImageList);
+    procedure SetItemIndex(AValue: integer);
     procedure SetKind(AValue: TATButtonKind);
     procedure SetBoldBorder(AValue: boolean);
     procedure SetTextOverlay(const AValue: string);
@@ -123,7 +124,7 @@ type
     function GetTextSize(C: TCanvas; const S: string): TSize;
     property Items: TStringList read FItems;
     property ItemsShort: TStringList read FItemsShort;
-    property ItemIndex: integer read FItemIndex write FItemIndex;
+    property ItemIndex: integer read FItemIndex write SetItemIndex;
     property Theme: PATFlatTheme read FTheme write SetTheme;
     property WidthInitial: integer read FWidthInitial write FWidthInitial;
     property TextOverlay: string read FTextOverlay write SetTextOverlay;
@@ -219,6 +220,14 @@ begin
   if FImages=AValue then Exit;
   FImages:= AValue;
   Invalidate;
+end;
+
+procedure TATButton.SetItemIndex(AValue: integer);
+begin
+  if FItemIndex=AValue then Exit;
+  FItemIndex:= AValue;
+  if FCheckable then
+    FChecked:= FItemIndex>0;
 end;
 
 procedure TATButton.SetKind(AValue: TATButtonKind);
@@ -767,11 +776,7 @@ end;
 
 procedure TATButton.DoChoiceClick(Sender: TObject);
 begin
-  FItemIndex:= (Sender as TComponent).Tag;
-
-  if FCheckable then
-    FChecked:= FItemIndex>0;
-
+  ItemIndex:= (Sender as TComponent).Tag;
   Invalidate;
   inherited Click;
 end;
