@@ -768,6 +768,10 @@ end;
 procedure TATButton.DoChoiceClick(Sender: TObject);
 begin
   FItemIndex:= (Sender as TComponent).Tag;
+
+  if FCheckable then
+    FChecked:= FItemIndex>0;
+
   Invalidate;
   inherited Click;
 end;
