@@ -98,7 +98,6 @@ type
     procedure ShowChoiceMenu;
     procedure TimerMouseoverTick(Sender: TObject);
   protected
-    procedure Click; override;
     procedure Paint; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseLeave; override;
@@ -116,6 +115,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    procedure Click; override;
     function CanFocus: boolean; override;
     property DataString: string read FDataString write FDataString;
     property DataString2: string read FDataString2 write FDataString2;
