@@ -5,16 +5,18 @@ License: MPL 2.0 or LGPL
 
 unit ATFlatToolbar;
 
+{$ifdef FPC}
 {$mode objfpc}{$H+}
+{$endif}
 
 interface
 
 uses
   Classes, SysUtils, Graphics, Controls, ExtCtrls,
-  ImgList, Menus, Math, 
+  ImgList, Menus, Math,Types,
   ATButtons,
-  ATFlatThemes,
-  LCLType;
+  ATFlatThemes {$ifdef FPC},
+  LCLType{$endif};
 
 type
   { TATFlatToolbar }
@@ -67,7 +69,9 @@ type
     property Align;
     property Anchors;
     property AutoSize;
+    {$ifdef FPC}
     property BorderSpacing;
+    {$endif}
     property ButtonWidth: integer read FButtonWidth write SetButtonWidth default 50;
     property Color;
     property Enabled;
@@ -233,10 +237,12 @@ begin
       (not Vertical) and
       (Controls[i-1].Left + Controls[i-1].Width + Ctl.Width >= ClientWidth) then
     begin
+      {$ifdef FPC}
       Ctl.AnchorSide[akLeft].Control:= CtlSource;
       Ctl.AnchorSide[akTop].Control:= CtlSource;
       Ctl.AnchorSide[akLeft].Side:= asrLeft;
       Ctl.AnchorSide[akTop].Side:= asrBottom;
+      {$endif}
       Ctl.Anchors:= [akLeft, akTop];
       CtlSource:= Ctl;
     end
@@ -253,10 +259,12 @@ begin
         akind2:= akTop;
       end;
 
+      {$ifdef FPC}
       Ctl.AnchorSide[akind].Control:= Controls[i-1];
       Ctl.AnchorSide[akind2].Control:= Controls[i-1];
       Ctl.AnchorSide[akind].Side:= asrRight;
       Ctl.AnchorSide[akind2].Side:= asrTop;
+      {$endif}
       Ctl.Anchors:= [akLeft, akTop];
     end;
   end;
@@ -375,9 +383,11 @@ begin
   else
     b.ArrowAlign:= taRightJustify;
 
-  if ADropdownEvent=nil then
+  {$ifdef FPC}
+  if ADropdownEvent = nil then
     b.OnClick:= @PopupForDropdownClick
   else
+  {$endif}
     b.OnClick:= ADropdownEvent;
 
   if AImageIndex>=0 then
@@ -440,7 +450,9 @@ var
 begin
   C:= Sender as TControl;
   P:= C.ClientToScreen(Point(0, C.Height));
+  {$ifdef FPC}
   C.PopupMenu.PopUp(P.X, P.Y);
+  {$endif}
 end;
 
 

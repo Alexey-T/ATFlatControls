@@ -18,7 +18,14 @@ Mouse usage:
 
 unit ATScrollBar;
 
-{$mode delphi}
+{$ifdef FPC}
+  {$mode delphi}
+{$else}
+  {$define windows}
+  {$ifdef VER150} //Delphi 7
+    {$define WIDE}
+  {$endif}
+{$endif}
 
 interface
 
@@ -27,13 +34,13 @@ interface
 {$endif}
 
 uses
-  {$ifdef windows}
+  {$ifndef FPC}
   Windows, Messages,
   {$endif}
   {$ifdef FPC}
   InterfaceBase,
   LCLIntf,
-  LCLType,
+  LCLType,FPTimer,
   {$endif}
   Classes, Types, Graphics,
   Controls, ExtCtrls, Forms;
@@ -71,9 +78,17 @@ type
     ColorBG: TColor;
     ColorBorder: TColor;
     ColorThumbBorder: TColor;
+
     ColorThumbFill: TColor;
+    ColorThumbOver: TColor;
+    ColorThumbDown: TColor;
+
     ColorArrowBorder: TColor;
+
     ColorArrowFill: TColor;
+    ColorArrowOver: TColor;
+    ColorArrowDown: TColor;
+
     ColorArrowSign: TColor;
     ColorScrolled: TColor;
     InitialSize: integer;
@@ -98,6 +113,15 @@ type
 
   TATScrollbar = class(TCustomControl)
   private
+    {$ifdef FPC}
+    FTimerMouseover: TFPTimer;
+    {$endif}
+
+    {$ifndef FPC}
+    FOnMouseLeave: TNotifyEvent;
+    FOnMouseEnter: TNotifyEvent;
+    {$endif}
+
     FKind: TScrollBarKind;
     FIndentCorner: Integer;
     FTheme: PATScrollbarTheme;
@@ -132,6 +156,15 @@ type
     FMouseDownOnThumb,
     FMouseDownOnPageUp,
     FMouseDownOnPageDown: boolean;
+
+    {$ifndef FPC}
+    procedure CMMouseEnter(var msg: TMessage);
+      message CM_MOUSEENTER;
+    procedure CMMouseLeave(var msg: TMessage);
+      message CM_MOUSELEAVE;
+    {$endif}
+
+    procedure TimerMouseoverTick(Sender: TObject);
 
     procedure DoPaintArrow(C: TCanvas; const R: TRect; Typ: TATScrollbarElemType);
     procedure DoPaintThumb(C: TCanvas);
@@ -170,19 +203,32 @@ type
     procedure Update; reintroduce;
 
   protected
+    {$ifdef FPC}
+     procedure MouseLeave; override;
+     procedure MouseEnter; override;
+    {$endif}
     procedure Paint; override;
     procedure Resize; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure Click; override;
-    {$ifdef windows}
+    {$ifndef FPC}
+    procedure DoMouseEnter; dynamic;
+    procedure DoMouseLeave; dynamic;
     procedure WMEraseBkgnd(var Message: TMessage); message WM_ERASEBKGND;
     {$endif}
   published
+    {$ifndef FPC}
+    property OnMouseEnter: TNotifyEvent read FOnMouseEnter write FOnMouseEnter;
+    property OnMouseLeave: TNotifyEvent read FOnMouseLeave write FOnMouseLeave;
+    {$endif}
+
     property Align;
     property Anchors;
+    {$ifdef FPC}
     property BorderSpacing;
+    {$endif}
     property Constraints;
     property Enabled;
     property DoubleBuffered;
@@ -223,12 +269,45 @@ end;
 
 { TATScrollbar }
 
+procedure TATScrollbar.TimerMouseoverTick(Sender: TObject);
+//timer is workaround for LCL issue, where MouseLeave not called
+//if mouse leaves app window area (at least on Linux)
+var
+Pnt: TPoint;
+begin
+Pnt:= ScreenToClient(Mouse.CursorPos);
+{$ifdef FPC}
+if not PtInRect(ClientRect, Pnt) then
+  MouseLeave;
+{$endif}
+end;
+
+{$ifdef FPC}
+procedure TATScrollbar.MouseLeave;
+begin
+  inherited;
+  FTimerMouseover.Enabled:= false;
+  //FOver:= false;
+  Invalidate;
+end;
+
+procedure TATScrollbar.MouseEnter;
+begin
+  inherited;
+  //FOver:= true;
+  Invalidate;
+  FTimerMouseover.Enabled:= true;
+end;
+{$endif}
+
 constructor TATScrollbar.Create(AOnwer: TComponent);
 begin
   inherited;
 
   Caption:= '';
+  {$ifdef FPC}
   BorderStyle:= bsNone;
+  {$endif}
   ControlStyle:= ControlStyle+[csOpaque];
 
   FKind:= sbHorizontal;
@@ -257,6 +336,13 @@ begin
   FTimer.Enabled:= false;
   FTimer.Interval:= 100;
   FTimer.OnTimer:= TimerTimer;
+
+  {$ifdef FPC}
+  FTimerMouseover:= TFPTimer.Create(Self);
+  FTimerMouseover.Enabled:= false;
+  FTimerMouseover.Interval:= 1000;
+  FTimerMouseover.OnTimer:= TimerMouseoverTick;
+  {$endif}
 
   FMouseDown:= false;
   FMouseDragOffset:= 0;
@@ -431,6 +517,8 @@ begin
   FMouseDownOnPageUp:= PtInRect(FRectPageUp, Point(X, Y));
   FMouseDownOnPageDown:= PtInRect(FRectPageDown, Point(X, Y));
 
+  Invalidate;
+
   if IsHorz then
     FMouseDragOffset:= X-FRectThumb.Left
   else
@@ -474,6 +562,10 @@ procedure TATScrollbar.MouseUp(Button: TMouseButton; Shift: TShiftState;
 begin
   FMouseDown:= false;
   FMouseDownOnThumb:= false;
+
+  FMouseDownOnUp:= false;
+  FMouseDownOnDown:= false;
+
   FTimer.Enabled:= false;
   Invalidate;
 end;
@@ -501,12 +593,35 @@ begin
 end;
 
 
-{$ifdef windows}
+{$ifndef FPC}
 //needed to remove flickering on resize and mouse-over
 procedure TATScrollbar.WMEraseBkgnd(var Message: TMessage);
 begin
   Message.Result:= 1;
 end;
+
+procedure TATScrollbar.CMMouseEnter(var msg: TMessage);
+begin
+  DoMouseEnter;
+end;
+
+procedure TATScrollbar.CMMouseLeave(var msg: TMessage);
+begin
+  DoMouseLeave;
+end;
+
+procedure TATScrollbar.DoMouseEnter;
+begin
+  Invalidate;
+  if Assigned(FOnMouseEnter) then FOnMouseEnter(Self);
+end;
+
+procedure TATScrollbar.DoMouseLeave;
+begin
+  Invalidate;
+  if Assigned(FOnMouseLeave) then FOnMouseLeave(Self);
+end;
+
 {$endif}
 
 procedure TATScrollbar.Click;
@@ -545,11 +660,29 @@ var
 begin
   if IsRectEmpty(R) then exit;
   C.Brush.Color:= ColorToRGB(FTheme^.ColorArrowBorder);
+
   C.FillRect(R);
 
   InflateRect(R, -1, -1);
   C.Brush.Color:= ColorToRGB(FTheme^.ColorArrowFill);
+
   C.FillRect(R);
+
+  if FMouseDownOnUp or FMouseDownOnDown then
+  begin
+    C.Brush.Color:= ColorToRGB(FTheme^.ColorArrowDown);
+    C.FillRect(R);
+  end
+  else
+  begin
+    P := Mouse.CursorPos;
+    P := ScreenToClient(P);
+    if PtInRect(R,P) then
+    begin
+      C.Brush.Color:= ColorToRGB(FTheme^.ColorArrowOver);
+      C.FillRect(R);
+    end;
+  end;
 
   P:= CenterPoint(R);
   cc:= DoScale(FTheme^.ArrowSize);
@@ -588,7 +721,7 @@ begin
   C.Polygon([P1, P2, P3]);
 end;
 
-function TATScrollbar.IsHorz: boolean; inline;
+function TATScrollbar.IsHorz: boolean; {$ifdef FPC} inline; {$endif}
 begin
   Result:= FKind=sbHorizontal;
 end;
@@ -674,6 +807,17 @@ var
   NOffset, i: integer;
 begin
   C.Brush.Color:= ColorToRGB(FTheme^.ColorThumbFill);
+
+  if FMouseDownOnThumb then
+    C.Brush.Color:= ColorToRGB(FTheme^.ColorThumbDown)
+  else
+  begin
+    P := Mouse.CursorPos;
+    P := ScreenToClient(P);
+    if PtInRect(R,P) then
+      C.Brush.Color:= ColorToRGB(FTheme^.ColorThumbOver);
+  end;
+
   C.Pen.Color:= ColorToRGB(FTheme^.ColorThumbBorder);
   C.Rectangle(R);
 
@@ -761,11 +905,14 @@ procedure TATScrollbar.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
 
+  Invalidate;
+
   if FMouseDownOnThumb then
   begin
     DoUpdatePosOnDrag(X, Y);
     Exit
   end;
+
 end;
 
 function TATScrollbar.CoordToPos(X, Y: Integer): Integer;
@@ -890,9 +1037,17 @@ initialization
     ColorBG:= $d0d0d0;
     ColorBorder:= clLtGray;
     ColorThumbBorder:= $808080;
+
     ColorThumbFill:= $c0c0c0;
+    ColorThumbOver:= $d0d0d0;
+    ColorThumbDown:= $00c0c0c0;
+
     ColorArrowBorder:= $808080;
+
     ColorArrowFill:= $c0c0c0;
+    ColorArrowOver:= $d0d0d0;
+    ColorArrowDown:= $00c0c0c0;
+
     ColorArrowSign:= $404040;
     ColorScrolled:= $d0b0b0;
     InitialSize:= 16;
