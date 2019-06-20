@@ -622,7 +622,7 @@ end;
 
 procedure TATStatus.DoPanelStretch(AIndex: integer);
 var
-  NSize, i: integer;
+  NSize, NCell, i: integer;
   D: TATStatusData;
 begin
   if not IsIndexOk(AIndex) then exit;
@@ -632,8 +632,11 @@ begin
     if i<>AIndex then
     begin
       D:= GetPanelData(i);
+      NCell:= D.Width;
+      if not D.AutoSize then
+        NCell:= Theme^.DoScale(NCell);
       if Assigned(D) then
-        Inc(NSize, D.Width);
+        Inc(NSize, NCell);
     end;
 
   D:= GetPanelData(AIndex);
