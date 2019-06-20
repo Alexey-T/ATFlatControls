@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2019/06/20 06:03:59.000.611,=rtl.dcp</Transaction>
+    <Transaction>2019/06/20 06:04:13.000.881,=C:\Users\stand\Documents\RAD Studio\ATFlatControls-master\atflatcontrols\atflatcontrols_package.pas</Transaction>
+    <Transaction>2019/06/20 06:04:13.000.965,=C:\Users\stand\Documents\RAD Studio\ATFlatControls-master\atflatcontrols\atpanelcolor.pas</Transaction>
+    <Transaction>2019/06/20 06:04:13.000.871,=C:\Users\stand\Documents\RAD Studio\ATFlatControls-master\atflatcontrols\atbuttons.pas</Transaction>
+    <Transaction>2019/06/20 06:04:13.000.916,=C:\Users\stand\Documents\RAD Studio\ATFlatControls-master\atflatcontrols\atflattoolbar.pas</Transaction>
+    <Transaction>2019/06/20 06:04:13.000.989,=C:\Users\stand\Documents\RAD Studio\ATFlatControls-master\atflatcontrols\atscrollbar.pas</Transaction>
+    <Transaction>2019/06/20 06:04:13.000.927,=C:\Users\stand\Documents\RAD Studio\ATFlatControls-master\atflatcontrols\atgauge.pas</Transaction>
+    <Transaction>2019/06/20 06:04:13.000.977,=C:\Users\stand\Documents\RAD Studio\ATFlatControls-master\atflatcontrols\atpanelsimple.pas</Transaction>
+    <Transaction>2019/06/20 06:04:13.000.938,=C:\Users\stand\Documents\RAD Studio\ATFlatControls-master\atflatcontrols\atlinklabel.pas</Transaction>
+    <Transaction>2019/06/20 06:04:13.000.951,=C:\Users\stand\Documents\RAD Studio\ATFlatControls-master\atflatcontrols\atlistbox.pas</Transaction>
+    <Transaction>2019/06/20 06:04:13.000.903,=C:\Users\stand\Documents\RAD Studio\ATFlatControls-master\atflatcontrols\atflatthemes.pas</Transaction>
+    <Transaction>2019/06/20 06:04:13.000.892,=C:\Users\stand\Documents\RAD Studio\ATFlatControls-master\atflatcontrols\atflatcontrols_register.pas</Transaction>
+    <Transaction>2019/06/20 06:04:14.000.003,=C:\Users\stand\Documents\RAD Studio\ATFlatControls-master\atflatcontrols\atstatusbar.pas</Transaction>
+    <Transaction>2019/06/20 06:04:30.000.283,C:\Users\stand\Documents\RAD Studio\ATFlatControls-master\atflatcontrols\atflatcontrols_package.pas=</Transaction>
+    <Transaction>2019/06/20 06:53:43.000.251,C:\Users\stand\Documents\Embarcadero\Studio\Projects\Package1.dproj=C:\Users\stand\Documents\RAD Studio\ATFlatControls-master\atflatcontrols\ATFlatControlsPackage.dproj</Transaction>
+    <Transaction>2019/06/20 06:53:49.000.459,=vcl.dcp</Transaction>
+    <Transaction>2019/06/20 09:28:09.000.925,=C:\Users\stand\Documents\RAD Studio\ATFlatControls-master\atflatcontrols\res\tatbutton.bmp</Transaction>
+    <Transaction>2019/06/20 09:28:09.000.945,=C:\Users\stand\Documents\RAD Studio\ATFlatControls-master\atflatcontrols\res\tatbuttonstoolbar.bmp</Transaction>
+    <Transaction>2019/06/20 09:28:09.000.989,=C:\Users\stand\Documents\RAD Studio\ATFlatControls-master\atflatcontrols\res\tatlistbox.bmp</Transaction>
+    <Transaction>2019/06/20 09:28:09.000.970,=C:\Users\stand\Documents\RAD Studio\ATFlatControls-master\atflatcontrols\res\tatlabellink.bmp</Transaction>
+    <Transaction>2019/06/20 09:28:10.000.071,=C:\Users\stand\Documents\RAD Studio\ATFlatControls-master\atflatcontrols\res\tatstatus.bmp</Transaction>
+    <Transaction>2019/06/20 09:28:10.000.089,=C:\Users\stand\Documents\RAD Studio\ATFlatControls-master\atflatcontrols\res\tgauge.bmp</Transaction>
+    <Transaction>2019/06/20 09:28:10.000.007,=C:\Users\stand\Documents\RAD Studio\ATFlatControls-master\atflatcontrols\res\tatpanelcolor.bmp</Transaction>
+    <Transaction>2019/06/20 09:28:10.000.026,=C:\Users\stand\Documents\RAD Studio\ATFlatControls-master\atflatcontrols\res\tatpanelsimple.bmp</Transaction>
+    <Transaction>2019/06/20 09:28:10.000.045,=C:\Users\stand\Documents\RAD Studio\ATFlatControls-master\atflatcontrols\res\tatscroll.bmp</Transaction>
+  </Transactions>
+	<ProjectSortOrder AutoSort="0" SortType="0">
+    <File Path="res"/>
+    <File Path="res\tatbutton.bmp"/>
+    <File Path="res\tatbuttonstoolbar.bmp"/>
+    <File Path="res\tatlabellink.bmp"/>
+    <File Path="res\tatlistbox.bmp"/>
+    <File Path="res\tatpanelcolor.bmp"/>
+    <File Path="res\tatpanelsimple.bmp"/>
+    <File Path="res\tatscroll.bmp"/>
+    <File Path="res\tatstatus.bmp"/>
+    <File Path="res\tgauge.bmp"/>
+    <File Path="atbuttons.pas"/>
+    <File Path="atflatcontrols_register.pas"/>
+    <File Path="atflatthemes.pas"/>
+    <File Path="atflattoolbar.pas"/>
+    <File Path="atgauge.pas"/>
+    <File Path="atlinklabel.pas"/>
+    <File Path="atlistbox.pas"/>
+    <File Path="atpanelcolor.pas"/>
+    <File Path="atpanelsimple.pas"/>
+    <File Path="atscrollbar.pas"/>
+    <File Path="atstatusbar.pas"/>
+    <File Path="rtl.dcp"/>
+    <File Path="vcl.dcp"/>
+  </ProjectSortOrder>
+</BorlandProject>

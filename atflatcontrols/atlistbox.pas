@@ -5,14 +5,18 @@ License: MPL 2.0 or LGPL
 
 unit ATListbox;
 
+{$ifdef FPC}
 {$mode objfpc}{$H+}
+{$endif}
 
 interface
 
 uses
   Classes, SysUtils, Graphics, Controls,
-  Forms,
+  Forms, Types,Messages, Windows,
+  {$ifdef FPC}
   LMessages,
+  {$endif}
   ATScrollBar,
   ATFlatThemes;
 
@@ -38,7 +42,7 @@ type
     FItemHeight: integer;
     FItemHeightIsFixed: boolean;
     FItemTop: integer;
-    FBitmap: TBitmap;
+    FBitmap: Graphics.TBitmap;
     FCanGetFocus: boolean;
     FList: TStringList;
     FHotTrack: boolean;
@@ -63,7 +67,7 @@ type
     procedure SetItemHeight(AValue: integer);
     procedure SetThemedScrollbar(AValue: boolean);
     procedure UpdateColumnWidths;
-    procedure UpdateFromScrollbarMsg(const Msg: TLMScroll);
+    procedure UpdateFromScrollbarMsg(const Msg: TWMScroll);
     procedure UpdateScrollbar;
     function GetVisibleItems: integer;
     function GetItemHeightDefault: integer;
@@ -71,7 +75,7 @@ type
   protected
     procedure Paint; override;
     procedure Click; override;
-    procedure LMVScroll(var Msg: TLMVScroll); message LM_VSCROLL;
+    procedure LMVScroll(var Msg: TWMVScroll); message WM_VSCROLL;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
@@ -99,15 +103,19 @@ type
     property ColumnSizes: TATIntArray read FColumnSizes write FColumnSizes;
     property ColumnWidth[AIndex: integer]: integer read GetColumnWidth;
     function CanFocus: boolean; override;
+    {$ifdef FPC}
     function CanSetFocus: boolean; override;
+    {$endif}
     function ClientWidth: integer;
     procedure Invalidate; override;
     procedure UpdateItemHeight;
   published
     property Align;
     property Anchors;
+    {$ifdef FPC}
     property BorderStyle;
     property BorderSpacing;
+    {$endif}
     property CanGetFocus: boolean read FCanGetFocus write SetCanBeFocused default false;
     property DoubleBuffered stored false;
     property Enabled;
@@ -147,10 +155,9 @@ type
 implementation
 
 uses
-  Math, Types,
-  InterfaceBase, 
-  LCLType, LCLIntf;
-
+  Math {$ifdef FPC}, Types,
+  InterfaceBase,
+  LCLType, LCLIntf{$endif};
 
 function SGetItem(var S: string; const ch: Char): string;
 var
@@ -171,7 +178,10 @@ end;
 
 function IsDoubleBufferedNeeded: boolean;
 begin
+  Result := true;
+  {$ifdef FPC}
   Result:= WidgetSet.GetLCLCapability(lcCanDrawOutsideOnPaint) = LCL_CAPABILITY_YES;
+  {$endif}
 end;
 
 { TATListbox }
@@ -368,10 +378,10 @@ begin
       SItem:= SGetItem(S, FColumnSep);
 
       C.FillRect(
-        NColOffset,
+        Rect(NColOffset,
         R.Top,
         NAllWidth,
-        R.Bottom
+        R.Bottom)
         );
       C.TextOut(
         NColOffset+1,
@@ -380,7 +390,9 @@ begin
         );
 
       Inc(NColOffset, NColWidth);
-      C.Line(NColOffset-1, R.Top, NColOffset-1, R.Bottom);
+      {$ifdef FPC}
+      C.LineTo(NColOffset-1, R.Top, NColOffset-1, R.Bottom);
+      {$endif}
     end;
   end;
 end;
@@ -411,7 +423,13 @@ var
   Pnt: TPoint;
 begin
   if FCanGetFocus then
+    {$ifdef FPC}
     LCLIntf.SetFocus(Handle);
+    {$endif}
+
+    {$ifdef windows}
+    Windows.SetFocus(Handle);
+    {$endif}
 
   Pnt:= ScreenToClient(Mouse.CursorPos);
   ItemIndex:= GetItemIndexAt(Pnt);
@@ -446,10 +464,12 @@ procedure TATListbox.SetCanBeFocused(AValue: boolean);
 begin
   if FCanGetFocus=AValue then Exit;
   FCanGetFocus:= AValue;
+  {$ifdef FPC}
   if AValue then
     ControlStyle:= ControlStyle-[csNoFocus]
   else
     ControlStyle:= ControlStyle+[csNoFocus];
+  {$endif}
 end;
 
 procedure TATListbox.SetItemHeightPercents(AValue: integer);
@@ -520,7 +540,7 @@ constructor TATListbox.Create(AOwner: TComponent);
 begin
   inherited;
 
-  ControlStyle:= ControlStyle+[csOpaque]-[csTripleClicks];
+  ControlStyle:= ControlStyle+[csOpaque] {$ifdef FPC}-[csTripleClicks]{$endif};
   DoubleBuffered:= IsDoubleBufferedNeeded;
   Width:= 180;
   Height:= 150;
@@ -541,7 +561,7 @@ begin
   SetLength(FColumnSizes, 0);
   SetLength(FColumnWidths, 0);
 
-  FBitmap:= TBitmap.Create;
+  FBitmap:= Graphics.TBitmap.Create;
   FBitmap.SetSize(1600, 1200);
 
   FTheme:= @ATFlatTheme;
@@ -551,7 +571,7 @@ begin
   FScrollbar.Parent:= Self;
   FScrollbar.Kind:= sbVertical;
   FScrollbar.Align:= alRight;
-  FScrollbar.OnChange:= @ScrollbarChange;
+  FScrollbar.OnChange:= ScrollbarChange;
 end;
 
 destructor TATListbox.Destroy;
@@ -561,7 +581,7 @@ begin
   inherited;
 end;
 
-procedure TATListbox.UpdateFromScrollbarMsg(const Msg: TLMScroll);
+procedure TATListbox.UpdateFromScrollbarMsg(const Msg: TWMScroll);
 var
   NMax: integer;
 begin
@@ -582,7 +602,7 @@ begin
   end;
 end;
 
-procedure TATListbox.LMVScroll(var Msg: TLMVScroll);
+procedure TATListbox.LMVScroll(var Msg: TWMVScroll);
 begin
   UpdateFromScrollbarMsg(Msg);
   Invalidate;
@@ -593,10 +613,12 @@ begin
   Result:= FCanGetFocus;
 end;
 
+{$ifdef FPC}
 function TATListbox.CanSetFocus: boolean;
 begin
   Result:= FCanGetFocus;
 end;
+{$endif}
 
 function TATListbox.ClientWidth: integer;
 begin

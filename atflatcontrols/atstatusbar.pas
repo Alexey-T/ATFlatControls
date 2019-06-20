@@ -39,9 +39,14 @@ type
     FImageIndex: integer;
     FAutoSize: boolean;
     FAutoStretch: boolean;
-    FColorFont: integer;
-    FColorBack: integer;
+    FColorFont: TColor; //integer;
+    FColorBack: TColor; //integer;
+    {$ifdef FPC}
     FTag: PtrInt;
+    {$endif}
+    {$ifdef windows}
+    FTag: IntPtr;
+    {$endif}
   public
     constructor Create(ACollection: TCollection); override;
   published
@@ -54,7 +59,12 @@ type
     property AutoStretch: boolean read FAutoStretch write FAutoStretch default false;
     property ColorFont: TColor read FColorFont write FColorFont default clNone;
     property ColorBack: TColor read FColorBack write FColorBack default clNone;
+    {$ifdef FPC}
     property Tag: PtrInt read FTag write FTag default 0;
+    {$endif}
+    {$ifdef windows}
+    property Tag: IntPtr read FTag write FTag default 0;
+    {$endif}
   end;
 
 type
@@ -118,7 +128,12 @@ type
       AAlign: TAlignment;
       const ACaption: TCaption= '';
       AImageIndex: integer= - 1;
+      {$ifdef FPC}
       ATag: PtrInt= 0;
+      {$endif}
+      {$ifdef windows}
+      ATag: IntPtr= 0;
+      {$endif}
       AAutoSize: boolean= false;
       AAutoStretch: boolean= false;
       AFontColor: TColor=clNone);
@@ -129,7 +144,7 @@ type
     property Hints[AIndex: integer]: string read GetHint write SetHint;
     procedure DoPanelStretch(AIndex: integer);
     procedure DoPanelAutoWidth(C: TCanvas; AIndex: integer);
-    function FindPanel(ATag: PtrInt): integer;
+    function FindPanel(ATag: IntPtr): integer;
     property HeightInitial: integer read FHeightInitial write FHeightInitial;
     procedure Invalidate; override;
   protected
@@ -145,7 +160,9 @@ type
   published
     property Align;
     property Anchors;
+    {$ifdef FPC}
     property BorderSpacing;
+    {$endif}
     property DoubleBuffered;
     property Enabled;
     property Visible;
@@ -216,7 +233,9 @@ begin
 
   Align:= alBottom;
   Caption:= '';
+  {$ifdef FPC}
   BorderStyle:= bsNone;
+  {$endif}
   ControlStyle:= ControlStyle+[csOpaque];
   DoubleBuffered:= IsDoubleBufferedNeeded;
 
@@ -499,7 +518,12 @@ procedure TATStatus.AddPanel(
   AAlign: TAlignment;
   const ACaption: TCaption='';
   AImageIndex: integer=-1;
-  ATag: PtrInt=0;
+  {$ifdef FPC}
+  ATag: PtrInt= 0;
+  {$endif}
+  {$ifdef windows}
+  ATag: IntPtr= 0;
+  {$endif}
   AAutoSize: boolean=false;
   AAutoStretch: boolean=false;
   AFontColor: TColor=clNone);
@@ -622,7 +646,7 @@ end;
 
 procedure TATStatus.DoPanelStretch(AIndex: integer);
 var
-  NSize, NCell, i: integer;
+  NSize, i: integer;
   D: TATStatusData;
 begin
   if not IsIndexOk(AIndex) then exit;
@@ -632,11 +656,8 @@ begin
     if i<>AIndex then
     begin
       D:= GetPanelData(i);
-      NCell:= D.Width;
-      if not D.AutoSize then
-        NCell:= Theme^.DoScale(NCell);
       if Assigned(D) then
-        Inc(NSize, NCell);
+        Inc(NSize, D.Width);
     end;
 
   D:= GetPanelData(AIndex);
@@ -666,7 +687,7 @@ begin
 end;
 
 
-function TATStatus.FindPanel(ATag: PtrInt): integer;
+function TATStatus.FindPanel(ATag: IntPtr): integer;
 var
   D: TATStatusData;
   i: integer;

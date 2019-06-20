@@ -5,7 +5,9 @@ License: MPL 2.0 or LGPL
 
 unit ATPanelColor;
 
+{$ifdef FPC}
 {$mode objfpc}{$H+}
+{$endif}
 
 interface
 
@@ -52,7 +54,9 @@ begin
   Height:= 100;
   Caption:= '';
   Color:= clWhite;
+  {$ifdef FPC}
   BorderStyle:= bsNone;
+  {$endif}
   BorderWidth:= 0;
   BorderColor:= clBlack;
 end;
