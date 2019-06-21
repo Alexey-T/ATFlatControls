@@ -210,7 +210,9 @@ type
     procedure DoMouseEnter; dynamic;
     procedure DoMouseLeave; dynamic;
     {$endif}
+    {$ifdef windows}
     procedure WMEraseBkgnd(var Message: TMessage); message WM_ERASEBKGND;
+    {$endif}
   published
     {$ifndef FPC}
     property OnMouseEnter: TNotifyEvent read FOnMouseEnter write FOnMouseEnter;
