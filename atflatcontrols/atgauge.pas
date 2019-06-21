@@ -269,15 +269,19 @@ begin
         C.Brush.Color:= Theme^.ColorBgPassive;
         C.Ellipse(r2);
 
-        Alfa:= 360*GetPartDoneFloat;
-        C.Pen.Color:= Theme^.ColorBgOver;
-        C.Brush.Color:= Theme^.ColorBgOver;
-        {$ifdef FPC}
-        C.RadialPie(r2.Left, r2.Top, r2.Right, r2.Bottom,
-          16*90, //starting angle: 90 deg
-          -Round(16*Alfa) //pie angle: -Alfa deg
-         );
-        {$endif}
+        if FProgress>FMinValue then
+        begin
+          Alfa:= 2*pi*GetPartDoneFloat;
+          C.Pen.Color:= Theme^.ColorBgOver;
+          C.Brush.Color:= Theme^.ColorBgOver;
+
+          C.Pie(r2.Left, r2.Top, r2.Right, r2.Bottom,
+            (r2.Left+r2.Right) div 2 + Round(1000*sin(Alfa)),
+            (r2.Top+r2.Bottom) div 2 - Round(1000*cos(Alfa)),
+            (r2.Left+r2.Right) div 2,
+            r.Top
+           );
+        end;
       end;
   end;
 
