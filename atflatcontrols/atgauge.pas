@@ -6,15 +6,19 @@ License: MPL 2.0 or LGPL or any license which LCL can use
 
 unit ATGauge;
 
+{$ifdef FPC}
 {$mode objfpc}{$H+}
+{$endif}
 
 interface
 
 uses
   Classes, SysUtils, Graphics, Controls,
   Math, Types,
+  {$ifdef FPC}
   InterfaceBase,
   LCLType, LCLIntf,
+  {$endif}
   ATFlatThemes;
 
 type
@@ -34,7 +38,9 @@ type
   private
     FDoubleBuffered: boolean;
     FBitmap: TBitmap;
+    {$ifdef FPC}
     FBorderStyle: TBorderStyle;
+    {$endif}
     FKind: TATGaugeKind;
     FMinValue: integer;
     FMaxValue: integer;
@@ -47,7 +53,9 @@ type
     procedure DoPaintTo(C: TCanvas; r: TRect);
     function GetPercentDone: integer;
     function GetPartDoneFloat: Double;
+    {$ifdef FPC}
     procedure SetBorderStyle(AValue: TBorderStyle);
+    {$endif}
     procedure SetKind(AValue: TATGaugeKind);
     procedure SetMaxValue(AValue: integer);
     procedure SetMinValue(AValue: integer);
@@ -56,7 +64,9 @@ type
     procedure SetShowTextInverted(AValue: boolean);
   protected
     procedure Paint; override;
+    {$ifdef FPC}
     procedure DoOnResize; override;
+    {$endif}
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -66,8 +76,10 @@ type
   published
     property Align;
     property Anchors;
+    {$ifdef FPC}
     property BorderStyle: TBorderStyle read FBorderStyle write SetBorderStyle default bsSingle;
     property BorderSpacing;
+    {$endif}
     property Color;
     property Constraints;
     property DoubleBuffered: boolean read FDoubleBuffered write FDoubleBuffered;
@@ -99,7 +111,10 @@ implementation
 
 function IsDoubleBufferedNeeded: boolean;
 begin
+  Result:= true;
+  {$ifdef FPC}
   Result:= WidgetSet.GetLCLCapability(lcCanDrawOutsideOnPaint) = LCL_CAPABILITY_YES;
+  {$endif}
 end;
 
 { TATGauge }
@@ -138,13 +153,15 @@ begin
     Bmp.TransparentColor:= ColorEmpty;
 
     Bmp.Canvas.Brush.Color:= ColorEmpty;
-    Bmp.Canvas.FillRect(0, 0, Bmp.Width, Bmp.Height);
+    Bmp.Canvas.FillRect(Rect(0, 0, Bmp.Width, Bmp.Height));
 
     Bmp.Canvas.Font.Name:= Theme^.FontName;
     Bmp.Canvas.Font.Size:= Theme^.DoScaleFont(Theme^.FontSize);
     Bmp.Canvas.Font.Color:= Theme^.ColorFont;
     Bmp.Canvas.Font.Quality:= fqNonAntialiased; //antialias
+    {$ifdef FPC}
     Bmp.Canvas.AntialiasingMode:= amOn; //antialias
+    {$endif}
     Bmp.Canvas.TextOut(0, 0, Str);
 
     Pnt.X:= (r.Left+r.Right-StrSize.cx) div 2;
@@ -188,7 +205,7 @@ begin
 
         C.Brush.Color:= Theme^.ColorBgOver;
         NSize:= Round((r.Right-r.Left) * GetPartDoneFloat);
-        C.FillRect(r.Left, r.Top, r.Left+NSize, r.Bottom);
+        C.FillRect(Rect(r.Left, r.Top, r.Left+NSize, r.Bottom));
       end;
 
     gkVerticalBar:
@@ -197,7 +214,7 @@ begin
 
         C.Brush.Color:= Theme^.ColorBgOver;
         NSize:= Round((r.Bottom-r.Top) * GetPartDoneFloat);
-        C.FillRect(r.Left, r.Bottom-NSize, r.Right, r.Bottom);
+        C.FillRect(Rect(r.Left, r.Bottom-NSize, r.Right, r.Bottom));
       end;
 
     gkNeedle,
@@ -205,7 +222,13 @@ begin
       begin
         DoFillBG(Color);
 
+
+
+        {$ifdef FPC}
         if FBorderStyle<>bsNone then NSize:= 1 else NSize:= 0;
+        {$else}
+        NSize:= 0;
+        {$endif}
         r2:= Rect(
           r.Left+NSize, r.Top+NSize,
           r.Right-1-NSize, r.Bottom-1+(r.Bottom-r.Top)-NSize);
@@ -235,7 +258,11 @@ begin
       begin
         DoFillBG(Color);
 
+        {$ifdef FPC}
         if FBorderStyle<>bsNone then NSize:= 1 else NSize:= 0;
+        {$else}
+        NSize:= 0;
+        {$endif}
         r2:= Rect(r.Left+NSize, r.Top+NSize, r.Right-NSize, r.Bottom-NSize);
 
         C.Pen.Color:= Theme^.ColorBgOver;
@@ -245,10 +272,12 @@ begin
         Alfa:= 360*GetPartDoneFloat;
         C.Pen.Color:= Theme^.ColorBgOver;
         C.Brush.Color:= Theme^.ColorBgOver;
+        {$ifdef FPC}
         C.RadialPie(r2.Left, r2.Top, r2.Right, r2.Bottom,
           16*90, //starting angle: 90 deg
           -Round(16*Alfa) //pie angle: -Alfa deg
          );
+        {$endif}
       end;
   end;
 
@@ -263,6 +292,7 @@ begin
   end;
 
   //paint border
+  {$ifdef FPC}
   if FBorderStyle<>bsNone then
   begin
     C.Pen.Color:= Theme^.ColorBorderPassive;
@@ -270,6 +300,8 @@ begin
     C.Rectangle(r);
     C.Brush.Style:= bsSolid;
   end;
+  {$endif}
+
 end;
 
 function TATGauge.GetPartDoneFloat: Double;
@@ -282,12 +314,14 @@ begin
   Result:= Round(100 * GetPartDoneFloat);
 end;
 
+{$ifdef FPC}
 procedure TATGauge.SetBorderStyle(AValue: TBorderStyle);
 begin
   if FBorderStyle=AValue then Exit;
   FBorderStyle:=AValue;
   Invalidate;
 end;
+{$endif}
 
 procedure TATGauge.SetKind(AValue: TATGaugeKind);
 begin
@@ -358,8 +392,8 @@ begin
   inherited;
 
   ControlStyle:= ControlStyle
-    +[csOpaque, csNoFocus]
-    -[csDoubleClicks, csTripleClicks];
+    +[csOpaque {$ifdef FPC}, csNoFocus{$endif}]
+    -[csDoubleClicks {$ifdef FPC},csTripleClicks{$endif}];
 
   Width:= 150;
   Height:= 50;
@@ -371,7 +405,9 @@ begin
 
   FDoubleBuffered:= IsDoubleBufferedNeeded;
   FKind:= gkHorizontalBar;
+  {$ifdef FPC}
   FBorderStyle:= bsSingle;
+  {$endif}
 
   FMinValue:= 0;
   FMaxValue:= 100;
@@ -392,6 +428,7 @@ begin
   Progress:= Progress+AValue;
 end;
 
+{$ifdef FPC}
 procedure TATGauge.DoOnResize;
 const
   cResizeBitmapStep = 100;
@@ -414,6 +451,7 @@ begin
 
   Invalidate;
 end;
+{$endif}
 
 
 end.

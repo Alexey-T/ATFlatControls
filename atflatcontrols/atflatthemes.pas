@@ -1,6 +1,8 @@
 unit ATFlatThemes;
 
+{$ifdef FPC}
 {$ModeSwitch advancedrecords}
+{$endif}
 
 interface
 
