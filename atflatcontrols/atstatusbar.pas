@@ -13,7 +13,7 @@ interface
 {$endif}
 
 uses
-  {$ifndef FPC}
+  {$ifdef windows}
   Windows,
   Messages,
   {$endif}
@@ -41,12 +41,8 @@ type
     FAutoStretch: boolean;
     FColorFont: TColor; //integer;
     FColorBack: TColor; //integer;
-    {$ifdef FPC}
-    FTag: PtrInt;
-    {$endif}
-    {$ifndef FPC}
     FTag: IntPtr;
-    {$endif}
+
   public
     constructor Create(ACollection: TCollection); override;
   published
@@ -59,12 +55,7 @@ type
     property AutoStretch: boolean read FAutoStretch write FAutoStretch default false;
     property ColorFont: TColor read FColorFont write FColorFont default clNone;
     property ColorBack: TColor read FColorBack write FColorBack default clNone;
-    {$ifdef FPC}
-    property Tag: PtrInt read FTag write FTag default 0;
-    {$endif}
-    {$ifndef FPC}
     property Tag: IntPtr read FTag write FTag default 0;
-    {$endif}
   end;
 
 type
@@ -128,12 +119,7 @@ type
       AAlign: TAlignment;
       const ACaption: TCaption= '';
       AImageIndex: integer= - 1;
-      {$ifdef FPC}
-      ATag: PtrInt= 0;
-      {$endif}
-      {$ifndef FPC}
       ATag: IntPtr= 0;
-      {$endif}
       AAutoSize: boolean= false;
       AAutoStretch: boolean= false;
       AFontColor: TColor=clNone);
@@ -153,7 +139,7 @@ type
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: integer); override;
     procedure Click; override;
-    {$ifndef FPC}
+    {$ifdef windows}
     procedure WMEraseBkgnd(var Message: TMessage); message WM_ERASEBKGND;
     {$endif}
 
@@ -518,12 +504,7 @@ procedure TATStatus.AddPanel(
   AAlign: TAlignment;
   const ACaption: TCaption='';
   AImageIndex: integer=-1;
-  {$ifdef FPC}
-  ATag: PtrInt= 0;
-  {$endif}
-  {$ifndef FPC}
   ATag: IntPtr= 0;
-  {$endif}
   AAutoSize: boolean=false;
   AAutoStretch: boolean=false;
   AFontColor: TColor=clNone);
@@ -569,7 +550,7 @@ begin
     Result:= nil;
 end;
 
-{$ifndef FPC}
+{$ifdef windows}
 //needed to remove flickering on resize and mouse-over
 procedure TATStatus.WMEraseBkgnd(var Message: TMessage);
 begin
@@ -646,7 +627,7 @@ end;
 
 procedure TATStatus.DoPanelStretch(AIndex: integer);
 var
-  NSize, i: integer;
+  NSize, NCell, i: integer;
   D: TATStatusData;
 begin
   if not IsIndexOk(AIndex) then exit;
@@ -656,8 +637,11 @@ begin
     if i<>AIndex then
     begin
       D:= GetPanelData(i);
+      NCell:= D.Width;
+      if not D.AutoSize then
+        NCell:= Theme^.DoScale(NCell);
       if Assigned(D) then
-        Inc(NSize, D.Width);
+        Inc(NSize, NCell);
     end;
 
   D:= GetPanelData(AIndex);

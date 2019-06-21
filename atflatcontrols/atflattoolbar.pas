@@ -15,8 +15,7 @@ uses
   Classes, SysUtils, Graphics, Controls, ExtCtrls,
   ImgList, Menus, Math,Types,
   ATButtons,
-  ATFlatThemes {$ifdef FPC},
-  LCLType{$endif};
+  ATFlatThemes;
 
 type
   { TATFlatToolbar }
@@ -443,6 +442,8 @@ begin
   b.Enabled:= false;
 end;
 
+type TControlHack = class(TControl);
+
 procedure TATFlatToolbar.PopupForDropdownClick(Sender: TObject);
 var
   C: TControl;
@@ -450,9 +451,8 @@ var
 begin
   C:= Sender as TControl;
   P:= C.ClientToScreen(Point(0, C.Height));
-  {$ifdef FPC}
-  C.PopupMenu.PopUp(P.X, P.Y);
-  {$endif}
+  TControlHack(C).PopupMenu.PopUp(P.X, P.Y);
+
 end;
 
 

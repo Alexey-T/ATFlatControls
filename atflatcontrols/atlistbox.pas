@@ -7,11 +7,6 @@ unit ATListbox;
 
 {$ifdef FPC}
   {$mode delphi}
-{$else}
-  {$define windows}
-  {$ifdef VER150} //Delphi 7
-    {$define WIDE}
-  {$endif}
 {$endif}
 
 interface
@@ -396,12 +391,10 @@ begin
       SItem:= SGetItem(S, FColumnSep);
 
       C.FillRect(
-        {$ifndef FPC}Rect({$endif}
-        NColOffset,
+        Rect(NColOffset,
         R.Top,
         NAllWidth,
-        R.Bottom
-        {$ifndef FPC}){$endif}
+        R.Bottom)
         );
       C.TextOut(
         NColOffset+1,
@@ -448,7 +441,8 @@ begin
     {$endif}
 
     {$ifndef FPC}
-    Windows.SetFocus(Handle);
+  if FCanGetFocus then
+    SetFocus;
     {$endif}
 
   Pnt:= ScreenToClient(Mouse.CursorPos);
@@ -591,12 +585,9 @@ begin
   FScrollbar.Parent:= Self;
   FScrollbar.Kind:= sbVertical;
   FScrollbar.Align:= alRight;
-  {$ifdef FPC}
+
   FScrollbar.OnChange:= ScrollbarChange;
-  {$endif}
-  {$ifdef delphi}
-  FScrollbar.OnChange:= ScrollbarChange;
-  {$endif}
+
 end;
 
 destructor TATListbox.Destroy;

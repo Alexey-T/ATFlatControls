@@ -6,7 +6,8 @@ License: MPL 2.0 or LGPL
 unit ATButtons;
 
   {$ifdef FPC}
-  {$mode objfpc}{$H+}
+  //{$mode objfpc}{$H+}
+  {$mode delphi}
   {$endif}
 
 interface
@@ -16,8 +17,7 @@ uses
   Types, Math, Forms, ExtCtrls,
   ATFlatThemes
   {$ifdef FPC}
-  , FPTimer,
-  LCLType
+  , LCLType
   {$endif};
 
 
@@ -76,12 +76,7 @@ type
     FPadding: integer;
     FPaddingBig: integer;
     FTheme: PATFlatTheme;
-    {$ifdef FPC}
-    FTimerMouseover: TFPTimer;
-    {$endif}
-    {$ifdef delphi}
     FTimerMouseover: TTimer;
-    {$endif}
     FWidthInitial: integer;
     FTextOverlay: string;
     FTextAlign: TAlignment;
@@ -489,9 +484,9 @@ begin
         C.Pen.Color:= ColorToRGB(Theme^.ColorSeparators);
         {$ifdef FPC}
         C.Line(pnt1, pnt2);
-        {$endif}
-        {$ifdef windows}
-        C.LineTo(pnt1.Y, pnt2.Y);
+        {$else}
+        C.MoveTo (pnt1.x, pnt1.y);
+        C.LineTo (pnt2.x, pnt2.y);
         {$endif}
       end;
 
@@ -502,9 +497,9 @@ begin
         C.Pen.Color:= ColorToRGB(Theme^.ColorSeparators);
         {$ifdef FPC}
         C.Line(pnt1, pnt2);
-        {$endif}
-        {$ifdef windows}
-        C.LineTo(pnt1.Y, pnt2.Y);
+        {$else}
+        C.MoveTo (pnt1.x, pnt1.y);
+        C.LineTo (pnt2.x, pnt2.y);
         {$endif}
       end;
   end;
@@ -577,20 +572,11 @@ begin
   if AColorBg<>clNone then
   begin
     C.Brush.Color:= AColorBg;
-    {$ifdef FPC}
-    C.FillRect(
-      AX-NSize*2-1,
-      AY-NSize*2-1,
-      AX+NSize*2+2,
-      AY+NSize*2+1);
-    {$endif}
-    {$ifdef windows}
     C.FillRect(
       Rect(AX-NSize*2-1,
       AY-NSize*2-1,
       AX+NSize*2+2,
       AY+NSize*2+1));
-    {$endif}
   end;
 
   CanvasPaintTriangleDown(C, AColorArrow, Point(AX, AY), NSize);
@@ -726,12 +712,10 @@ begin
   C.Font.Size:= DoScaleFont(Theme^.FontSize);
   C.Font.Style:= [];
 
-  {$ifdef FPC}
-  if FBoldFont then
-    C.Font.Style:= [fsBold]
-  else
-    C.Font.Style:= [];
-  {$endif}
+  //if FBoldFont then
+  //  C.Font.Style:= [fsBold]
+  //else
+  //  C.Font.Style:= [];
 
   NText:= C.TextWidth(Caption);
   NIcon:= GetIconWidth;
@@ -784,18 +768,12 @@ begin
   FTheme:= @ATFlatTheme;
   FWidthInitial:= 0;
 
-  {$ifdef FPC}
-  FTimerMouseover:= TFPTimer.Create(Self);
-  FTimerMouseover.Enabled:= false;
-  FTimerMouseover.Interval:= 1000;
-  FTimerMouseover.OnTimer:= @TimerMouseoverTick;
-  {$endif}
-  {$ifdef delphi}
   FTimerMouseover:= TTimer.Create(Self);
   FTimerMouseover.Enabled:= false;
   FTimerMouseover.Interval:= 1000;
+
   FTimerMouseover.OnTimer:= TimerMouseoverTick;
-  {$endif}
+
 end;
 
 destructor TATButton.Destroy;
@@ -845,12 +823,9 @@ begin
     mi.Tag:= i;
     mi.RadioItem:= true;
     mi.Checked:= i=FItemIndex;
-    {$ifdef FPC}
-    mi.OnClick:= @DoChoiceClick;
-    {$endif}
-    {$ifdef delphi}
+
     mi.OnClick:= DoChoiceClick;
-    {$endif}
+
     FPopup.Items.Add(mi);
   end;
 
@@ -871,12 +846,12 @@ begin
   {$endif}
 end;
 
-function TATButton.DoScale(AValue: integer): integer; {$ifdef FPC}inline;{$endif}
+function TATButton.DoScale(AValue: integer): integer;
 begin
   Result:= Theme^.DoScale(AValue);
 end;
 
-function TATButton.DoScaleFont(AValue: integer): integer; {$ifdef FPC}inline;{$endif}
+function TATButton.DoScaleFont(AValue: integer): integer;
 begin
   Result:= Theme^.DoScaleFont(AValue);
 end;

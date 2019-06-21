@@ -9,6 +9,7 @@
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
+        <IncludeFiles Value="res"/>
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
@@ -22,7 +23,7 @@
 and several simple controls."/>
     <License Value="MPL 2.0, LGPL"/>
     <Version Major="1" Minor="4"/>
-    <Files Count="11">
+    <Files Count="12">
       <Item1>
         <Filename Value="atbuttons.pas"/>
         <UnitName Value="ATButtons"/>
@@ -68,6 +69,10 @@ and several simple controls."/>
         <Filename Value="atflatthemes.pas"/>
         <UnitName Value="ATFlatThemes"/>
       </Item11>
+      <Item12>
+        <Filename Value="res\icons.lrs"/>
+        <Type Value="LRS"/>
+      </Item12>
     </Files>
     <RequiredPkgs Count="1">
       <Item1>

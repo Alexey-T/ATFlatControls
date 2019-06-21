@@ -20,11 +20,6 @@ unit ATScrollBar;
 
 {$ifdef FPC}
   {$mode delphi}
-{$else}
-  {$define windows}
-  {$ifdef VER150} //Delphi 7
-    {$define WIDE}
-  {$endif}
 {$endif}
 
 interface
@@ -721,7 +716,7 @@ begin
   C.Polygon([P1, P2, P3]);
 end;
 
-function TATScrollbar.IsHorz: boolean; {$ifdef FPC} inline; {$endif}
+function TATScrollbar.IsHorz: boolean;
 begin
   Result:= FKind=sbHorizontal;
 end;
