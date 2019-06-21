@@ -75,14 +75,14 @@ type
     ColorThumbBorder: TColor;
 
     ColorThumbFill: TColor;
-    ColorThumbOver: TColor;
-    ColorThumbDown: TColor;
+    ColorThumbFillOver: TColor;
+    ColorThumbFillPressed: TColor;
 
     ColorArrowBorder: TColor;
 
     ColorArrowFill: TColor;
-    ColorArrowOver: TColor;
-    ColorArrowDown: TColor;
+    ColorArrowFillOver: TColor;
+    ColorArrowFillPressed: TColor;
 
     ColorArrowSign: TColor;
     ColorScrolled: TColor;
@@ -663,7 +663,7 @@ begin
 
   if FMouseDownOnUp or FMouseDownOnDown then
   begin
-    C.Brush.Color:= ColorToRGB(FTheme^.ColorArrowDown);
+    C.Brush.Color:= ColorToRGB(FTheme^.ColorArrowFillPressed);
     C.FillRect(R);
   end
   else
@@ -672,7 +672,7 @@ begin
     P := ScreenToClient(P);
     if PtInRect(R,P) then
     begin
-      C.Brush.Color:= ColorToRGB(FTheme^.ColorArrowOver);
+      C.Brush.Color:= ColorToRGB(FTheme^.ColorArrowFillOver);
       C.FillRect(R);
     end;
   end;
@@ -802,13 +802,13 @@ begin
   C.Brush.Color:= ColorToRGB(FTheme^.ColorThumbFill);
 
   if FMouseDownOnThumb then
-    C.Brush.Color:= ColorToRGB(FTheme^.ColorThumbDown)
+    C.Brush.Color:= ColorToRGB(FTheme^.ColorThumbFillPressed)
   else
   begin
     P := Mouse.CursorPos;
     P := ScreenToClient(P);
     if PtInRect(R,P) then
-      C.Brush.Color:= ColorToRGB(FTheme^.ColorThumbOver);
+      C.Brush.Color:= ColorToRGB(FTheme^.ColorThumbFillOver);
   end;
 
   C.Pen.Color:= ColorToRGB(FTheme^.ColorThumbBorder);
@@ -897,15 +897,12 @@ end;
 procedure TATScrollbar.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
-
   Invalidate;
 
   if FMouseDownOnThumb then
   begin
     DoUpdatePosOnDrag(X, Y);
-    Exit
   end;
-
 end;
 
 function TATScrollbar.CoordToPos(X, Y: Integer): Integer;
@@ -1030,19 +1027,18 @@ initialization
     ColorBG:= $d0d0d0;
     ColorBorder:= clLtGray;
     ColorThumbBorder:= $808080;
-
     ColorThumbFill:= $c0c0c0;
-    ColorThumbOver:= $d0d0d0;
-    ColorThumbDown:= $00c0c0c0;
+    ColorThumbFillOver:= $d0d0d0;
+    ColorThumbFillPressed:= $e0c0c0;
 
     ColorArrowBorder:= $808080;
-
     ColorArrowFill:= $c0c0c0;
-    ColorArrowOver:= $d0d0d0;
-    ColorArrowDown:= $00c0c0c0;
+    ColorArrowFillOver:= $d0d0d0;
+    ColorArrowFillPressed:= $e0c0c0;
 
     ColorArrowSign:= $404040;
     ColorScrolled:= $d0b0b0;
+
     InitialSize:= 16;
     ScalePercents:= 100;
     ArrowStyleH:= asaArrowsNormal;
@@ -1052,6 +1048,7 @@ initialization
     BorderSize:= 0;
     TimerInterval:= 120;
     InstantMoveOnClick:= false;
+
     ThumbMarkerOffset:= 4;
     ThumbMarkerMinimalSize:= 20;
     ThumbMarkerDecorSize:= 2;
