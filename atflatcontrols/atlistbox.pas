@@ -788,16 +788,17 @@ begin
 end;
 
 procedure TATListbox.MouseMove(Shift: TShiftState; X, Y: Integer);
+var
+  NewIndex: integer;
 begin
-
   inherited;
 
   if FHotTrack then
   begin
-    //only update when needed:
-    if FHotTrackIndex <> GetItemIndexAt(Point(X, Y)) then
+    NewIndex:= GetItemIndexAt(Point(X, Y));
+    if FHotTrackIndex<>NewIndex then
     begin
-      FHotTrackIndex:= GetItemIndexAt(Point(X, Y));
+      FHotTrackIndex:= NewIndex;
       Invalidate;
     end;
   end
