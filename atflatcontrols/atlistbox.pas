@@ -77,6 +77,7 @@ type
     function GetVisibleItems: integer;
     function GetItemHeightDefault: integer;
     function GetColumnWidth(AIndex: integer): integer;
+    procedure DoKeyDown(var Key: Word; Shift: TShiftState);
   protected
     procedure Paint; override;
     procedure Click; override;
@@ -85,6 +86,8 @@ type
     {$endif}
     {$ifndef FPC}
     procedure WMVScroll(var Msg: TWMVScroll); message WM_VSCROLL;
+    procedure WMGetDlgCode(var Message: TWMGetDlgCode); message WM_GETDLGCODE;
+    procedure WMKeyDown(var Message: TWMKeyDown); message WM_KEYDOWN;
     {$endif}
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
@@ -347,7 +350,8 @@ end;
 procedure TATListbox.DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
 var
   S, SItem: string;
-  NPos, NColOffset, NColWidth, NAllWidth, i: integer;
+  //NPos, not used
+  NColOffset, NColWidth, NAllWidth, i: integer;
 begin
   if AIndex=FItemIndex then
   begin
@@ -661,6 +665,26 @@ begin
   UpdateFromScrollbarMsg(Msg);
   Invalidate;
 end;
+
+procedure TATListbox.WMGetDlgCode(var Message: TWMGetDlgCode);
+begin
+ inherited;
+ Message.Result:= Message.Result or DLGC_WANTARROWS;
+end;
+
+procedure TATListbox.WMKeyDown(var Message: TWMKeyDown);
+var
+  ShiftState: TShiftState;
+begin
+
+ { Check the ShiftState, like delphi does while processing WMKeyDown }
+ ShiftState := KeyDataToShiftState(Message.KeyData);
+ DoKeyDown(Message.CharCode,ShiftState);
+
+ inherited;
+
+end;
+
 {$endif}
 
 {$ifdef FPC}
@@ -708,10 +732,8 @@ begin
     ItemTop:= Max(0, Min(ItemCount-VisibleItems, ItemTop+Mouse.WheelScrollLines));
 end;
 
-procedure TATListbox.KeyDown(var Key: Word; Shift: TShiftState);
+procedure TATListbox.DoKeyDown(var Key: Word; Shift: TShiftState);
 begin
-  inherited;
-
   if (key=vk_up) then
   begin
     ItemIndex:= ItemIndex-1;
@@ -757,6 +779,12 @@ begin
     key:= 0;
     Exit
   end;
+end;
+
+procedure TATListbox.KeyDown(var Key: Word; Shift: TShiftState);
+begin
+  inherited;
+  DoKeyDown(Key,Shift);
 end;
 
 procedure TATListbox.MouseMove(Shift: TShiftState; X, Y: Integer);
