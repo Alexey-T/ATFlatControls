@@ -405,6 +405,9 @@ begin
       Inc(NColOffset, NColWidth);
       {$ifdef FPC}
       C.Line(NColOffset-1, R.Top, NColOffset-1, R.Bottom);
+      {$else}
+      C.MoveTo (NColOffset-1, R.Top);
+      C.LineTo (NColOffset-1, R.Bottom);
       {$endif}
     end;
   end;

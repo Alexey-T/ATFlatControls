@@ -14,7 +14,7 @@ interface
 
 uses
   Classes, SysUtils, Graphics, Controls, Menus,
-  Types, Math, Forms, ExtCtrls,
+  Types, Math, Forms, ExtCtrls, {$ifndef FPC}Messages,{$endif}
   ATFlatThemes
   {$ifdef FPC}
   , LCLType
@@ -52,6 +52,11 @@ type
 
   TATButton = class(TCustomControl)
   private
+    {$ifndef FPC}
+    FOnMouseLeave: TNotifyEvent;
+    FOnMouseEnter: TNotifyEvent;
+    {$endif}
+
     FPressed: boolean;
     FOver: boolean;
     FChecked: boolean;
@@ -81,6 +86,14 @@ type
     FTextOverlay: string;
     FTextAlign: TAlignment;
     FShowShortItems: boolean;
+
+    {$ifndef FPC}
+    procedure CMMouseEnter(var msg: TMessage);
+      message CM_MOUSEENTER;
+    procedure CMMouseLeave(var msg: TMessage);
+      message CM_MOUSELEAVE;
+    {$endif}
+
     procedure DoChoiceClick(Sender: TObject);
     function GetIconHeight: integer;
     function GetIconWidth: integer;
@@ -102,7 +115,9 @@ type
     procedure SetTextOverlay(const AValue: string);
     procedure SetTheme(AValue: PATFlatTheme);
     procedure ShowChoiceMenu;
+    {$ifdef FPC}
     procedure TimerMouseoverTick(Sender: TObject);
+    {$endif}
   protected
     procedure Paint; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
@@ -111,6 +126,12 @@ type
     procedure MouseEnter; override;
     procedure TextChanged; override;
    {$endif}
+
+    {$ifndef FPC}
+    procedure DoMouseEnter; dynamic;
+    procedure DoMouseLeave; dynamic;
+    {$endif}
+
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure KeyPress(var Key: char); override;
@@ -142,6 +163,12 @@ type
     {$ifdef FPC}
     property BorderSpacing;
     {$endif}
+
+    {$ifndef FPC}
+    property OnMouseEnter: TNotifyEvent read FOnMouseEnter write FOnMouseEnter;
+    property OnMouseLeave: TNotifyEvent read FOnMouseLeave write FOnMouseLeave;
+    {$endif}
+
     property Caption;
     property TabStop;
     property TabOrder;
@@ -172,8 +199,10 @@ type
     property OnMouseDown;
     property OnMouseUp;
     property OnMouseMove;
+    {$ifdef FPC}
     property OnMouseEnter;
     property OnMouseLeave;
+    {$endif}
     property OnMouseWheel;
     property OnMouseWheelDown;
     property OnMouseWheelUp;
@@ -193,6 +222,32 @@ begin
 end;
 
 { TATButton }
+
+{$ifndef FPC}
+procedure TATButton.CMMouseEnter(var msg: TMessage);
+begin
+  DoMouseEnter;
+end;
+
+procedure TATButton.CMMouseLeave(var msg: TMessage);
+begin
+  DoMouseLeave;
+end;
+
+procedure TATButton.DoMouseEnter;
+begin
+  FOver:= true;
+  Invalidate;
+  if Assigned(FOnMouseEnter) then FOnMouseEnter(Self);
+end;
+
+procedure TATButton.DoMouseLeave;
+begin
+  FOver:= false;
+  Invalidate;
+  if Assigned(FOnMouseLeave) then FOnMouseLeave(Self);
+end;
+{$endif}
 
 procedure TATButton.SetChecked(AValue: boolean);
 begin
@@ -477,7 +532,7 @@ begin
         C.TextOut(pnt1.x, pnt1.y, S);
       end;
 
-    abuSeparatorVert:
+    abuSeparatorHorz:
       begin
         pnt1:= Point(Theme^.SeparatorOffset, NHeight div 2);
         pnt2:= Point(NWidth-Theme^.SeparatorOffset, NHeight div 2);
@@ -490,7 +545,7 @@ begin
         {$endif}
       end;
 
-    abuSeparatorHorz:
+    abuSeparatorVert:
       begin
         pnt1:= Point(NWidth div 2, Theme^.SeparatorOffset);
         pnt2:= Point(NWidth div 2, NHeight-Theme^.SeparatorOffset);
@@ -771,8 +826,9 @@ begin
   FTimerMouseover:= TTimer.Create(Self);
   FTimerMouseover.Enabled:= false;
   FTimerMouseover.Interval:= 1000;
-
+  {$ifdef FPC}
   FTimerMouseover.OnTimer:= TimerMouseoverTick;
+  {$endif}
 
 end;
 
@@ -833,6 +889,7 @@ begin
   FPopup.PopUp(P.X, P.Y);
 end;
 
+{$ifdef FPC}
 procedure TATButton.TimerMouseoverTick(Sender: TObject);
 //timer is workaround for LCL issue, where MouseLeave not called
 //if mouse leaves app window area (at least on Linux)
@@ -840,11 +897,11 @@ var
   Pnt: TPoint;
 begin
   Pnt:= ScreenToClient(Mouse.CursorPos);
-  {$ifdef FPC}
   if not PtInRect(ClientRect, Pnt) then
     MouseLeave;
-  {$endif}
+
 end;
+{$endif}
 
 function TATButton.DoScale(AValue: integer): integer;
 begin

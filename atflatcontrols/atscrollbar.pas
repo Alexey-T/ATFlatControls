@@ -29,13 +29,13 @@ interface
 {$endif}
 
 uses
-  {$ifndef FPC}
+  {$ifdef windows}
   Windows, Messages,
   {$endif}
   {$ifdef FPC}
   InterfaceBase,
   LCLIntf,
-  LCLType,FPTimer,
+  LCLType,
   {$endif}
   Classes, Types, Graphics,
   Controls, ExtCtrls, Forms;
@@ -108,9 +108,7 @@ type
 
   TATScrollbar = class(TCustomControl)
   private
-    {$ifdef FPC}
-    FTimerMouseover: TFPTimer;
-    {$endif}
+    FTimerMouseover: TTimer;
 
     {$ifndef FPC}
     FOnMouseLeave: TNotifyEvent;
@@ -211,8 +209,8 @@ type
     {$ifndef FPC}
     procedure DoMouseEnter; dynamic;
     procedure DoMouseLeave; dynamic;
-    procedure WMEraseBkgnd(var Message: TMessage); message WM_ERASEBKGND;
     {$endif}
+    procedure WMEraseBkgnd(var Message: TMessage); message WM_ERASEBKGND;
   published
     {$ifndef FPC}
     property OnMouseEnter: TNotifyEvent read FOnMouseEnter write FOnMouseEnter;
@@ -332,12 +330,10 @@ begin
   FTimer.Interval:= 100;
   FTimer.OnTimer:= TimerTimer;
 
-  {$ifdef FPC}
-  FTimerMouseover:= TFPTimer.Create(Self);
+  FTimerMouseover:= TTimer.Create(Self);
   FTimerMouseover.Enabled:= false;
   FTimerMouseover.Interval:= 1000;
   FTimerMouseover.OnTimer:= TimerMouseoverTick;
-  {$endif}
 
   FMouseDown:= false;
   FMouseDragOffset:= 0;
@@ -587,14 +583,15 @@ begin
   Invalidate;
 end;
 
-
-{$ifndef FPC}
 //needed to remove flickering on resize and mouse-over
+{$ifdef windows}
 procedure TATScrollbar.WMEraseBkgnd(var Message: TMessage);
 begin
   Message.Result:= 1;
 end;
+{$endif}
 
+{$ifndef FPC}
 procedure TATScrollbar.CMMouseEnter(var msg: TMessage);
 begin
   DoMouseEnter;
@@ -616,7 +613,6 @@ begin
   Invalidate;
   if Assigned(FOnMouseLeave) then FOnMouseLeave(Self);
 end;
-
 {$endif}
 
 procedure TATScrollbar.Click;

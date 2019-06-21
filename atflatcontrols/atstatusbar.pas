@@ -41,7 +41,7 @@ type
     FAutoStretch: boolean;
     FColorFont: TColor; //integer;
     FColorBack: TColor; //integer;
-    FTag: IntPtr;
+    FTag: Int64;
 
   public
     constructor Create(ACollection: TCollection); override;
@@ -55,7 +55,7 @@ type
     property AutoStretch: boolean read FAutoStretch write FAutoStretch default false;
     property ColorFont: TColor read FColorFont write FColorFont default clNone;
     property ColorBack: TColor read FColorBack write FColorBack default clNone;
-    property Tag: IntPtr read FTag write FTag default 0;
+    property Tag: Int64 read FTag write FTag default 0;
   end;
 
 type
