@@ -414,15 +414,8 @@ begin
     C.FillRect(RectAll);
   end
   else
-//    NColorBg:= clNone; not used again
-  begin
-    if FOver then
-      NColorBg:= Theme^.ColorBgOver
-    else
-      NColorBg:= Theme^.ColorBgPassive;
-    C.Brush.Color:= NColorBg;
-    C.FillRect(RectAll);
-  end;
+  //Flat style - don't paint any background
+    NColorBg:= clNone;
 
   if bUseBorder then
   begin
