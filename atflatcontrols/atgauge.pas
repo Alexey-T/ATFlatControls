@@ -222,8 +222,12 @@ begin
       begin
         DoFillBG(Color);
 
+
+
         {$ifdef FPC}
         if FBorderStyle<>bsNone then NSize:= 1 else NSize:= 0;
+        {$else}
+        NSize:= 0;
         {$endif}
         r2:= Rect(
           r.Left+NSize, r.Top+NSize,
@@ -256,6 +260,8 @@ begin
 
         {$ifdef FPC}
         if FBorderStyle<>bsNone then NSize:= 1 else NSize:= 0;
+        {$else}
+        NSize:= 0;
         {$endif}
         r2:= Rect(r.Left+NSize, r.Top+NSize, r.Right-NSize, r.Bottom-NSize);
 
