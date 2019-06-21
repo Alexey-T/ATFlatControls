@@ -73,19 +73,18 @@ type
     ColorBG: TColor;
     ColorBorder: TColor;
     ColorThumbBorder: TColor;
-
     ColorThumbFill: TColor;
     ColorThumbFillOver: TColor;
     ColorThumbFillPressed: TColor;
 
     ColorArrowBorder: TColor;
-
     ColorArrowFill: TColor;
     ColorArrowFillOver: TColor;
     ColorArrowFillPressed: TColor;
 
     ColorArrowSign: TColor;
     ColorScrolled: TColor;
+
     InitialSize: integer;
     ScalePercents: integer;
     ArrowStyleH: TATScrollbarArrowsStyle;
@@ -95,6 +94,7 @@ type
     BorderSize: integer;
     TimerInterval: integer;
     InstantMoveOnClick: boolean;
+
     ThumbMarkerOffset: integer;
     ThumbMarkerMinimalSize: integer;
     ThumbMarkerDecorSize: integer;
