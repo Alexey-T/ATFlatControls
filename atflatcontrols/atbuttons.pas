@@ -408,6 +408,7 @@ begin
       NColorBg:= Theme^.ColorBgOver
     else
       NColorBg:= Theme^.ColorBgPassive;
+
     NColorBg:= ColorToRGB(NColorBg);
     C.Brush.Color:= NColorBg;
     C.FillRect(RectAll);
@@ -532,7 +533,7 @@ begin
         C.TextOut(pnt1.x, pnt1.y, S);
       end;
 
-    abuSeparatorHorz:
+    abuSeparatorVert:
       begin
         pnt1:= Point(Theme^.SeparatorOffset, NHeight div 2);
         pnt2:= Point(NWidth-Theme^.SeparatorOffset, NHeight div 2);
@@ -545,7 +546,7 @@ begin
         {$endif}
       end;
 
-    abuSeparatorVert:
+    abuSeparatorHorz:
       begin
         pnt1:= Point(NWidth div 2, Theme^.SeparatorOffset);
         pnt2:= Point(NWidth div 2, NHeight-Theme^.SeparatorOffset);
