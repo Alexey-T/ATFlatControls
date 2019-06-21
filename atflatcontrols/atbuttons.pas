@@ -901,7 +901,6 @@ begin
   Pnt:= ScreenToClient(Mouse.CursorPos);
   if not PtInRect(ClientRect, Pnt) then
     MouseLeave;
-
 end;
 {$endif}
 

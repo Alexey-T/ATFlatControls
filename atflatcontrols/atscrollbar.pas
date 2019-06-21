@@ -268,13 +268,13 @@ procedure TATScrollbar.TimerMouseoverTick(Sender: TObject);
 //timer is workaround for LCL issue, where MouseLeave not called
 //if mouse leaves app window area (at least on Linux)
 var
-Pnt: TPoint;
+  Pnt: TPoint;
 begin
-Pnt:= ScreenToClient(Mouse.CursorPos);
-{$ifdef FPC}
-if not PtInRect(ClientRect, Pnt) then
-  MouseLeave;
-{$endif}
+  {$ifdef FPC}
+  Pnt:= ScreenToClient(Mouse.CursorPos);
+  if not PtInRect(ClientRect, Pnt) then
+    MouseLeave;
+  {$endif}
 end;
 
 {$ifdef FPC}
