@@ -417,6 +417,7 @@ procedure TATListbox.Paint;
 var
   R: TRect;
 begin
+
   inherited;
   UpdateScrollbar;
   UpdateItemHeight;
@@ -760,12 +761,17 @@ end;
 
 procedure TATListbox.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin
+
   inherited;
 
   if FHotTrack then
   begin
-    FHotTrackIndex:= GetItemIndexAt(Point(X, Y));
-    Invalidate;
+    //only update when needed:
+    if FHotTrackIndex <> GetItemIndexAt(Point(X, Y)) then
+    begin
+      FHotTrackIndex:= GetItemIndexAt(Point(X, Y));
+      Invalidate;
+    end;
   end
   else
     FHotTrackIndex:= -1;
