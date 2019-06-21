@@ -5,7 +5,9 @@ License: MPL 2.0 or LGPL
 
 unit ATPanelSimple;
 
+{$ifdef FPC}
 {$mode objfpc}{$H+}
+{$endif}
 
 interface
 
@@ -25,7 +27,9 @@ type
     property Align;
     property Anchors;
     property AutoSize;
+    {$ifdef FPC}
     property BorderSpacing;
+    {$endif}
     property Color;
     property Enabled;
     property ParentColor;
@@ -44,8 +48,8 @@ begin
   inherited;
 
   ControlStyle:= ControlStyle + [
-    csAcceptsControls,
-    csNoFocus];
+    csAcceptsControls {$ifdef FPC},
+    csNoFocus{$endif}];
 
   Width:= 150;
   Height:= 100;

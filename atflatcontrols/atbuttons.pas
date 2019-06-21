@@ -5,16 +5,21 @@ License: MPL 2.0 or LGPL
 
 unit ATButtons;
 
-{$mode objfpc}{$H+}
+  {$ifdef FPC}
+  //{$mode objfpc}{$H+}
+  {$mode delphi}
+  {$endif}
 
 interface
 
 uses
   Classes, SysUtils, Graphics, Controls, Menus,
-  Types, Math, Forms, ExtCtrls,
-  ATFlatThemes,
-  FPTimer,
-  LCLType;
+  Types, Math, Forms, ExtCtrls, {$ifndef FPC}Messages,{$endif}
+  ATFlatThemes
+  {$ifdef FPC}
+  , LCLType
+  {$endif};
+
 
 type
   TATButtonKind = (
@@ -47,6 +52,11 @@ type
 
   TATButton = class(TCustomControl)
   private
+    {$ifndef FPC}
+    FOnMouseLeave: TNotifyEvent;
+    FOnMouseEnter: TNotifyEvent;
+    {$endif}
+
     FPressed: boolean;
     FOver: boolean;
     FChecked: boolean;
@@ -71,11 +81,19 @@ type
     FPadding: integer;
     FPaddingBig: integer;
     FTheme: PATFlatTheme;
-    FTimerMouseover: TFPTimer;
+    FTimerMouseover: TTimer;
     FWidthInitial: integer;
     FTextOverlay: string;
     FTextAlign: TAlignment;
     FShowShortItems: boolean;
+
+    {$ifndef FPC}
+    procedure CMMouseEnter(var msg: TMessage);
+      message CM_MOUSEENTER;
+    procedure CMMouseLeave(var msg: TMessage);
+      message CM_MOUSELEAVE;
+    {$endif}
+
     procedure DoChoiceClick(Sender: TObject);
     function GetIconHeight: integer;
     function GetIconWidth: integer;
@@ -97,18 +115,28 @@ type
     procedure SetTextOverlay(const AValue: string);
     procedure SetTheme(AValue: PATFlatTheme);
     procedure ShowChoiceMenu;
+    {$ifdef FPC}
     procedure TimerMouseoverTick(Sender: TObject);
+    {$endif}
   protected
     procedure Paint; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
+   {$ifdef FPC}
     procedure MouseLeave; override;
     procedure MouseEnter; override;
+    procedure TextChanged; override;
+   {$endif}
+
+    {$ifndef FPC}
+    procedure DoMouseEnter; dynamic;
+    procedure DoMouseLeave; dynamic;
+    {$endif}
+
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure KeyPress(var Key: char); override;
     procedure DoEnter; override;
     procedure DoExit; override;
-    procedure TextChanged; override;
     procedure Resize; override;
     procedure SetAutoSize(AValue: boolean); override;
     function DoScale(AValue: integer): integer;
@@ -132,7 +160,15 @@ type
   published
     property Align;
     property Anchors;
+    {$ifdef FPC}
     property BorderSpacing;
+    {$endif}
+
+    {$ifndef FPC}
+    property OnMouseEnter: TNotifyEvent read FOnMouseEnter write FOnMouseEnter;
+    property OnMouseLeave: TNotifyEvent read FOnMouseLeave write FOnMouseLeave;
+    {$endif}
+
     property Caption;
     property TabStop;
     property TabOrder;
@@ -163,8 +199,10 @@ type
     property OnMouseDown;
     property OnMouseUp;
     property OnMouseMove;
+    {$ifdef FPC}
     property OnMouseEnter;
     property OnMouseLeave;
+    {$endif}
     property OnMouseWheel;
     property OnMouseWheelDown;
     property OnMouseWheelUp;
@@ -184,6 +222,32 @@ begin
 end;
 
 { TATButton }
+
+{$ifndef FPC}
+procedure TATButton.CMMouseEnter(var msg: TMessage);
+begin
+  DoMouseEnter;
+end;
+
+procedure TATButton.CMMouseLeave(var msg: TMessage);
+begin
+  DoMouseLeave;
+end;
+
+procedure TATButton.DoMouseEnter;
+begin
+  FOver:= true;
+  Invalidate;
+  if Assigned(FOnMouseEnter) then FOnMouseEnter(Self);
+end;
+
+procedure TATButton.DoMouseLeave;
+begin
+  FOver:= false;
+  Invalidate;
+  if Assigned(FOnMouseLeave) then FOnMouseLeave(Self);
+end;
+{$endif}
 
 procedure TATButton.SetChecked(AValue: boolean);
 begin
@@ -344,6 +408,7 @@ begin
       NColorBg:= Theme^.ColorBgOver
     else
       NColorBg:= Theme^.ColorBgPassive;
+
     NColorBg:= ColorToRGB(NColorBg);
     C.Brush.Color:= NColorBg;
     C.FillRect(RectAll);
@@ -473,7 +538,12 @@ begin
         pnt1:= Point(Theme^.SeparatorOffset, NHeight div 2);
         pnt2:= Point(NWidth-Theme^.SeparatorOffset, NHeight div 2);
         C.Pen.Color:= ColorToRGB(Theme^.ColorSeparators);
+        {$ifdef FPC}
         C.Line(pnt1, pnt2);
+        {$else}
+        C.MoveTo (pnt1.x, pnt1.y);
+        C.LineTo (pnt2.x, pnt2.y);
+        {$endif}
       end;
 
     abuSeparatorHorz:
@@ -481,7 +551,12 @@ begin
         pnt1:= Point(NWidth div 2, Theme^.SeparatorOffset);
         pnt2:= Point(NWidth div 2, NHeight-Theme^.SeparatorOffset);
         C.Pen.Color:= ColorToRGB(Theme^.ColorSeparators);
+        {$ifdef FPC}
         C.Line(pnt1, pnt2);
+        {$else}
+        C.MoveTo (pnt1.x, pnt1.y);
+        C.LineTo (pnt2.x, pnt2.y);
+        {$endif}
       end;
   end;
 
@@ -554,10 +629,10 @@ begin
   begin
     C.Brush.Color:= AColorBg;
     C.FillRect(
-      AX-NSize*2-1,
+      Rect(AX-NSize*2-1,
       AY-NSize*2-1,
       AX+NSize*2+2,
-      AY+NSize*2+1);
+      AY+NSize*2+1));
   end;
 
   CanvasPaintTriangleDown(C, AColorArrow, Point(AX, AY), NSize);
@@ -607,6 +682,7 @@ begin
   end;
 end;
 
+{$ifdef FPC}
 procedure TATButton.MouseLeave;
 begin
   inherited;
@@ -622,6 +698,7 @@ begin
   Invalidate;
   FTimerMouseover.Enabled:= true;
 end;
+{$endif}
 
 procedure TATButton.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
@@ -664,11 +741,13 @@ begin
   Invalidate;
 end;
 
+{$ifdef FPC}
 procedure TATButton.TextChanged;
 begin
   inherited;
   Invalidate; //paint caption
 end;
+{$endif}
 
 procedure TATButton.Resize;
 begin
@@ -716,7 +795,7 @@ begin
 
   ControlStyle:= ControlStyle
     +[csOpaque]
-    -[csDoubleClicks, csTripleClicks];
+    -[csDoubleClicks {$ifdef FPC}, csTripleClicks{$endif}];
 
   TabStop:= true;
   Width:= 100;
@@ -745,10 +824,13 @@ begin
   FTheme:= @ATFlatTheme;
   FWidthInitial:= 0;
 
-  FTimerMouseover:= TFPTimer.Create(Self);
+  FTimerMouseover:= TTimer.Create(Self);
   FTimerMouseover.Enabled:= false;
   FTimerMouseover.Interval:= 1000;
-  FTimerMouseover.OnTimer:= @TimerMouseoverTick;
+  {$ifdef FPC}
+  FTimerMouseover.OnTimer:= TimerMouseoverTick;
+  {$endif}
+
 end;
 
 destructor TATButton.Destroy;
@@ -798,7 +880,9 @@ begin
     mi.Tag:= i;
     mi.RadioItem:= true;
     mi.Checked:= i=FItemIndex;
-    mi.OnClick:= @DoChoiceClick;
+
+    mi.OnClick:= DoChoiceClick;
+
     FPopup.Items.Add(mi);
   end;
 
@@ -806,6 +890,7 @@ begin
   FPopup.PopUp(P.X, P.Y);
 end;
 
+{$ifdef FPC}
 procedure TATButton.TimerMouseoverTick(Sender: TObject);
 //timer is workaround for LCL issue, where MouseLeave not called
 //if mouse leaves app window area (at least on Linux)
@@ -815,14 +900,16 @@ begin
   Pnt:= ScreenToClient(Mouse.CursorPos);
   if not PtInRect(ClientRect, Pnt) then
     MouseLeave;
-end;
 
-function TATButton.DoScale(AValue: integer): integer; inline;
+end;
+{$endif}
+
+function TATButton.DoScale(AValue: integer): integer;
 begin
   Result:= Theme^.DoScale(AValue);
 end;
 
-function TATButton.DoScaleFont(AValue: integer): integer; inline;
+function TATButton.DoScaleFont(AValue: integer): integer;
 begin
   Result:= Theme^.DoScaleFont(AValue);
 end;
