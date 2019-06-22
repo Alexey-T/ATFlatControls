@@ -634,7 +634,20 @@ procedure TATScrollbar.SetKind(AValue: TScrollBarKind);
 begin
   if AValue=FKind then Exit;
   FKind:= AValue;
-  Invalidate;
+
+  Case FKind of
+    sbHorizontal :
+    begin
+      Width:= 200;
+      Height:= FTheme.InitialSize;
+    end;
+    sbVertical :
+    begin
+      Height:= 200;
+      Width:= FTheme.InitialSize;
+    end;
+  End;
+
 end;
 
 procedure TATScrollbar.DoPaintArrow(C: TCanvas; const R: TRect;
