@@ -653,23 +653,22 @@ var
 begin
   if IsRectEmpty(R) then exit;
   C.Brush.Color:= ColorToRGB(FTheme^.ColorArrowBorder);
-
   C.FillRect(R);
 
   InflateRect(R, -1, -1);
   C.Brush.Color:= ColorToRGB(FTheme^.ColorArrowFill);
-
   C.FillRect(R);
 
-  if FMouseDownOnUp or FMouseDownOnDown then
+  if (FMouseDownOnUp and (Typ in [aseArrowUp, aseArrowLeft])) or
+    (FMouseDownOnDown and (Typ in [aseArrowDown, aseArrowRight])) then
   begin
     C.Brush.Color:= ColorToRGB(FTheme^.ColorArrowFillPressed);
     C.FillRect(R);
   end
   else
   begin
-    P := Mouse.CursorPos;
-    P := ScreenToClient(P);
+    P:= Mouse.CursorPos;
+    P:= ScreenToClient(P);
     if PtInRect(R,P) then
     begin
       C.Brush.Color:= ColorToRGB(FTheme^.ColorArrowFillOver);
@@ -1034,7 +1033,7 @@ initialization
     ColorArrowBorder:= $808080;
     ColorArrowFill:= $c0c0c0;
     ColorArrowFillOver:= $d0d0d0;
-    ColorArrowFillPressed:= $e0c0c0;
+    ColorArrowFillPressed:= $e0a0a0;
 
     ColorArrowSign:= $404040;
     ColorScrolled:= $d0b0b0;
