@@ -241,19 +241,8 @@ begin
   if Assigned(FOnMouseEnter) then FOnMouseEnter(Self);
 end;
 
-type
-  TControlCracker = class(TControl);
 procedure TATButton.DoMouseLeave;
 begin
-  if FFlat then
-  begin
-    if Parent <> nil then
-    if Parent is TControl then
-    begin
-      Self.Canvas.Brush.Color:= TControlCracker(Parent).Color;
-      Self.Canvas.FillRect(Self.Canvas.ClipRect);
-    end;
-  end;
   FOver:= false;
   Invalidate;
   if Assigned(FOnMouseLeave) then FOnMouseLeave(Self);
@@ -380,6 +369,8 @@ begin
   PaintTo(Canvas);
 end;
 
+type
+  TControlCracker = class(TControl);
 procedure TATButton.PaintTo(C: TCanvas);
 var
   NWidth, NHeight: integer;
@@ -425,8 +416,20 @@ begin
     C.FillRect(RectAll);
   end
   else
-  //Flat style - don't paint any background
+  begin
+    {$ifdef FPC}
+    //Flat style - don't paint any background (FPC)
     NColorBg:= clNone;
+    {$else}
+    //Flat style - don't paint any background (delphi)
+    if Parent <> nil then
+    if Parent is TControl then
+    begin
+      Self.Canvas.Brush.Color:= TControlCracker(Parent).Color;
+      Self.Canvas.FillRect(Self.Canvas.ClipRect);
+    end;
+    {$endif}
+  end;
 
   if bUseBorder then
   begin
