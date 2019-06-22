@@ -635,17 +635,19 @@ begin
   if AValue=FKind then Exit;
   FKind:= AValue;
 
-  if FKind = sbHorizontal then
-  begin
-    Width:= 200;
-    Height:= FTheme.InitialSize;
-  end;
+  Case FKind of
+    sbHorizontal :
+    begin
+      Width:= 200;
+      Height:= FTheme.InitialSize;
+    end;
+    sbVertical :
+    begin
+      Height:= 200;
+      Width:= FTheme.InitialSize;
+    end;
+  End;
 
-  if FKind = sbVertical then
-  begin
-    Height:= 200;
-    Width:= FTheme.InitialSize;
-  end;
 end;
 
 procedure TATScrollbar.DoPaintArrow(C: TCanvas; const R: TRect;
