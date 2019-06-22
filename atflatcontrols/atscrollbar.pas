@@ -159,7 +159,7 @@ type
 
     procedure TimerMouseoverTick(Sender: TObject);
 
-    procedure DoPaintArrow(C: TCanvas; const R: TRect; Typ: TATScrollbarElemType);
+    procedure DoPaintArrow(C: TCanvas; const R: TRect; AType: TATScrollbarElemType);
     procedure DoPaintThumb(C: TCanvas);
     procedure DoPaintBack(C: TCanvas);
     procedure DoPaintBackScrolled(C: TCanvas);
@@ -168,7 +168,7 @@ type
     procedure DoPaintStd_Corner(C: TCanvas; const R: TRect);
     procedure DoPaintStd_Back(C: TCanvas; const R: TRect);
     procedure DoPaintStd_BackScrolled(C: TCanvas; const R: TRect);
-    procedure DoPaintStd_Arrow(C: TCanvas; R: TRect; Typ: TATScrollbarElemType);
+    procedure DoPaintStd_Arrow(C: TCanvas; R: TRect; AType: TATScrollbarElemType);
     procedure DoPaintStd_Thumb(C: TCanvas; const R: TRect);
 
     function IsHorz: boolean; inline;
@@ -638,15 +638,15 @@ begin
 end;
 
 procedure TATScrollbar.DoPaintArrow(C: TCanvas; const R: TRect;
-  Typ: TATScrollbarElemType);
+  AType: TATScrollbarElemType);
 begin
   if IsRectEmpty(R) then exit;
-  if DoDrawEvent(Typ, C, R) then
-    DoPaintStd_Arrow(C, R, Typ);
+  if DoDrawEvent(AType, C, R) then
+    DoPaintStd_Arrow(C, R, AType);
 end;    
 
 procedure TATScrollbar.DoPaintStd_Arrow(C: TCanvas; R: TRect;
-  Typ: TATScrollbarElemType);
+  AType: TATScrollbarElemType);
 var
   P, P1, P2, P3: TPoint;
   cc: Integer;
@@ -659,8 +659,8 @@ begin
   C.Brush.Color:= ColorToRGB(FTheme^.ColorArrowFill);
   C.FillRect(R);
 
-  if (FMouseDownOnUp and (Typ in [aseArrowUp, aseArrowLeft])) or
-    (FMouseDownOnDown and (Typ in [aseArrowDown, aseArrowRight])) then
+  if (FMouseDownOnUp and (AType in [aseArrowUp, aseArrowLeft])) or
+    (FMouseDownOnDown and (AType in [aseArrowDown, aseArrowRight])) then
   begin
     C.Brush.Color:= ColorToRGB(FTheme^.ColorArrowFillPressed);
     C.FillRect(R);
@@ -679,7 +679,7 @@ begin
   P:= CenterPoint(R);
   cc:= DoScale(FTheme^.ArrowSize);
 
-  case Typ of
+  case AType of
     aseArrowUp:
       begin
         P1:= Point(P.X-cc, P.Y+cc div 2);
