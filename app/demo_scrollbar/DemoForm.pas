@@ -103,7 +103,7 @@ end;
 
 procedure TFormDemo.chkInstantChange(Sender: TObject);
 begin
-  ATScrollbarTheme.InstantMoveOnClick:= chkInstant.Checked;
+  ATScrollbarTheme.DirectJumpOnClickPageUpDown:= chkInstant.Checked;
 end;
 
 procedure TFormDemo.DrawEvent(S: TObject; AType: TATScrollbarElemType;
