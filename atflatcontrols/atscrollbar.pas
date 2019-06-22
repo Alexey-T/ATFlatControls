@@ -635,19 +635,16 @@ begin
   if AValue=FKind then Exit;
   FKind:= AValue;
 
-  Case FKind of
-    sbHorizontal :
-    begin
-      Width:= 200;
-      Height:= FTheme.InitialSize;
-    end;
-    sbVertical :
-    begin
-      Height:= 200;
-      Width:= FTheme.InitialSize;
-    end;
-  End;
-
+  if IsHorz then
+  begin
+    Width:= 200;
+    Height:= FTheme^.InitialSize;
+  end
+  else
+  begin
+    Height:= 200;
+    Width:= FTheme^.InitialSize;
+  end;
 end;
 
 procedure TATScrollbar.DoPaintArrow(C: TCanvas; const R: TRect;
