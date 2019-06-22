@@ -241,8 +241,19 @@ begin
   if Assigned(FOnMouseEnter) then FOnMouseEnter(Self);
 end;
 
+type
+  TControlCracker = class(TControl);
 procedure TATButton.DoMouseLeave;
 begin
+  if FFlat then
+  begin
+    if Parent <> nil then
+    if Parent is TControl then
+    begin
+      Self.Canvas.Brush.Color:= TControlCracker(Parent).Color;
+      Self.Canvas.FillRect(Self.Canvas.ClipRect);
+    end;
+  end;
   FOver:= false;
   Invalidate;
   if Assigned(FOnMouseLeave) then FOnMouseLeave(Self);
