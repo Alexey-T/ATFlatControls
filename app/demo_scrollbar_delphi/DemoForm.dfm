@@ -1,7 +1,6 @@
 object FormDemo: TFormDemo
   Left = 303
   Top = 282
-  AutoScroll = False
   Caption = 'ATScrollBar demo'
   ClientHeight = 381
   ClientWidth = 716
@@ -63,23 +62,23 @@ object FormDemo: TFormDemo
     object Label3: TLabel
       Left = 16
       Top = 56
-      Width = 19
+      Width = 43
       Height = 13
-      Caption = 'Size'
+      Caption = 'Scale, %'
     end
     object Label4: TLabel
       Left = 16
       Top = 152
-      Width = 62
+      Width = 64
       Height = 13
-      Caption = 'Arrow longer'
+      Caption = 'Arrow len, %'
     end
     object Label5: TLabel
       Left = 16
       Top = 184
-      Width = 66
+      Width = 72
       Height = 13
-      Caption = 'Corner indent'
+      Caption = 'Corner size, %'
     end
     object chkDraw: TCheckBox
       Left = 16
@@ -121,11 +120,11 @@ object FormDemo: TFormDemo
       Top = 48
       Width = 113
       Height = 30
-      Max = 40
-      Min = 8
+      Max = 300
+      Min = 100
       PageSize = 5
       Frequency = 20
-      Position = 20
+      Position = 100
       TabOrder = 0
       ThumbLength = 16
       OnChange = trackSizeChange
@@ -135,9 +134,11 @@ object FormDemo: TFormDemo
       Top = 144
       Width = 113
       Height = 30
-      Min = -10
+      Max = 400
+      Min = 50
       PageSize = 20
       Frequency = 5
+      Position = 50
       TabOrder = 3
       ThumbLength = 16
       OnChange = trackLongerChange
@@ -147,8 +148,8 @@ object FormDemo: TFormDemo
       Top = 176
       Width = 113
       Height = 30
-      Max = 30
-      Min = -30
+      Max = 300
+      Min = -300
       PageSize = 20
       Frequency = 10
       TabOrder = 4
@@ -160,13 +161,37 @@ object FormDemo: TFormDemo
       Top = 176
       Width = 113
       Height = 30
-      Max = 30
-      Min = -30
+      Max = 300
+      Min = -300
       PageSize = 40
       Frequency = 10
       TabOrder = 5
       ThumbLength = 16
       OnChange = trackCornerHChange
+    end
+    object ListArrows: TListBox
+      Left = 240
+      Top = 240
+      Width = 121
+      Height = 97
+      ItemHeight = 13
+      Items.Strings = (
+        'normal'
+        'below'
+        'above'
+        'hidden'
+        'in corner')
+      TabOrder = 7
+      OnClick = ListArrowsClick
+    end
+    object chkInstant: TCheckBox
+      Left = 16
+      Top = 255
+      Width = 153
+      Height = 17
+      Caption = 'Instant move on click'
+      TabOrder = 8
+      OnClick = chkDrawClick
     end
   end
   object Panel2: TPanel
