@@ -2,10 +2,10 @@ object FormDemo: TFormDemo
   Left = 260
   Height = 421
   Top = 285
-  Width = 716
+  Width = 729
   Caption = 'ATScrollBar demo'
   ClientHeight = 421
-  ClientWidth = 716
+  ClientWidth = 729
   Font.Height = -13
   Font.Name = 'Default'
   OnCreate = FormCreate
@@ -23,11 +23,11 @@ object FormDemo: TFormDemo
     Left = 266
     Height = 421
     Top = 0
-    Width = 450
+    Width = 463
     Align = alClient
     BevelOuter = bvNone
     ClientHeight = 421
-    ClientWidth = 450
+    ClientWidth = 463
     TabOrder = 0
     object Label1: TLabel
       Left = 8
@@ -195,6 +195,48 @@ object FormDemo: TFormDemo
       Caption = 'Instant move on click'
       OnChange = chkInstantChange
       TabOrder = 8
+    end
+    object trackThumbSize: TTrackBar
+      Left = 328
+      Height = 46
+      Top = 144
+      Width = 64
+      Frequency = 20
+      Max = 50
+      Min = 4
+      OnChange = trackThumbSizeChange
+      PageSize = 5
+      Position = 4
+      TabOrder = 9
+    end
+    object Label6: TLabel
+      Left = 230
+      Height = 16
+      Top = 168
+      Width = 87
+      Caption = 'Min thumb size'
+      ParentColor = False
+    end
+    object trackMax: TTrackBar
+      Left = 328
+      Height = 46
+      Top = 96
+      Width = 64
+      Frequency = 20
+      Max = 10000
+      Min = 100
+      OnChange = trackMaxChange
+      PageSize = 5
+      Position = 100
+      TabOrder = 10
+    end
+    object Label7: TLabel
+      Left = 230
+      Height = 16
+      Top = 120
+      Width = 60
+      Caption = 'Max value'
+      ParentColor = False
     end
   end
   object Panel2: TPanel

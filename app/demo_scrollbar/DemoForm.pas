@@ -15,6 +15,8 @@ type
 
   TFormDemo = class(TForm)
     chkInstant: TCheckBox;
+    Label6: TLabel;
+    Label7: TLabel;
     ListArrows: TListBox;
     Panel1: TPanel;
     Panel2: TPanel;
@@ -33,16 +35,20 @@ type
     Label5: TLabel;
     trackCornerV: TTrackBar;
     trackCornerH: TTrackBar;
+    trackThumbSize: TTrackBar;
+    trackMax: TTrackBar;
     procedure chkInstantChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure chkDrawClick(Sender: TObject);
     procedure ListArrowsClick(Sender: TObject);
     procedure trackBorChange(Sender: TObject);
+    procedure trackMaxChange(Sender: TObject);
     procedure trackPageChange(Sender: TObject);
     procedure trackSizeChange(Sender: TObject);
     procedure trackLongerChange(Sender: TObject);
     procedure trackCornerVChange(Sender: TObject);
     procedure trackCornerHChange(Sender: TObject);
+    procedure trackThumbSizeChange(Sender: TObject);
   private
     { Private declarations }
     procedure ChangeH(S: TObject);
@@ -186,6 +192,14 @@ begin
   bar_h1.Invalidate;
 end;
 
+procedure TFormDemo.trackMaxChange(Sender: TObject);
+begin
+  bar_v.Max:= trackMax.Position;
+  bar_v.Invalidate;
+  bar_h.Max:= trackMax.Position;
+  bar_h.Invalidate;
+end;
+
 procedure TFormDemo.ChangeH(S: TObject);
 begin
   labh.Caption:= Format('Horz %d (%d .. %d)', [bar_h.Position, bar_h.Min, bar_h.Max]);
@@ -232,6 +246,14 @@ end;
 procedure TFormDemo.trackCornerHChange(Sender: TObject);
 begin
   bar_h.IndentCorner:= trackCornerH.Position;
+  bar_h.Invalidate;
+end;
+
+procedure TFormDemo.trackThumbSizeChange(Sender: TObject);
+begin
+  bar_v.MinSizeOfThumb:= trackThumbSize.Position;
+  bar_h.MinSizeOfThumb:= trackThumbSize.Position;
+  bar_v.Invalidate;
   bar_h.Invalidate;
 end;
 
