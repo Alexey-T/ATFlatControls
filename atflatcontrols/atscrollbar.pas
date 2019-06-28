@@ -126,6 +126,7 @@ type
     FPageSize: Integer;
     FMinSizeToShowThumb: Integer;
     FMinSizeOfThumb: Integer;
+    FDeltaOfThumb: Integer;
 
     //internal
     FRectMain: TRect; //area for scrolling
@@ -157,6 +158,7 @@ type
       message CM_MOUSELEAVE;
     {$endif}
 
+    function EffectiveRectSize: integer;
     procedure TimerMouseoverTick(Sender: TObject);
 
     procedure DoPaintArrow(C: TCanvas; const R: TRect; AType: TATScrollbarElemType);
@@ -729,21 +731,33 @@ begin
   Result:= FKind=sbHorizontal;
 end;
 
+function TATScrollbar.EffectiveRectSize: integer;
+begin
+  if IsHorz then
+    Result:= FRectMain.Width
+  else
+    Result:= FRectMain.Height;
+
+  if FDeltaOfThumb<0 then
+    Inc(Result, FDeltaOfThumb);
+
+  if Result<1 then
+    Result:= 1;
+end;
+
 function TATScrollbar.PosToCoord(APos: Integer): Integer;
 var
-  N0, NLen: Integer;
+  N0: Integer;
 begin
   if IsHorz then
   begin
     N0:= FRectMain.Left;
-    NLen:= FRectMain.Width;
   end
   else
   begin
     N0:= FRectMain.Top;
-    NLen:= FRectMain.Height;
   end;
-  Result:= N0 + (APos-FMin) * NLen div Math.Max(1, FMax-FMin);
+  Result:= N0 + (APos-FMin) * EffectiveRectSize div Math.Max(1, FMax-FMin);
 end;
 
 procedure TATScrollbar.DoUpdateThumbRect;
@@ -760,8 +774,9 @@ begin
     R.Top:= FRectMain.Top;
     R.Bottom:= FRectMain.Bottom;
     R.Left:= PosToCoord(FPos);
-    R.Left:= Math.Min(R.Left, FRectMain.Right-FMinSizeOfThumb);
     R.Right:= PosToCoord(FPos+FPageSize);
+    FDeltaOfThumb:= R.Right-R.Left-FMinSizeOfThumb;
+    R.Left:= Math.Min(R.Left, FRectMain.Right-FMinSizeOfThumb);
     R.Right:= Math.Max(R.Right, R.Left+FMinSizeOfThumb);
     R.Right:= Math.Min(R.Right, FRectMain.Right);
   end
@@ -771,8 +786,9 @@ begin
     R.Left:= FRectMain.Left;
     R.Right:= FRectMain.Right;
     R.Top:= PosToCoord(FPos);
-    R.Top:= Math.Min(R.Top, FRectMain.Bottom-FMinSizeOfThumb);
     R.Bottom:= PosToCoord(FPos+FPageSize);
+    FDeltaOfThumb:= R.Bottom-R.Top-FMinSizeOfThumb;
+    R.Top:= Math.Min(R.Top, FRectMain.Bottom-FMinSizeOfThumb);
     R.Bottom:= Math.Max(R.Bottom, R.Top+FMinSizeOfThumb);
     R.Bottom:= Math.Min(R.Bottom, FRectMain.Bottom);
   end;
@@ -918,9 +934,9 @@ end;
 function TATScrollbar.CoordToPos(X, Y: Integer): Integer;
 begin
   if IsHorz then
-    Result:= FMin + (X-FRectMain.Left) * (FMax-FMin) div Math.Max(FRectMain.Width, 1)
+    Result:= FMin + (X-FRectMain.Left) * (FMax-FMin) div EffectiveRectSize
   else
-    Result:= FMin + (Y-FRectMain.Top) * (FMax-FMin) div Math.Max(FRectMain.Height, 1);
+    Result:= FMin + (Y-FRectMain.Top) * (FMax-FMin) div EffectiveRectSize;
 end;
 
 procedure TATScrollbar.DoUpdatePosOnDrag(X, Y: Integer);
