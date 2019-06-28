@@ -251,8 +251,7 @@ end;
 
 procedure TFormDemo.trackThumbSizeChange(Sender: TObject);
 begin
-  bar_v.MinSizeOfThumb:= trackThumbSize.Position;
-  bar_h.MinSizeOfThumb:= trackThumbSize.Position;
+  ATScrollbarTheme.ThumbMinSize:= trackThumbSize.Position;
   bar_v.Invalidate;
   bar_h.Invalidate;
 end;

@@ -95,6 +95,8 @@ type
     TimerInterval: integer;
     DirectJumpOnClickPageUpDown: boolean;
 
+    MinSizeToShowThumb: integer;
+    ThumbMinSize: integer;
     ThumbMarkerOffset: integer;
     ThumbMarkerMinimalSize: integer;
     ThumbMarkerDecorSize: integer;
@@ -124,8 +126,6 @@ type
     FMax: Integer;
     FLineSize: Integer;
     FPageSize: Integer;
-    FMinSizeToShowThumb: Integer;
-    FMinSizeOfThumb: Integer;
     FDeltaOfThumb: Integer;
 
     //internal
@@ -239,8 +239,6 @@ type
     property Max: Integer read FMax write SetMax default 100;
     property LineSize: Integer read FLineSize write FLineSize default 1;
     property PageSize: Integer read FPageSize write SetPageSize default 20;
-    property MinSizeToShowThumb: Integer read FMinSizeToShowThumb write FMinSizeToShowThumb default 10;
-    property MinSizeOfThumb: Integer read FMinSizeOfThumb write FMinSizeOfThumb default 4;
     property Kind: TScrollBarKind read FKind write SetKind default sbHorizontal;
     property IndentCorner: Integer read FIndentCorner write FIndentCorner default 0;
 
@@ -321,8 +319,6 @@ begin
   FMax:= 100;
   FLineSize:= 1;
   FPageSize:= 20;
-  FMinSizeToShowThumb:= 10;
-  FMinSizeOfThumb:= 4;
 
   FBitmap:= TBitmap.Create;
   FBitmap.PixelFormat:= pf24bit;
@@ -770,26 +766,26 @@ begin
 
   if IsHorz then
   begin
-    if FRectMain.Width<FMinSizeToShowThumb then Exit;
+    if FRectMain.Width<FTheme^.MinSizeToShowThumb then Exit;
     R.Top:= FRectMain.Top;
     R.Bottom:= FRectMain.Bottom;
     R.Left:= PosToCoord(FPos);
     R.Right:= PosToCoord(FPos+FPageSize);
-    FDeltaOfThumb:= R.Right-R.Left-FMinSizeOfThumb;
-    R.Left:= Math.Min(R.Left, FRectMain.Right-FMinSizeOfThumb);
-    R.Right:= Math.Max(R.Right, R.Left+FMinSizeOfThumb);
+    FDeltaOfThumb:= R.Right-R.Left-FTheme^.ThumbMinSize;
+    R.Left:= Math.Min(R.Left, FRectMain.Right-FTheme^.ThumbMinSize);
+    R.Right:= Math.Max(R.Right, R.Left+FTheme^.ThumbMinSize);
     R.Right:= Math.Min(R.Right, FRectMain.Right);
   end
   else
   begin
-    if FRectMain.Height<FMinSizeToShowThumb then Exit;
+    if FRectMain.Height<FTheme^.MinSizeToShowThumb then Exit;
     R.Left:= FRectMain.Left;
     R.Right:= FRectMain.Right;
     R.Top:= PosToCoord(FPos);
     R.Bottom:= PosToCoord(FPos+FPageSize);
-    FDeltaOfThumb:= R.Bottom-R.Top-FMinSizeOfThumb;
-    R.Top:= Math.Min(R.Top, FRectMain.Bottom-FMinSizeOfThumb);
-    R.Bottom:= Math.Max(R.Bottom, R.Top+FMinSizeOfThumb);
+    FDeltaOfThumb:= R.Bottom-R.Top-FTheme^.ThumbMinSize;
+    R.Top:= Math.Min(R.Top, FRectMain.Bottom-FTheme^.ThumbMinSize);
+    R.Bottom:= Math.Max(R.Bottom, R.Top+FTheme^.ThumbMinSize);
     R.Bottom:= Math.Min(R.Bottom, FRectMain.Bottom);
   end;
   FRectThumb:= R;
@@ -1075,6 +1071,8 @@ initialization
     TimerInterval:= 200;
     DirectJumpOnClickPageUpDown:= false;
 
+    MinSizeToShowThumb:= 10;
+    ThumbMinSize:= 4;
     ThumbMarkerOffset:= 4;
     ThumbMarkerMinimalSize:= 20;
     ThumbMarkerDecorSize:= 2;
