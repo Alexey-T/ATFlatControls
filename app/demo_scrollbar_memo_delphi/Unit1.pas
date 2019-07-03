@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
   ATScrollBar, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.ExtCtrls, Math,
-  Vcl.AppEvnts, ALScrollBar, System.UITypes;
+  Vcl.AppEvnts, System.UITypes;
 
 type
   TMemo  = class(Vcl.StdCtrls.TMemo)
