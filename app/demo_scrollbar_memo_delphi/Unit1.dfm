@@ -1,0 +1,171 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'ATScrollBar Memo Demo'
+  ClientHeight = 299
+  ClientWidth = 635
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  OnMouseWheel = FormMouseWheel
+  OnResize = FormResize
+  PixelsPerInch = 96
+  TextHeight = 13
+  object PanelRight: TPanel
+    Left = 488
+    Top = 0
+    Width = 147
+    Height = 299
+    Align = alRight
+    BevelOuter = bvNone
+    ParentBackground = False
+    TabOrder = 0
+    ExplicitHeight = 280
+    object cbWordWrap: TCheckBox
+      AlignWithMargins = True
+      Left = 6
+      Top = 3
+      Width = 135
+      Height = 22
+      Margins.Left = 6
+      Margins.Right = 6
+      Margins.Bottom = 0
+      Align = alTop
+      Caption = 'WordWrap'
+      Checked = True
+      State = cbChecked
+      TabOrder = 0
+      OnClick = cbWordWrapClick
+    end
+    object Button1: TButton
+      AlignWithMargins = True
+      Left = 6
+      Top = 140
+      Width = 135
+      Height = 25
+      Margins.Left = 6
+      Margins.Top = 12
+      Margins.Right = 6
+      Align = alTop
+      Caption = 'Font...'
+      TabOrder = 1
+      OnClick = Button1Click
+    end
+    object RadioGroup1: TRadioGroup
+      AlignWithMargins = True
+      Left = 3
+      Top = 28
+      Width = 141
+      Height = 80
+      Margins.Bottom = 0
+      Align = alTop
+      Caption = 'ScrollBars'
+      ItemIndex = 0
+      Items.Strings = (
+        'Custom Only'
+        'System Only'
+        'Both (debug use)')
+      TabOrder = 2
+      OnClick = RadioGroup1Click
+    end
+    object cbDark: TCheckBox
+      AlignWithMargins = True
+      Left = 6
+      Top = 111
+      Width = 135
+      Height = 17
+      Margins.Left = 6
+      Margins.Right = 6
+      Margins.Bottom = 0
+      Align = alTop
+      Caption = 'Dark'
+      TabOrder = 3
+      OnClick = cbDarkClick
+    end
+  end
+  object PanelMemo: TPanel
+    Left = 0
+    Top = 0
+    Width = 488
+    Height = 299
+    Align = alClient
+    ParentBackground = False
+    TabOrder = 1
+    ExplicitHeight = 280
+    object Memo1: TMemo
+      AlignWithMargins = True
+      Left = 4
+      Top = 4
+      Width = 464
+      Height = 275
+      Align = alClient
+      BevelInner = bvNone
+      BevelOuter = bvNone
+      BorderStyle = bsNone
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Lines.Strings = (
+        'Memo1')
+      ParentFont = False
+      ScrollBars = ssVertical
+      TabOrder = 0
+      WantTabs = True
+      OnChange = Memo1Change
+      ExplicitHeight = 256
+    end
+    object ATHScrollbar: TATScrollbar
+      AlignWithMargins = True
+      Left = 1
+      Top = 282
+      Width = 469
+      Height = 16
+      Margins.Left = 0
+      Margins.Top = 0
+      Margins.Right = 17
+      Margins.Bottom = 0
+      Align = alBottom
+      DoubleBuffered = True
+      Visible = False
+      OnChange = ATHScrollbarChange
+      ExplicitTop = 263
+    end
+    object ATVScrollbar: TATScrollbar
+      Left = 471
+      Top = 1
+      Width = 16
+      Height = 281
+      Margins.Left = 0
+      Margins.Top = 2
+      Margins.Right = 0
+      Margins.Bottom = 2
+      Align = alRight
+      DoubleBuffered = True
+      Visible = False
+      Kind = sbVertical
+      OnChange = ATVScrollbarChange
+      ExplicitHeight = 262
+    end
+  end
+  object ApplicationEvents1: TApplicationEvents
+    OnIdle = ApplicationEvents1Idle
+    Left = 311
+    Top = 161
+  end
+  object FontDialog1: TFontDialog
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    Left = 304
+    Top = 96
+  end
+end
