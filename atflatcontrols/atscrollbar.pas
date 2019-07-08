@@ -320,6 +320,7 @@ begin
   FMin:= 0;
   FMax:= 100;
   FSmallChange:= 1;
+  FLargeChange:= 0;
   FPageSize:= 20;
 
   FBitmap:= TBitmap.Create;
