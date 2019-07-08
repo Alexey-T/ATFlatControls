@@ -555,9 +555,9 @@ begin
           ScrollVal:= FPageSize;
 
         if FMouseDownOnPageUp then
-            DoScrollBy(-ScrollVal)
+          DoScrollBy(-ScrollVal)
         else
-            DoScrollBy(ScrollVal);
+          DoScrollBy(ScrollVal);
 
         FTimer.Enabled:= true;
       end;
