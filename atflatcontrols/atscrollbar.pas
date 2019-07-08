@@ -125,6 +125,7 @@ type
     FMin: Integer;
     FMax: Integer;
     FLineSize: Integer;
+    FLargeChange: Integer;
     FPageSize: Integer;
     FDeltaOfThumb: Integer;
 
@@ -238,6 +239,7 @@ type
     property Min: Integer read FMin write SetMin default 0;
     property Max: Integer read FMax write SetMax default 100;
     property LineSize: Integer read FLineSize write FLineSize default 1;
+    property LargeChange: Integer read FLargeChange write FLargeChange default 0;
     property PageSize: Integer read FPageSize write SetPageSize default 20;
     property Kind: TScrollBarKind read FKind write SetKind default sbHorizontal;
     property IndentCorner: Integer read FIndentCorner write FIndentCorner default 0;
@@ -498,6 +500,8 @@ end;
 
 procedure TATScrollbar.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
+var
+  ScrollVal: integer;
 begin
   FMouseDown:= Button=mbLeft;
   FMouseDownOnThumb:= PtInRect(FRectThumb, Point(X, Y));
@@ -539,10 +543,16 @@ begin
       end
       else
       begin
+        ScrollVal := FPageSize; //default
+
+        if FLargeChange > 0 then
+          ScrollVal := FLargeChange; //optional
+
         if FMouseDownOnPageUp then
-          DoScrollBy(-FPageSize)
+            DoScrollBy(-ScrollVal)
         else
-          DoScrollBy(FPageSize);
+            DoScrollBy(ScrollVal);
+
         FTimer.Enabled:= true;
       end;
     end;
