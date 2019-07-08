@@ -43,6 +43,7 @@ type
     procedure cbDarkClick(Sender: TObject);
   private
     procedure UpdateScrollbar;
+    procedure SetScrollWidth(EndSpace:integer=15);
     { Private declarations }
   public
     { Public declarations }
@@ -211,6 +212,8 @@ begin
       //ShowMessage(FileName);
       Clear;
       Form1.ATVScrollbar.Position := 0;
+      Form1.ATHScrollbar.Position := 0;
+      Form1.ATHScrollbar.Max := 0;
       Lines.LoadFromFile(FileName);
       Form1.UpdateScrollbar;
       SetFocus;
@@ -323,14 +326,35 @@ begin
   UpdateScrollbar;
 end;
 
+procedure TForm1.SetScrollWidth(EndSpace:integer);
+var
+  i, startLine, endLine, endPos: integer;
+begin
+
+    if not Memo1.WordWrap then
+    begin
+      startLine := Memo1.Perform( EM_GETFIRSTVISIBLELINE,0,0 );
+      endLine := startLine + GetVisibleLineCount(Memo1);
+      for i := startLine to endLine do
+      begin
+        endPos :=
+          (Length(Memo1.Lines[i]) * GetTextMetric(Memo1).tmAveCharWidth) +
+            (EndSpace * GetTextMetric(Memo1).tmAveCharWidth);
+        if ATHScrollbar.Max < endPos then
+          ATHScrollbar.Max := endPos;
+      end;
+      ATHScrollbar.Visible :=
+        (Memo1.ClientWidth < ATHScrollbar.Max) and
+          (RadioGroup1.ItemIndex <> SystemSB)
+    end;
+
+end;
+
 procedure TForm1.UpdateScrollbar;
 var
   VisibleLineCount: integer;
   NeedVert, NeedHorz: boolean;
   SS: TScrollStyle;
-const
-  EndSpace = 10; //slight space for breathing room at end of lines
-
 begin
 
   VisibleLineCount := GetVisibleLineCount(Memo1);
@@ -338,7 +362,7 @@ begin
   NeedVert := (Memo1.Lines.Count > VisibleLineCount);
   NeedHorz :=
     (not Memo1.WordWrap) and
-      (Memo1.ClientWidth < ContentRect(Memo1).Width);
+      (Memo1.ClientWidth < ATHScrollbar.Max); //ContentRect(Memo1).Width);
 
   SS := ssNone;
 
@@ -382,6 +406,7 @@ begin
 
     ATVScrollbar.Min:= 0;
 
+    ATVScrollbar.LargeChange := 3;
     ATVScrollbar.PageSize := GetVisibleLineCount(Memo1);
     ATVScrollbar.Max := Memo1.Lines.Count + 1;
 
@@ -393,10 +418,14 @@ begin
 
     ATHScrollbar.Min:= 0;
     //Minimum scroll arrow movement:
-    ATHScrollbar.LineSize := GetTextMetric(Memo1).tmMaxCharWidth;
+    ATHScrollbar.SmallChange := GetTextMetric(Memo1).tmMaxCharWidth;
+    ATHScrollbar.LargeChange := ATHScrollbar.SmallChange * 3;
 
     ATHScrollbar.PageSize := Memo1.ClientWidth;
-    ATHScrollbar.Max := ContentRect(Memo1).Width + EndSpace;
+    //ATHScrollbar.Max := ContentRect(Memo1).Width + EndSpace;
+
+    SetScrollWidth;
+
   // END HORIZONTAL CUSTOM ///////
 
   ATVScrollbar.Invalidate;
@@ -557,6 +586,7 @@ end;
 procedure TForm1.ATVScrollbarChange(Sender: TObject);
 begin
 
+  SetScrollWidth;
   SendMessage(Memo1.Handle, WM_VSCROLL ,MAKEWPARAM( SB_THUMBTRACK,
     ATVScrollbar.Position) ,0);
 
