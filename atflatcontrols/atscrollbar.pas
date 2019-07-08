@@ -84,6 +84,7 @@ type
 
     ColorArrowSign: TColor;
     ColorScrolled: TColor;
+    ColorDecor3D: TColor;
 
     InitialSize: integer;
     ScalePercents: integer;
@@ -94,12 +95,14 @@ type
     BorderSize: integer;
     TimerInterval: integer;
     DirectJumpOnClickPageUpDown: boolean;
+    Decor3D: boolean;
 
     MinSizeToShowThumb: integer;
     ThumbMinSize: integer;
     ThumbMarkerOffset: integer;
     ThumbMarkerMinimalSize: integer;
     ThumbMarkerDecorSize: integer;
+    ThumbMarkerDecorSpace: integer;
   end;
 
 var
@@ -269,8 +272,10 @@ end;
 procedure TATScrollbar.TimerMouseoverTick(Sender: TObject);
 //timer is workaround for LCL issue, where MouseLeave not called
 //if mouse leaves app window area (at least on Linux)
+{$ifdef FPC}
 var
   Pnt: TPoint;
+{$endif}
 begin
   {$ifdef FPC}
   Pnt:= ScreenToClient(Mouse.CursorPos);
@@ -544,15 +549,15 @@ begin
       end
       else
       begin
-        if FLargeChange>0 then
-          ScrollVal:= FLargeChange
-        else
-          ScrollVal:= FPageSize;
+        ScrollVal := FPageSize; //default
+
+        if FLargeChange > 0 then
+          ScrollVal := FLargeChange; //optional
 
         if FMouseDownOnPageUp then
-          DoScrollBy(-ScrollVal)
+            DoScrollBy(-ScrollVal)
         else
-          DoScrollBy(ScrollVal);
+            DoScrollBy(ScrollVal);
 
         FTimer.Enabled:= true;
       end;
@@ -727,7 +732,6 @@ begin
     else
       Exit;
  end;     
-
   C.Brush.Color:= ColorToRGB(FTheme^.ColorArrowSign);
   C.Pen.Color:= ColorToRGB(FTheme^.ColorArrowSign);
   C.Polygon([P1, P2, P3]);
@@ -830,7 +834,7 @@ end;
 procedure TATScrollbar.DoPaintStd_Thumb(C: TCanvas; const R: TRect);
 var
   P: TPoint;
-  NOffset, i: integer;
+  NOffset, i, DecorSpace: integer;
 begin
   C.Brush.Color:= ColorToRGB(FTheme^.ColorThumbFill);
 
@@ -850,21 +854,45 @@ begin
   NOffset:= FTheme^.ThumbMarkerOffset;
 
   P:= CenterPoint(R);
+  if FTheme^.Decor3D then
+  begin
+    if IsHorz then P.X := p.X + 1;
+    if not IsHorz then P.Y := p.Y + 1;
+  end;
+
+  DecorSpace := FTheme^.ThumbMarkerDecorSPace;
+
   if IsHorz then
   begin
     if R.Width>FTheme^.ThumbMarkerMinimalSize then
     begin
       for i:= 0 to FTheme^.ThumbMarkerDecorSize-1 do
       begin
-        C.MoveTo(P.X-2*i, R.Top+NOffset);
-        C.LineTo(P.X-2*i, R.Bottom-NOffset);
+        C.MoveTo(P.X-DecorSpace*i, R.Top+NOffset);
+        C.LineTo(P.X-DecorSpace*i, R.Bottom-NOffset);
         if i>0 then
         begin
-          C.MoveTo(P.X+2*i, R.Top+NOffset);
-          C.LineTo(P.X+2*i, R.Bottom-NOffset);
+          C.MoveTo(P.X-DecorSpace*i, R.Top+NOffset);
+          C.LineTo(P.X-DecorSpace*i, R.Bottom-NOffset);
         end;
       end;
     end;
+
+    if FTheme^.Decor3D then
+    begin
+      C.Pen.Color:= ColorToRGB(FTheme^.ColorDecor3D);
+      for i:= 0 to FTheme^.ThumbMarkerDecorSize-1 do
+      begin
+        C.MoveTo((P.X-DecorSpace*i) -1, R.Top+NOffset);
+        C.LineTo((P.X-DecorSpace*i) -1, R.Bottom-NOffset);
+        if i>0 then
+        begin
+          C.MoveTo((P.X-DecorSpace*i) -1, R.Top+NOffset);
+          C.LineTo((P.X-DecorSpace*i) -1, R.Bottom-NOffset);
+        end;
+      end;
+    end;
+
   end
   else
   begin
@@ -872,14 +900,30 @@ begin
     begin
       for i:= 0 to FTheme^.ThumbMarkerDecorSize-1 do
       begin
-        C.MoveTo(R.Left+NOffset, P.Y-2*i);
-        C.LineTo(R.Right-NOffset, P.Y-2*i);
+        C.MoveTo(R.Left+NOffset, P.Y-DecorSpace*i);
+        C.LineTo(R.Right-NOffset, P.Y-DecorSpace*i);
         if i>0 then
         begin
-          C.MoveTo(R.Left+NOffset, P.Y+2*i);
-          C.LineTo(R.Right-NOffset, P.Y+2*i);
+          C.MoveTo(R.Left+NOffset, P.Y+DecorSpace*i);
+          C.LineTo(R.Right-NOffset, P.Y+DecorSpace*i);
         end;
       end;
+
+      if FTheme^.Decor3D then
+      begin
+        C.Pen.Color:= ColorToRGB(FTheme^.ColorDecor3D);
+        for i:= 0 to FTheme^.ThumbMarkerDecorSize-1 do
+        begin
+          C.MoveTo(R.Left+NOffset, (P.Y-DecorSpace*i) -1);
+          C.LineTo(R.Right-NOffset, (P.Y-DecorSpace*i) -1);
+          if i>0 then
+          begin
+            C.MoveTo(R.Left+NOffset, (P.Y+DecorSpace*i) -1);
+            C.LineTo(R.Right-NOffset, (P.Y+DecorSpace*i) -1);
+          end;
+        end;
+      end;
+
     end;
   end;
 end;
@@ -1071,6 +1115,7 @@ initialization
 
     ColorArrowSign:= $404040;
     ColorScrolled:= $d0b0b0;
+    ColorDecor3D:= $ffffff; //default: clWhite
 
     InitialSize:= 16;
     ScalePercents:= 100;
@@ -1081,12 +1126,14 @@ initialization
     BorderSize:= 0;
     TimerInterval:= 200;
     DirectJumpOnClickPageUpDown:= false;
+    Decor3D:= false;
 
     MinSizeToShowThumb:= 10;
     ThumbMinSize:= 4;
     ThumbMarkerOffset:= 4;
     ThumbMarkerMinimalSize:= 20;
     ThumbMarkerDecorSize:= 2;
+    ThumbMarkerDecorSpace:= 2;
   end;
 
 end.
