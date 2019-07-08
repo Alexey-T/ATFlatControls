@@ -871,8 +871,8 @@ begin
         C.LineTo(P.X-DecorSpace*i, R.Bottom-NOffset);
         if i>0 then
         begin
-          C.MoveTo(P.X-DecorSpace*i, R.Top+NOffset);
-          C.LineTo(P.X-DecorSpace*i, R.Bottom-NOffset);
+          C.MoveTo(P.X+DecorSpace*i, R.Top+NOffset);
+          C.LineTo(P.X+DecorSpace*i, R.Bottom-NOffset);
         end;
       end;
     end;
@@ -886,8 +886,8 @@ begin
         C.LineTo((P.X-DecorSpace*i) -1, R.Bottom-NOffset);
         if i>0 then
         begin
-          C.MoveTo((P.X-DecorSpace*i) -1, R.Top+NOffset);
-          C.LineTo((P.X-DecorSpace*i) -1, R.Bottom-NOffset);
+          C.MoveTo((P.X+DecorSpace*i) -1, R.Top+NOffset);
+          C.LineTo((P.X+DecorSpace*i) -1, R.Bottom-NOffset);
         end;
       end;
     end;
