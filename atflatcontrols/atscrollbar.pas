@@ -124,7 +124,7 @@ type
     FPos: Integer;
     FMin: Integer;
     FMax: Integer;
-    FLineSize: Integer;
+    FSmallChange: Integer;
     FLargeChange: Integer;
     FPageSize: Integer;
     FDeltaOfThumb: Integer;
@@ -238,7 +238,7 @@ type
     property Position: Integer read FPos write SetPos default 0;
     property Min: Integer read FMin write SetMin default 0;
     property Max: Integer read FMax write SetMax default 100;
-    property LineSize: Integer read FLineSize write FLineSize default 1;
+    property SmallChange: Integer read FSmallChange write FSmallChange default 1;
     property LargeChange: Integer read FLargeChange write FLargeChange default 0;
     property PageSize: Integer read FPageSize write SetPageSize default 20;
     property Kind: TScrollBarKind read FKind write SetKind default sbHorizontal;
@@ -319,7 +319,8 @@ begin
 
   FMin:= 0;
   FMax:= 100;
-  FLineSize:= 1;
+  FSmallChange:= 1;
+  FLargeChange:= 0;
   FPageSize:= 20;
 
   FBitmap:= TBitmap.Create;
@@ -523,13 +524,13 @@ begin
 
     if FMouseDownOnUp then
     begin
-      DoScrollBy(-FLineSize);
+      DoScrollBy(-FSmallChange);
       FTimer.Enabled:= true;
     end
     else
     if FMouseDownOnDown then
     begin
-      DoScrollBy(FLineSize);
+      DoScrollBy(FSmallChange);
       FTimer.Enabled:= true;
     end
     else
@@ -976,10 +977,10 @@ begin
   P:= ScreenToClient(P);
 
   if FMouseDownOnDown and PtInRect(FRectArrDown, P) then
-    DoScrollBy(FLineSize)
+    DoScrollBy(FSmallChange)
   else
   if FMouseDownOnUp and PtInRect(FRectArrUp, P) then
-    DoScrollBy(-FLineSize)
+    DoScrollBy(-FSmallChange)
   else
   if FMouseDownOnPageDown and PtInRect(FRectPageDown, P) then
     DoScrollBy(FPageSize)
