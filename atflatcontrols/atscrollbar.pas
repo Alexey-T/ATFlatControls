@@ -549,10 +549,10 @@ begin
       end
       else
       begin
-        ScrollVal := FPageSize; //default
-
-        if FLargeChange > 0 then
-          ScrollVal := FLargeChange; //optional
+        if FLargeChange>0 then
+          ScrollVal:= FLargeChange
+        else
+          ScrollVal:= FPageSize;
 
         if FMouseDownOnPageUp then
             DoScrollBy(-ScrollVal)
@@ -856,8 +856,7 @@ begin
   P:= CenterPoint(R);
   if FTheme^.Decor3D then
   begin
-    if IsHorz then P.X := p.X + 1;
-    if not IsHorz then P.Y := p.Y + 1;
+    if IsHorz then Inc(P.X) else Inc(P.Y);
   end;
 
   DecorSpace := FTheme^.ThumbMarkerDecorSPace;
