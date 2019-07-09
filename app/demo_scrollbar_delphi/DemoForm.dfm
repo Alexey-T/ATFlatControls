@@ -193,6 +193,15 @@ object FormDemo: TFormDemo
       TabOrder = 8
       OnClick = chkDrawClick
     end
+    object chkDecorDbl1: TCheckBox
+      Left = 16
+      Top = 278
+      Width = 153
+      Height = 17
+      Caption = 'Decor Double'
+      TabOrder = 9
+      OnClick = chkDecorDbl1Click
+    end
   end
   object Panel2: TPanel
     Left = 0
