@@ -76,6 +76,8 @@ type
     ColorThumbFill: TColor;
     ColorThumbFillOver: TColor;
     ColorThumbFillPressed: TColor;
+    ColorThumbDecor: TColor;
+    ColorThumbDecor2: TColor;
 
     ColorArrowBorder: TColor;
     ColorArrowFill: TColor;
@@ -84,7 +86,6 @@ type
 
     ColorArrowSign: TColor;
     ColorScrolled: TColor;
-    ColorDecor3D: TColor;
 
     InitialSize: integer;
     ScalePercents: integer;
@@ -95,7 +96,6 @@ type
     BorderSize: integer;
     TimerInterval: integer;
     DirectJumpOnClickPageUpDown: boolean;
-    Decor3D: boolean;
 
     MinSizeToShowThumb: integer;
     ThumbMinSize: integer;
@@ -103,6 +103,7 @@ type
     ThumbMarkerMinimalSize: integer;
     ThumbMarkerDecorSize: integer;
     ThumbMarkerDecorSpace: integer;
+    ThumbMarkerDecorDouble: boolean;
   end;
 
 var
@@ -854,11 +855,12 @@ begin
   NOffset:= FTheme^.ThumbMarkerOffset;
 
   P:= CenterPoint(R);
-  if FTheme^.Decor3D then
+  if FTheme^.ThumbMarkerDecorDouble then
   begin
     if IsHorz then Inc(P.X) else Inc(P.Y);
   end;
 
+  C.Pen.Color:= ColorToRGB(FTheme^.ColorThumbDecor);
   DecorSpace := FTheme^.ThumbMarkerDecorSPace;
 
   if IsHorz then
@@ -877,9 +879,9 @@ begin
       end;
     end;
 
-    if FTheme^.Decor3D then
+    if FTheme^.ThumbMarkerDecorDouble then
     begin
-      C.Pen.Color:= ColorToRGB(FTheme^.ColorDecor3D);
+      C.Pen.Color:= ColorToRGB(FTheme^.ColorThumbDecor2);
       for i:= 0 to FTheme^.ThumbMarkerDecorSize-1 do
       begin
         C.MoveTo((P.X-DecorSpace*i) -1, R.Top+NOffset);
@@ -908,9 +910,9 @@ begin
         end;
       end;
 
-      if FTheme^.Decor3D then
+      if FTheme^.ThumbMarkerDecorDouble then
       begin
-        C.Pen.Color:= ColorToRGB(FTheme^.ColorDecor3D);
+        C.Pen.Color:= ColorToRGB(FTheme^.ColorThumbDecor2);
         for i:= 0 to FTheme^.ThumbMarkerDecorSize-1 do
         begin
           C.MoveTo(R.Left+NOffset, (P.Y-DecorSpace*i) -1);
@@ -1106,6 +1108,8 @@ initialization
     ColorThumbFill:= $c0c0c0;
     ColorThumbFillOver:= $d0d0d0;
     ColorThumbFillPressed:= $e0c0c0;
+    ColorThumbDecor:= ColorThumbBorder;
+    ColorThumbDecor2:= clWhite;
 
     ColorArrowBorder:= $808080;
     ColorArrowFill:= $c0c0c0;
@@ -1114,7 +1118,6 @@ initialization
 
     ColorArrowSign:= $404040;
     ColorScrolled:= $d0b0b0;
-    ColorDecor3D:= $ffffff; //default: clWhite
 
     InitialSize:= 16;
     ScalePercents:= 100;
@@ -1125,7 +1128,6 @@ initialization
     BorderSize:= 0;
     TimerInterval:= 200;
     DirectJumpOnClickPageUpDown:= false;
-    Decor3D:= false;
 
     MinSizeToShowThumb:= 10;
     ThumbMinSize:= 4;
@@ -1133,6 +1135,7 @@ initialization
     ThumbMarkerMinimalSize:= 20;
     ThumbMarkerDecorSize:= 2;
     ThumbMarkerDecorSpace:= 2;
+    ThumbMarkerDecorDouble:= false;
   end;
 
 end.
