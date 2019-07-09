@@ -30,6 +30,7 @@ type
     trackCornerH: TTrackBar;
     ListArrows: TListBox;
     chkInstant: TCheckBox;
+    chkDecorDbl1: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure chkDrawClick(Sender: TObject);
     procedure trackBorChange(Sender: TObject);
@@ -39,6 +40,7 @@ type
     procedure trackCornerVChange(Sender: TObject);
     procedure trackCornerHChange(Sender: TObject);
     procedure ListArrowsClick(Sender: TObject);
+    procedure chkDecorDbl1Click(Sender: TObject);
   private
     { Private declarations }
     procedure ChangeH(S: TObject);
@@ -151,6 +153,15 @@ begin
     p.y:= (ARect.Top+ARect.Bottom-ACanvas.TextHeight(str)) div 2;
     ACanvas.TextOut(p.x, p.y, str);
   end;
+end;
+
+procedure TFormDemo.chkDecorDbl1Click(Sender: TObject);
+begin
+  ATScrollbarTheme.ThumbMarkerDecorDouble := chkDecorDbl1.Checked;
+  bar_v.Invalidate;
+  bar_h.Invalidate;
+  bar_v1.Invalidate;
+  bar_h1.Invalidate;
 end;
 
 procedure TFormDemo.chkDrawClick(Sender: TObject);
