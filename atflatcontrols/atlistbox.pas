@@ -704,7 +704,7 @@ end;
 function TATListbox.ClientWidth: integer;
 begin
   Result:= inherited ClientWidth;
-  if ThemedScrollbar and Scrollbar.Visible then
+  if ThemedScrollbar and FScrollbar.Visible then
     Dec(Result, FScrollbar.Width);
 end;
 
