@@ -790,6 +790,7 @@ end;
 procedure TATListbox.MouseMove(Shift: TShiftState; X, Y: Integer);
 var
   NewIndex: integer;
+  R: TRect;
 begin
   inherited;
 
@@ -799,7 +800,14 @@ begin
     if FHotTrackIndex<>NewIndex then
     begin
       FHotTrackIndex:= NewIndex;
-      Invalidate;
+      if Assigned(FScrollbar) and FScrollbar.Visible then
+      begin
+        // https://github.com/Alexey-T/ATFlatControls/issues/32
+        R:= Rect(0, 0, ClientWidth, ClientHeight);
+        InvalidateRect(Handle, {$ifdef fpc}@{$endif}R, false);
+      end
+      else
+        Invalidate;
     end;
   end
   else
