@@ -72,8 +72,8 @@ type
     {$endif}
     {$ifndef FPC}
     procedure UpdateFromScrollbarMsg(const Msg: TWMVScroll);
-    procedure CMMouseEnter( var msg: TMessage ); message CM_MOUSEENTER;
-    procedure CMMouseLeave( var msg: TMessage ); message CM_MOUSELEAVE;
+    procedure CMMouseEnter(var msg: TMessage); message CM_MOUSEENTER;
+    procedure CMMouseLeave(var msg: TMessage); message CM_MOUSELEAVE;
     {$endif}
     procedure UpdateScrollbar;
     function GetVisibleItems: integer;
@@ -725,7 +725,6 @@ end;
 
 procedure TATListbox.InvalidateNoSB;
 var
-  NewIndex: integer;
   R: TRect;
 begin
   if Assigned(FScrollbar) and FScrollbar.Visible then
