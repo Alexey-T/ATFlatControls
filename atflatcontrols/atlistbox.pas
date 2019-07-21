@@ -72,12 +72,15 @@ type
     {$endif}
     {$ifndef FPC}
     procedure UpdateFromScrollbarMsg(const Msg: TWMVScroll);
+    procedure CMMouseEnter( var msg: TMessage ); message CM_MOUSEENTER;
+    procedure CMMouseLeave( var msg: TMessage ); message CM_MOUSELEAVE;
     {$endif}
     procedure UpdateScrollbar;
     function GetVisibleItems: integer;
     function GetItemHeightDefault: integer;
     function GetColumnWidth(AIndex: integer): integer;
     procedure DoKeyDown(var Key: Word; Shift: TShiftState);
+    procedure InvalidateNoSB;
   protected
     procedure Paint; override;
     procedure Click; override;
@@ -649,6 +652,18 @@ begin
     SB_THUMBTRACK: FItemTop:= Max(0, Msg.Pos);
   end;
 end;
+
+procedure TATListbox.CMMouseEnter(var msg: TMessage);
+begin
+  inherited;
+  InvalidateNoSB;
+end;
+
+procedure TATListbox.CMMouseLeave(var msg: TMessage);
+begin
+  inherited;
+  InvalidateNoSB;
+end;
 {$endif}
 
 {$ifdef FPC}
@@ -707,6 +722,22 @@ begin
   if ThemedScrollbar and FScrollbar.Visible then
     Dec(Result, FScrollbar.Width);
 end;
+
+procedure TATListbox.InvalidateNoSB;
+var
+  NewIndex: integer;
+  R: TRect;
+begin
+  if Assigned(FScrollbar) and FScrollbar.Visible then
+  begin
+    // https://github.com/Alexey-T/ATFlatControls/issues/32
+    R:= Rect(0, 0, ClientWidth, ClientHeight);
+    InvalidateRect(Handle, {$ifdef fpc}@{$endif}R, false);
+  end
+  else
+    Invalidate;
+end;
+
 
 procedure TATListbox.Invalidate;
 begin
@@ -790,7 +821,6 @@ end;
 procedure TATListbox.MouseMove(Shift: TShiftState; X, Y: Integer);
 var
   NewIndex: integer;
-  R: TRect;
 begin
   inherited;
 
@@ -800,14 +830,7 @@ begin
     if FHotTrackIndex<>NewIndex then
     begin
       FHotTrackIndex:= NewIndex;
-      if Assigned(FScrollbar) and FScrollbar.Visible then
-      begin
-        // https://github.com/Alexey-T/ATFlatControls/issues/32
-        R:= Rect(0, 0, ClientWidth, ClientHeight);
-        InvalidateRect(Handle, {$ifdef fpc}@{$endif}R, false);
-      end
-      else
-        Invalidate;
+      InvalidateNoSB;
     end;
   end
   else
