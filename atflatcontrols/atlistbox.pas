@@ -74,6 +74,7 @@ type
     procedure UpdateFromScrollbarMsg(const Msg: TWMVScroll);
     procedure CMMouseEnter(var msg: TMessage); message CM_MOUSEENTER;
     procedure CMMouseLeave(var msg: TMessage); message CM_MOUSELEAVE;
+    procedure WMEraseBkgnd(var Message: TMessage); message WM_ERASEBKGND;
     {$endif}
     procedure UpdateScrollbar;
     function GetVisibleItems: integer;
@@ -663,6 +664,13 @@ procedure TATListbox.CMMouseLeave(var msg: TMessage);
 begin
   inherited;
   InvalidateNoSB;
+end;
+
+procedure TATListbox.WMEraseBkgnd(var Message: TMessage);
+begin
+  Message.Result:= 1;
+  if Assigned(FScrollbar) then
+    FScrollbar.Refresh;
 end;
 {$endif}
 
