@@ -250,6 +250,7 @@ begin
     FScrollbar.Max:= ItemCount;
     FScrollbar.PageSize:= VisibleItems;
     FScrollbar.Position:= ItemTop;
+    FScrollbar.Update;
   end;
 
   FillChar(si{%H-}, SizeOf(si), 0);
