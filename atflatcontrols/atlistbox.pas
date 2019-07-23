@@ -670,6 +670,7 @@ procedure TATListbox.WMEraseBkgnd(var Message: TMessage);
 begin
   Message.Result:= 1;
   if Assigned(FScrollbar) then
+  if not MouseInClient then
     FScrollbar.Refresh;
 end;
 {$endif}
