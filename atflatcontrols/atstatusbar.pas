@@ -41,6 +41,8 @@ type
     FAutoStretch: boolean;
     FColorFont: TColor; //integer;
     FColorBack: TColor; //integer;
+    FFontName: string;
+    FFontSize: integer;
     FTag: Int64;
 
   public
@@ -55,6 +57,8 @@ type
     property AutoStretch: boolean read FAutoStretch write FAutoStretch default false;
     property ColorFont: TColor read FColorFont write FColorFont default clNone;
     property ColorBack: TColor read FColorBack write FColorBack default clNone;
+    property FontName: string read FFontName write FFontName;
+    property FontSize: integer read FFontSize write FFontSize default 0;
     property Tag: Int64 read FTag write FTag default 0;
   end;
 
@@ -198,6 +202,8 @@ begin
   FWidth:= 100;
   FColorFont:= clNone;
   FColorBack:= clNone;
+  FFontName:= '';
+  FFontSize:= 0;
   FTag:= 0;
 end;
 
@@ -309,6 +315,16 @@ begin
   if AData.Caption<>'' then
   begin
     C.FillRect(RectText);
+
+    if AData.FontName<>'' then
+      C.Font.Name:= AData.FontName
+    else
+      C.Font.Name:= Theme^.FontName;
+
+    if AData.FontSize>0 then
+      C.Font.Size:= AData.FontSize
+    else
+      C.Font.Size:= Theme^.FontSize;
 
     if AData.ColorFont<>clNone then
       C.Font.Color:= ColorToRGB(AData.ColorFont)
