@@ -1,4 +1,7 @@
 
+2019.09.05
++ ATStatusbar: added cell prop FontName, FontSize
+
 2019.06.11
 + ATButton: added props ItemsShort (for Kind=TextChoice), ShowShortItems, TextAlign
 
