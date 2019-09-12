@@ -47,6 +47,9 @@ const
   cDefaultButtonPadding = 4;
   cDefaultButtonPaddingBig = 5;
 
+var
+  ATFlatControlsEnableButtonsColorBgOver: boolean = true;
+
 type
   { TATButton }
 
@@ -395,6 +398,8 @@ begin
     (not FFlat)
     or FChecked
     or (FOver and not (FKind in [abuSeparatorHorz, abuSeparatorVert]));
+  bUseBack:= bUseBack and ATFlatControlsEnableButtonsColorBgOver;
+
   bUseBorder:= bUseBack
     or (FKind=abuTextChoice);
 
