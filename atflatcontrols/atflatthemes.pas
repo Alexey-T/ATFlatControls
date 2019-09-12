@@ -44,6 +44,7 @@ type
     ColorBorderPassive: TColor;
     ColorBorderOver: TColor;
     ColorBorderFocused: TColor;
+    EnableColorBgOver: boolean;
 
     MouseoverBorderWidth: integer;
     PressedBorderWidth: integer;
@@ -108,6 +109,7 @@ initialization
     ColorBorderPassive:= $a0a0a0;
     ColorBorderOver:= $d0d0d0;
     ColorBorderFocused:= clNavy;
+    EnableColorBgOver:= true;
 
     MouseoverBorderWidth:= 1;
     PressedBorderWidth:= 3;

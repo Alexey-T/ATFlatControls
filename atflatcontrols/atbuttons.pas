@@ -47,9 +47,6 @@ const
   cDefaultButtonPadding = 4;
   cDefaultButtonPaddingBig = 5;
 
-var
-  ATFlatControlsEnableButtonsColorBgOver: boolean = true;
-
 type
   { TATButton }
 
@@ -372,8 +369,6 @@ begin
   PaintTo(Canvas);
 end;
 
-type
-  TControlCracker = class(TControl);
 procedure TATButton.PaintTo(C: TCanvas);
 var
   NWidth, NHeight: integer;
@@ -394,11 +389,13 @@ begin
   else
     NSizeArrow:= 0;
 
+  if not Theme^.EnableColorBgOver then
+    FOver:= false;
+
   bUseBack:=
     (not FFlat)
     or FChecked
     or (FOver and not (FKind in [abuSeparatorHorz, abuSeparatorVert]));
-  bUseBack:= bUseBack and ATFlatControlsEnableButtonsColorBgOver;
 
   bUseBorder:= bUseBack
     or (FKind=abuTextChoice);
