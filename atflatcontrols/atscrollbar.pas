@@ -966,7 +966,9 @@ begin
   if FPos<>Value then
   begin
     FPos:= Value;
-    Invalidate;
+
+    Repaint; //only Invalidate is not ok, it delays painting on big files
+
     if Assigned(FOnChange) then
       FOnChange(Self);
   end;

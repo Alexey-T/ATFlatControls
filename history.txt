@@ -1,4 +1,7 @@
 
+2019.09.13
+- ATScrollbar: fixed very slow repainting on dragging thumb, on big files in CudaText 
+
 2019.09.05
 + ATStatusbar: added cell prop FontName, FontSize
 
