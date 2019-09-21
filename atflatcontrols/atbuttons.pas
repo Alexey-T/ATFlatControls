@@ -81,7 +81,6 @@ type
     FPadding: integer;
     FPaddingBig: integer;
     FTheme: PATFlatTheme;
-    FTimerMouseover: TTimer;
     FWidthInitial: integer;
     FTextOverlay: string;
     FTextAlign: TAlignment;
@@ -115,9 +114,6 @@ type
     procedure SetTextOverlay(const AValue: string);
     procedure SetTheme(AValue: PATFlatTheme);
     procedure ShowChoiceMenu;
-    {$ifdef FPC}
-    procedure TimerMouseoverTick(Sender: TObject);
-    {$endif}
   protected
     procedure Paint; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
@@ -703,7 +699,6 @@ end;
 procedure TATButton.MouseLeave;
 begin
   inherited;
-  FTimerMouseover.Enabled:= false;
   FOver:= false;
   Invalidate;
 end;
@@ -713,7 +708,6 @@ begin
   inherited;
   FOver:= true;
   Invalidate;
-  FTimerMouseover.Enabled:= true;
 end;
 {$endif}
 
@@ -840,14 +834,6 @@ begin
   FItemIndex:= -1;
   FTheme:= @ATFlatTheme;
   FWidthInitial:= 0;
-
-  FTimerMouseover:= TTimer.Create(Self);
-  FTimerMouseover.Enabled:= false;
-  FTimerMouseover.Interval:= 1000;
-  {$ifdef FPC}
-  FTimerMouseover.OnTimer:= TimerMouseoverTick;
-  {$endif}
-
 end;
 
 destructor TATButton.Destroy;
@@ -906,19 +892,6 @@ begin
   P:= ClientToScreen(Point(0, Height));
   FPopup.PopUp(P.X, P.Y);
 end;
-
-{$ifdef FPC}
-procedure TATButton.TimerMouseoverTick(Sender: TObject);
-//timer is workaround for LCL issue, where MouseLeave not called
-//if mouse leaves app window area (at least on Linux)
-var
-  Pnt: TPoint;
-begin
-  Pnt:= ScreenToClient(Mouse.CursorPos);
-  if not PtInRect(ClientRect, Pnt) then
-    MouseLeave;
-end;
-{$endif}
 
 function TATButton.DoScale(AValue: integer): integer;
 begin
