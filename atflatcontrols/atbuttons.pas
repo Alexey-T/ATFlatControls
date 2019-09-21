@@ -117,13 +117,11 @@ type
   protected
     procedure Paint; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-   {$ifdef FPC}
+    {$ifdef FPC}
     procedure MouseLeave; override;
     procedure MouseEnter; override;
     procedure TextChanged; override;
-   {$endif}
-
-    {$ifndef FPC}
+    {$else}
     procedure DoMouseEnter; dynamic;
     procedure DoMouseLeave; dynamic;
     {$endif}
