@@ -128,7 +128,7 @@ type
 
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-    procedure KeyPress(var Key: char); override;
+    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure DoEnter; override;
     procedure DoExit; override;
     procedure Resize; override;
@@ -730,12 +730,14 @@ begin
   Invalidate;
 end;
 
-
-procedure TATButton.KeyPress(var Key: char);
+procedure TATButton.KeyDown(var Key: Word; Shift: TShiftState);
 begin
   inherited;
-  if (Key=' ') then
+  if ((Key=VK_SPACE) or (Key=VK_RETURN)) and (Shift=[]) then
+  begin
     Click;
+    Key:= 0;
+  end;
 end;
 
 procedure TATButton.DoEnter;
