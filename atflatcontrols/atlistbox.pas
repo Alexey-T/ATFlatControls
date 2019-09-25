@@ -318,6 +318,8 @@ end;
 procedure TATListbox.DoPaintTo(C: TCanvas; r: TRect);
 var
   Index: integer;
+  bPaintX: boolean;
+  RectX: TRect;
 begin
   C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListbox);
   C.FillRect(r);
@@ -337,6 +339,21 @@ begin
     end
     else
       DoDefaultDrawItem(C, Index, r);
+
+    case FShowX of
+      albsxNone:
+        bPaintX:= false;
+      albsxAllItems:
+        bPaintX:= true;
+      albsxHotItem:
+        bPaintX:= FHotTrack and (Index=FHotTrackIndex);
+    end;
+
+    if bPaintX then
+    begin
+      RectX:= Rect(r.Left, r.Top, r.Left+FIndentX, r.Bottom);
+      DoPaintX(C, RectX);
+    end;
   end;
 end;
 
@@ -393,8 +410,6 @@ end;
 procedure TATListbox.DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
 var
   S, SItem: string;
-  RectX: TRect;
-  bPaintX: boolean;
   NIndentLeft,
   NColOffset, NColWidth, NAllWidth, i: integer;
 begin
@@ -424,21 +439,6 @@ begin
   NIndentLeft:= FIndentLeft;
   if FShowX<>albsxNone then
     Inc(NIndentLeft, FIndentX);
-
-  case FShowX of
-    albsxNone:
-      bPaintX:= false;
-    albsxAllItems:
-      bPaintX:= true;
-    albsxHotItem:
-      bPaintX:= FHotTrack and (AIndex=FHotTrackIndex);
-  end;
-
-  if bPaintX then
-  begin
-    RectX:= Rect(R.Left, R.Top, R.Left+FIndentX, R.Bottom);
-    DoPaintX(C, RectX);
-  end;
 
   if Length(FColumnSizes)=0 then
   begin
