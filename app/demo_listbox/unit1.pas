@@ -35,6 +35,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure TrackScaleChange(Sender: TObject);
   private
+    procedure ListClickX(Sender: TObject);
     { private declarations }
     procedure ListDraw(Sender: TObject; C: TCanvas; AIndex: integer; const ARect: TRect);
     procedure ListClick(Sender: TObject);
@@ -65,6 +66,7 @@ begin
 
   list.OnDrawItem:= @ListDraw;
   list.OnClick:= @ListClick;
+  list.OnClickXMark:=@ListClickX;
   list.OnDblClick:= @ListDblClick;
   list.OnChangedSel:= @ListChSel;
 
@@ -167,8 +169,12 @@ end;
 
 procedure TfmMain.ListClick(Sender: TObject);
 begin
-  Beep;
-  Caption:= 'Clicked: '+IntToStr(list.ItemIndex);
+  Caption:= 'Clicked item: '+IntToStr(list.ItemIndex);
+end;
+
+procedure TfmMain.ListClickX(Sender: TObject);
+begin
+  Caption:= 'Clicked x mark: '+IntToStr(list.ItemIndex);
 end;
 
 procedure TfmMain.ListDblClick(Sender: TObject);

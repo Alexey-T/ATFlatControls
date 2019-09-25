@@ -64,6 +64,7 @@ type
     FColumnWidths: TATIntArray;
     FShowX: TATListboxShowX;
     FOnDrawItem: TATListboxDrawItemEvent;
+    FOnClickX: TNotifyEvent;
     FOnChangeSel: TNotifyEvent;
     FOnScroll: TNotifyEvent;
     procedure DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
@@ -163,6 +164,7 @@ type
     property VirtualMode: boolean read FVirtualMode write FVirtualMode default true;
     property Visible;
     property OnClick;
+    property OnClickXMark: TNotifyEvent read FOnClickX write FOnClickX;
     property OnDblClick;
     property OnContextPopup;
     property OnChangedSel: TNotifyEvent read FOnChangeSel write FOnChangeSel;
@@ -527,6 +529,14 @@ begin
 
   Pnt:= ScreenToClient(Mouse.CursorPos);
   ItemIndex:= GetItemIndexAt(Pnt);
+
+  if FShowX<>albsxNone then
+    if PtInRect(Rect(0, 0, FIndentX, Height), Pnt) then
+      if Assigned(FOnClickX) then
+      begin
+        FOnClickX(Self);
+        exit;
+      end;
 
   inherited; //OnClick must be after ItemIndex set
 end;

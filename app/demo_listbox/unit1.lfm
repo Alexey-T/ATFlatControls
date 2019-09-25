@@ -100,7 +100,7 @@ object fmMain: TfmMain
     end
     object ComboShowX: TComboBox
       Left = 332
-      Height = 29
+      Height = 27
       Top = 72
       Width = 148
       ItemHeight = 0
