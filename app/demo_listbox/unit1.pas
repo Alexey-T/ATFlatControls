@@ -21,6 +21,7 @@ type
     chkVirtual: TCheckBox;
     chkOwnerDrawn: TCheckBox;
     chkThemedScroll: TCheckBox;
+    ComboShowX: TComboBox;
     Label1: TLabel;
     Panel1: TPanel;
     TrackScale: TTrackBar;
@@ -30,6 +31,7 @@ type
     procedure chkOwnerDrawnChange(Sender: TObject);
     procedure chkThemedScrollChange(Sender: TObject);
     procedure chkVirtualChange(Sender: TObject);
+    procedure ComboShowXChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure TrackScaleChange(Sender: TObject);
   private
@@ -94,6 +96,12 @@ procedure TfmMain.chkVirtualChange(Sender: TObject);
 begin
   list.VirtualMode:= chkVirtual.Checked;
   list.Invalidate;
+end;
+
+procedure TfmMain.ComboShowXChange(Sender: TObject);
+begin
+  List.ShowXMark:= TATListboxShowX(ComboShowX.ItemIndex);
+  List.Invalidate;
 end;
 
 procedure TfmMain.chkOwnerDrawnChange(Sender: TObject);

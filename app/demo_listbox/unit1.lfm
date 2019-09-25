@@ -98,5 +98,22 @@ object fmMain: TfmMain
       OnClick = ButtonGotoClick
       TabOrder = 6
     end
+    object ComboShowX: TComboBox
+      Left = 332
+      Height = 29
+      Top = 72
+      Width = 148
+      ItemHeight = 0
+      ItemIndex = 0
+      Items.Strings = (
+        'no X marks'
+        'X for all items'
+        'X for hot item'
+      )
+      OnChange = ComboShowXChange
+      Style = csDropDownList
+      TabOrder = 7
+      Text = 'no X marks'
+    end
   end
 end

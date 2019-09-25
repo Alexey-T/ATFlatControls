@@ -27,6 +27,13 @@ type
   TATIntArray = array of integer;
 
 type
+  TATListboxShowX = (
+    albsxNone,
+    albsxAllItems,
+    albsxHotItem
+    );
+
+type
   { TATListbox }
 
   TATListbox = class(TCustomControl)
@@ -49,14 +56,17 @@ type
     FHotTrackIndex: integer;
     FIndentLeft: integer;
     FIndentTop: integer;
+    FIndentX: integer;
     FColumnSep: char;
     FColumnSizes: TATIntArray;
     FColumnWidths: TATIntArray;
+    FShowX: TATListboxShowX;
     FOnDrawItem: TATListboxDrawItemEvent;
     FOnChangeSel: TNotifyEvent;
     FOnScroll: TNotifyEvent;
     procedure DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
     procedure DoPaintTo(C: TCanvas; r: TRect);
+    procedure DoPaintX(C: TCanvas; const R: TRect);
     function ItemBottom: integer;
     procedure ScrollbarChange(Sender: TObject);
     procedure SetCanBeFocused(AValue: boolean);
@@ -139,6 +149,7 @@ type
     property HotTrack: boolean read FHotTrack write FHotTrack default false;
     property IndentLeft: integer read FIndentLeft write FIndentLeft default 4;
     property IndentTop: integer read FIndentTop write FIndentTop default 2;
+    property IndentXMark: integer read FIndentX write FIndentX default 14;
     property ItemHeightPercents: integer read FItemHeightPercents write SetItemHeightPercents default 100;
     property OwnerDrawn: boolean read FOwnerDrawn write FOwnerDrawn default false;
     property ParentColor;
@@ -146,6 +157,7 @@ type
     property ParentShowHint;
     property PopupMenu;
     property ShowHint;
+    property ShowXMark: TATListboxShowX read FShowX write FShowX default albsxNone;
     property VirtualMode: boolean read FVirtualMode write FVirtualMode default true;
     property Visible;
     property OnClick;
@@ -351,11 +363,29 @@ begin
   end;
 end;
 
+procedure TATListbox.DoPaintX(C: TCanvas; const R: TRect);
+var
+  Xm, Ym, X1, Y1, X2, Y2: integer;
+begin
+  C.Pen.Color:= FTheme^.ColorArrows;
+  Xm:= (R.Left+R.Right) div 2;
+  Ym:= (R.Top+R.Bottom) div 2;
+  X1:= R.Left+FTheme^.OffsetXMark;
+  X2:= R.Right-FTheme^.OffsetXMark;
+  Y1:= Ym-(Xm-X1);
+  Y2:= Ym+(X2-Xm);
+  C.MoveTo(X1, Y1);
+  C.LineTo(X2+1, Y2+1);
+  C.MoveTo(X1, Y2);
+  C.LineTo(X2+1, Y1-1);
+end;
 
 procedure TATListbox.DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
 var
   S, SItem: string;
-  //NPos, not used
+  RectX: TRect;
+  bPaintX: boolean;
+  NIndentLeft,
   NColOffset, NColWidth, NAllWidth, i: integer;
 begin
   if AIndex=FItemIndex then
@@ -381,10 +411,29 @@ begin
   else
     S:= '('+IntToStr(AIndex)+')';
 
+  NIndentLeft:= FIndentLeft;
+  if FShowX<>albsxNone then
+    Inc(NIndentLeft, FIndentX);
+
+  case FShowX of
+    albsxNone:
+      bPaintX:= false;
+    albsxAllItems:
+      bPaintX:= true;
+    albsxHotItem:
+      bPaintX:= FHotTrack and (AIndex=FHotTrackIndex);
+  end;
+
+  if bPaintX then
+  begin
+    RectX:= Rect(R.Left, R.Top, R.Left+FIndentX, R.Bottom);
+    DoPaintX(C, RectX);
+  end;
+
   if Length(FColumnSizes)=0 then
   begin
     C.TextOut(
-      R.Left+FIndentLeft,
+      R.Left+NIndentLeft,
       R.Top+FIndentTop,
       S);
   end
@@ -581,12 +630,14 @@ begin
   FItemTop:= 0;
   FIndentLeft:= 4;
   FIndentTop:= 2;
+  FIndentX:= 14;
   FOwnerDrawn:= false;
   FVirtualMode:= true;
   FHotTrack:= false;
   FColumnSep:= #9;
   SetLength(FColumnSizes, 0);
   SetLength(FColumnWidths, 0);
+  FShowX:= albsxNone;
 
   FBitmap:= Graphics.TBitmap.Create;
   FBitmap.SetSize(1600, 1200);
@@ -600,7 +651,6 @@ begin
   FScrollbar.Align:= alRight;
 
   FScrollbar.OnChange:= ScrollbarChange;
-
 end;
 
 destructor TATListbox.Destroy;
