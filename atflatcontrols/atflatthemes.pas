@@ -57,7 +57,7 @@ type
     GapForAutoSize: integer;
     TextOverlayPosition: TATButtonOverlayPosition;
     SeparatorOffset: integer;
-    OffsetXMark: integer;
+    XMarkWidth: integer;
     ScalePercents: integer;
     ScaleFontPercents: integer;
     function DoScale(AValue: integer): integer;
@@ -124,7 +124,7 @@ initialization
     GapForAutoSize:= 8;
     TextOverlayPosition:= bopRightBottom;
     SeparatorOffset:= 2;
-    OffsetXMark:= 3;
+    XMarkWidth:= 10;
 
     ScalePercents:= 100;
     ScaleFontPercents:= 0;

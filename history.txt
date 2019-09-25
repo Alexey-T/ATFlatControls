@@ -1,8 +1,8 @@
 
 2019.09.26
-+ ATListbox: added prop ShowXMark, IndentXMark
++ ATListbox: added ShowXMark
 + ATListbox: added OnClickXMark
-+ added theme props: OffsetXMark, ColorArrowsOver
++ added theme props: XMarkWidth, ColorArrowsOver
 
 2019.09.13
 - ATScrollbar: fixed very slow repainting on dragging thumb, on big files in CudaText 

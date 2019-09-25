@@ -58,7 +58,6 @@ type
     FHotTrackIndex: integer;
     FIndentLeft: integer;
     FIndentTop: integer;
-    FIndentX: integer;
     FColumnSep: char;
     FColumnSizes: TATIntArray;
     FColumnWidths: TATIntArray;
@@ -152,7 +151,6 @@ type
     property HotTrack: boolean read FHotTrack write FHotTrack default false;
     property IndentLeft: integer read FIndentLeft write FIndentLeft default 4;
     property IndentTop: integer read FIndentTop write FIndentTop default 2;
-    property IndentXMark: integer read FIndentX write FIndentX default 14;
     property ItemHeightPercents: integer read FItemHeightPercents write SetItemHeightPercents default 100;
     property OwnerDrawn: boolean read FOwnerDrawn write FOwnerDrawn default false;
     property ParentColor;
@@ -353,7 +351,7 @@ begin
 
     if bPaintX then
     begin
-      RectX:= Rect(r.Left, r.Top, r.Left+FIndentX, r.Bottom);
+      RectX:= Rect(r.Left, r.Top, r.Left+FTheme^.XMarkWidth, r.Bottom);
       DoPaintX(C, RectX);
     end;
   end;
@@ -371,7 +369,7 @@ begin
     if PtInRect(R, P) then
       NColor:= FTheme^.ColorArrowsOver
   end;
-  CanvasPaintXMark(C, R, NColor, FTheme^.OffsetXMark);
+  CanvasPaintXMark(C, R, NColor, 1{offset from edge});
 end;
 
 function TATListbox.GetColumnWidth(AIndex: integer): integer;
@@ -448,7 +446,7 @@ begin
 
   NIndentLeft:= FIndentLeft;
   if FShowX<>albsxNone then
-    Inc(NIndentLeft, FIndentX);
+    Inc(NIndentLeft, FTheme^.XMarkWidth);
 
   if Length(FColumnSizes)=0 then
   begin
@@ -531,7 +529,7 @@ begin
   ItemIndex:= GetItemIndexAt(Pnt);
 
   if FShowX<>albsxNone then
-    if PtInRect(Rect(0, 0, FIndentX, Height), Pnt) then
+    if PtInRect(Rect(0, 0, FTheme^.XMarkWidth, Height), Pnt) then
       if Assigned(FOnClickX) then
       begin
         FOnClickX(Self);
@@ -658,7 +656,6 @@ begin
   FItemTop:= 0;
   FIndentLeft:= 4;
   FIndentTop:= 2;
-  FIndentX:= 14;
   FOwnerDrawn:= false;
   FVirtualMode:= true;
   FHotTrack:= false;
