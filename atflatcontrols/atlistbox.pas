@@ -362,11 +362,13 @@ var
   P: TPoint;
   NColor: TColor;
 begin
-  P:= ScreenToClient(Mouse.CursorPos);
-  if PtInRect(R, P) then
-    NColor:= FTheme^.ColorArrowsOver
-  else
-    NColor:= FTheme^.ColorArrows;
+  NColor:= FTheme^.ColorArrows;
+  if FHotTrack then
+  begin
+    P:= ScreenToClient(Mouse.CursorPos);
+    if PtInRect(R, P) then
+      NColor:= FTheme^.ColorArrowsOver
+  end;
   CanvasPaintXMark(C, R, NColor, FTheme^.OffsetXMark);
 end;
 
