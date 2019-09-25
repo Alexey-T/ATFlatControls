@@ -40,6 +40,7 @@ type
     ColorBgListboxHottrack: TColor;
     ColorBgOverlay: TColor;
     ColorArrows: TColor;
+    ColorArrowsOver: TColor;
     ColorSeparators: TColor;
     ColorBorderPassive: TColor;
     ColorBorderOver: TColor;
@@ -106,6 +107,7 @@ initialization
     ColorBgListboxHottrack:= clMoneyGreen;
     ColorBgOverlay:= clRed;
     ColorArrows:= clGray;
+    ColorArrowsOver:= clBlack;
     ColorSeparators:= clDkGray;
     ColorBorderPassive:= $a0a0a0;
     ColorBorderOver:= $d0d0d0;
