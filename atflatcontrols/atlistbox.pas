@@ -358,10 +358,16 @@ begin
 end;
 
 procedure TATListbox.DoPaintX(C: TCanvas; const R: TRect);
+var
+  P: TPoint;
+  NColor: TColor;
 begin
-  CanvasPaintXMark(C, R,
-    FTheme^.ColorArrows,
-    FTheme^.OffsetXMark);
+  P:= ScreenToClient(Mouse.CursorPos);
+  if PtInRect(R, P) then
+    NColor:= FTheme^.ColorArrowsOver
+  else
+    NColor:= FTheme^.ColorArrows;
+  CanvasPaintXMark(C, R, NColor, FTheme^.OffsetXMark);
 end;
 
 function TATListbox.GetColumnWidth(AIndex: integer): integer;
@@ -896,7 +902,7 @@ begin
   if FHotTrack then
   begin
     NewIndex:= GetItemIndexAt(Point(X, Y));
-    if FHotTrackIndex<>NewIndex then
+    if (FHotTrackIndex<>NewIndex) or (FShowX<>albsxNone) then
     begin
       FHotTrackIndex:= NewIndex;
       InvalidateNoSB;

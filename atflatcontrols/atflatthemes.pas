@@ -107,7 +107,7 @@ initialization
     ColorBgListboxHottrack:= clMoneyGreen;
     ColorBgOverlay:= clRed;
     ColorArrows:= clGray;
-    ColorArrowsOver:= clBlack;
+    ColorArrowsOver:= clBlue;
     ColorSeparators:= clDkGray;
     ColorBorderPassive:= $a0a0a0;
     ColorBorderOver:= $d0d0d0;
