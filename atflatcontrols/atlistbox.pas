@@ -351,7 +351,7 @@ begin
 
     if bPaintX then
     begin
-      RectX:= Rect(r.Left, r.Top, r.Left+FTheme^.XMarkWidth, r.Bottom);
+      RectX:= Rect(r.Left, r.Top, r.Left+FTheme^.DoScale(FTheme^.XMarkWidth), r.Bottom);
       DoPaintX(C, RectX);
     end;
   end;
@@ -369,7 +369,7 @@ begin
     if PtInRect(R, P) then
       NColor:= FTheme^.ColorArrowsOver
   end;
-  CanvasPaintXMark(C, R, NColor, 1{offset from edge});
+  CanvasPaintXMark(C, R, NColor, FTheme^.DoScale(FTheme^.XMarkOffset));
 end;
 
 function TATListbox.GetColumnWidth(AIndex: integer): integer;
@@ -446,7 +446,7 @@ begin
 
   NIndentLeft:= FIndentLeft;
   if FShowX<>albsxNone then
-    Inc(NIndentLeft, FTheme^.XMarkWidth);
+    Inc(NIndentLeft, FTheme^.DoScale(FTheme^.XMarkWidth));
 
   if Length(FColumnSizes)=0 then
   begin
@@ -529,7 +529,7 @@ begin
   ItemIndex:= GetItemIndexAt(Pnt);
 
   if FShowX<>albsxNone then
-    if PtInRect(Rect(0, 0, FTheme^.XMarkWidth, Height), Pnt) then
+    if PtInRect(Rect(0, 0, FTheme^.DoScale(FTheme^.XMarkWidth), Height), Pnt) then
       if Assigned(FOnClickX) then
       begin
         FOnClickX(Self);

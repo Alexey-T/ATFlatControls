@@ -58,6 +58,7 @@ type
     TextOverlayPosition: TATButtonOverlayPosition;
     SeparatorOffset: integer;
     XMarkWidth: integer;
+    XMarkOffset: integer;
     ScalePercents: integer;
     ScaleFontPercents: integer;
     function DoScale(AValue: integer): integer;
@@ -125,6 +126,7 @@ initialization
     TextOverlayPosition:= bopRightBottom;
     SeparatorOffset:= 2;
     XMarkWidth:= 10;
+    XMarkOffset:= 1;
 
     ScalePercents:= 100;
     ScaleFontPercents:= 0;
