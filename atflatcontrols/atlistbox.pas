@@ -44,6 +44,7 @@ type
     Modified: boolean;
     DataText: string;
     constructor Create(const ATag: Int64; AModified: boolean; const ADataText: string);
+    procedure SetFromString(AText: string);
   end;
 
 type
@@ -239,6 +240,31 @@ begin
   Tag:= ATag;
   Modified:= AModified;
   DataText:= ADataText;
+end;
+
+procedure TATListboxItemProp.SetFromString(AText: string);
+var
+  SItem, SKey, SValue: string;
+begin
+  //text is '{key1:value1;key2:value2}' from to_str()
+  if AText[1]='{' then
+    AText:= Copy(AText, 2, Length(AText)-2);
+  repeat
+    SItem:= SGetItem(AText, #1);
+    if SItem='' then Break;
+    SKey:= SGetItem(SItem, ':');
+    SValue:= SItem;
+    SValue:= StringReplace(SValue, #2, ',', [rfReplaceAll]);
+
+    if SKey='datatext' then
+      DataText:= SValue
+    else
+    if SKey='tag' then
+      Tag:= StrToInt64Def(SValue, 0)
+    else
+    if SKey='modified' then
+      Modified:= SValue='1';
+  until false;
 end;
 
 { TATListbox }
