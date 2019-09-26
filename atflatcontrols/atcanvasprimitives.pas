@@ -22,15 +22,15 @@ procedure CanvasPaintTriangleRight(C: TCanvas; AColor: TColor; ACoord: TPoint; A
 procedure CanvasArrowHorz(C: TCanvas;
   const ARect: TRect;
   AColorFont: TColor;
-  AArrowLen: integer; //OptUnprintedTabCharLength*ACharSizeX
+  AArrowLen: integer;
   AToRight: boolean;
-  APointerScale: integer); //OptUnprintedTabPointerScale
+  APointerScale: integer);
 
 procedure CanvasArrowDown(C: TCanvas;
   const ARect: TRect;
   AColorFont: TColor;
-  APointerLen: integer; //OptUnprintedEndArrowLength
-  APointerScale: integer); //OptUnprintedTabPointerScale
+  ALengthScale: integer;
+  APointerScale: integer);
 
 procedure CanvasPaintPlusMinus(C: TCanvas;
   AColorBorder, AColorBG: TColor;
@@ -189,9 +189,9 @@ end;
 procedure CanvasArrowHorz(C: TCanvas;
   const ARect: TRect;
   AColorFont: TColor;
-  AArrowLen: integer; //OptUnprintedTabCharLength*ACharSizeX
+  AArrowLen: integer;
   AToRight: boolean;
-  APointerScale: integer); //OptUnprintedTabPointerScale
+  APointerScale: integer);
 const
   cIndent = 1; //offset left/rt
 var
@@ -235,13 +235,13 @@ end;
 procedure CanvasArrowDown(C: TCanvas;
   const ARect: TRect;
   AColorFont: TColor;
-  APointerLen: integer; //OptUnprintedEndArrowLength
-  APointerScale: integer); //OptUnprintedTabPointerScale
+  ALengthScale: integer;
+  APointerScale: integer);
 var
   Len, X, Y1, Y2, Dx: integer;
 begin
   X:= (ARect.Left+ARect.Right) div 2;
-  Len:= ARect.Height * APointerLen div 100;
+  Len:= ARect.Height * ALengthScale div 100;
   Dx:= ARect.Height * APointerScale div 100;
   C.Pen.Color:= AColorFont;
 
