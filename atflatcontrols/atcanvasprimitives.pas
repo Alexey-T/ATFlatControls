@@ -8,11 +8,12 @@ uses
   Classes, SysUtils, Graphics, Math;
 
 procedure CanvasInvertRect(C: TCanvas; const R: TRect; AColor: TColor);
-procedure CanvasLine(C: TCanvas; P1, P2: TPoint; AColor: TColor);
-procedure CanvasDottedVertLine_Alt(C: TCanvas; Color: TColor; X1, Y1, Y2: integer); inline;
-procedure CanvasDottedHorzVertLine(C: TCanvas; Color: TColor; X1, Y1, X2, Y2: integer);
-procedure CanvasWavyHorzLine(C: TCanvas; Color: TColor; X1, Y1, X2, Y2: integer; AtDown: boolean);
-procedure CanvasRoundedLine(C: TCanvas; Color: TColor; X1, Y1, X2, Y2: integer; AtDown: boolean);
+
+procedure CanvasLine(C: TCanvas; P1, P2: TPoint; AColor: TColor); inline;
+procedure CanvasLine_DottedVertAlt(C: TCanvas; Color: TColor; X1, Y1, Y2: integer); inline;
+procedure CanvasLine_Dotted(C: TCanvas; Color: TColor; X1, Y1, X2, Y2: integer);
+procedure CanvasLine_WavyHorz(C: TCanvas; Color: TColor; X1, Y1, X2, Y2: integer; AtDown: boolean);
+procedure CanvasLine_RoundedEdge(C: TCanvas; Color: TColor; X1, Y1, X2, Y2: integer; AtDown: boolean);
 
 procedure CanvasPaintTriangleUp(C: TCanvas; AColor: TColor; ACoord: TPoint; ASize: integer); inline;
 procedure CanvasPaintTriangleDown(C: TCanvas; AColor: TColor; ACoord: TPoint; ASize: integer); inline;
@@ -31,7 +32,12 @@ procedure CanvasArrowDown(C: TCanvas;
   APointerLen: integer; //OptUnprintedEndArrowLength
   APointerScale: integer); //OptUnprintedTabPointerScale
 
-procedure CanvasPaintPlusMinus(C: TCanvas; AColorBorder, AColorBG: TColor; ACenter: TPoint; ASize: integer; APlus: boolean); inline;
+procedure CanvasPaintPlusMinus(C: TCanvas;
+  AColorBorder, AColorBG: TColor;
+  ACenter: TPoint;
+  ASize: integer;
+  APlus: boolean);
+
 procedure CanvasPaintXMark(C: TCanvas; const R: TRect; AColor: TColor; AOffset: integer);
 
 
@@ -111,7 +117,7 @@ begin
 end;
 {$endif}
 
-procedure CanvasDottedHorzVertLine(C: TCanvas; Color: TColor; X1, Y1, X2, Y2: integer);
+procedure CanvasLine_Dotted(C: TCanvas; Color: TColor; X1, Y1, X2, Y2: integer);
 var
   i: integer;
   vis: boolean;
@@ -137,7 +143,7 @@ begin
   end;
 end;
 
-procedure CanvasDottedVertLine_Alt(C: TCanvas; Color: TColor; X1, Y1, Y2: integer); inline;
+procedure CanvasLine_DottedVertAlt(C: TCanvas; Color: TColor; X1, Y1, Y2: integer); inline;
 var
   j: integer;
 begin
@@ -262,7 +268,7 @@ begin
     C.Line(ACenter.X, ACenter.Y-ASize+2, ACenter.X, ACenter.Y+ASize-1);
 end;
 
-procedure CanvasWavyHorzLine(C: TCanvas; Color: TColor; X1, Y1, X2, Y2: integer; AtDown: boolean);
+procedure CanvasLine_WavyHorz(C: TCanvas; Color: TColor; X1, Y1, X2, Y2: integer; AtDown: boolean);
 const
   cWavePeriod = 2;
   cWaveInc: array[0..cWavePeriod-1] of integer = (0, 2);
@@ -294,7 +300,7 @@ begin
   C.Polyline(Points);
 end;
 
-procedure CanvasRoundedLine(C: TCanvas; Color: TColor; X1, Y1, X2, Y2: integer; AtDown: boolean);
+procedure CanvasLine_RoundedEdge(C: TCanvas; Color: TColor; X1, Y1, X2, Y2: integer; AtDown: boolean);
 var
   Points: array[0..3] of TPoint;
 begin
