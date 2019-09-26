@@ -538,14 +538,14 @@ begin
       begin
         pnt1:= Point(Theme^.SeparatorOffset, NHeight div 2);
         pnt2:= Point(NWidth-Theme^.SeparatorOffset, NHeight div 2);
-        CanvasPaintLine(C, pnt1, pnt2, Theme^.ColorSeparators);
+        CanvasLine(C, pnt1, pnt2, Theme^.ColorSeparators);
       end;
 
     abuSeparatorHorz:
       begin
         pnt1:= Point(NWidth div 2, Theme^.SeparatorOffset);
         pnt2:= Point(NWidth div 2, NHeight-Theme^.SeparatorOffset);
-        CanvasPaintLine(C, pnt1, pnt2, Theme^.ColorSeparators);
+        CanvasLine(C, pnt1, pnt2, Theme^.ColorSeparators);
       end;
   end;
 
