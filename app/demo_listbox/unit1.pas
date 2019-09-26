@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls, ComCtrls,
+  ExtCtrls, ComCtrls, Menus,
   ATListbox,
   ATScrollbar,
   ATFlatThemes;
@@ -23,7 +23,9 @@ type
     chkThemedScroll: TCheckBox;
     ComboShowX: TComboBox;
     Label1: TLabel;
+    MenuItem1: TMenuItem;
     Panel1: TPanel;
+    PopupMenu1: TPopupMenu;
     TrackScale: TTrackBar;
     procedure ButtonGotoClick(Sender: TObject);
     procedure chkDoubleSizeChange(Sender: TObject);
@@ -33,6 +35,7 @@ type
     procedure chkVirtualChange(Sender: TObject);
     procedure ComboShowXChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure MenuItem1Click(Sender: TObject);
     procedure TrackScaleChange(Sender: TObject);
   private
     procedure ListClickX(Sender: TObject);
@@ -63,6 +66,7 @@ begin
   list.Parent:= Self;
   list.Align:= alClient;
   list.CanGetFocus:= true;
+  list.PopupMenu:= PopupMenu1;
 
   list.OnDrawItem:= @ListDraw;
   list.OnClick:= @ListClick;
@@ -80,6 +84,11 @@ begin
   list.Items.AddObject('real item last', TObject(1));
 
   ActiveControl:= list;
+end;
+
+procedure TfmMain.MenuItem1Click(Sender: TObject);
+begin
+  ShowMessage('Test...');
 end;
 
 procedure TfmMain.TrackScaleChange(Sender: TObject);

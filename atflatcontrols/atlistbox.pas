@@ -112,6 +112,7 @@ type
       MousePos: TPoint): Boolean; override;
     procedure ChangedSelection; virtual;
     procedure Scrolled; virtual;
+    procedure DoContextPopup(MousePos: TPoint; var Handled: Boolean); override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -253,6 +254,14 @@ procedure TATListbox.Scrolled;
 begin
   if Assigned(FOnScroll) then
     FOnScroll(Self);
+end;
+
+procedure TATListbox.DoContextPopup(MousePos: TPoint; var Handled: Boolean);
+begin
+  //must select item under mouse cursor
+  ItemIndex:= GetItemIndexAt(MousePos);
+
+  inherited;
 end;
 
 procedure TATListbox.UpdateScrollbar;

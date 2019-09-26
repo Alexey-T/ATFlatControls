@@ -116,4 +116,12 @@ object fmMain: TfmMain
       Text = 'no X marks'
     end
   end
+  object PopupMenu1: TPopupMenu
+    Left = 288
+    Top = 377
+    object MenuItem1: TMenuItem
+      Caption = 'Test item'
+      OnClick = MenuItem1Click
+    end
+  end
 end
