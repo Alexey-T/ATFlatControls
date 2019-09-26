@@ -18,7 +18,8 @@ uses
   LMessages,
   {$endif}
   ATScrollBar,
-  ATFlatThemes;
+  ATFlatThemes,
+  ATCanvasPrimitives;
 
 type
   TATListboxDrawItemEvent = procedure(Sender: TObject; C: TCanvas; AIndex: integer; const ARect: TRect) of object;
@@ -32,8 +33,6 @@ type
     albsxAllItems,
     albsxHotItem
     );
-
-procedure CanvasPaintXMark(C: TCanvas; const R: TRect; AColor: TColor; AOffset: integer);
 
 type
   { TATListbox }
@@ -217,30 +216,6 @@ begin
   Result:= WidgetSet.GetLCLCapability(lcCanDrawOutsideOnPaint) = LCL_CAPABILITY_YES;
   {$endif}
 end;
-
-procedure CanvasPaintXMark(C: TCanvas; const R: TRect; AColor: TColor; AOffset: integer);
-var
-  Xm, Ym, X1, Y1, X2, Y2: integer;
-begin
-  C.Pen.Color:= AColor;
-  Xm:= (R.Left+R.Right) div 2;
-  Ym:= (R.Top+R.Bottom) div 2;
-  X1:= R.Left+AOffset;
-  X2:= R.Right-AOffset;
-  Y1:= Ym-(Xm-X1);
-  Y2:= Ym+(X2-Xm);
-
-  C.MoveTo(X1, Y1);
-  C.LineTo(X2+1, Y2+1);
-  C.MoveTo(X1, Y2);
-  C.LineTo(X2+1, Y1-1);
-
-  C.MoveTo(X1+1, Y1);
-  C.LineTo(X2+2, Y2+1);
-  C.MoveTo(X1+1, Y2);
-  C.LineTo(X2+2, Y1-1);
-end;
-
 
 { TATListbox }
 

@@ -15,10 +15,11 @@ interface
 uses
   Classes, SysUtils, Graphics, Controls, Menus,
   Types, Math, Forms, ExtCtrls, {$ifndef FPC}Messages,{$endif}
-  ATFlatThemes
+  ATFlatThemes,
   {$ifdef FPC}
-  , LCLType
-  {$endif};
+  LCLType,
+  {$endif}
+  ATCanvasPrimitives;
 
 
 type
@@ -203,17 +204,6 @@ type
   end;
 
 implementation
-
-procedure CanvasPaintTriangleDown(C: TCanvas; AColor: TColor; ACoord: TPoint; ASize: integer);
-begin
-  C.Brush.Color:= ColorToRGB(AColor);
-  C.Pen.Color:= ColorToRGB(AColor);
-  C.Polygon([
-    Point(ACoord.X - ASize*2, ACoord.Y - ASize),
-    Point(ACoord.X + ASize*2, ACoord.Y - ASize),
-    Point(ACoord.X, ACoord.Y + ASize)
-    ]);
-end;
 
 { TATButton }
 
@@ -548,26 +538,14 @@ begin
       begin
         pnt1:= Point(Theme^.SeparatorOffset, NHeight div 2);
         pnt2:= Point(NWidth-Theme^.SeparatorOffset, NHeight div 2);
-        C.Pen.Color:= ColorToRGB(Theme^.ColorSeparators);
-        {$ifdef FPC}
-        C.Line(pnt1, pnt2);
-        {$else}
-        C.MoveTo (pnt1.x, pnt1.y);
-        C.LineTo (pnt2.x, pnt2.y);
-        {$endif}
+        CanvasPaintLine(C, pnt1, pnt2, Theme^.ColorSeparators);
       end;
 
     abuSeparatorHorz:
       begin
         pnt1:= Point(NWidth div 2, Theme^.SeparatorOffset);
         pnt2:= Point(NWidth div 2, NHeight-Theme^.SeparatorOffset);
-        C.Pen.Color:= ColorToRGB(Theme^.ColorSeparators);
-        {$ifdef FPC}
-        C.Line(pnt1, pnt2);
-        {$else}
-        C.MoveTo (pnt1.x, pnt1.y);
-        C.LineTo (pnt2.x, pnt2.y);
-        {$endif}
+        CanvasPaintLine(C, pnt1, pnt2, Theme^.ColorSeparators);
       end;
   end;
 
