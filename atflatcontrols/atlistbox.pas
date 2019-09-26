@@ -107,6 +107,7 @@ type
     {$endif}
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
       MousePos: TPoint): Boolean; override;
     procedure ChangedSelection; virtual;
@@ -531,7 +532,6 @@ begin
     {$endif}
 
   Pnt:= ScreenToClient(Mouse.CursorPos);
-  ItemIndex:= GetItemIndexAt(Pnt);
 
   if FShowX<>albsxNone then
     if PtInRect(Rect(0, 0, FIndentForX, Height), Pnt) then
@@ -924,6 +924,13 @@ begin
   end
   else
     FHotTrackIndex:= -1;
+end;
+
+procedure TATListbox.MouseDown(Button: TMouseButton; Shift: TShiftState;
+  X, Y: Integer);
+begin
+  ItemIndex:= GetItemIndexAt(Point(X, Y));
+  inherited;
 end;
 
 {$ifdef fpc}
