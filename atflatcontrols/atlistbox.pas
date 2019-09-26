@@ -457,7 +457,7 @@ begin
         R.Bottom)
         );
       C.TextOut(
-        NColOffset+1,
+        NColOffset+1+IfThen(i=0, NIndentLeft),
         R.Top+FIndentTop,
         SItem
         );
