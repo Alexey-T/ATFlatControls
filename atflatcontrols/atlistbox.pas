@@ -356,7 +356,8 @@ begin
       NColor:= FTheme^.ColorArrowsOver
   end;
   CanvasPaintXMark(C, R, NColor,
-    FTheme^.DoScale(FTheme^.XMarkOffset),
+    FTheme^.DoScale(FTheme^.XMarkOffsetLeft),
+    FTheme^.DoScale(FTheme^.XMarkOffsetRight),
     FTheme^.DoScale(FTheme^.XMarkLineWidth)
     );
 end;

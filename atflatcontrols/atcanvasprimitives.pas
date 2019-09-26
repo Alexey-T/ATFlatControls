@@ -38,7 +38,10 @@ procedure CanvasPaintPlusMinus(C: TCanvas;
   ASize: integer;
   APlus: boolean);
 
-procedure CanvasPaintXMark(C: TCanvas; const R: TRect; AColor: TColor; AOffset, ALineWidth: integer);
+procedure CanvasPaintXMark(C: TCanvas;
+  const R: TRect;
+  AColor: TColor;
+  AIndentLeft, AIndentRight, ALineWidth: integer);
 
 
 implementation
@@ -58,17 +61,18 @@ begin
   {$endif}
 end;
 
-procedure CanvasPaintXMark(C: TCanvas; const R: TRect; AColor: TColor; AOffset, ALineWidth: integer);
+procedure CanvasPaintXMark(C: TCanvas; const R: TRect; AColor: TColor;
+  AIndentLeft, AIndentRight, ALineWidth: integer);
 var
-  Xm, Ym, X1, Y1, X2, Y2, i: integer;
+  X1, Y1, X2, Y2, W, i: integer;
 begin
   C.Pen.Color:= ColorToRGB(AColor);
-  Xm:= (R.Left+R.Right) div 2;
-  Ym:= (R.Top+R.Bottom) div 2;
-  X1:= R.Left+AOffset;
-  X2:= R.Right-AOffset;
-  Y1:= Ym-(Xm-X1);
-  Y2:= Ym+(X2-Xm);
+
+  W:= R.Right-R.Left-AIndentLeft-AIndentRight;
+  X1:= R.Left+AIndentLeft;
+  X2:= X1 + W;
+  Y1:= (R.Top+R.Bottom) div 2 - W div 2;
+  Y2:= Y1 + W;
 
   for i:= 0 to ALineWidth-1 do
   begin

@@ -58,7 +58,8 @@ type
     TextOverlayPosition: TATButtonOverlayPosition;
     SeparatorOffset: integer;
     XMarkWidth: integer;
-    XMarkOffset: integer;
+    XMarkOffsetLeft: integer;
+    XMarkOffsetRight: integer;
     XMarkLineWidth: integer;
     ScalePercents: integer;
     ScaleFontPercents: integer;
@@ -127,7 +128,8 @@ initialization
     TextOverlayPosition:= bopRightBottom;
     SeparatorOffset:= 2;
     XMarkWidth:= 10;
-    XMarkOffset:= 1;
+    XMarkOffsetLeft:= 2;
+    XMarkOffsetRight:= 2;
     XMarkLineWidth:= 2;
 
     ScalePercents:= 100;
