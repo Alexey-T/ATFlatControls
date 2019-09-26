@@ -12,10 +12,11 @@ unit ATListbox;
 interface
 
 uses
-  Classes, SysUtils, Graphics, Controls,
-  Forms, {$ifndef FPC}Messages, Windows,{$endif}
+  Classes, SysUtils, Graphics, Controls, Forms,
   {$ifdef FPC}
   LMessages,
+  {$else}
+  Messages, Windows,
   {$endif}
   ATScrollBar,
   ATFlatThemes,
@@ -81,8 +82,7 @@ type
     procedure UpdateColumnWidths;
     {$ifdef FPC}
     procedure UpdateFromScrollbarMsg(const Msg: TLMScroll);
-    {$endif}
-    {$ifndef FPC}
+    {$else}
     procedure UpdateFromScrollbarMsg(const Msg: TWMVScroll);
     procedure CMMouseEnter(var msg: TMessage); message CM_MOUSEENTER;
     procedure CMMouseLeave(var msg: TMessage); message CM_MOUSELEAVE;
@@ -99,15 +99,14 @@ type
     procedure Click; override;
     {$ifdef FPC}
     procedure LMVScroll(var Msg: TLMVScroll); message LM_VSCROLL;
-    {$endif}
-    {$ifndef FPC}
+    procedure MouseLeave; override;
+    {$else}
     procedure WMVScroll(var Msg: TWMVScroll); message WM_VSCROLL;
     procedure WMGetDlgCode(var Message: TWMGetDlgCode); message WM_GETDLGCODE;
     procedure WMKeyDown(var Message: TWMKeyDown); message WM_KEYDOWN;
     {$endif}
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-    procedure MouseLeave; override;
     function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
       MousePos: TPoint): Boolean; override;
     procedure ChangedSelection; virtual;
@@ -188,12 +187,12 @@ type
 implementation
 
 uses
-  Math
   {$ifdef FPC}
-  , Types,
+  Types,
   InterfaceBase,
-  LCLType, LCLIntf
-  {$endif};
+  LCLType, LCLIntf,
+  {$endif}
+  Math;
 
 function SGetItem(var S: string; const ch: Char): string;
 var
@@ -527,10 +526,7 @@ begin
   if FCanGetFocus then
     {$ifdef FPC}
     LCLIntf.SetFocus(Handle);
-    {$endif}
-
-    {$ifndef FPC}
-  if FCanGetFocus then
+    {$else}
     SetFocus;
     {$endif}
 
@@ -930,6 +926,7 @@ begin
     FHotTrackIndex:= -1;
 end;
 
+{$ifdef fpc}
 procedure TATListbox.MouseLeave;
 begin
   inherited;
@@ -939,6 +936,7 @@ begin
     Invalidate;
   end;
 end;
+{$endif}
 
 initialization
 
