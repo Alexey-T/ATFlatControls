@@ -107,6 +107,7 @@ type
     {$endif}
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseLeave; override;
     function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
       MousePos: TPoint): Boolean; override;
     procedure ChangedSelection; virtual;
@@ -918,6 +919,16 @@ begin
   end
   else
     FHotTrackIndex:= -1;
+end;
+
+procedure TATListbox.MouseLeave;
+begin
+  inherited;
+  if FHotTrack then
+  begin
+    FHotTrackIndex:= -1;
+    Invalidate;
+  end;
 end;
 
 initialization
