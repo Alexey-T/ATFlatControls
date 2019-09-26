@@ -57,6 +57,7 @@ type
     FHotTrackIndex: integer;
     FIndentLeft: integer;
     FIndentTop: integer;
+    FIndentForX: integer;
     FColumnSep: char;
     FColumnSizes: TATIntArray;
     FColumnWidths: TATIntArray;
@@ -305,6 +306,10 @@ begin
   C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListbox);
   C.FillRect(r);
 
+  FIndentForX:= 0;
+  if FShowX<>albsxNone then
+    Inc(FIndentForX, FTheme^.DoScale(FTheme^.XMarkWidth));
+
   for Index:= FItemTop to ItemCount-1 do
   begin
     r.Top:= (Index-FItemTop)*FItemHeight;
@@ -332,7 +337,7 @@ begin
 
     if bPaintX then
     begin
-      RectX:= Rect(r.Left, r.Top, r.Left+FTheme^.DoScale(FTheme^.XMarkWidth), r.Bottom);
+      RectX:= Rect(r.Left, r.Top, r.Left+FIndentForX, r.Bottom);
       DoPaintX(C, RectX);
     end;
   end;
@@ -428,9 +433,7 @@ begin
   else
     S:= '('+IntToStr(AIndex)+')';
 
-  NIndentLeft:= FIndentLeft;
-  if FShowX<>albsxNone then
-    Inc(NIndentLeft, FTheme^.DoScale(FTheme^.XMarkWidth));
+  NIndentLeft:= FIndentLeft+FIndentForX;
 
   if Length(FColumnSizes)=0 then
   begin
@@ -513,7 +516,7 @@ begin
   ItemIndex:= GetItemIndexAt(Pnt);
 
   if FShowX<>albsxNone then
-    if PtInRect(Rect(0, 0, FTheme^.DoScale(FTheme^.XMarkWidth), Height), Pnt) then
+    if PtInRect(Rect(0, 0, FIndentForX, Height), Pnt) then
       if Assigned(FOnClickX) then
       begin
         FOnClickX(Self);
