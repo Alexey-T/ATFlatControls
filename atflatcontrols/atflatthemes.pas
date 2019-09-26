@@ -127,7 +127,7 @@ initialization
     GapForAutoSize:= 8;
     TextOverlayPosition:= bopRightBottom;
     SeparatorOffset:= 2;
-    XMarkWidth:= 10;
+    XMarkWidth:= 8;
     XMarkOffsetLeft:= 1;
     XMarkOffsetRight:= 1;
     XMarkLineWidth:= 2;
