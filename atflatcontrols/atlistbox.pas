@@ -229,10 +229,16 @@ begin
   X2:= R.Right-AOffset;
   Y1:= Ym-(Xm-X1);
   Y2:= Ym+(X2-Xm);
+
   C.MoveTo(X1, Y1);
   C.LineTo(X2+1, Y2+1);
   C.MoveTo(X1, Y2);
   C.LineTo(X2+1, Y1-1);
+
+  C.MoveTo(X1+1, Y1);
+  C.LineTo(X2+2, Y2+1);
+  C.MoveTo(X1+1, Y2);
+  C.LineTo(X2+2, Y1-1);
 end;
 
 
