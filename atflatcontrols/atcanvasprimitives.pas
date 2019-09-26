@@ -90,7 +90,7 @@ begin
     NColor:= ColorToRGB(AColor);
     C.Pen.Color:= NColor;
     C.Brush.Color:= NColor;
-    C.Ellipse(Rect(X1, Y1, X2, Y2));
+    C.Ellipse(Rect(X1, Y1, X2+2, Y2+2));
   end;
 end;
 

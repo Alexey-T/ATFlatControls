@@ -128,8 +128,8 @@ initialization
     TextOverlayPosition:= bopRightBottom;
     SeparatorOffset:= 2;
     XMarkWidth:= 10;
-    XMarkOffsetLeft:= 2;
-    XMarkOffsetRight:= 2;
+    XMarkOffsetLeft:= 1;
+    XMarkOffsetRight:= 1;
     XMarkLineWidth:= 2;
 
     ScalePercents:= 100;
