@@ -36,6 +36,17 @@ type
     );
 
 type
+  { TATListboxItemProp }
+
+  TATListboxItemProp = class
+  public
+    Tag: Int64;
+    Modified: boolean;
+    DataText: string;
+    constructor Create(const ATag: Int64; AModified: boolean; const ADataText: string);
+  end;
+
+type
   { TATListbox }
 
   TATListbox = class(TCustomControl)
@@ -220,6 +231,16 @@ begin
   {$endif}
 end;
 
+{ TATListboxItemProp }
+
+constructor TATListboxItemProp.Create(const ATag: Int64; AModified: boolean;
+  const ADataText: string);
+begin
+  Tag:= ATag;
+  Modified:= AModified;
+  DataText:= ADataText;
+end;
+
 { TATListbox }
 
 function TATListbox.GetVisibleItems: integer;
@@ -338,7 +359,10 @@ begin
       DoDefaultDrawItem(C, Index, r);
     end;
 
-    bCircle:= (Index<FList.Count) and (PtrInt(FList.Objects[Index])>0);
+    bCircle:=
+      (Index>=0) and (Index<FList.Count) and
+      (FList.Objects[Index] is TATListboxItemProp) and
+      TATListboxItemProp(FList.Objects[Index]).Modified;
 
     case FShowX of
       albsxNone:

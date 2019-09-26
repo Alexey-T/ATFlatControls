@@ -78,10 +78,10 @@ begin
   list.Color:= $e0e0e0;
   list.VirtualItemCount:= 21;
 
-  list.Items.AddObject('real item first', TObject(1));
+  list.Items.AddObject('real item first', TATListboxItemProp.Create(0, true, ''));
   list.Items.Add('real item 1');
   list.Items.Add('real item 2');
-  list.Items.AddObject('real item last', TObject(1));
+  list.Items.AddObject('real item last', TATListboxItemProp.Create(0, true, ''));
 
   ActiveControl:= list;
 end;
