@@ -68,7 +68,7 @@ type
     FOnScroll: TNotifyEvent;
     procedure DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
     procedure DoPaintTo(C: TCanvas; r: TRect);
-    procedure DoPaintX(C: TCanvas; const R: TRect);
+    procedure DoPaintX(C: TCanvas; const R: TRect; ACircle: boolean);
     function ItemBottom: integer;
     procedure ScrollbarChange(Sender: TObject);
     procedure SetCanBeFocused(AValue: boolean);
@@ -300,7 +300,7 @@ end;
 procedure TATListbox.DoPaintTo(C: TCanvas; r: TRect);
 var
   Index: integer;
-  bPaintX: boolean;
+  bPaintX, bCircle: boolean;
   RectX: TRect;
 begin
   C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListbox);
@@ -324,7 +324,11 @@ begin
         FOnDrawItem(Self, C, Index, r);
     end
     else
+    begin
       DoDefaultDrawItem(C, Index, r);
+    end;
+
+    bCircle:= (Index<FList.Count) and (PtrInt(FList.Objects[Index])>0);
 
     case FShowX of
       albsxNone:
@@ -335,18 +339,19 @@ begin
         bPaintX:= FHotTrack and (Index=FHotTrackIndex);
     end;
 
-    if bPaintX then
+    if bPaintX or bCircle then
     begin
       RectX:= Rect(r.Left, r.Top, r.Left+FIndentForX, r.Bottom);
-      DoPaintX(C, RectX);
+      DoPaintX(C, RectX, bCircle and (Index<>FHotTrackIndex));
     end;
   end;
 end;
 
-procedure TATListbox.DoPaintX(C: TCanvas; const R: TRect);
+procedure TATListbox.DoPaintX(C: TCanvas; const R: TRect; ACircle: boolean);
 var
   P: TPoint;
   NColor: TColor;
+  NLineWidth: integer;
 begin
   NColor:= FTheme^.ColorArrows;
   if FHotTrack then
@@ -355,10 +360,16 @@ begin
     if PtInRect(R, P) then
       NColor:= FTheme^.ColorArrowsOver
   end;
+
+  if ACircle then
+    NLineWidth:= 0
+  else
+    NLineWidth:= FTheme^.DoScale(FTheme^.XMarkLineWidth);
+
   CanvasPaintXMark(C, R, NColor,
     FTheme^.DoScale(FTheme^.XMarkOffsetLeft),
     FTheme^.DoScale(FTheme^.XMarkOffsetRight),
-    FTheme^.DoScale(FTheme^.XMarkLineWidth)
+    NLineWidth
     );
 end;
 
