@@ -59,6 +59,7 @@ type
     SeparatorOffset: integer;
     XMarkWidth: integer;
     XMarkOffset: integer;
+    XMarkLineWidth: integer;
     ScalePercents: integer;
     ScaleFontPercents: integer;
     function DoScale(AValue: integer): integer;
@@ -127,6 +128,7 @@ initialization
     SeparatorOffset:= 2;
     XMarkWidth:= 10;
     XMarkOffset:= 1;
+    XMarkLineWidth:= 2;
 
     ScalePercents:= 100;
     ScaleFontPercents:= 0;

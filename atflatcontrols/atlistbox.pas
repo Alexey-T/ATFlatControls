@@ -350,7 +350,10 @@ begin
     if PtInRect(R, P) then
       NColor:= FTheme^.ColorArrowsOver
   end;
-  CanvasPaintXMark(C, R, NColor, FTheme^.DoScale(FTheme^.XMarkOffset));
+  CanvasPaintXMark(C, R, NColor,
+    FTheme^.DoScale(FTheme^.XMarkOffset),
+    FTheme^.DoScale(FTheme^.XMarkLineWidth)
+    );
 end;
 
 function TATListbox.GetColumnWidth(AIndex: integer): integer;

@@ -38,7 +38,7 @@ procedure CanvasPaintPlusMinus(C: TCanvas;
   ASize: integer;
   APlus: boolean);
 
-procedure CanvasPaintXMark(C: TCanvas; const R: TRect; AColor: TColor; AOffset: integer);
+procedure CanvasPaintXMark(C: TCanvas; const R: TRect; AColor: TColor; AOffset, ALineWidth: integer);
 
 
 implementation
@@ -58,9 +58,9 @@ begin
   {$endif}
 end;
 
-procedure CanvasPaintXMark(C: TCanvas; const R: TRect; AColor: TColor; AOffset: integer);
+procedure CanvasPaintXMark(C: TCanvas; const R: TRect; AColor: TColor; AOffset, ALineWidth: integer);
 var
-  Xm, Ym, X1, Y1, X2, Y2: integer;
+  Xm, Ym, X1, Y1, X2, Y2, i: integer;
 begin
   C.Pen.Color:= ColorToRGB(AColor);
   Xm:= (R.Left+R.Right) div 2;
@@ -70,15 +70,13 @@ begin
   Y1:= Ym-(Xm-X1);
   Y2:= Ym+(X2-Xm);
 
-  C.MoveTo(X1, Y1);
-  C.LineTo(X2+1, Y2+1);
-  C.MoveTo(X1, Y2);
-  C.LineTo(X2+1, Y1-1);
-
-  C.MoveTo(X1+1, Y1);
-  C.LineTo(X2+2, Y2+1);
-  C.MoveTo(X1+1, Y2);
-  C.LineTo(X2+2, Y1-1);
+  for i:= 0 to ALineWidth-1 do
+  begin
+    C.MoveTo(i+X1, Y1);
+    C.LineTo(i+X2+1, Y2+1);
+    C.MoveTo(i+X1, Y2);
+    C.LineTo(i+X2+1, Y1-1);
+  end;
 end;
 
 
