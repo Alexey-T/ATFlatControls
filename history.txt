@@ -2,7 +2,8 @@
 2019.09.26
 + ATListbox: added ShowXMark
 + ATListbox: added OnClickXMark
-+ added theme props: XMarkWidth, XMarkOffset, ColorArrowsOver
++ ATListbox: if Items.Objects[index]>0, then instead of x mark, listbox paints circle mark (like VSCode)
++ added theme props: XMark*, ColorArrowsOver
 
 2019.09.13
 - ATScrollbar: fixed very slow repainting on dragging thumb, on big files in CudaText 
