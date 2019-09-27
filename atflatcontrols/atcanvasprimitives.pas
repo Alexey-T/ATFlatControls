@@ -1,11 +1,17 @@
 unit ATCanvasPrimitives;
 
-{$mode objfpc}{$H+}
+{$ifdef fpc}
+  {$mode objfpc}{$H+}
+{$else}
+  {$define invert_pixels}
+{$endif}
 
 interface
 
 uses
-  Classes, SysUtils, Graphics, Math;
+  Classes, SysUtils, Graphics,
+  Types,
+  Math;
 
 procedure CanvasInvertRect(C: TCanvas; const R: TRect; AColor: TColor);
 
@@ -228,7 +234,8 @@ begin
   Dx:= ARect.Height * APointerScale div 100;
   C.Pen.Color:= AColorFont;
 
-  C.Line(X1, Y, X2, Y);
+  C.MoveTo(X1, Y);
+  C.LineTo(X2, Y);
   if AToRight then
   begin
     C.MoveTo(X2, Y);
@@ -276,9 +283,13 @@ begin
   C.Brush.Color:= AColorBG;
   C.Pen.Color:= AColorBorder;
   C.Rectangle(ACenter.X-ASize, ACenter.Y-ASize, ACenter.X+ASize+1, ACenter.Y+ASize+1);
-  C.Line(ACenter.X-ASize+2, ACenter.Y, ACenter.X+ASize-1, ACenter.Y);
+  C.MoveTo(ACenter.X-ASize+2, ACenter.Y);
+  C.LineTo(ACenter.X+ASize-1, ACenter.Y);
   if APlus then
-    C.Line(ACenter.X, ACenter.Y-ASize+2, ACenter.X, ACenter.Y+ASize-1);
+  begin
+    C.MoveTo(ACenter.X, ACenter.Y-ASize+2);
+    C.LineTo(ACenter.X, ACenter.Y+ASize-1);
+  end;
 end;
 
 procedure CanvasLine_WavyHorz(C: TCanvas; Color: TColor; X1, Y1, X2, Y2: integer; AtDown: boolean);
@@ -337,7 +348,8 @@ begin
   end
   else
   begin
-    C.Line(X1, Y1+2, X2, Y2-1);
+    C.MoveTo(X1, Y1+2);
+    C.LineTo(X2, Y2-1);
     //don't draw pixels, other lines did it
   end;
 end;

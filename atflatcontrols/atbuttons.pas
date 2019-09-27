@@ -5,20 +5,21 @@ License: MPL 2.0 or LGPL
 
 unit ATButtons;
 
-  {$ifdef FPC}
-  //{$mode objfpc}{$H+}
-  {$mode delphi}
-  {$endif}
+{$ifdef FPC}
+{$mode delphi}
+{$endif}
 
 interface
 
 uses
   Classes, SysUtils, Graphics, Controls, Menus,
-  Types, Math, Forms, ExtCtrls, {$ifndef FPC}Messages,{$endif}
-  ATFlatThemes,
+  Types, Math, Forms, ExtCtrls,
   {$ifdef FPC}
   LCLType,
+  {$else}
+  Windows, Messages,
   {$endif}
+  ATFlatThemes,
   ATCanvasPrimitives;
 
 
@@ -352,6 +353,9 @@ begin
   inherited;
   PaintTo(Canvas);
 end;
+
+type
+  TControlCracker = class(TControl); //for Delphi
 
 procedure TATButton.PaintTo(C: TCanvas);
 var

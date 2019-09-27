@@ -43,6 +43,7 @@ contains
   atpanelcolor in 'atpanelcolor.pas',
   atpanelsimple in 'atpanelsimple.pas',
   atscrollbar in 'atscrollbar.pas',
-  atstatusbar in 'atstatusbar.pas';
+  atstatusbar in 'atstatusbar.pas',
+  atcanvasprimitives in 'atcanvasprimitives.pas';
 
 end.
