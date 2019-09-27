@@ -392,7 +392,7 @@ begin
   begin
     P:= ScreenToClient(Mouse.CursorPos);
     if PtInRect(R, P) then
-      NColor:= FTheme^.ColorArrowsOver
+      NColor:= FTheme^.ColorArrowsOver;
   end;
 
   if ACircle then
@@ -558,7 +558,7 @@ begin
   Pnt:= ScreenToClient(Mouse.CursorPos);
 
   if FShowX<>albsxNone then
-    if PtInRect(Rect(0, 0, FIndentForX, Height), Pnt) then
+    if Pnt.X<=FIndentForX then
       if Assigned(FOnClickX) then
       begin
         FOnClickX(Self);
