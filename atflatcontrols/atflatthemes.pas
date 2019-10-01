@@ -130,7 +130,7 @@ initialization
     XMarkWidth:= 8;
     XMarkOffsetLeft:= 1;
     XMarkOffsetRight:= 1;
-    XMarkLineWidth:= 2;
+    XMarkLineWidth:= 1;
 
     ScalePercents:= 100;
     ScaleFontPercents:= 0;
