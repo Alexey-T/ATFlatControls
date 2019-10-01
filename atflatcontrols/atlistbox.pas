@@ -370,10 +370,10 @@ begin
       albsxAllItems:
         bPaintX:= true;
       albsxHotItem:
-        bPaintX:= FHotTrack and (Index=FHotTrackIndex);
+        bPaintX:= bCircle or (FHotTrack and (Index=FHotTrackIndex));
     end;
 
-    if bPaintX or bCircle then
+    if bPaintX then
     begin
       RectX:= Rect(r.Left, r.Top, r.Left+FIndentForX, r.Bottom);
       DoPaintX(C, RectX, bCircle and (Index<>FHotTrackIndex));
