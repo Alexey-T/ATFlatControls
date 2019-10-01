@@ -24,6 +24,7 @@ procedure CanvasLine_RoundedEdge(C: TCanvas; Color: TColor; X1, Y1, X2, Y2: inte
 procedure CanvasPaintTriangleUp(C: TCanvas; AColor: TColor; ACoord: TPoint; ASize: integer); inline;
 procedure CanvasPaintTriangleDown(C: TCanvas; AColor: TColor; ACoord: TPoint; ASize: integer); inline;
 procedure CanvasPaintTriangleRight(C: TCanvas; AColor: TColor; ACoord: TPoint; ASize: integer); inline;
+procedure CanvasPaintTriangleLeft(C: TCanvas; AColor: TColor; ACoord: TPoint; ASize: integer); inline;
 
 procedure CanvasArrowHorz(C: TCanvas;
   const ARect: TRect;
@@ -73,7 +74,7 @@ begin
 end;
 
 procedure _CalcMarkRect(const R: TRect; AIndentLeft, AIndentRight: integer;
-  out X1, Y1, X2, Y2: integer);
+  out X1, Y1, X2, Y2: integer); inline;
 var
   W: integer;
 begin
@@ -233,6 +234,17 @@ begin
     Point(ACoord.X - ASize, ACoord.Y - ASize*2),
     Point(ACoord.X + ASize, ACoord.Y),
     Point(ACoord.X - ASize, ACoord.Y + ASize*2)
+    ]);
+end;
+
+procedure CanvasPaintTriangleLeft(C: TCanvas; AColor: TColor; ACoord: TPoint; ASize: integer);
+begin
+  C.Brush.Color:= AColor;
+  C.Pen.Color:= AColor;
+  C.Polygon([
+    Point(ACoord.X + ASize, ACoord.Y - ASize*2),
+    Point(ACoord.X - ASize, ACoord.Y),
+    Point(ACoord.X + ASize, ACoord.Y + ASize*2)
     ]);
 end;
 
