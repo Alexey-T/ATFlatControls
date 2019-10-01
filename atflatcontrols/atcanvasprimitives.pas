@@ -70,7 +70,7 @@ end;
 procedure CanvasPaintXMark(C: TCanvas; const R: TRect; AColor: TColor;
   AIndentLeft, AIndentRight, ALineWidth: integer);
 var
-  X1, Y1, X2, Y2, W, i: integer;
+  X1, Y1, X2, Y2, W: integer;
   NColor: TColor;
 begin
   W:= R.Right-R.Left-AIndentLeft-AIndentRight;
@@ -79,6 +79,29 @@ begin
   Y1:= (R.Top+R.Bottom) div 2 - W div 2;
   Y2:= Y1 + W;
 
+  NColor:= ColorToRGB(AColor);
+  C.Pen.Color:= NColor;
+  C.Brush.Color:= NColor;
+
+  C.Polygon([
+    Point(X1, Y1+1),
+    Point(X1, Y1),
+    Point(X1+1, Y1),
+    Point(X2, Y2-1),
+    Point(X2, Y2),
+    Point(X2-1, Y2)
+    ]);
+
+  C.Polygon([
+    Point(X2-1, Y1),
+    Point(X2, Y1),
+    Point(X2, Y1+1),
+    Point(X1+1, Y2),
+    Point(X1, Y2),
+    Point(X1, Y2-1)
+    ]);
+
+  {
   if ALineWidth>0 then
   begin
     C.Pen.Color:= ColorToRGB(AColor);
@@ -98,6 +121,7 @@ begin
     C.Brush.Color:= NColor;
     C.Ellipse(Rect(X1, Y1, X2+2, Y2+2));
   end;
+  }
 end;
 
 
