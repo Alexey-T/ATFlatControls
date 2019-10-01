@@ -106,8 +106,8 @@ var
   X1, Y1, X2, Y2: integer;
   NColor: TColor;
 begin
-  if ALineWidth<=0 then
-    raise Exception.Create('LineWidth cannot be 0');
+  if ALineWidth<1 then
+    ALineWidth:= 1;
 
   _CalcMarkRect(R, AIndentLeft, AIndentRight, X1, Y1, X2, Y2);
 
