@@ -648,10 +648,13 @@ begin
     abakArrowRight:
       CanvasPaintTriangleRight(C, AColorArrow, Point(AX, AY), NSize);
     abakCross:
-      CanvasPaintXMark(C, R, AColorArrow,
-        DoScale(FTheme^.XMarkOffsetLeft),
-        DoScale(FTheme^.XMarkOffsetRight),
-        DoScale(FTheme^.XMarkLineWidth));
+      begin
+        NSize:= (R.Right-R.Left - DoScale(FTheme^.XMarkWidth - FTheme^.XMarkOffsetLeft - FTheme^.XMarkOffsetRight)) div 2;
+        CanvasPaintXMark(C, R, AColorArrow,
+          NSize,
+          NSize,
+          DoScale(FTheme^.XMarkLineWidth));
+      end;
   end;
 end;
 
