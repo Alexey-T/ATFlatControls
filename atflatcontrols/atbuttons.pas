@@ -144,8 +144,6 @@ type
     procedure DoExit; override;
     procedure Resize; override;
     procedure SetAutoSize(AValue: boolean); override;
-    function DoScale(AValue: integer): integer;
-    function DoScaleFont(AValue: integer): integer;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -383,7 +381,7 @@ begin
   RectAll:= ClientRect;
 
   if FArrow then
-    NSizeArrow:= DoScale(4*Theme^.ArrowSize)
+    NSizeArrow:= Theme^.DoScale(4*Theme^.ArrowSize)
   else
     NSizeArrow:= 0;
 
@@ -459,7 +457,7 @@ begin
 
   C.Font.Name:= Theme^.FontName;
   C.Font.Color:= ColorToRGB(IfThen(Enabled, Theme^.ColorFont, Theme^.ColorFontDisabled));
-  C.Font.Size:= DoScaleFont(Theme^.FontSize);
+  C.Font.Size:= Theme^.DoScaleFont(Theme^.FontSize);
 
   if BoldFont then
     C.Font.Style:= [fsBold]
@@ -633,7 +631,7 @@ var
   NSize: integer;
   R: TRect;
 begin
-  NSize:= DoScale(Theme^.ArrowSize);
+  NSize:= Theme^.DoScale(Theme^.ArrowSize);
   R:= Rect(
     AX-NSize*2-1,
     AY-NSize*2-1,
@@ -655,11 +653,11 @@ begin
       CanvasPaintTriangleRight(C, AColorArrow, Point(AX, AY), NSize);
     abakCross:
       begin
-        NSize:= (R.Right-R.Left - DoScale(FTheme^.XMarkWidth - FTheme^.XMarkOffsetLeft - FTheme^.XMarkOffsetRight)) div 2;
+        NSize:= (R.Right-R.Left - Theme^.DoScale(FTheme^.XMarkWidth - FTheme^.XMarkOffsetLeft - FTheme^.XMarkOffsetRight)) div 2;
         CanvasPaintXMark(C, R, AColorArrow,
           NSize,
           NSize,
-          DoScale(FTheme^.XMarkLineWidth));
+          Theme^.DoScale(FTheme^.XMarkLineWidth));
       end;
   end;
 end;
@@ -791,7 +789,7 @@ begin
 
   C:= Canvas;
   C.Font.Name:= Theme^.FontName;
-  C.Font.Size:= DoScaleFont(Theme^.FontSize);
+  C.Font.Size:= Theme^.DoScaleFont(Theme^.FontSize);
   C.Font.Style:= [];
 
   //if FBoldFont then
@@ -907,16 +905,6 @@ begin
 
   P:= ClientToScreen(Point(0, Height));
   FPopup.PopUp(P.X, P.Y);
-end;
-
-function TATButton.DoScale(AValue: integer): integer;
-begin
-  Result:= Theme^.DoScale(AValue);
-end;
-
-function TATButton.DoScaleFont(AValue: integer): integer;
-begin
-  Result:= Theme^.DoScaleFont(AValue);
 end;
 
 function TATButton.GetTextItem(AIndex: integer; const ADefault: string): string;
