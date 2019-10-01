@@ -44,6 +44,11 @@ procedure CanvasPaintPlusMinus(C: TCanvas;
   ASize: integer;
   APlus: boolean);
 
+procedure CanvasPaintCircleMark(C: TCanvas;
+  const R: TRect;
+  AColor: TColor;
+  AIndentLeft, AIndentRight: integer);
+
 procedure CanvasPaintXMark(C: TCanvas;
   const R: TRect;
   AColor: TColor;
@@ -67,46 +72,64 @@ begin
   {$endif}
 end;
 
-procedure CanvasPaintXMark(C: TCanvas; const R: TRect; AColor: TColor;
-  AIndentLeft, AIndentRight, ALineWidth: integer);
+procedure _CalcMarkRect(const R: TRect; AIndentLeft, AIndentRight: integer;
+  out X1, Y1, X2, Y2: integer);
 var
-  X1, Y1, X2, Y2, W: integer;
-  NColor: TColor;
+  W: integer;
 begin
   W:= R.Right-R.Left-AIndentLeft-AIndentRight;
   X1:= R.Left+AIndentLeft;
   X2:= X1 + W;
   Y1:= (R.Top+R.Bottom) div 2 - W div 2;
   Y2:= Y1 + W;
+end;
+
+procedure CanvasPaintCircleMark(C: TCanvas; const R: TRect; AColor: TColor;
+  AIndentLeft, AIndentRight: integer);
+var
+  X1, Y1, X2, Y2: integer;
+  NColor: TColor;
+begin
+  _CalcMarkRect(R, AIndentLeft, AIndentRight, X1, Y1, X2, Y2);
 
   NColor:= ColorToRGB(AColor);
   C.Pen.Color:= NColor;
   C.Brush.Color:= NColor;
 
-  if ALineWidth>0 then
-  begin
-    C.Polygon([
-      Point(X1, Y1+ALineWidth),
-      Point(X1, Y1),
-      Point(X1+ALineWidth, Y1),
-      Point(X2, Y2-ALineWidth),
-      Point(X2, Y2),
-      Point(X2-ALineWidth, Y2)
-      ]);
-    C.Polygon([
-      Point(X2-ALineWidth, Y1),
-      Point(X2, Y1),
-      Point(X2, Y1+ALineWidth),
-      Point(X1+ALineWidth, Y2),
-      Point(X1, Y2),
-      Point(X1, Y2-ALineWidth)
-      ]);
-  end
-  else
-  begin
-    //paint circle mark
-    C.Ellipse(Rect(X1, Y1, X2+2, Y2+2));
-  end;
+  C.Ellipse(Rect(X1, Y1, X2+2, Y2+2));
+end;
+
+procedure CanvasPaintXMark(C: TCanvas; const R: TRect; AColor: TColor;
+  AIndentLeft, AIndentRight, ALineWidth: integer);
+var
+  X1, Y1, X2, Y2: integer;
+  NColor: TColor;
+begin
+  if ALineWidth<=0 then
+    raise Exception.Create('LineWidth cannot be 0');
+
+  _CalcMarkRect(R, AIndentLeft, AIndentRight, X1, Y1, X2, Y2);
+
+  NColor:= ColorToRGB(AColor);
+  C.Pen.Color:= NColor;
+  C.Brush.Color:= NColor;
+
+  C.Polygon([
+    Point(X1, Y1+ALineWidth),
+    Point(X1, Y1),
+    Point(X1+ALineWidth, Y1),
+    Point(X2, Y2-ALineWidth),
+    Point(X2, Y2),
+    Point(X2-ALineWidth, Y2)
+    ]);
+  C.Polygon([
+    Point(X2-ALineWidth, Y1),
+    Point(X2, Y1),
+    Point(X2, Y1+ALineWidth),
+    Point(X1+ALineWidth, Y2),
+    Point(X1, Y2),
+    Point(X1, Y2-ALineWidth)
+    ]);
 end;
 
 

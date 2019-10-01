@@ -385,7 +385,6 @@ procedure TATListbox.DoPaintX(C: TCanvas; const R: TRect; ACircle: boolean);
 var
   P: TPoint;
   NColor: TColor;
-  NLineWidth: integer;
 begin
   NColor:= FTheme^.ColorArrows;
   if FHotTrack then
@@ -396,15 +395,16 @@ begin
   end;
 
   if ACircle then
-    NLineWidth:= 0
+    CanvasPaintCircleMark(C, R, NColor,
+      FTheme^.DoScale(FTheme^.XMarkOffsetLeft),
+      FTheme^.DoScale(FTheme^.XMarkOffsetRight)
+    )
   else
-    NLineWidth:= FTheme^.DoScale(FTheme^.XMarkLineWidth);
-
-  CanvasPaintXMark(C, R, NColor,
-    FTheme^.DoScale(FTheme^.XMarkOffsetLeft),
-    FTheme^.DoScale(FTheme^.XMarkOffsetRight),
-    NLineWidth
-    );
+    CanvasPaintXMark(C, R, NColor,
+      FTheme^.DoScale(FTheme^.XMarkOffsetLeft),
+      FTheme^.DoScale(FTheme^.XMarkOffsetRight),
+      FTheme^.DoScale(FTheme^.XMarkLineWidth)
+      );
 end;
 
 function TATListbox.GetColumnWidth(AIndex: integer): integer;
