@@ -103,6 +103,7 @@ begin
   b_choice.ItemsShort.Add('BB');
   b_choice.ItemsShort.Add('CCCC');
   b_choice.ItemIndex:= 1;
+  b_choice.ArrowKind:= abakCross;
 
   b_colors:= TATButton.create(self);
   b_colors.parent:= self;

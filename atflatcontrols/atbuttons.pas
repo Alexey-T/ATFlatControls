@@ -50,6 +50,14 @@ const
   cDefaultButtonPaddingBig = 5;
 
 type
+  TATButtonArrowKind = (
+    abakArrowDown,
+    abakArrowLeft,
+    abakArrowRight,
+    abakCross
+    );
+
+type
   { TATButton }
 
   TATButton = class(TCustomControl)
@@ -68,6 +76,7 @@ type
     FImages: TImageList;
     FImageIndex: integer;
     FArrow: boolean;
+    FArrowKind: TATButtonArrowKind;
     FArrowAlign: TAlignment;
     FFlat: boolean;
     FKind: TATButtonKind;
@@ -180,6 +189,7 @@ type
     property Focusable: boolean read FFocusable write SetFocusable default true;
     property Flat: boolean read FFlat write SetFlat default false;
     property Arrow: boolean read FArrow write FArrow default false;
+    property ArrowKind: TATButtonArrowKind read FArrowKind write FArrowKind default abakArrowDown;
     property ArrowAlign: TAlignment read FArrowAlign write FArrowAlign default taRightJustify;
     property TextAlign: TAlignment read FTextAlign write FTextAlign default taLeftJustify;
     property Kind: TATButtonKind read FKind write SetKind default abuTextOnly;
@@ -615,20 +625,34 @@ end;
 procedure TATButton.PaintArrow(C: TCanvas; AX, AY: integer; AColorBg, AColorArrow: TColor);
 var
   NSize: integer;
+  R: TRect;
 begin
   NSize:= DoScale(Theme^.ArrowSize);
+  R:= Rect(
+    AX-NSize*2-1,
+    AY-NSize*2-1,
+    AX+NSize*2+2,
+    AY+NSize*2+1);
 
   if AColorBg<>clNone then
   begin
     C.Brush.Color:= AColorBg;
-    C.FillRect(
-      Rect(AX-NSize*2-1,
-      AY-NSize*2-1,
-      AX+NSize*2+2,
-      AY+NSize*2+1));
+    C.FillRect(R);
   end;
 
-  CanvasPaintTriangleDown(C, AColorArrow, Point(AX, AY), NSize);
+  case FArrowKind of
+    abakArrowDown:
+      CanvasPaintTriangleDown(C, AColorArrow, Point(AX, AY), NSize);
+    abakArrowLeft:
+      CanvasPaintTriangleLeft(C, AColorArrow, Point(AX, AY), NSize);
+    abakArrowRight:
+      CanvasPaintTriangleRight(C, AColorArrow, Point(AX, AY), NSize);
+    abakCross:
+      CanvasPaintXMark(C, R, AColorArrow,
+        DoScale(FTheme^.XMarkOffsetLeft),
+        DoScale(FTheme^.XMarkOffsetRight),
+        DoScale(FTheme^.XMarkLineWidth));
+  end;
 end;
 
 procedure TATButton.SetBoldFont(AValue: boolean);
@@ -807,6 +831,7 @@ begin
   FKind:= abuTextOnly;
   FBoldBorder:= false;
   FArrow:= false;
+  FArrowKind:= abakArrowDown;
   FArrowAlign:= taRightJustify;
   FTextAlign:= taLeftJustify;
   FPadding:= cDefaultButtonPadding;

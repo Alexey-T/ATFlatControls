@@ -1,4 +1,7 @@
 
+2019.10.01
++ ATButton: added prop ArrowKind (enum)
+
 2019.09.26
 + ATListbox: added ShowXMark
 + ATListbox: added OnClickXMark
