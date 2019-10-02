@@ -38,7 +38,8 @@ uses
   LCLType,
   {$endif}
   Classes, Types, Graphics,
-  Controls, ExtCtrls, Forms;
+  Controls, ExtCtrls, Forms,
+  ATCanvasPrimitives;
 
 type
   TATScrollbarElemType = (
@@ -674,8 +675,8 @@ end;
 procedure TATScrollbar.DoPaintStd_Arrow(C: TCanvas; R: TRect;
   AType: TATScrollbarElemType);
 var
-  P, P1, P2, P3: TPoint;
-  cc: Integer;
+  P: TPoint;
+  NSize: Integer;
 begin
   if IsRectEmpty(R) then exit;
   C.Brush.Color:= ColorToRGB(FTheme^.ColorArrowBorder);
@@ -703,39 +704,20 @@ begin
   end;
 
   P:= CenterPoint(R);
-  cc:= DoScale(FTheme^.ArrowSize);
+  NSize:= DoScale(FTheme^.ArrowSize);
 
   case AType of
     aseArrowUp:
-      begin
-        P1:= Point(P.X-cc, P.Y+cc div 2);
-        P2:= Point(P.X+cc, P.Y+cc div 2);
-        P3:= Point(P.X, P.Y-cc+cc div 2);
-      end;
+      CanvasPaintTriangleUp(C, FTheme^.ColorArrowSign, P, NSize);
     aseArrowDown:
-      begin
-        P1:= Point(P.X-cc, P.Y-cc div 2);
-        P2:= Point(P.X+cc, P.Y-cc div 2);
-        P3:= Point(P.X, P.Y+cc-cc div 2);
-      end;
+      CanvasPaintTriangleDown(C, FTheme^.ColorArrowSign, P, NSize);
     aseArrowLeft:
-      begin
-        P1:= Point(P.X+cc div 2, P.Y-cc);
-        P2:= Point(P.X+cc div 2, P.Y+cc);
-        P3:= Point(P.X-cc+cc div 2, P.Y);
-      end;
+      CanvasPaintTriangleLeft(C, FTheme^.ColorArrowSign, P, NSize);
     aseArrowRight:
-      begin
-        P1:= Point(P.X-cc div 2    -1, P.Y-cc);
-        P2:= Point(P.X-cc div 2    -1, P.Y+cc);
-        P3:= Point(P.X+cc-cc div 2 -1, P.Y);
-      end;
+      CanvasPaintTriangleRight(C, FTheme^.ColorArrowSign, P, NSize);
     else
       Exit;
- end;     
-  C.Brush.Color:= ColorToRGB(FTheme^.ColorArrowSign);
-  C.Pen.Color:= ColorToRGB(FTheme^.ColorArrowSign);
-  C.Polygon([P1, P2, P3]);
+  end;
 end;
 
 function TATScrollbar.IsHorz: boolean;
@@ -1125,7 +1107,7 @@ initialization
     ScalePercents:= 100;
     ArrowStyleH:= asaArrowsNormal;
     ArrowStyleV:= asaArrowsNormal;
-    ArrowSize:= 3;
+    ArrowSize:= 2;
     ArrowLengthPercents:= 100;
     BorderSize:= 0;
     TimerInterval:= 200;
