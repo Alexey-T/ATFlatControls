@@ -945,11 +945,16 @@ procedure TATScrollbar.SetPos(Value: Integer);
 begin
   Value:= Math.Min(Value, FMax);
   Value:= Math.Max(Value, FMin);
+
   if FPos<>Value then
   begin
     FPos:= Value;
 
+    {$ifdef windows}
     Repaint; //only Invalidate is not ok, it delays painting on big files
+    {$else}
+    Invalidate;
+    {$endif}
 
     if Assigned(FOnChange) then
       FOnChange(Self);
