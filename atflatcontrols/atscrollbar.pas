@@ -20,13 +20,11 @@ unit ATScrollBar;
 
 {$ifdef FPC}
   {$mode delphi}
+{$else}
+  {$define windows}
 {$endif}
 
 interface
-
-{$ifndef FPC}
-{$define windows}
-{$endif}
 
 uses
   {$ifdef windows}
