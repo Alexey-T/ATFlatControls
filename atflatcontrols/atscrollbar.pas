@@ -190,7 +190,7 @@ type
 
     procedure TimerTimer(Sender: TObject);
     procedure SetKind(AValue: TScrollBarKind);
-    procedure SetPos(Value: Integer);
+    procedure SetPos(AValue: Integer);
     procedure SetMin(Value: Integer);
     procedure SetMax(Value: Integer);
     procedure SetPageSize(Value: Integer);
@@ -941,14 +941,16 @@ begin
   end;
 end;
 
-procedure TATScrollbar.SetPos(Value: Integer);
+procedure TATScrollbar.SetPos(AValue: Integer);
 begin
-  Value:= Math.Min(Value, FMax);
-  Value:= Math.Max(Value, FMin);
+  if AValue>FMax then
+    AValue:= FMax;
+  if AValue<FMin then
+    AValue:= FMin;
 
-  if FPos<>Value then
+  if FPos<>AValue then
   begin
-    FPos:= Value;
+    FPos:= AValue;
 
     {$ifdef windows}
     Repaint; //only Invalidate is not ok, it delays painting on big files
