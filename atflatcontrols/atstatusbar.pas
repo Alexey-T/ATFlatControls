@@ -108,6 +108,7 @@ type
     function GetHint(AIndex: integer): string;
     procedure SetCaption(AIndex: integer; const AValue: TCaption);
     procedure SetHint(AIndex: integer; const AValue: string); reintroduce;
+    procedure UpdateCanvasFontFromData(C: TCanvas; AData: TATStatusData);
   public
     constructor Create(AOnwer: TComponent); override;
     destructor Destroy; override;
@@ -276,6 +277,25 @@ begin
     DoPaintTo(Canvas);
 end;
 
+procedure TATStatus.UpdateCanvasFontFromData(C: TCanvas; AData: TATStatusData);
+begin
+  if AData.FontName<>'' then
+    C.Font.Name:= AData.FontName
+  else
+    C.Font.Name:= Theme^.FontName;
+
+  if AData.FontSize>0 then
+    C.Font.Size:= Theme^.DoScaleFont(AData.FontSize)
+  else
+    C.Font.Size:= Theme^.DoScaleFont(Theme^.FontSize);
+
+  if AData.ColorFont<>clNone then
+    C.Font.Color:= ColorToRGB(AData.ColorFont)
+  else
+    C.Font.Color:= ColorToRGB(Theme^.ColorFont);
+
+end;
+
 procedure TATStatus.DoPaintPanelTo(C: TCanvas; ARect: TRect; AData: TATStatusData);
 var
   RectText: TRect;
@@ -315,22 +335,7 @@ begin
   if AData.Caption<>'' then
   begin
     C.FillRect(RectText);
-
-    if AData.FontName<>'' then
-      C.Font.Name:= AData.FontName
-    else
-      C.Font.Name:= Theme^.FontName;
-
-    if AData.FontSize>0 then
-      C.Font.Size:= AData.FontSize
-    else
-      C.Font.Size:= Theme^.FontSize;
-
-    if AData.ColorFont<>clNone then
-      C.Font.Color:= ColorToRGB(AData.ColorFont)
-    else
-      C.Font.Color:= ColorToRGB(Theme^.ColorFont);
-
+    UpdateCanvasFontFromData(C, AData);
     TextSize:= C.TextExtent(AData.Caption);
 
     case AData.Align of
@@ -414,8 +419,8 @@ var
 begin
   C.Brush.Color:= ColorToRGB(Color);
   C.FillRect(ClientRect);
-  C.Font.Name:= Theme^.FontName;
-  C.Font.Size:= Theme^.DoScaleFont(Theme^.FontSize);
+  //C.Font.Name:= Theme^.FontName;
+  //C.Font.Size:= Theme^.DoScaleFont(Theme^.FontSize);
 
   //consider AutoSize
   for i:= 0 to PanelCount-1 do
@@ -680,7 +685,10 @@ begin
       Inc(NSize, Images.Width+NPad);
 
     if D.Caption<>'' then
+    begin
+      UpdateCanvasFontFromData(C, D);
       Inc(NSize, C.TextWidth(D.Caption));
+    end;
 
     D.Width:= NSize;
   end;

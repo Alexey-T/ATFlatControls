@@ -33,7 +33,7 @@ type
       ACanvas: TCanvas; const ARect: TRect; var ACanDraw: boolean);
   public
     { Public declarations }
-    t, t0: TATStatus;
+    t, t0, t1: TATStatus;
   end;
 
 var
@@ -82,6 +82,24 @@ begin
   t0.AddPanel(-1, 50, taRightJustify, 'Rt2', -1, 0, false, false, clGreen);
   t0.AddPanel(-1, 300, taLeftJustify, 'Long wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww', -1, 0, false, true);
   t0.AddPanel(-1, 100, taCenter, 'Center');//, -1, 0, true);
+
+  //-----------------------------------
+  t1:= TATStatus.Create(Self);
+  t1.Parent:= Self;
+  t1.Top:= t0.Top-2;
+
+  t1.Color:= clLtGray;
+  t1.ColorBorderTop:= clWhite;
+  t1.ColorBorderR:= clGray;
+  t1.ColorBorderD:= clGray;
+  t1.ColorBorderL:= clWhite;
+  t1.ColorBorderU:= clNone;
+  t1.Font.Size:= 15;
+  t1.Height:= 32;
+  t1.HeightInitial:= 32;
+
+  t1.AddPanel(-1, 20, taLeftJustify, 'Auto-sized', -1, 0, true, false);
+  t1.AddPanel(-1, 20, taRightJustify, 'Also auto-sized', -1, 0, true, false);
 end;
 
 procedure TForm1.bAddClick(Sender: TObject);
