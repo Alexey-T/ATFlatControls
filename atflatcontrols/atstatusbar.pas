@@ -108,7 +108,7 @@ type
     function GetHint(AIndex: integer): string;
     procedure SetCaption(AIndex: integer; const AValue: TCaption);
     procedure SetHint(AIndex: integer; const AValue: string); reintroduce;
-    procedure UpdateCanvasFontFromData(C: TCanvas; AData: TATStatusData);
+    procedure UpdateCanvasFont(C: TCanvas; D: TATStatusData);
   public
     constructor Create(AOnwer: TComponent); override;
     destructor Destroy; override;
@@ -277,23 +277,22 @@ begin
     DoPaintTo(Canvas);
 end;
 
-procedure TATStatus.UpdateCanvasFontFromData(C: TCanvas; AData: TATStatusData);
+procedure TATStatus.UpdateCanvasFont(C: TCanvas; D: TATStatusData);
 begin
-  if AData.FontName<>'' then
-    C.Font.Name:= AData.FontName
+  if D.FontName<>'' then
+    C.Font.Name:= D.FontName
   else
     C.Font.Name:= Theme^.FontName;
 
-  if AData.FontSize>0 then
-    C.Font.Size:= Theme^.DoScaleFont(AData.FontSize)
+  if D.FontSize>0 then
+    C.Font.Size:= Theme^.DoScaleFont(D.FontSize)
   else
     C.Font.Size:= Theme^.DoScaleFont(Theme^.FontSize);
 
-  if AData.ColorFont<>clNone then
-    C.Font.Color:= ColorToRGB(AData.ColorFont)
+  if D.ColorFont<>clNone then
+    C.Font.Color:= ColorToRGB(D.ColorFont)
   else
     C.Font.Color:= ColorToRGB(Theme^.ColorFont);
-
 end;
 
 procedure TATStatus.DoPaintPanelTo(C: TCanvas; ARect: TRect; AData: TATStatusData);
@@ -335,7 +334,7 @@ begin
   if AData.Caption<>'' then
   begin
     C.FillRect(RectText);
-    UpdateCanvasFontFromData(C, AData);
+    UpdateCanvasFont(C, AData);
     TextSize:= C.TextExtent(AData.Caption);
 
     case AData.Align of
@@ -419,8 +418,6 @@ var
 begin
   C.Brush.Color:= ColorToRGB(Color);
   C.FillRect(ClientRect);
-  //C.Font.Name:= Theme^.FontName;
-  //C.Font.Size:= Theme^.DoScaleFont(Theme^.FontSize);
 
   //consider AutoSize
   for i:= 0 to PanelCount-1 do
@@ -686,7 +683,7 @@ begin
 
     if D.Caption<>'' then
     begin
-      UpdateCanvasFontFromData(C, D);
+      UpdateCanvasFont(C, D);
       Inc(NSize, C.TextWidth(D.Caption));
     end;
 
