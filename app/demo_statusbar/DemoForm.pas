@@ -46,6 +46,8 @@ uses StrUtils, Math;
 {$R *.lfm}
 
 procedure TForm1.FormCreate(Sender: TObject);
+var
+  D: TATStatusData;
 begin
   t:= TATStatus.Create(Self);
   t.Parent:= Self;
@@ -74,14 +76,13 @@ begin
   t0.ColorBorderD:= clGray;
   t0.ColorBorderL:= clWhite;
   t0.ColorBorderU:= clNone;
-  t0.Font.Size:= 13;
   t0.Height:= 32;
   t0.HeightInitial:= 32;
 
   t0.AddPanel(-1, 50, taRightJustify, 'Rt', -1, 0, false, false, clNavy);
   t0.AddPanel(-1, 50, taRightJustify, 'Rt2', -1, 0, false, false, clGreen);
   t0.AddPanel(-1, 300, taLeftJustify, 'Long wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww', -1, 0, false, true);
-  t0.AddPanel(-1, 100, taCenter, 'Center');//, -1, 0, true);
+  t0.AddPanel(-1, 100, taCenter, 'Center');
 
   //-----------------------------------
   t1:= TATStatus.Create(Self);
@@ -94,12 +95,16 @@ begin
   t1.ColorBorderD:= clGray;
   t1.ColorBorderL:= clWhite;
   t1.ColorBorderU:= clNone;
-  t1.Font.Size:= 15;
-  t1.Height:= 32;
-  t1.HeightInitial:= 32;
+  t1.Height:= 35;
+  t1.HeightInitial:= 35;
 
   t1.AddPanel(-1, 20, taLeftJustify, 'Auto-sized', -1, 0, true, false);
   t1.AddPanel(-1, 20, taRightJustify, 'Also auto-sized', -1, 0, true, false);
+
+  D:= t1.GetPanelData(0);
+  D.FontSize:= 14;
+  D:= t1.GetPanelData(1);
+  D.FontSize:= 19;
 end;
 
 procedure TForm1.bAddClick(Sender: TObject);
