@@ -137,7 +137,6 @@ end;
 procedure TATGauge.DoPaintTextInverted(C: TCanvas; r: TRect; const Str: string);
 const
   ColorEmpty = clBlack;
-  ColorFont = clWhite;
 var
   StrSize: TSize;
   Bmp: TBitmap;
