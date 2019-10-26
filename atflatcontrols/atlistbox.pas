@@ -74,6 +74,7 @@ type
     FColumnSizes: TATIntArray;
     FColumnWidths: TATIntArray;
     FShowX: TATListboxShowX;
+    FThemedFont: boolean;
     FOnDrawItem: TATListboxDrawItemEvent;
     FOnClickX: TNotifyEvent;
     FOnChangeSel: TNotifyEvent;
@@ -105,6 +106,8 @@ type
     function GetColumnWidth(AIndex: integer): integer;
     procedure DoKeyDown(var Key: Word; Shift: TShiftState);
     procedure InvalidateNoSB;
+    function CurrentFontName: string;
+    function CurrentFontSize: integer;
   protected
     procedure Paint; override;
     procedure Click; override;
@@ -144,6 +147,7 @@ type
     property ColumnSeparator: char read FColumnSep write FColumnSep;
     property ColumnSizes: TATIntArray read FColumnSizes write FColumnSizes;
     property ColumnWidth[AIndex: integer]: integer read GetColumnWidth;
+    property ThemedFont: boolean read FThemedFont write FThemedFont;
     {$ifdef FPC}
     function CanFocus: boolean; override;
     function CanSetFocus: boolean; override;
@@ -255,7 +259,7 @@ end;
 
 function TATListbox.GetItemHeightDefault: integer;
 begin
-  Result:= FTheme^.DoScaleFont(FTheme^.FontSize) * 18 div 10 + 2;
+  Result:= FTheme^.DoScaleFont(CurrentFontSize) * 18 div 10 + 2;
   Result:= Result * Screen.PixelsPerInch div 96;
 end;
 
@@ -334,6 +338,9 @@ var
   bPaintX, bCircle: boolean;
   RectX: TRect;
 begin
+  C.Font.Name:= CurrentFontName;
+  C.Font.Size:= FTheme^.DoScaleFont(CurrentFontSize);
+
   C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListbox);
   C.FillRect(r);
 
@@ -535,8 +542,6 @@ begin
   R:= ClientRect;
   if DoubleBuffered then
   begin
-    FBitmap.Canvas.Font.Name:= FTheme^.FontName;
-    FBitmap.Canvas.Font.Size:= FTheme^.DoScaleFont(FTheme^.FontSize);
     DoPaintTo(FBitmap.Canvas, R);
     Canvas.CopyRect(R, FBitmap.Canvas, R);
   end
@@ -675,6 +680,7 @@ begin
   DoubleBuffered:= IsDoubleBufferedNeeded;
   Width:= 180;
   Height:= 150;
+  Font.Size:= 9;
 
   CanGetFocus:= false;
   FList:= TStringList.Create;
@@ -698,6 +704,7 @@ begin
 
   FTheme:= @ATFlatTheme;
   FThemedScrollbar:= true;
+  FThemedFont:= true;
 
   FScrollbar:= TATScrollbar.Create(Self);
   FScrollbar.Parent:= Self;
@@ -849,6 +856,22 @@ begin
   end
   else
     Invalidate;
+end;
+
+function TATListbox.CurrentFontName: string;
+begin
+  if FThemedFont then
+    Result:= FTheme^.FontName
+  else
+    Result:= Font.Name;
+end;
+
+function TATListbox.CurrentFontSize: integer;
+begin
+  if FThemedFont then
+    Result:= FTheme^.FontSize
+  else
+    Result:= Font.Size;
 end;
 
 
