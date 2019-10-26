@@ -53,6 +53,7 @@ type
   private
     FTheme: PATFlatTheme;
     FThemedScrollbar: boolean;
+    FThemedFont: boolean;
     FScrollbar: TATScrollbar;
     FOwnerDrawn: boolean;
     FVirtualMode: boolean;
@@ -74,7 +75,6 @@ type
     FColumnSizes: TATIntArray;
     FColumnWidths: TATIntArray;
     FShowX: TATListboxShowX;
-    FThemedFont: boolean;
     FOnDrawItem: TATListboxDrawItemEvent;
     FOnClickX: TNotifyEvent;
     FOnChangeSel: TNotifyEvent;
@@ -143,11 +143,11 @@ type
     function GetItemIndexAt(Pnt: TPoint): integer;
     property Theme: PATFlatTheme read FTheme write FTheme;
     property ThemedScrollbar: boolean read FThemedScrollbar write SetThemedScrollbar;
+    property ThemedFont: boolean read FThemedFont write FThemedFont;
     property Scrollbar: TATScrollbar read FScrollbar;
     property ColumnSeparator: char read FColumnSep write FColumnSep;
     property ColumnSizes: TATIntArray read FColumnSizes write FColumnSizes;
     property ColumnWidth[AIndex: integer]: integer read GetColumnWidth;
-    property ThemedFont: boolean read FThemedFont write FThemedFont;
     {$ifdef FPC}
     function CanFocus: boolean; override;
     function CanSetFocus: boolean; override;
