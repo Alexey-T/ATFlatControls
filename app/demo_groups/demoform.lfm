@@ -1,0 +1,257 @@
+object fmTest: TfmTest
+  Left = 357
+  Height = 545
+  Top = 137
+  Width = 914
+  Caption = 'Groups'
+  ClientHeight = 522
+  ClientWidth = 914
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Menu = MainMenu1
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poScreenCenter
+  LCLVersion = '1.9.0.0'
+  object Tree: TTreeView
+    Left = 0
+    Height = 501
+    Top = 0
+    Width = 170
+    Align = alLeft
+    DragMode = dmAutomatic
+    HideSelection = False
+    Indent = 19
+    TabOrder = 0
+    Visible = False
+    OnDragDrop = TreeDragDrop
+    OnDragOver = TreeDragOver
+    Options = [tvoAutoItemHeight, tvoKeepCollapsedNodes, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
+    Items.Data = {
+      F9FFFFFF0200030000000000000000000000FFFFFFFFFFFFFFFF000000000000
+      00000004000000546573740000000000000000FFFFFFFFFFFFFFFF0200000000
+      000000010500000054657374320000000000000000FFFFFFFFFFFFFFFF000000
+      000000000000030000005454320000000000000000FFFFFFFFFFFFFFFF000000
+      000000000000030000005454310000000000000000FFFFFFFFFFFFFFFF000000
+      000000000000020000005454
+    }
+  end
+  object Status: TStatusBar
+    Left = 0
+    Height = 21
+    Top = 501
+    Width = 914
+    Panels = <>
+  end
+  object PopupMenu1: TPopupMenu
+    left = 408
+    top = 80
+    object mnuClose: TMenuItem
+      Caption = 'close'
+      object mnuCloseThis: TMenuItem
+        Caption = 'this'
+        OnClick = mnuCloseThisClick
+      end
+      object mnuCloseOthSame: TMenuItem
+        Caption = 'others (same group)'
+        OnClick = mnuCloseOthSameClick
+      end
+      object mnuCloseOthAll: TMenuItem
+        Caption = 'others (all groups)'
+        OnClick = mnuCloseOthAllClick
+      end
+      object N5: TMenuItem
+        Caption = '-'
+      end
+      object mnuCloseLt: TMenuItem
+        Caption = 'left tabs (same group)'
+        OnClick = mnuCloseLtClick
+      end
+      object mnuCloseRt: TMenuItem
+        Caption = 'right tabs (same group)'
+        OnClick = mnuCloseRtClick
+      end
+      object N6: TMenuItem
+        Caption = '-'
+      end
+      object mnuCloseAllThis: TMenuItem
+        Caption = 'all (same group)'
+        OnClick = mnuCloseAllThisClick
+      end
+      object mnuCloseAll: TMenuItem
+        Caption = 'all'
+        OnClick = mnuCloseAllClick
+      end
+    end
+    object N1: TMenuItem
+      Caption = '-'
+    end
+    object m1: TMenuItem
+      Caption = 'to group 1'
+      OnClick = m1Click
+    end
+    object m2: TMenuItem
+      Caption = 'to group 2'
+      OnClick = m2Click
+    end
+    object m3: TMenuItem
+      Caption = 'to group 3'
+      OnClick = m3Click
+    end
+    object m4: TMenuItem
+      Caption = 'to group 4'
+      OnClick = m4Click
+    end
+    object togroup51: TMenuItem
+      Caption = 'to group 5'
+      OnClick = togroup51Click
+    end
+    object togroup61: TMenuItem
+      Caption = 'to group 6'
+      OnClick = togroup61Click
+    end
+    object N3: TMenuItem
+      Caption = '-'
+    end
+    object mNext: TMenuItem
+      Caption = 'to group next'
+      OnClick = mNextClick
+    end
+    object mPre: TMenuItem
+      Caption = 'to group prev'
+      OnClick = mPreClick
+    end
+  end
+  object MainMenu1: TMainMenu
+    left = 368
+    top = 96
+    object Mode1: TMenuItem
+      Caption = 'Mode'
+      object mnuMode1: TMenuItem
+        Caption = 'single'
+        OnClick = mnuMode1Click
+      end
+      object mnuMode2V: TMenuItem
+        Caption = '2 vert'
+        OnClick = mnuMode2VClick
+      end
+      object mnuMode2H: TMenuItem
+        Caption = '2 horz'
+        OnClick = mnuMode2HClick
+      end
+      object mnuMode3V: TMenuItem
+        Caption = '3 vert'
+        OnClick = mnuMode3VClick
+      end
+      object mnuMode3H: TMenuItem
+        Caption = '3 horz'
+        OnClick = mnuMode3HClick
+      end
+      object modeMode12V: TMenuItem
+        Caption = '1+2 vert'
+        OnClick = modeMode12VClick
+      end
+      object mnuMode12H: TMenuItem
+        Caption = '1+2 horz'
+        OnClick = mnuMode12HClick
+      end
+      object mnuMode4V: TMenuItem
+        Caption = '4 vert'
+        OnClick = mnuMode4VClick
+      end
+      object mnuMode4H: TMenuItem
+        Caption = '4 horz'
+        OnClick = mnuMode4HClick
+      end
+      object mnuMode4G: TMenuItem
+        Caption = '4 grid'
+        OnClick = mnuMode4GClick
+      end
+      object mnuMode6V: TMenuItem
+        Caption = '6 vert'
+        OnClick = mnuMode6VClick
+      end
+      object mnuMode6H: TMenuItem
+        Caption = '6 horz'
+        OnClick = mnuMode6HClick
+      end
+      object mnuMode6: TMenuItem
+        Caption = '6 grid'
+        OnClick = mnuMode6Click
+      end
+    end
+    object Focus1: TMenuItem
+      Caption = 'Focus'
+      object N12: TMenuItem
+        Caption = 'group 1'
+        ShortCut = 112
+        OnClick = N12Click
+      end
+      object N21: TMenuItem
+        Caption = 'group 2'
+        ShortCut = 113
+        OnClick = N21Click
+      end
+      object N31: TMenuItem
+        Caption = 'group 3'
+        ShortCut = 114
+        OnClick = N31Click
+      end
+      object N41: TMenuItem
+        Caption = 'group 4'
+        ShortCut = 115
+        OnClick = N41Click
+      end
+      object group51: TMenuItem
+        Caption = 'group 5'
+        ShortCut = 116
+        OnClick = group51Click
+      end
+      object group61: TMenuItem
+        Caption = 'group 6'
+        ShortCut = 117
+        OnClick = group61Click
+      end
+      object N2: TMenuItem
+        Caption = '-'
+      end
+      object Next1: TMenuItem
+        Caption = 'group next'
+        ShortCut = 120
+        OnClick = Next1Click
+      end
+      object Pr1: TMenuItem
+        Caption = 'group prev'
+        ShortCut = 121
+        OnClick = Pr1Click
+      end
+    end
+    object Movetab1: TMenuItem
+      Caption = 'Move current tab'
+      object tonext1: TMenuItem
+        Caption = 'to next group'
+        OnClick = tonext1Click
+      end
+      object toprev1: TMenuItem
+        Caption = 'to prev group'
+        OnClick = toprev1Click
+      end
+      object N4: TMenuItem
+        Caption = '-'
+      end
+      object toothergroup1: TMenuItem
+        Caption = 'to opposite group (1->2, 2..6->1)'
+        OnClick = toothergroup1Click
+      end
+    end
+    object mTree: TMenuItem
+      Caption = 'Tree'
+      object mnuTreeToggle: TMenuItem
+        Caption = 'Toggle tree'
+        OnClick = mnuTreeToggleClick
+      end
+    end
+  end
+end

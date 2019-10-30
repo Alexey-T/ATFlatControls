@@ -1,0 +1,144 @@
+object Form1: TForm1
+  Left = 313
+  Height = 378
+  Top = 232
+  Width = 734
+  Caption = 'ATTabs position demo'
+  ClientHeight = 378
+  ClientWidth = 734
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '2.1.0.0'
+  object chkPosTop: TRadioButton
+    Left = 208
+    Height = 24
+    Top = 112
+    Width = 50
+    Caption = 'top'
+    Checked = True
+    OnChange = chkPosTopChange
+    TabOrder = 0
+    TabStop = True
+  end
+  object chkPosBottom: TRadioButton
+    Left = 208
+    Height = 24
+    Top = 136
+    Width = 78
+    Caption = 'bottom'
+    OnChange = chkPosBottomChange
+    TabOrder = 1
+  end
+  object chkPosLeft: TRadioButton
+    Left = 208
+    Height = 24
+    Top = 160
+    Width = 50
+    Caption = 'left'
+    OnChange = chkPosLeftChange
+    TabOrder = 2
+  end
+  object chkPosRight: TRadioButton
+    Left = 208
+    Height = 24
+    Top = 184
+    Width = 58
+    Caption = 'right'
+    OnChange = chkPosRightChange
+    TabOrder = 3
+  end
+  object chkEmptyBtns: TCheckBox
+    Left = 312
+    Height = 24
+    Top = 112
+    Width = 99
+    Caption = 'no buttons'
+    OnChange = chkEmptyBtnsChange
+    TabOrder = 4
+  end
+  object chkFlat: TCheckBox
+    Left = 312
+    Height = 24
+    Top = 136
+    Width = 50
+    Caption = 'flat'
+    OnChange = chkFlatChange
+    TabOrder = 5
+  end
+  object chkFullColor: TCheckBox
+    Left = 312
+    Height = 24
+    Top = 160
+    Width = 103
+    Caption = 'full colored'
+    OnChange = chkFullColorChange
+    TabOrder = 6
+  end
+  object chkColorAllowVert: TCheckBox
+    Left = 312
+    Height = 24
+    Top = 184
+    Width = 171
+    Caption = 'color band: allow vert'
+    Checked = True
+    OnChange = chkColorAllowVertChange
+    State = cbChecked
+    TabOrder = 7
+  end
+  object chkAngled: TCheckBox
+    Left = 312
+    Height = 24
+    Top = 208
+    Width = 104
+    Caption = 'angled tabs'
+    OnChange = chkAngledChange
+    TabOrder = 8
+  end
+  object chkBetween: TCheckBox
+    Left = 312
+    Height = 24
+    Top = 232
+    Width = 159
+    Caption = 'space between tabs'
+    OnChange = chkBetweenChange
+    TabOrder = 9
+  end
+  object btnAddTab: TButton
+    Left = 448
+    Height = 25
+    Top = 112
+    Width = 136
+    Caption = 'add tab'
+    OnClick = btnAddTabClick
+    TabOrder = 11
+  end
+  object btnPrev: TButton
+    Left = 448
+    Height = 25
+    Top = 144
+    Width = 64
+    Caption = '<'
+    OnClick = btnPrevClick
+    TabOrder = 12
+  end
+  object btnNext: TButton
+    Left = 512
+    Height = 25
+    Top = 144
+    Width = 72
+    Caption = '>'
+    OnClick = btnNextClick
+    TabOrder = 13
+  end
+  object chkAnim: TCheckBox
+    Left = 312
+    Height = 24
+    Top = 256
+    Width = 214
+    Caption = 'animation for tab add/close'
+    Checked = True
+    OnChange = chkAnimChange
+    State = cbChecked
+    TabOrder = 10
+  end
+end

@@ -1,0 +1,288 @@
+
+2019.09.07
+* change: remove published ClientWidth, ClientHeight
+
+2019.09.03
++ add: OnTabDblClick event
++ add: OnTabDropQuery event
+
+2019.09.02
++ add: OptScalePercents, allows to scale UI elements (without control size) by a factor
+* change: removed Scale property from ATGroups; instead added tabOptionScalePercents
++ add: TATTabData has new props: TabColorActive, TabColorOver (patch by @petko)
++ add: OptSpaceBeforeTextForMinWidth
+- fix: published OnMouseDown
+- fix: OnDblClick was not fired
+
+2019.07.17
++ add: OptActiveVisibleOnResize
+
+2019.06.18
++ add: prop OptSpaceSide
+* removed: prop OptShowAngled (now use OptSpaceSide)
+* removed: prop OptShowAngleTangent
+
+2019.06.17
++ add: method SetTheme - component will use fixed PNG images to paint tab shapes and "x" marks
++ add: folder "img_themes" with few sample themes
+
+2019.06.15
++ add: OptSpaceSeparator
+
+2019.06.14
++ add: OptButtonLayout allows chars "|" (separator) and "_" (space)
++ add: OptButtonSizeSpace
++ add: OptButtonSizeSeparator
++ add: TabMenuExternal (TPopupMenu)
+* removed support for TNT Controls
+
+2019.06.07
++ add: ParentColor
+
+2019.06.06
++ add: property OptShowFlatMouseOver
++ add: PropertyEditor under Delphi (patch by @srd-software)
++ add: changes in design-time are applied immediately
+
+2019.02.17
++ add: option for rounded X mark on mouse-over OptShowXRounded
+
+2018.12.28
+- fix: flickering of hints when mouse moves over x,<,> buttons
+
+2018.12.26
++ add: drag-drop now works in Delphi (tested on D7)
+- workaround for Lazarus drag-drop: it starts too early, so simple click on [x] icon shows drag-drop mark
+
+2018.12.23
+- fix: calculate index of mouse-over tab also on each Paint, because user can add/del tabs by keyboard 
+
+2018.12.17
++ add: prop OptHintForX
++ add: prop OptHintForPlus
++ add: prop OptHintForArrowLeft
++ add: prop OptHintForArrowRight
++ add: prop OptHintForArrowDown
++ add: prop OptHintForUser0...4
+
+2018.12.16
++ add: prop OptShowXButtons has new enum value: "show for active + mouseover tabs"
+
+2018.12.12
+- fix: OnDragDrop, OnDragOver did not work
+
+2018.12.11
+- fix: clicking on X area with hidden X button must not close tab
+- fix: painting of tab underlines with OptShowAngled
+- fix: compiling in Delphi
+
+2018.12.10
+- fix: context menu on macOS
+
+2018.12.08
++ add: property ColorSeparator
+
+2018.12.07
++ add: property OptShowFlatSepar
+
+2018.12.06
++ add: property OptTruncateCaption
+
+2018.10.30
++ add: animations on tab add/close, which are controlled by new props:
+    OptAnimationEnabled
+    OptAnimationStepVert
+    OptAnimationStepHorz
+    OptAnimationPause
+    
+2018.08.30
++ add: ATTabs: event OnTabGetCloseAction which affects what clicking "x" does
++ add: ATTabs: option OptWhichActivateOnClose (right tab or recent tab)
++ add: ATTabs: event OnTabGetTick to support option above
++ add: ATGroups: option above is exposed in SetTabOption()
+
+2018.08.13
++ add: ATGroups: added modes "6 vert", "6 horz"
+
+2018.06.05
++ add: TATTabData has new prop TabHideXButton (to hide x for some tabs)
+- fix: wrong color of X mark in "flat" mode
+
+2018.06.02
+- fix: custom-drawn tabs cannot be painted with x mark
+
+2018.06.01
+* change: instead of Font.Color, now set prop ColorFont
+
+2018.05.21
+* change: ATGroups: OnTabPopup event has 2 more params
+
+2018.05.20
++ add: ATGroups: add method MoveTabsFromGroupToAnother
+
+2018.03.25
++ add: vertical tabs now have variable height if OptVarWidth
++ add: public prop ScrollPos
++ add: public method DoScrollAnimation
++ add: Data (TATTabData) has new props:
+  + TabSpecialWidth (for horz tabs)
+  + TabSpecialHeight (for vert tabs)
+
+2018.03.07
++ add: method MakeVisible (it's called when changing TabIndex)
++ add: method IsTabVisible
++ add: methods GetTabRect*: added param AWithScroll
++ add: method SwitchTab: added param ALoopAtEdge
+- fixed: IsScrollMarkNeeded was wrong for var sized tabs
+
+2018.02.24
++ add: Data.TabHint field; work of per-tab hints on mouse move (tested on demo)
+
+2018.02.20
+- fix: avoid reduntant OnChange calls
+
+2018.02.13
++ add/change: clicking on X of passive tab don't active this tab. only clicking on caption does.
+* change: GetTabAt has additional param
+
+2018.02.12
+* change: ATGroups.AddTab: added params AIndex, AndActivate; gets int result
+
+2018.02.09
+- fix: triangle arrows painted with error on scale 125%
+
+2017.11.24
++ added files of ATGroups repo, with demo_groups, with readme
+
+2017.11.22
++ add: Delphi package file (.dpk) but w/o icon
+- fix: compiling on Delphi
+- fix: show unicode on Delphi7
+
+2017.11.21
++ add: supported multi-line tab captions, with #10 char
+
+2017.11.20
++ add: multi-line tabs can auto-fill control by width, prop OptFillWidth
+- fix: OptVarWidth didn't consider option OptShowNumberPrefix
+- fix: active bar position in OptShowFlat+OptMultiline mode
+
+2017.11.09
++ add: IDE designer can design all props of Tabs items: caption/color/modified/fontstyle/etc.
+
+2017.11.07
++ add: can set special font color/ font style for hot (mouse-over) tabs, and active tab
+  + add: prop ColorFontActive
+  + add: prop ColorFontHot
+  + add: prop OptActiveFontStyle, OptActiveFontStyleUsed
+  + add: prop OptHotFontStyle, OptHotFontStyleUsed
++ add: custom-draw event called for spacer (rect below tabs) too
+* renamed prop to OptSpaceBetweenLines
+
+2017.11.05
++ add: tabs can be wrappable to several lines: prop OptMultiline
++ add: tabs can be auto-sized to captions: prop OptVarWidth
++ add: prop OptSpaceBetweenRows for multi-line mode
+
+2017.10.28
++ add: Delphi compatible
+
+2017.10.27
++ add: prop OptShowAngled
++ add: prop OptShowAngleTangent
++ add: paint of angled tabs made faster (not using Canvas.Pixels)
+* removed prop OptTabAngle
+
+2017.10.11
++ add: prop OptPosition (top/bottom/left/right)
++ add: demo which tests OptPosition
+* renamed prop OptSpaceOnTop to OptSpacer
++ add: prop OptSpacer2 for left/right view
+
+2017.09.24
++ add: close button in OptButtonLayout: "x"
++ add: user buttons in OptButtonLayout: "0".."4"
++ add: support OnTabDrawBefore/OnTabDrawAfter for all arrows, user buttons
++ add: wiki file about "options"
+
+2017.09.23
++ add: prop OptButtonLayout. allowed buttons: <>v+. 
++ add: was only plus-tab, now also plus-button. use via OptButtonLayout.
++ add: prop OptButtonSize
++ add: prop OptShowArrowsNear: paint <> buttons together
+* change: plus-tab is painted via lines (not font)
+* deleted: prop OptShowPlusText
+
+2017.09.16
+* changed: renamed most of options to OptNNNNNN (sorry, please fix your code)
+
+2017.09.15
++ add: scrolling arrows, they work when tabs painted out of right side (when lot of tabs)
++ add: scrolling mark (red on top if lot of tabs)
++ add: prop TabShowScrollArrows (note: it uses TabIndentInit)
++ add: prop TabShowScrollMark
++ add: prop TabScrollMarkX, TabScrollMarkY
++ add: prop ColorScrollMark
++ add: prop TabAngleMaxTabs: slow TabAngle will be used only until not much tabs
+* renamed prop to ColorDropMark
+* renamed type to TATTabTriangle, with values
+
+2017.09.11
++ reworked drag-drop (was drop in MouseUp, not ok)
+- fix: crDrag cursor if mouse-up on another control
+
+2017.07.24
++ prop Images (Imagelist)
++ each tab's Data has TabImageIndex: now icons can be painted on tabs, text is shifted to right
+
+2017.06.14
+- fix: middle click didn't close tabs
+- fix: double click didn't work: to close tabs, to make new tab
+
+2017.05.25
+- fix: right-click must not show drag-cursor
+
+2017.01.04
++ use LCLCapability
+
+2016.08.27
++ new value of TabShowClose: show "x" for mouseover tab only
++ improve demo (allow to set all vals for TabsShowClose, top tabs angle=0)
+
+2016.07.15
++ don't use temp-bitmap to paint text (faster)
++ don't use bitmaps if DoubleBuffered off
+
+2016.03.25
++ rework of DnD between controls, now ok on Win32
+
+2016.02.02
+* del prop TabIndentText, center now
+
+1.2.0
++ prop TabShowModifiedText
++ prop TabShowEntireColor
++ prop ColorFontModified
++ Data.TabModified used actually to show "*"
++ TntPopupMenu for Delphi7
+- show "cancel" for close one tab
+
+1.1.3
+- fix incorrect left indent for plus-tab
+
+1.1.2
++ event OnTabMove
++ prop TabMiddleClickClose
+
+1.1.0
++ widestring used in Delphi7
++ drag-drop of tabs works between all ATTabs controls, even no events needed
++ event OnTabOver
++ event OnTabEmpty
++ prop TabDragOutEnabled
++ parameter in DeleteTab
++ method SwitchTab
++ support for owner-draw of backgnd (e.g. with SpTbx theme)
+
+1.0.2
++ support for "bottom tabs" (TabBottom prop)
