@@ -8,9 +8,8 @@ unit atflatcontrols_package;
 interface
 
 uses
-  ATButtons, atflatcontrols_register, ATListbox, ATLinkLabel, ATFlatToolbar, 
-  ATPanelSimple, ATPanelColor, ATScrollBar, ATStatusBar, ATGauge, 
-  ATFlatThemes, ATCanvasPrimitives, LazarusPackageIntf;
+  ATButtons, atflatcontrols_register, ATListbox, ATLinkLabel, ATFlatToolbar, ATPanelSimple, ATPanelColor, 
+  ATScrollBar, ATStatusBar, ATGauge, ATFlatThemes, LazarusPackageIntf;
 
 implementation
 

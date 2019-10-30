@@ -22,8 +22,8 @@
 - ATStatusbar
 and several simple controls."/>
     <License Value="MPL 2.0, LGPL"/>
-    <Version Major="1" Minor="4"/>
-    <Files Count="13">
+    <Version Major="1" Minor="5"/>
+    <Files Count="12">
       <Item1>
         <Filename Value="atbuttons.pas"/>
         <UnitName Value="ATButtons"/>
@@ -73,15 +73,14 @@ and several simple controls."/>
         <Filename Value="res\icons.lrs"/>
         <Type Value="LRS"/>
       </Item12>
-      <Item13>
-        <Filename Value="atcanvasprimitives.pas"/>
-        <UnitName Value="ATCanvasPrimitives"/>
-      </Item13>
     </Files>
-    <RequiredPkgs Count="1">
+    <RequiredPkgs Count="2">
       <Item1>
-        <PackageName Value="LCL"/>
+        <PackageName Value="atcanvasprimitives_package"/>
       </Item1>
+      <Item2>
+        <PackageName Value="LCL"/>
+      </Item2>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>
