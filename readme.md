@@ -1,5 +1,7 @@
-Controls for Lazarus 
+Controls for Lazarus and Delphi:
 
+* ATTabs: OS independant tab control: http://wiki.freepascal.org/ATTabs
+* ATGroups: several combined ATTabs: http://wiki.freepascal.org/ATGroups
 * ATButton: custom-drawn button: http://wiki.freepascal.org/ATButton
 * ATFlatToolbar: toolbar based on ATButton: http://wiki.freepascal.org/ATFlatToolbar
 * ATListbox: custom-drawn listbox: http://wiki.freepascal.org/ATListbox
@@ -18,5 +20,3 @@ Simple controls:
 ![img](img/atscrollbar.png?raw=true)
 ![img](img/atgauge.png?raw=true)
 ![img](img/atstatusbar.png?raw=true)
-
-Lazarus 1.6+, tested on Win/Linux/macOS.
