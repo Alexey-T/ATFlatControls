@@ -7,7 +7,9 @@ unit atflatcontrols_register;
 interface
 
 uses
-  Classes, SysUtils, 
+  Classes, SysUtils,
+  ATTabs,
+  ATGroups,
   ATButtons, ATFlatToolbar, 
   ATListbox, ATLinkLabel, ATScrollbar, ATStatusbar,
   ATPanelSimple, ATPanelColor, ATGauge {$ifdef FPC}, LResources{$endif};
@@ -18,7 +20,9 @@ implementation
 
 procedure Register;
 begin
-  RegisterComponents('Misc', [
+  RegisterComponents('AT Controls', [
+    TATTabs,
+    TATGroups,
     TATButton,
     TATFlatToolbar,
     TATListbox,

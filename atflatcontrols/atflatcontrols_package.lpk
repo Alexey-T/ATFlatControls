@@ -14,6 +14,8 @@
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Custom-drawn controls, used in CudaText:
+- ATTabs
+- ATGroups
 - ATButton
 - ATFlatToolbar
 - ATGauge
@@ -22,8 +24,8 @@
 - ATStatusbar
 and several simple controls."/>
     <License Value="MPL 2.0, LGPL"/>
-    <Version Major="1" Minor="5"/>
-    <Files Count="12">
+    <Version Major="2"/>
+    <Files Count="15">
       <Item1>
         <Filename Value="atbuttons.pas"/>
         <UnitName Value="ATButtons"/>
@@ -73,14 +75,23 @@ and several simple controls."/>
         <Filename Value="res\icons.lrs"/>
         <Type Value="LRS"/>
       </Item12>
+      <Item13>
+        <Filename Value="atgroups.pas"/>
+        <UnitName Value="ATGroups"/>
+      </Item13>
+      <Item14>
+        <Filename Value="attabs.pas"/>
+        <UnitName Value="attabs"/>
+      </Item14>
+      <Item15>
+        <Filename Value="atcanvasprimitives.pas"/>
+        <UnitName Value="ATCanvasPrimitives"/>
+      </Item15>
     </Files>
-    <RequiredPkgs Count="2">
+    <RequiredPkgs Count="1">
       <Item1>
-        <PackageName Value="atcanvasprimitives_package"/>
-      </Item1>
-      <Item2>
         <PackageName Value="LCL"/>
-      </Item2>
+      </Item1>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>
