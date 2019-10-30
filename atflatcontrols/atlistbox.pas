@@ -82,10 +82,12 @@ type
     procedure DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
     procedure DoPaintTo(C: TCanvas; r: TRect);
     procedure DoPaintX(C: TCanvas; const R: TRect; ACircle: boolean);
+    function GetOnDrawScrollbar: TATScrollbarDrawEvent;
     function ItemBottom: integer;
     procedure ScrollbarChange(Sender: TObject);
     procedure SetCanBeFocused(AValue: boolean);
     procedure SetItemHeightPercents(AValue: integer);
+    procedure SetOnDrawScrollbar(AValue: TATScrollbarDrawEvent);
     procedure SetVirtualItemCount(AValue: integer);
     procedure SetItemIndex(AValue: integer);
     procedure SetItemTop(AValue: integer);
@@ -184,6 +186,7 @@ type
     property OnContextPopup;
     property OnChangedSel: TNotifyEvent read FOnChangeSel write FOnChangeSel;
     property OnDrawItem: TATListboxDrawItemEvent read FOnDrawItem write FOnDrawItem;
+    property OnDrawScrollbar: TATScrollbarDrawEvent read GetOnDrawScrollbar write SetOnDrawScrollbar;
     property OnScroll: TNotifyEvent read FOnScroll write FOnScroll;
     property OnKeyPress;
     property OnKeyDown;
@@ -414,6 +417,11 @@ begin
       );
 end;
 
+function TATListbox.GetOnDrawScrollbar: TATScrollbarDrawEvent;
+begin
+  Result:= FScrollbar.OnOwnerDraw;
+end;
+
 function TATListbox.GetColumnWidth(AIndex: integer): integer;
 begin
   if (AIndex>=0) and (AIndex<Length(FColumnSizes)) then
@@ -613,6 +621,11 @@ begin
   if FItemHeightPercents=AValue then Exit;
   FItemHeightPercents:= AValue;
   FItemHeightIsFixed:= false;
+end;
+
+procedure TATListbox.SetOnDrawScrollbar(AValue: TATScrollbarDrawEvent);
+begin
+  FScrollbar.OnOwnerDraw:= AValue;
 end;
 
 procedure TATListbox.SetVirtualItemCount(AValue: integer);

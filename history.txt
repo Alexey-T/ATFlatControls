@@ -1,4 +1,8 @@
 
+2019.10.30
+* require package ATCanvasPrimitives
++ ATListbox: added OnDrawScrollbar
+
 2019.10.01
 + ATButton: added prop ArrowKind (enum)
 
