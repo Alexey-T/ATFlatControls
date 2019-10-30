@@ -54,7 +54,7 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_UsePackage>vcl;rtl;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>vcl;rtl;vclimg;atcanvasprimitives_package;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
@@ -79,6 +79,7 @@
         </DelphiCompile>
         <DCCReference Include="rtl.dcp"/>
         <DCCReference Include="vcl.dcp"/>
+        <DCCReference Include="vclimg.dcp"/>
         <DCCReference Include="atbuttons.pas"/>
         <DCCReference Include="atflatcontrols_register.pas"/>
         <DCCReference Include="atflatthemes.pas"/>
@@ -94,10 +95,6 @@
         <RcItem Include="res\tatbutton.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>tatbutton</ResourceId>
-        </RcItem>
-        <RcItem Include="res\tatbuttonstoolbar.bmp">
-            <ResourceType>BITMAP</ResourceType>
-            <ResourceId>tatflattoolbar</ResourceId>
         </RcItem>
         <RcItem Include="res\tatlabellink.bmp">
             <ResourceType>BITMAP</ResourceType>
@@ -115,17 +112,9 @@
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>tatpanelsimple</ResourceId>
         </RcItem>
-        <RcItem Include="res\tatscroll.bmp">
-            <ResourceType>BITMAP</ResourceType>
-            <ResourceId>tatscrollbar</ResourceId>
-        </RcItem>
         <RcItem Include="res\tatstatus.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>tatstatus</ResourceId>
-        </RcItem>
-        <RcItem Include="res\tgauge.bmp">
-            <ResourceType>BITMAP</ResourceType>
-            <ResourceId>tatgauge</ResourceId>
         </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
@@ -149,7 +138,7 @@
                 </Source>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\ATFlatControlsPackage.bpl" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\..\..\..\..\Public\Documents\Embarcadero\Studio\20.0\Bpl\ATFlatControlsPackage.bpl" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>ATFlatControlsPackage.bpl</RemoteName>
                         <Overwrite>true</Overwrite>

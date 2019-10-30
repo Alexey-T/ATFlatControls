@@ -30,7 +30,8 @@ package ATFlatControlsPackage;
 
 requires
   rtl,
-  vcl;
+  vcl,
+  vclimg;
 
 contains
   atbuttons in 'atbuttons.pas',
