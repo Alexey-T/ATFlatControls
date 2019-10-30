@@ -9,7 +9,7 @@ interface
 uses
   Classes, SysUtils,
   ATTabs,
-  ATGroups,
+  {$ifdef FPC}ATGroups,{$endif}
   ATButtons, ATFlatToolbar, 
   ATListbox, ATLinkLabel, ATScrollbar, ATStatusbar,
   ATPanelSimple, ATPanelColor, ATGauge {$ifdef FPC}, LResources{$endif};
@@ -22,7 +22,7 @@ procedure Register;
 begin
   RegisterComponents('AT Controls', [
     TATTabs,
-    TATGroups,
+    {$ifdef FPC}TATGroups,{$endif}
     TATButton,
     TATFlatToolbar,
     TATListbox,
