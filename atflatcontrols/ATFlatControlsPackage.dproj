@@ -91,6 +91,7 @@
         <DCCReference Include="atscrollbar.pas"/>
         <DCCReference Include="atstatusbar.pas"/>
         <DCCReference Include="atcanvasprimitives.pas"/>
+        <DCCReference Include="attabs.pas"/>
         <RcItem Include="res\tatbutton.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>tatbutton</ResourceId>
