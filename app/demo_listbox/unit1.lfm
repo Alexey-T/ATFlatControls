@@ -115,6 +115,17 @@ object fmMain: TfmMain
       TabOrder = 7
       Text = 'no X marks'
     end
+    object chkHorzBar: TCheckBox
+      Left = 332
+      Height = 24
+      Top = 48
+      Width = 119
+      Caption = 'horz scrollbar'
+      Checked = True
+      OnChange = chkHorzBarChange
+      State = cbChecked
+      TabOrder = 8
+    end
   end
   object PopupMenu1: TPopupMenu
     Left = 288

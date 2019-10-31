@@ -16,6 +16,7 @@ type
 
   TfmMain = class(TForm)
     ButtonGoto: TButton;
+    chkHorzBar: TCheckBox;
     chkDoubleSize: TCheckBox;
     chkHotTrack: TCheckBox;
     chkVirtual: TCheckBox;
@@ -29,6 +30,7 @@ type
     TrackScale: TTrackBar;
     procedure ButtonGotoClick(Sender: TObject);
     procedure chkDoubleSizeChange(Sender: TObject);
+    procedure chkHorzBarChange(Sender: TObject);
     procedure chkHotTrackChange(Sender: TObject);
     procedure chkOwnerDrawnChange(Sender: TObject);
     procedure chkThemedScrollChange(Sender: TObject);
@@ -134,6 +136,12 @@ begin
   else
     List.ItemHeightPercents:= 100;
   List.Update;
+end;
+
+procedure TfmMain.chkHorzBarChange(Sender: TObject);
+begin
+  List.ShowHorzScrollbar:= chkHorzBar.Checked;
+  List.Invalidate;
 end;
 
 procedure TfmMain.ButtonGotoClick(Sender: TObject);
