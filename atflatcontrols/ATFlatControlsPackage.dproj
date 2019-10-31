@@ -95,7 +95,7 @@
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>tatbutton</ResourceId>
         </RcItem>
-        <RcItem Include="res\tatbuttonstoolbar.bmp">
+        <RcItem Include="res\tatflattoolbar.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>tatflattoolbar</ResourceId>
         </RcItem>
@@ -115,7 +115,7 @@
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>tatpanelsimple</ResourceId>
         </RcItem>
-        <RcItem Include="res\tatscroll.bmp">
+        <RcItem Include="res\tatscrollbar.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>tatscrollbar</ResourceId>
         </RcItem>
@@ -123,9 +123,17 @@
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>tatstatus</ResourceId>
         </RcItem>
-        <RcItem Include="res\tgauge.bmp">
+        <RcItem Include="res\tatgauge.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>tatgauge</ResourceId>
+        </RcItem>
+        <RcItem Include="res\tattabs.bmp">
+            <ResourceType>BITMAP</ResourceType>
+            <ResourceId>tattabs</ResourceId>
+        </RcItem>
+        <RcItem Include="res\tatgroups.bmp">
+            <ResourceType>BITMAP</ResourceType>
+            <ResourceId>tatgroups</ResourceId>
         </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
