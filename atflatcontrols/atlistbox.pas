@@ -24,6 +24,7 @@ uses
 
 type
   TATListboxDrawItemEvent = procedure(Sender: TObject; C: TCanvas; AIndex: integer; const ARect: TRect) of object;
+  TATListboxCalcWidth = function (Sender: TObject; C: TCanvas): integer of object;
 
 type
   TATIntArray = array of integer;
@@ -79,6 +80,7 @@ type
     FShowX: TATListboxShowX;
     FMaxWidth: integer;
     FOnDrawItem: TATListboxDrawItemEvent;
+    FOnCalcScrollWidth: TATListboxCalcWidth;
     FOnClickX: TNotifyEvent;
     FOnChangeSel: TNotifyEvent;
     FOnScroll: TNotifyEvent;
@@ -194,6 +196,7 @@ type
     property OnContextPopup;
     property OnChangedSel: TNotifyEvent read FOnChangeSel write FOnChangeSel;
     property OnDrawItem: TATListboxDrawItemEvent read FOnDrawItem write FOnDrawItem;
+    property OnCalcScrollWidth: TATListboxCalcWidth read FOnCalcScrollWidth write FOnCalcScrollWidth;
     property OnDrawScrollbar: TATScrollbarDrawEvent read GetOnDrawScrollbar write SetOnDrawScrollbar;
     property OnScroll: TNotifyEvent read FOnScroll write FOnScroll;
     property OnKeyPress;
@@ -302,17 +305,19 @@ end;
 
 function TATListbox.GetMaxWidth(C: TCanvas): integer;
 var
-  S: string;
   i: integer;
 begin
-  if FVirtualMode then
-    exit(ClientWidth);
   Result:= 0;
-  for i:= 0 to ItemCount-1 do
+
+  if FVirtualMode then
   begin
-    S:= Items[i];
-    Result:= Max(Result, C.TextWidth(S));
+    if Assigned(FOnCalcScrollWidth) then
+      Result:= FOnCalcScrollWidth(Self, C);
+    exit;
   end;
+
+  for i:= 0 to ItemCount-1 do
+    Result:= Max(Result, C.TextWidth(Items[i]));
   Inc(Result, FIndentLeft+2);
 end;
 
