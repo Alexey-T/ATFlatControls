@@ -187,7 +187,7 @@ type
     property PopupMenu;
     property ShowHint;
     property ShowXMark: TATListboxShowX read FShowX write FShowX default albsxNone;
-    property ShowHorzScrollbar: boolean read FShowHorzScrollbar write FShowHorzScrollbar default true;
+    property ShowHorzScrollbar: boolean read FShowHorzScrollbar write FShowHorzScrollbar default false;
     property VirtualMode: boolean read FVirtualMode write FVirtualMode default true;
     property Visible;
     property OnClick;
@@ -756,7 +756,7 @@ begin
   SetLength(FColumnSizes, 0);
   SetLength(FColumnWidths, 0);
   FShowX:= albsxNone;
-  FShowHorzScrollbar:= true;
+  FShowHorzScrollbar:= false;
 
   FBitmap:= Graphics.TBitmap.Create;
   FBitmap.SetSize(1600, 1200);

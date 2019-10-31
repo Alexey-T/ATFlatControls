@@ -116,14 +116,12 @@ object fmMain: TfmMain
       Text = 'no X marks'
     end
     object chkHorzBar: TCheckBox
-      Left = 332
+      Left = 280
       Height = 24
-      Top = 48
+      Top = 0
       Width = 119
       Caption = 'horz scrollbar'
-      Checked = True
       OnChange = chkHorzBarChange
-      State = cbChecked
       TabOrder = 8
     end
   end
