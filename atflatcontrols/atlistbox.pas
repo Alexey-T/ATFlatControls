@@ -160,6 +160,7 @@ type
     function CanFocus: boolean; override;
     function CanSetFocus: boolean; override;
     {$endif}
+    function ClientHeight: integer;
     function ClientWidth: integer;
     procedure Invalidate; override;
     procedure UpdateItemHeight;
@@ -305,7 +306,7 @@ var
   i: integer;
 begin
   if FVirtualMode then
-    exit(Width-FScrollbar.Width);
+    exit(ClientWidth);
   Result:= 0;
   for i:= 0 to ItemCount-1 do
   begin
@@ -332,7 +333,7 @@ begin
     begin
       FScrollbarHorz.Min:= 0;
       FScrollbarHorz.Max:= FMaxWidth;
-      FScrollbarHorz.PageSize:= Width-FScrollbar.Width;
+      FScrollbarHorz.PageSize:= ClientWidth;
       FScrollbarHorz.Update;
     end;
   end;
@@ -895,6 +896,13 @@ begin
   Result:= FCanGetFocus;
 end;
 {$endif}
+
+function TATListbox.ClientHeight: integer;
+begin
+  Result:= inherited ClientHeight;
+  if ThemedScrollbar and FScrollbarHorz.Visible then
+    Dec(Result, FScrollbarHorz.Height);
+end;
 
 function TATListbox.ClientWidth: integer;
 begin
