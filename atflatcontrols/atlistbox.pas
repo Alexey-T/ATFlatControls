@@ -55,6 +55,7 @@ type
     FThemedScrollbar: boolean;
     FThemedFont: boolean;
     FScrollbar: TATScrollbar;
+    FScrollbarHorz: TATScrollbar;
     FOwnerDrawn: boolean;
     FVirtualMode: boolean;
     FVirtualItemCount: integer;
@@ -74,7 +75,9 @@ type
     FColumnSep: char;
     FColumnSizes: TATIntArray;
     FColumnWidths: TATIntArray;
+    FShowHorzScrollbar: boolean;
     FShowX: TATListboxShowX;
+    FMaxWidth: integer;
     FOnDrawItem: TATListboxDrawItemEvent;
     FOnClickX: TNotifyEvent;
     FOnChangeSel: TNotifyEvent;
@@ -82,9 +85,11 @@ type
     procedure DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
     procedure DoPaintTo(C: TCanvas; r: TRect);
     procedure DoPaintX(C: TCanvas; const R: TRect; ACircle: boolean);
+    function GetMaxWidth(C: TCanvas): integer;
     function GetOnDrawScrollbar: TATScrollbarDrawEvent;
     function ItemBottom: integer;
     procedure ScrollbarChange(Sender: TObject);
+    procedure ScrollbarHorzChange(Sender: TObject);
     procedure SetCanBeFocused(AValue: boolean);
     procedure SetItemHeightPercents(AValue: integer);
     procedure SetOnDrawScrollbar(AValue: TATScrollbarDrawEvent);
@@ -147,6 +152,7 @@ type
     property ThemedScrollbar: boolean read FThemedScrollbar write SetThemedScrollbar;
     property ThemedFont: boolean read FThemedFont write FThemedFont;
     property Scrollbar: TATScrollbar read FScrollbar;
+    property ScrollbarHorz: TATScrollbar read FScrollbarHorz;
     property ColumnSeparator: char read FColumnSep write FColumnSep;
     property ColumnSizes: TATIntArray read FColumnSizes write FColumnSizes;
     property ColumnWidth[AIndex: integer]: integer read GetColumnWidth;
@@ -178,6 +184,7 @@ type
     property PopupMenu;
     property ShowHint;
     property ShowXMark: TATListboxShowX read FShowX write FShowX default albsxNone;
+    property ShowHorzScrollbar: boolean read FShowHorzScrollbar write FShowHorzScrollbar default true;
     property VirtualMode: boolean read FVirtualMode write FVirtualMode default true;
     property Visible;
     property OnClick;
@@ -292,6 +299,22 @@ begin
   inherited;
 end;
 
+function TATListbox.GetMaxWidth(C: TCanvas): integer;
+var
+  S: string;
+  i: integer;
+begin
+  if FVirtualMode then
+    exit(Width-FScrollbar.Width);
+  Result:= 0;
+  for i:= 0 to ItemCount-1 do
+  begin
+    S:= Items[i];
+    Result:= Max(Result, C.TextWidth(S));
+  end;
+  Inc(Result, FIndentLeft+2);
+end;
+
 procedure TATListbox.UpdateScrollbar;
 var
   si: TScrollInfo;
@@ -303,6 +326,15 @@ begin
     FScrollbar.PageSize:= VisibleItems;
     FScrollbar.Position:= ItemTop;
     FScrollbar.Update;
+
+    FScrollbarHorz.Visible:= FShowHorzScrollbar;
+    if FShowHorzScrollbar then
+    begin
+      FScrollbarHorz.Min:= 0;
+      FScrollbarHorz.Max:= FMaxWidth;
+      FScrollbarHorz.PageSize:= Width-FScrollbar.Width;
+      FScrollbarHorz.Update;
+    end;
   end;
 
   FillChar(si{%H-}, SizeOf(si), 0);
@@ -343,6 +375,8 @@ var
 begin
   C.Font.Name:= CurrentFontName;
   C.Font.Size:= FTheme^.DoScaleFont(CurrentFontSize);
+
+  FMaxWidth:= GetMaxWidth(C);
 
   C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListbox);
   C.FillRect(r);
@@ -499,14 +533,14 @@ begin
   if Length(FColumnSizes)=0 then
   begin
     C.TextOut(
-      R.Left+NIndentLeft,
+      R.Left+NIndentLeft - FScrollbarHorz.Position,
       R.Top+FIndentTop,
       S);
   end
   else
   begin
     NAllWidth:= ClientWidth;
-    NColOffset:= R.Left+FIndentLeft;
+    NColOffset:= R.Left+FIndentLeft - FScrollbarHorz.Position;
     C.Pen.Color:= Theme^.ColorSeparators;
 
     for i:= 0 to Length(FColumnSizes)-1 do
@@ -602,6 +636,11 @@ end;
 procedure TATListbox.ScrollbarChange(Sender: TObject);
 begin
   ItemTop:= FScrollbar.Position;
+end;
+
+procedure TATListbox.ScrollbarHorzChange(Sender: TObject);
+begin
+  Invalidate;
 end;
 
 procedure TATListbox.SetCanBeFocused(AValue: boolean);
@@ -711,6 +750,7 @@ begin
   SetLength(FColumnSizes, 0);
   SetLength(FColumnWidths, 0);
   FShowX:= albsxNone;
+  FShowHorzScrollbar:= true;
 
   FBitmap:= Graphics.TBitmap.Create;
   FBitmap.SetSize(1600, 1200);
@@ -723,8 +763,14 @@ begin
   FScrollbar.Parent:= Self;
   FScrollbar.Kind:= sbVertical;
   FScrollbar.Align:= alRight;
-
   FScrollbar.OnChange:= ScrollbarChange;
+
+  FScrollbarHorz:= TATScrollbar.Create(Self);
+  FScrollbarHorz.Parent:= Self;
+  FScrollbarHorz.Kind:= sbHorizontal;
+  FScrollbarHorz.Align:= alBottom;
+  FScrollbarHorz.IndentCorner:= 100;
+  FScrollbarHorz.OnChange:= ScrollbarHorzChange;
 end;
 
 destructor TATListbox.Destroy;
