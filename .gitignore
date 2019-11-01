@@ -18,9 +18,13 @@
 *.dof
 *.ppu
 *.bak
+*.local
+*.identcache
+*.stat
 
 lib/
 backup/
 *.lps
 project?
 demo
+__history/
