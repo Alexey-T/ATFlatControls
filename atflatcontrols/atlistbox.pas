@@ -16,7 +16,7 @@ uses
   {$ifdef FPC}
   LMessages,
   {$else}
-  Messages, Windows,
+  Messages, Windows, System.UITypes,
   {$endif}
   ATScrollBar,
   ATFlatThemes,
@@ -126,12 +126,13 @@ type
   protected
     procedure Paint; override;
     procedure Click; override;
-    procedure DoOnResize; override;
     {$ifdef FPC}
+    procedure DoOnResize; override;
     procedure LMVScroll(var Msg: TLMVScroll); message LM_VSCROLL;
     procedure LMHScroll(var Msg: TLMHScroll); message LM_HSCROLL;
     procedure MouseLeave; override;
     {$else}
+    procedure WMSize(var Msg: TWMSize); message WM_SIZE;
     procedure WMVScroll(var Msg: TWMVScroll); message WM_VSCROLL;
     procedure WMHScroll(var Msg: TWMHScroll); message WM_HSCROLL;
     procedure WMGetDlgCode(var Message: TWMGetDlgCode); message WM_GETDLGCODE;
@@ -195,7 +196,7 @@ type
     property ParentFont;
     property ParentShowHint;
     property PopupMenu;
-    property ScrollBars: TScrollStyle read FScrollbars write FScrollbars default ssVertical;
+    property ScrollBars: TScrollStyle read FScrollbars write FScrollbars default TScrollStyle.ssVertical;
     property ShowHint;
     property ShowXMark: TATListboxShowX read FShowX write FShowX default albsxNone;
     property VirtualMode: boolean read FVirtualMode write FVirtualMode default true;
@@ -336,6 +337,8 @@ var
   NeedVertBar, NeedHorzBar: boolean;
   si: TScrollInfo;
 begin
+
+  {$ifdef FPC}
   if FScrollbars in [ssHorizontal, ssAutoHorizontal, ssBoth, ssAutoBoth] then
     FMaxWidth:= GetMaxWidth(C)
   else
@@ -362,6 +365,30 @@ begin
     else
       NeedHorzBar:= false;
   end;
+  {$endif}
+
+  {$ifndef FPC}
+  if FScrollbars in [ssHorizontal, ssBoth] then
+    FMaxWidth:= GetMaxWidth(C)
+  else
+    FMaxWidth:= 10;
+
+  case FScrollbars of
+    ssVertical,
+    ssBoth:
+      NeedVertBar:= ItemCount*ItemHeight>Height; //not ClientHeight
+    else
+      NeedVertBar:= false;
+  end;
+
+  case FScrollbars of
+    ssHorizontal,
+    ssBoth:
+      NeedHorzBar:= FMaxWidth>Width; //not ClientWidth
+    else
+      NeedHorzBar:= false;
+  end;
+  {$endif}
 
   FScrollbar.Visible:=     FThemedScrollbar and NeedVertBar;
   FScrollbarHorz.Visible:= FThemedScrollbar and NeedHorzBar;
@@ -688,11 +715,13 @@ begin
   inherited; //OnClick must be after ItemIndex set
 end;
 
+{$ifdef FPC}
 procedure TATListbox.DoOnResize;
 begin
   inherited;
   Invalidate;
 end;
+{$endif}
 
 function TATListbox.GetItemIndexAt(Pnt: TPoint): integer;
 begin
@@ -826,7 +855,7 @@ begin
   FItemHeightPercents:= 100;
   FItemHeight:= 17;
   FItemTop:= 0;
-  FScrollbars:= ssVertical;
+  FScrollbars:= TScrollStyle.ssVertical;
   FScrollHorz:= 0;
   FIndentLeft:= 4;
   FIndentTop:= 2;
@@ -945,6 +974,13 @@ end;
 {$endif}
 
 {$ifndef FPC}
+procedure TATListbox.WMSize(var Msg: TWMSize);
+begin
+  inherited;
+  if (csCreating in ControlState) then exit;
+  Invalidate;
+end;
+
 procedure TATListbox.WMVScroll(var Msg: TWMVScroll);
 begin
   UpdateFromScrollbarMsg(Msg);
