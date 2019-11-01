@@ -339,11 +339,14 @@ begin
     FScrollbar.Position:= ItemTop;
     FScrollbar.Update;
 
-    FScrollbarHorz.Min:= 0;
-    FScrollbarHorz.Max:= FMaxWidth;
-    FScrollbarHorz.PageSize:= ClientWidth;
-    FScrollbarHorz.Position:= ScrollHorz;
-    FScrollbarHorz.Update;
+    if FShowHorzScrollbar then
+    begin
+      FScrollbarHorz.Min:= 0;
+      FScrollbarHorz.Max:= FMaxWidth;
+      FScrollbarHorz.PageSize:= ClientWidth;
+      FScrollbarHorz.Position:= ScrollHorz;
+      FScrollbarHorz.Update;
+    end;
   end
   else
   begin
@@ -384,11 +387,6 @@ var
 begin
   C.Font.Name:= CurrentFontName;
   C.Font.Size:= FTheme^.DoScaleFont(CurrentFontSize);
-
-  if FShowHorzScrollbar then
-    FMaxWidth:= GetMaxWidth(C)
-  else
-    FMaxWidth:= 1;
 
   C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListbox);
   C.FillRect(r);
@@ -586,21 +584,32 @@ end;
 procedure TATListbox.Paint;
 var
   R: TRect;
+  C: TCanvas;
 begin
-
   inherited;
+
+  if DoubleBuffered then
+    C:= FBitmap.Canvas
+  else
+    C:= Canvas;
+
+  if FShowHorzScrollbar then
+    FMaxWidth:= GetMaxWidth(C)
+  else
+    FMaxWidth:= 1;
+
   UpdateScrollbar;
   UpdateItemHeight;
   UpdateColumnWidths;
 
-  R:= ClientRect;
+  R:= Rect(0, 0, ClientWidth, ClientHeight);
   if DoubleBuffered then
   begin
-    DoPaintTo(FBitmap.Canvas, R);
-    Canvas.CopyRect(R, FBitmap.Canvas, R);
+    DoPaintTo(C, R);
+    Canvas.CopyRect(R, C, R);
   end
   else
-    DoPaintTo(Canvas, R);
+    DoPaintTo(C, R);
 end;
 
 procedure TATListbox.Click;
