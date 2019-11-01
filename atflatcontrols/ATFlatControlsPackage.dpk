@@ -30,7 +30,8 @@ package ATFlatControlsPackage;
 
 requires
   rtl,
-  vcl;
+  vcl,
+  vclimg;
 
 contains
   atbuttons in 'atbuttons.pas',
@@ -44,6 +45,7 @@ contains
   atpanelsimple in 'atpanelsimple.pas',
   atscrollbar in 'atscrollbar.pas',
   atstatusbar in 'atstatusbar.pas',
-  atcanvasprimitives in 'atcanvasprimitives.pas';
+  atcanvasprimitives in 'atcanvasprimitives.pas',
+  attabs in 'attabs.pas';
 
 end.
