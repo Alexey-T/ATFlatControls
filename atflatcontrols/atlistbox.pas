@@ -65,6 +65,7 @@ type
     FItemHeight: integer;
     FItemHeightIsFixed: boolean;
     FItemTop: integer;
+    FScrollHorz: integer;
     FBitmap: Graphics.TBitmap;
     FCanGetFocus: boolean;
     FList: TStringList;
@@ -95,6 +96,7 @@ type
     procedure SetCanBeFocused(AValue: boolean);
     procedure SetItemHeightPercents(AValue: integer);
     procedure SetOnDrawScrollbar(AValue: TATScrollbarDrawEvent);
+    procedure SetScrollHorz(AValue: integer);
     procedure SetVirtualItemCount(AValue: integer);
     procedure SetItemIndex(AValue: integer);
     procedure SetItemTop(AValue: integer);
@@ -146,6 +148,7 @@ type
     property ItemHeightDefault: integer read GetItemHeightDefault;
     function ItemCount: integer;
     function IsIndexValid(AValue: integer): boolean;
+    property ScrollHorz: integer read FScrollHorz write SetScrollHorz;
     property HotTrackIndex: integer read FHotTrackIndex;
     property VirtualItemCount: integer read FVirtualItemCount write SetVirtualItemCount;
     property VisibleItems: integer read GetVisibleItems;
@@ -325,6 +328,9 @@ procedure TATListbox.UpdateScrollbar;
 var
   si: TScrollInfo;
 begin
+  FScrollbar.Visible:= ThemedScrollbar;
+  FScrollbarHorz.Visible:= ThemedScrollbar and FShowHorzScrollbar;
+
   if ThemedScrollbar then
   begin
     FScrollbar.Min:= 0;
@@ -333,14 +339,11 @@ begin
     FScrollbar.Position:= ItemTop;
     FScrollbar.Update;
 
-    FScrollbarHorz.Visible:= FShowHorzScrollbar;
-    if FShowHorzScrollbar then
-    begin
-      FScrollbarHorz.Min:= 0;
-      FScrollbarHorz.Max:= FMaxWidth;
-      FScrollbarHorz.PageSize:= ClientWidth;
-      FScrollbarHorz.Update;
-    end;
+    FScrollbarHorz.Min:= 0;
+    FScrollbarHorz.Max:= FMaxWidth;
+    FScrollbarHorz.PageSize:= ClientWidth;
+    FScrollbarHorz.Position:= ScrollHorz;
+    FScrollbarHorz.Update;
   end;
 
   FillChar(si{%H-}, SizeOf(si), 0);
@@ -362,6 +365,24 @@ begin
   end;
 
   SetScrollInfo(Handle, SB_VERT, si, True);
+
+  if FShowHorzScrollbar then
+  begin
+    if ThemedScrollbar then
+    begin
+      si.nMax:= 1;
+      si.nPage:= 2;
+      si.nPos:= 0;
+    end
+    else
+    begin
+      si.nMax:= FMaxWidth;
+      si.nPage:= ClientWidth;
+      si.nPos:= ScrollHorz;
+    end;
+
+    SetScrollInfo(Handle, SB_Horz, si, True);
+  end;
 end;
 
 function TATListbox.ItemCount: integer;
@@ -382,7 +403,10 @@ begin
   C.Font.Name:= CurrentFontName;
   C.Font.Size:= FTheme^.DoScaleFont(CurrentFontSize);
 
-  FMaxWidth:= GetMaxWidth(C);
+  if FShowHorzScrollbar then
+    FMaxWidth:= GetMaxWidth(C)
+  else
+    FMaxWidth:= 1;
 
   C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListbox);
   C.FillRect(r);
@@ -539,14 +563,14 @@ begin
   if Length(FColumnSizes)=0 then
   begin
     C.TextOut(
-      R.Left+NIndentLeft - FScrollbarHorz.Position,
+      R.Left+NIndentLeft-ScrollHorz,
       R.Top+FIndentTop,
       S);
   end
   else
   begin
     NAllWidth:= ClientWidth;
-    NColOffset:= R.Left+FIndentLeft - FScrollbarHorz.Position;
+    NColOffset:= R.Left+FIndentLeft-ScrollHorz;
     C.Pen.Color:= Theme^.ColorSeparators;
 
     for i:= 0 to Length(FColumnSizes)-1 do
@@ -646,7 +670,7 @@ end;
 
 procedure TATListbox.ScrollbarHorzChange(Sender: TObject);
 begin
-  Invalidate;
+  ScrollHorz:= FScrollbarHorz.Position;
 end;
 
 procedure TATListbox.SetCanBeFocused(AValue: boolean);
@@ -671,6 +695,14 @@ end;
 procedure TATListbox.SetOnDrawScrollbar(AValue: TATScrollbarDrawEvent);
 begin
   FScrollbar.OnOwnerDraw:= AValue;
+end;
+
+procedure TATListbox.SetScrollHorz(AValue: integer);
+begin
+  if FScrollHorz=AValue then Exit;
+  FScrollHorz:= AValue;
+  FScrollbarHorz.Position:= AValue;
+  Invalidate;
 end;
 
 procedure TATListbox.SetVirtualItemCount(AValue: integer);
@@ -724,8 +756,8 @@ procedure TATListbox.SetThemedScrollbar(AValue: boolean);
 begin
   if FThemedScrollbar=AValue then Exit;
   FThemedScrollbar:= AValue;
-
-  FScrollbar.Visible:= AValue;
+  FScrollbar.Visible:= FThemedScrollbar;
+  FScrollbarHorz.Visible:= FThemedScrollbar and FShowHorzScrollbar;
   Invalidate;
 end;
 
@@ -747,6 +779,7 @@ begin
   FItemHeightPercents:= 100;
   FItemHeight:= 17;
   FItemTop:= 0;
+  FScrollHorz:= 0;
   FIndentLeft:= 4;
   FIndentTop:= 2;
   FOwnerDrawn:= false;
@@ -905,14 +938,14 @@ end;
 function TATListbox.ClientHeight: integer;
 begin
   Result:= inherited ClientHeight;
-  if ThemedScrollbar and FScrollbarHorz.Visible then
+  if FScrollbarHorz.Visible then
     Dec(Result, FScrollbarHorz.Height);
 end;
 
 function TATListbox.ClientWidth: integer;
 begin
   Result:= inherited ClientWidth;
-  if ThemedScrollbar and FScrollbar.Visible then
+  if FScrollbar.Visible then
     Dec(Result, FScrollbar.Width);
 end;
 

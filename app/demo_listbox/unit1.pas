@@ -40,6 +40,7 @@ type
     procedure MenuItem1Click(Sender: TObject);
     procedure TrackScaleChange(Sender: TObject);
   private
+    function ListCalcScrollWidth(Sender: TObject; C: TCanvas): integer;
     procedure ListClickX(Sender: TObject);
     { private declarations }
     procedure ListDraw(Sender: TObject; C: TCanvas; AIndex: integer; const ARect: TRect);
@@ -75,6 +76,7 @@ begin
   list.OnClickXMark:=@ListClickX;
   list.OnDblClick:= @ListDblClick;
   list.OnChangedSel:= @ListChSel;
+  list.OnCalcScrollWidth:=@ListCalcScrollWidth;
 
   list.OwnerDrawn:= true;
   list.Color:= $e0e0e0;
@@ -98,6 +100,11 @@ begin
   ATFlatTheme.ScalePercents:= TrackScale.Position;
   ATScrollbarTheme.ScalePercents:= TrackScale.Position;
   List.Invalidate;
+end;
+
+function TfmMain.ListCalcScrollWidth(Sender: TObject; C: TCanvas): integer;
+begin
+  Result:= 300;
 end;
 
 procedure TfmMain.chkThemedScrollChange(Sender: TObject);
