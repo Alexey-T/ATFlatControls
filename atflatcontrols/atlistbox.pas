@@ -105,6 +105,7 @@ type
     procedure UpdateColumnWidths;
     {$ifdef FPC}
     procedure UpdateFromScrollbarMsg(const Msg: TLMScroll);
+    procedure UpdateFromScrollbarHorzMsg(const Msg: TLMScroll);
     {$else}
     procedure UpdateFromScrollbarMsg(const Msg: TWMVScroll);
     procedure CMMouseEnter(var msg: TMessage); message CM_MOUSEENTER;
@@ -124,6 +125,7 @@ type
     procedure Click; override;
     {$ifdef FPC}
     procedure LMVScroll(var Msg: TLMVScroll); message LM_VSCROLL;
+    procedure LMHScroll(var Msg: TLMHScroll); message LM_HSCROLL;
     procedure MouseLeave; override;
     {$else}
     procedure WMVScroll(var Msg: TWMVScroll); message WM_VSCROLL;
@@ -328,10 +330,10 @@ procedure TATListbox.UpdateScrollbar;
 var
   si: TScrollInfo;
 begin
-  FScrollbar.Visible:= ThemedScrollbar;
-  FScrollbarHorz.Visible:= ThemedScrollbar and FShowHorzScrollbar;
+  FScrollbar.Visible:= FThemedScrollbar;
+  FScrollbarHorz.Visible:= FThemedScrollbar and FShowHorzScrollbar;
 
-  if ThemedScrollbar then
+  if FThemedScrollbar then
   begin
     FScrollbar.Min:= 0;
     FScrollbar.Max:= ItemCount;
@@ -344,44 +346,26 @@ begin
     FScrollbarHorz.PageSize:= ClientWidth;
     FScrollbarHorz.Position:= ScrollHorz;
     FScrollbarHorz.Update;
-  end;
-
-  FillChar(si{%H-}, SizeOf(si), 0);
-  si.cbSize:= SizeOf(si);
-  si.fMask:= SIF_ALL;
-  si.nMin:= 0;
-
-  if ThemedScrollbar then
-  begin
-    si.nMax:= 1;
-    si.nPage:= 2;
-    si.nPos:= 0;
   end
   else
   begin
+    FillChar(si{%H-}, SizeOf(si), 0);
+    si.cbSize:= SizeOf(si);
+    si.fMask:= SIF_ALL or SIF_DISABLENOSCROLL;
+    si.nMin:= 0;
+
     si.nMax:= ItemCount;
     si.nPage:= GetVisibleItems;
     si.nPos:= FItemTop;
-  end;
+    SetScrollInfo(Handle, SB_VERT, si, True);
 
-  SetScrollInfo(Handle, SB_VERT, si, True);
-
-  if FShowHorzScrollbar then
-  begin
-    if ThemedScrollbar then
-    begin
-      si.nMax:= 1;
-      si.nPage:= 2;
-      si.nPos:= 0;
-    end
-    else
+    if FShowHorzScrollbar then
     begin
       si.nMax:= FMaxWidth;
       si.nPage:= ClientWidth;
       si.nPos:= ScrollHorz;
+      SetScrollInfo(Handle, SB_Horz, si, True);
     end;
-
-    SetScrollInfo(Handle, SB_Horz, si, True);
   end;
 end;
 
@@ -753,11 +737,28 @@ begin
 end;
 
 procedure TATListbox.SetThemedScrollbar(AValue: boolean);
+var
+  si: TScrollInfo;
 begin
   if FThemedScrollbar=AValue then Exit;
   FThemedScrollbar:= AValue;
+
   FScrollbar.Visible:= FThemedScrollbar;
   FScrollbarHorz.Visible:= FThemedScrollbar and FShowHorzScrollbar;
+
+  if AValue then
+  begin
+    FillChar(si{%H-}, SizeOf(si), 0);
+    si.cbSize:= SizeOf(si);
+    si.fMask:= SIF_ALL;
+    si.nMin:= 0;
+    si.nMax:= 1;
+    si.nPage:= 2;
+    si.nPos:= 0;
+    SetScrollInfo(Handle, SB_VERT, si, True);
+    SetScrollInfo(Handle, SB_Horz, si, True);
+  end;
+
   Invalidate;
 end;
 
@@ -828,7 +829,7 @@ begin
 
   case Msg.ScrollCode of
     SB_TOP:        FItemTop:= 0;
-    SB_BOTTOM:     FItemTop:= Max(0, ItemCount-GetVisibleItems);
+    SB_BOTTOM:     FItemTop:= NMax;
 
     SB_LINEUP:     FItemTop:= Max(0, FItemTop-1);
     SB_LINEDOWN:   FItemTop:= Min(NMax, FItemTop+1);
@@ -838,6 +839,27 @@ begin
 
     SB_THUMBPOSITION,
     SB_THUMBTRACK: FItemTop:= Max(0, Msg.Pos);
+  end;
+end;
+
+procedure TATListbox.UpdateFromScrollbarHorzMsg(const Msg: TLMScroll);
+var
+  NMax: integer;
+begin
+  NMax:= Max(0, FMaxWidth-ClientWidth);
+
+  case Msg.ScrollCode of
+    SB_TOP:        FScrollHorz:= 0;
+    SB_BOTTOM:     FScrollHorz:= NMax;
+
+    SB_LINEUP:     FScrollHorz:= Max(0, FScrollHorz-1);
+    SB_LINEDOWN:   FScrollHorz:= Min(NMax, FScrollHorz+1);
+
+    SB_PAGEUP:     FScrollHorz:= Max(0, FScrollHorz-ClientWidth);
+    SB_PAGEDOWN:   FScrollHorz:= Min(NMax, FScrollHorz+ClientWidth);
+
+    SB_THUMBPOSITION,
+    SB_THUMBTRACK: FScrollHorz:= Max(0, Msg.Pos);
   end;
 end;
 {$endif}
@@ -889,6 +911,12 @@ end;
 procedure TATListbox.LMVScroll(var Msg: TLMVScroll);
 begin
   UpdateFromScrollbarMsg(Msg);
+  Invalidate;
+end;
+
+procedure TATListbox.LMHScroll(var Msg: TLMHScroll);
+begin
+  UpdateFromScrollbarHorzMsg(Msg);
   Invalidate;
 end;
 {$endif}
