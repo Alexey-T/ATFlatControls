@@ -115,7 +115,6 @@ type
     function GetItemHeightDefault: integer;
     function GetColumnWidth(AIndex: integer): integer;
     procedure DoKeyDown(var Key: Word; Shift: TShiftState);
-    procedure InvalidateNoSB;
     function CurrentFontName: string;
     function CurrentFontSize: integer;
   protected
@@ -865,13 +864,13 @@ end;
 procedure TATListbox.CMMouseEnter(var msg: TMessage);
 begin
   inherited;
-  InvalidateNoSB;
+  Invalidate;
 end;
 
 procedure TATListbox.CMMouseLeave(var msg: TMessage);
 begin
   inherited;
-  InvalidateNoSB;
+  Invalidate;
 end;
 
 procedure TATListbox.WMEraseBkgnd(var Message: TMessage);
@@ -959,20 +958,6 @@ begin
     Dec(Result, FScrollbar.Width);
 end;
 
-procedure TATListbox.InvalidateNoSB;
-var
-  R: TRect;
-begin
-  if Assigned(FScrollbar) and FScrollbar.Visible then
-  begin
-    // https://github.com/Alexey-T/ATFlatControls/issues/32
-    R:= Rect(0, 0, ClientWidth, ClientHeight);
-    InvalidateRect(Handle, {$ifdef fpc}@{$endif}R, false);
-  end
-  else
-    Invalidate;
-end;
-
 function TATListbox.CurrentFontName: string;
 begin
   if FThemedFont then
@@ -989,13 +974,22 @@ begin
     Result:= Font.Size;
 end;
 
-
 procedure TATListbox.Invalidate;
+var
+  R: TRect;
 begin
-  if Assigned(FScrollbar) then
-    FScrollbar.Update;
-
+  {$ifdef FPC}
   inherited Invalidate;
+  {$else}
+  // https://github.com/Alexey-T/ATFlatControls/issues/32
+  if Assigned(FScrollbar) and FScrollbar.Visible then
+  begin
+    R:= Rect(0, 0, ClientWidth, ClientHeight);
+    InvalidateRect(Handle, R, false);
+  end
+  else
+    inherited Invalidate;
+  {$endif}
 end;
 
 function TATListbox.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
@@ -1081,7 +1075,7 @@ begin
     if (FHotTrackIndex<>NewIndex) or (FShowX<>albsxNone) then
     begin
       FHotTrackIndex:= NewIndex;
-      InvalidateNoSB;
+      Invalidate;
     end;
   end
   else
