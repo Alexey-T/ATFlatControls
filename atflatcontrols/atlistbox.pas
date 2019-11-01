@@ -350,6 +350,9 @@ begin
   end
   else
   begin
+    ShowScrollBar(Handle, SB_VERT, true);
+    ShowScrollBar(Handle, SB_HORZ, FShowHorzScrollbar);
+
     FillChar(si{%H-}, SizeOf(si), 0);
     si.cbSize:= SizeOf(si);
     si.fMask:= SIF_ALL or SIF_DISABLENOSCROLL;
@@ -365,7 +368,7 @@ begin
       si.nMax:= FMaxWidth;
       si.nPage:= ClientWidth;
       si.nPos:= ScrollHorz;
-      SetScrollInfo(Handle, SB_Horz, si, True);
+      SetScrollInfo(Handle, SB_HORZ, si, True);
     end;
   end;
 end;
@@ -755,15 +758,8 @@ begin
 
   if AValue then
   begin
-    FillChar(si{%H-}, SizeOf(si), 0);
-    si.cbSize:= SizeOf(si);
-    si.fMask:= SIF_ALL;
-    si.nMin:= 0;
-    si.nMax:= 1;
-    si.nPage:= 2;
-    si.nPos:= 0;
-    SetScrollInfo(Handle, SB_VERT, si, True);
-    SetScrollInfo(Handle, SB_Horz, si, True);
+    ShowScrollBar(Handle, SB_VERT, false);
+    ShowScrollBar(Handle, SB_HORZ, false);
   end;
 
   Invalidate;
