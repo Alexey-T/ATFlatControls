@@ -116,7 +116,7 @@ type
     procedure CMMouseLeave(var msg: TMessage); message CM_MOUSELEAVE;
     procedure WMEraseBkgnd(var Message: TMessage); message WM_ERASEBKGND;
     {$endif}
-    procedure UpdateScrollbar;
+    procedure UpdateScrollbars;
     function GetVisibleItems: integer;
     function GetItemHeightDefault: integer;
     function GetColumnWidth(AIndex: integer): integer;
@@ -330,7 +330,7 @@ begin
   Inc(Result, FIndentLeft+2);
 end;
 
-procedure TATListbox.UpdateScrollbar;
+procedure TATListbox.UpdateScrollbars;
 var
   si: TScrollInfo;
 begin
@@ -621,8 +621,8 @@ begin
   else
     FMaxWidth:= 1;
 
-  UpdateScrollbar;
   UpdateItemHeight;
+  UpdateScrollbars;
   UpdateColumnWidths;
 
   R:= Rect(0, 0, ClientWidth, ClientHeight);
