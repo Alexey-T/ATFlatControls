@@ -21,10 +21,13 @@
 *.local
 *.identcache
 *.stat
+*.lps
 
 lib/
 backup/
-*.lps
 project?
 demo
 __history/
+Win32/
+Win64/
+Debug/
