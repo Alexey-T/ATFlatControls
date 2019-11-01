@@ -333,19 +333,25 @@ end;
 procedure TATListbox.UpdateScrollbars;
 var
   si: TScrollInfo;
+  NeedVertBar: boolean;
 begin
-  FScrollbar.Visible:= FThemedScrollbar;
+  NeedVertBar:= ItemCount*ItemHeight>Height; //not ClientHeight
+
+  FScrollbar.Visible:= FThemedScrollbar and NeedVertBar;
   FScrollbarHorz.Visible:= FThemedScrollbar and FShowHorzScrollbar;
 
   if FThemedScrollbar then
   begin
-    FScrollbar.Min:= 0;
-    FScrollbar.Max:= ItemCount;
-    FScrollbar.PageSize:= VisibleItems;
-    FScrollbar.Position:= ItemTop;
-    FScrollbar.Update;
+    if FScrollbar.Visible then
+    begin
+      FScrollbar.Min:= 0;
+      FScrollbar.Max:= ItemCount;
+      FScrollbar.PageSize:= VisibleItems;
+      FScrollbar.Position:= ItemTop;
+      FScrollbar.Update;
+    end;
 
-    if FShowHorzScrollbar then
+    if FScrollbarHorz.Visible then
     begin
       FScrollbarHorz.Min:= 0;
       FScrollbarHorz.Max:= FMaxWidth;
@@ -356,7 +362,7 @@ begin
   end
   else
   begin
-    ShowOsBarVert:= true;
+    ShowOsBarVert:= NeedVertBar;
     ShowOsBarHorz:= FShowHorzScrollbar;
 
     FillChar(si{%H-}, SizeOf(si), 0);
@@ -364,12 +370,15 @@ begin
     si.fMask:= SIF_ALL or SIF_DISABLENOSCROLL;
     si.nMin:= 0;
 
-    si.nMax:= ItemCount;
-    si.nPage:= GetVisibleItems;
-    si.nPos:= FItemTop;
-    SetScrollInfo(Handle, SB_VERT, si, True);
+    if ShowOsBarVert then
+    begin
+      si.nMax:= ItemCount;
+      si.nPage:= GetVisibleItems;
+      si.nPos:= FItemTop;
+      SetScrollInfo(Handle, SB_VERT, si, True);
+    end;
 
-    if FShowHorzScrollbar then
+    if ShowOsBarHorz then
     begin
       si.nMax:= FMaxWidth;
       si.nPage:= ClientWidth;
