@@ -85,6 +85,12 @@ type
     FOnClickX: TNotifyEvent;
     FOnChangeSel: TNotifyEvent;
     FOnScroll: TNotifyEvent;
+    FShowOsBarVert: boolean;
+    FShowOsBarHorz: boolean;
+    procedure SetShowOsBarVert(AValue: boolean);
+    procedure SetShowOsBarHorz(AValue: boolean);
+    property ShowOsBarVert: boolean read FShowOsBarVert write SetShowOsBarVert;
+    property ShowOsBarHorz: boolean read FShowOsBarHorz write SetShowOsBarHorz;
     procedure DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
     procedure DoPaintTo(C: TCanvas; r: TRect);
     procedure DoPaintX(C: TCanvas; const R: TRect; ACircle: boolean);
@@ -350,8 +356,8 @@ begin
   end
   else
   begin
-    ShowScrollBar(Handle, SB_VERT, true);
-    ShowScrollBar(Handle, SB_HORZ, FShowHorzScrollbar);
+    ShowOsBarVert:= true;
+    ShowOsBarHorz:= FShowHorzScrollbar;
 
     FillChar(si{%H-}, SizeOf(si), 0);
     si.cbSize:= SizeOf(si);
@@ -510,6 +516,20 @@ begin
     if FColumnSizes[i]=0 then
       FColumnWidths[i]:= Max(0, NTotalWidth-NFixedSize) div NAutoSized;
   end;
+end;
+
+procedure TATListbox.SetShowOsBarVert(AValue: boolean);
+begin
+  if FShowOsBarVert=AValue then Exit;
+  FShowOsBarVert:= AValue;
+  ShowScrollBar(Handle, SB_Vert, AValue);
+end;
+
+procedure TATListbox.SetShowOsBarHorz(AValue: boolean);
+begin
+  if FShowOsBarHorz=AValue then Exit;
+  FShowOsBarHorz:= AValue;
+  ShowScrollBar(Handle, SB_Horz, AValue);
 end;
 
 procedure TATListbox.DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
@@ -747,8 +767,6 @@ begin
 end;
 
 procedure TATListbox.SetThemedScrollbar(AValue: boolean);
-var
-  si: TScrollInfo;
 begin
   if FThemedScrollbar=AValue then Exit;
   FThemedScrollbar:= AValue;
@@ -758,8 +776,8 @@ begin
 
   if AValue then
   begin
-    ShowScrollBar(Handle, SB_VERT, false);
-    ShowScrollBar(Handle, SB_HORZ, false);
+    ShowOsBarVert:= false;
+    ShowOsBarHorz:= false;
   end;
 
   Invalidate;
