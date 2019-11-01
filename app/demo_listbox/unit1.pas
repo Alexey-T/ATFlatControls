@@ -188,7 +188,7 @@ begin
 
   C.Font.Color:= $F0 shl AIndex; //weird color
   C.Font.Size:= AIndex+5; //weird font size
-  C.TextOut(ARect.Left+6+AIndex*6, (ARect.Top+ARect.Bottom-C.TextHeight(S)) div 2, S);
+  C.TextOut(ARect.Left+6+AIndex*6-list.ScrollHorz, (ARect.Top+ARect.Bottom-C.TextHeight(S)) div 2, S);
 end;
 
 procedure TfmMain.ListClick(Sender: TObject);

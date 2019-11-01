@@ -103,11 +103,9 @@ type
     procedure SetItemHeight(AValue: integer);
     procedure SetThemedScrollbar(AValue: boolean);
     procedure UpdateColumnWidths;
-    {$ifdef FPC}
-    procedure UpdateFromScrollbarMsg(const Msg: TLMScroll);
-    procedure UpdateFromScrollbarHorzMsg(const Msg: TLMScroll);
-    {$else}
-    procedure UpdateFromScrollbarMsg(const Msg: TWMVScroll);
+    procedure UpdateFromScrollbarMsg(const Msg: {$ifdef FPC}TLMScroll{$else}TWMVScroll{$endif});
+    procedure UpdateFromScrollbarHorzMsg(const Msg: {$ifdef FPC}TLMScroll{$else}TWMHScroll{$endif});
+    {$ifndef FPC}
     procedure CMMouseEnter(var msg: TMessage); message CM_MOUSEENTER;
     procedure CMMouseLeave(var msg: TMessage); message CM_MOUSELEAVE;
     procedure WMEraseBkgnd(var Message: TMessage); message WM_ERASEBKGND;
@@ -129,6 +127,7 @@ type
     procedure MouseLeave; override;
     {$else}
     procedure WMVScroll(var Msg: TWMVScroll); message WM_VSCROLL;
+    procedure WMHScroll(var Msg: TWMHScroll); message WM_HSCROLL;
     procedure WMGetDlgCode(var Message: TWMGetDlgCode); message WM_GETDLGCODE;
     procedure WMKeyDown(var Message: TWMKeyDown); message WM_KEYDOWN;
     {$endif}
@@ -820,8 +819,7 @@ begin
   inherited;
 end;
 
-{$ifdef FPC}
-procedure TATListbox.UpdateFromScrollbarMsg(const Msg: TLMScroll);
+procedure TATListbox.UpdateFromScrollbarMsg(const Msg: {$ifdef FPC}TLMScroll{$else}TWMVScroll{$endif});
 var
   NMax: integer;
 begin
@@ -842,7 +840,7 @@ begin
   end;
 end;
 
-procedure TATListbox.UpdateFromScrollbarHorzMsg(const Msg: TLMScroll);
+procedure TATListbox.UpdateFromScrollbarHorzMsg(const Msg: {$ifdef FPC}TLMScroll{$else}TWMHScroll{$endif});
 var
   NMax: integer;
 begin
@@ -862,30 +860,8 @@ begin
     SB_THUMBTRACK: FScrollHorz:= Max(0, Msg.Pos);
   end;
 end;
-{$endif}
 
 {$ifndef FPC}
-procedure TATListbox.UpdateFromScrollbarMsg(const Msg: TWMVScroll);
-var
-  NMax: integer;
-begin
-  NMax:= Max(0, ItemCount-GetVisibleItems);
-
-  case Msg.ScrollCode of
-    SB_TOP:        FItemTop:= 0;
-    SB_BOTTOM:     FItemTop:= Max(0, ItemCount-GetVisibleItems);
-
-    SB_LINEUP:     FItemTop:= Max(0, FItemTop-1);
-    SB_LINEDOWN:   FItemTop:= Min(NMax, FItemTop+1);
-
-    SB_PAGEUP:     FItemTop:= Max(0, FItemTop-GetVisibleItems);
-    SB_PAGEDOWN:   FItemTop:= Min(NMax, FItemTop+GetVisibleItems);
-
-    SB_THUMBPOSITION,
-    SB_THUMBTRACK: FItemTop:= Max(0, Msg.Pos);
-  end;
-end;
-
 procedure TATListbox.CMMouseEnter(var msg: TMessage);
 begin
   inherited;
@@ -925,6 +901,12 @@ end;
 procedure TATListbox.WMVScroll(var Msg: TWMVScroll);
 begin
   UpdateFromScrollbarMsg(Msg);
+  Invalidate;
+end;
+
+procedure TATListbox.WMHScroll(var Msg: TWMHScroll);
+begin
+  UpdateFromScrollbarHorzMsg(Msg);
   Invalidate;
 end;
 
