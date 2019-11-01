@@ -116,7 +116,7 @@ type
     procedure CMMouseLeave(var msg: TMessage); message CM_MOUSELEAVE;
     procedure WMEraseBkgnd(var Message: TMessage); message WM_ERASEBKGND;
     {$endif}
-    procedure UpdateScrollbars;
+    procedure UpdateScrollbars(C: TCanvas);
     function GetVisibleItems: integer;
     function GetItemHeightDefault: integer;
     function GetColumnWidth(AIndex: integer): integer;
@@ -331,11 +331,16 @@ begin
   Inc(Result, FIndentLeft+2);
 end;
 
-procedure TATListbox.UpdateScrollbars;
+procedure TATListbox.UpdateScrollbars(C: TCanvas);
 var
   NeedVertBar, NeedHorzBar: boolean;
   si: TScrollInfo;
 begin
+  if FScrollbars in [ssHorizontal, ssAutoHorizontal, ssBoth, ssAutoBoth] then
+    FMaxWidth:= GetMaxWidth(C)
+  else
+    FMaxWidth:= 10;
+
   case FScrollbars of
     ssAutoVertical,
     ssAutoBoth:
@@ -645,13 +650,8 @@ begin
   else
     C:= Canvas;
 
-  if FScrollbars in [ssHorizontal, ssAutoHorizontal, ssBoth, ssAutoBoth] then
-    FMaxWidth:= GetMaxWidth(C)
-  else
-    FMaxWidth:= 1;
-
   UpdateItemHeight;
-  UpdateScrollbars;
+  UpdateScrollbars(C);
   UpdateColumnWidths;
 
   R:= Rect(0, 0, ClientWidth, ClientHeight);
