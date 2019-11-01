@@ -12,7 +12,7 @@ unit ATListbox;
 interface
 
 uses
-  Classes, SysUtils, Graphics, Controls, Forms, StdCtrls,
+  Classes, SysUtils, Graphics, Controls, Forms,
   {$ifdef FPC}
   LMessages,
   {$else}
@@ -36,6 +36,16 @@ type
     albsxHotItem
     );
 
+  TATListboxScrollStyle = (
+    alssNone,
+    alssHorizontal,
+    alssVertical,
+    alssBoth,
+    alssAutoHorizontal,
+    alssAutoVertical,
+    alssAutoBoth
+    );
+
 type
   { TATListboxItemProp }
 
@@ -57,7 +67,7 @@ type
     FThemedFont: boolean;
     FScrollbar: TATScrollbar;
     FScrollbarHorz: TATScrollbar;
-    FScrollbars: TScrollStyle;
+    FScrollbars: TATListboxScrollStyle;
     FOwnerDrawn: boolean;
     FVirtualMode: boolean;
     FVirtualItemCount: integer;
@@ -196,7 +206,7 @@ type
     property ParentFont;
     property ParentShowHint;
     property PopupMenu;
-    property ScrollBars: TScrollStyle read FScrollbars write FScrollbars default TScrollStyle.ssVertical;
+    property ScrollBars: TATListboxScrollStyle read FScrollbars write FScrollbars default alssVertical;
     property ShowHint;
     property ShowXMark: TATListboxShowX read FShowX write FShowX default albsxNone;
     property VirtualMode: boolean read FVirtualMode write FVirtualMode default true;
@@ -337,58 +347,32 @@ var
   NeedVertBar, NeedHorzBar: boolean;
   si: TScrollInfo;
 begin
-
-  {$ifdef FPC}
-  if FScrollbars in [ssHorizontal, ssAutoHorizontal, ssBoth, ssAutoBoth] then
+  if FScrollbars in [alssHorizontal, alssAutoHorizontal, alssBoth, alssAutoBoth] then
     FMaxWidth:= GetMaxWidth(C)
   else
     FMaxWidth:= 10;
 
   case FScrollbars of
-    ssAutoVertical,
-    ssAutoBoth:
+    alssAutoVertical,
+    alssAutoBoth:
       NeedVertBar:= ItemCount*ItemHeight>Height; //not ClientHeight
-    ssVertical,
-    ssBoth:
+    alssVertical,
+    alssBoth:
       NeedVertBar:= true;
     else
       NeedVertBar:= false;
   end;
 
   case FScrollbars of
-    ssAutoHorizontal,
-    ssAutoBoth:
+    alssAutoHorizontal,
+    alssAutoBoth:
       NeedHorzBar:= FMaxWidth>Width; //not ClientWidth
-    ssHorizontal,
-    ssBoth:
+    alssHorizontal,
+    alssBoth:
       NeedHorzBar:= true;
     else
       NeedHorzBar:= false;
   end;
-  {$endif}
-
-  {$ifndef FPC}
-  if FScrollbars in [ssHorizontal, ssBoth] then
-    FMaxWidth:= GetMaxWidth(C)
-  else
-    FMaxWidth:= 10;
-
-  case FScrollbars of
-    ssVertical,
-    ssBoth:
-      NeedVertBar:= ItemCount*ItemHeight>Height; //not ClientHeight
-    else
-      NeedVertBar:= false;
-  end;
-
-  case FScrollbars of
-    ssHorizontal,
-    ssBoth:
-      NeedHorzBar:= FMaxWidth>Width; //not ClientWidth
-    else
-      NeedHorzBar:= false;
-  end;
-  {$endif}
 
   FScrollbar.Visible:=     FThemedScrollbar and NeedVertBar;
   FScrollbarHorz.Visible:= FThemedScrollbar and NeedHorzBar;
@@ -855,7 +839,7 @@ begin
   FItemHeightPercents:= 100;
   FItemHeight:= 17;
   FItemTop:= 0;
-  FScrollbars:= TScrollStyle.ssVertical;
+  FScrollbars:= alssVertical;
   FScrollHorz:= 0;
   FIndentLeft:= 4;
   FIndentTop:= 2;

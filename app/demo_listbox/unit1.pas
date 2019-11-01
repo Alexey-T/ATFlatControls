@@ -120,7 +120,7 @@ end;
 
 procedure TfmMain.comboScrollsChange(Sender: TObject);
 begin
-  List.Scrollbars:= TScrollStyle(comboScrolls.ItemIndex);
+  List.Scrollbars:= TATListboxScrollStyle(comboScrolls.ItemIndex);
   List.Invalidate;
 end;
 
