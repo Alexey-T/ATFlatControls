@@ -16,12 +16,12 @@ type
 
   TfmMain = class(TForm)
     ButtonGoto: TButton;
-    chkHorzBar: TCheckBox;
     chkDoubleSize: TCheckBox;
     chkHotTrack: TCheckBox;
     chkVirtual: TCheckBox;
     chkOwnerDrawn: TCheckBox;
     chkThemedScroll: TCheckBox;
+    comboScrolls: TComboBox;
     ComboShowX: TComboBox;
     Label1: TLabel;
     MenuItem1: TMenuItem;
@@ -30,11 +30,11 @@ type
     TrackScale: TTrackBar;
     procedure ButtonGotoClick(Sender: TObject);
     procedure chkDoubleSizeChange(Sender: TObject);
-    procedure chkHorzBarChange(Sender: TObject);
     procedure chkHotTrackChange(Sender: TObject);
     procedure chkOwnerDrawnChange(Sender: TObject);
     procedure chkThemedScrollChange(Sender: TObject);
     procedure chkVirtualChange(Sender: TObject);
+    procedure comboScrollsChange(Sender: TObject);
     procedure ComboShowXChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MenuItem1Click(Sender: TObject);
@@ -118,6 +118,12 @@ begin
   list.Invalidate;
 end;
 
+procedure TfmMain.comboScrollsChange(Sender: TObject);
+begin
+  List.Scrollbars:= TScrollStyle(comboScrolls.ItemIndex);
+  List.Invalidate;
+end;
+
 procedure TfmMain.ComboShowXChange(Sender: TObject);
 begin
   List.ShowXMark:= TATListboxShowX(ComboShowX.ItemIndex);
@@ -143,12 +149,6 @@ begin
   else
     List.ItemHeightPercents:= 100;
   List.Update;
-end;
-
-procedure TfmMain.chkHorzBarChange(Sender: TObject);
-begin
-  List.ShowHorzScrollbar:= chkHorzBar.Checked;
-  List.Invalidate;
 end;
 
 procedure TfmMain.ButtonGotoClick(Sender: TObject);

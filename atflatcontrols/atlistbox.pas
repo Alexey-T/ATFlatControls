@@ -12,7 +12,7 @@ unit ATListbox;
 interface
 
 uses
-  Classes, SysUtils, Graphics, Controls, Forms,
+  Classes, SysUtils, Graphics, Controls, Forms, StdCtrls,
   {$ifdef FPC}
   LMessages,
   {$else}
@@ -57,7 +57,7 @@ type
     FThemedFont: boolean;
     FScrollbar: TATScrollbar;
     FScrollbarHorz: TATScrollbar;
-    FAutoHideScrollbars: boolean;
+    FScrollbars: TScrollStyle;
     FOwnerDrawn: boolean;
     FVirtualMode: boolean;
     FVirtualItemCount: integer;
@@ -78,7 +78,6 @@ type
     FColumnSep: char;
     FColumnSizes: TATIntArray;
     FColumnWidths: TATIntArray;
-    FShowHorzScrollbar: boolean;
     FShowX: TATListboxShowX;
     FMaxWidth: integer;
     FOnDrawItem: TATListboxDrawItemEvent;
@@ -184,7 +183,6 @@ type
     property BorderStyle;
     property BorderSpacing;
     {$endif}
-    property AutoHideScrollbars: boolean read FAutoHideScrollbars write FAutoHideScrollbars default true;
     property CanGetFocus: boolean read FCanGetFocus write SetCanBeFocused default false;
     property DoubleBuffered stored false;
     property Enabled;
@@ -197,9 +195,9 @@ type
     property ParentFont;
     property ParentShowHint;
     property PopupMenu;
+    property ScrollBars: TScrollStyle read FScrollbars write FScrollbars default ssVertical;
     property ShowHint;
     property ShowXMark: TATListboxShowX read FShowX write FShowX default albsxNone;
-    property ShowHorzScrollbar: boolean read FShowHorzScrollbar write FShowHorzScrollbar default false;
     property VirtualMode: boolean read FVirtualMode write FVirtualMode default true;
     property Visible;
     property OnClick;
@@ -338,21 +336,32 @@ var
   NeedVertBar, NeedHorzBar: boolean;
   si: TScrollInfo;
 begin
-  if FAutoHideScrollbars then
-  begin
-    NeedVertBar:= ItemCount*ItemHeight>Height; //not ClientHeight
-    NeedHorzBar:= FMaxWidth>Width; //not ClientWidth
-  end
-  else
-  begin
-    NeedVertBar:= true;
-    NeedHorzBar:= true;
+  case FScrollbars of
+    ssAutoVertical,
+    ssAutoBoth:
+      NeedVertBar:= ItemCount*ItemHeight>Height; //not ClientHeight
+    ssVertical,
+    ssBoth:
+      NeedVertBar:= true;
+    else
+      NeedVertBar:= false;
   end;
 
-  FScrollbar.Visible:= FThemedScrollbar and NeedVertBar;
-  FScrollbarHorz.Visible:= FThemedScrollbar and NeedHorzBar and FShowHorzScrollbar;
+  case FScrollbars of
+    ssAutoHorizontal,
+    ssAutoBoth:
+      NeedHorzBar:= FMaxWidth>Width; //not ClientWidth
+    ssHorizontal,
+    ssBoth:
+      NeedHorzBar:= true;
+    else
+      NeedHorzBar:= false;
+  end;
+
+  FScrollbar.Visible:=     FThemedScrollbar and NeedVertBar;
+  FScrollbarHorz.Visible:= FThemedScrollbar and NeedHorzBar;
   ShowOsBarVert:= not FThemedScrollbar and NeedVertBar;
-  ShowOsBarHorz:= not FThemedScrollbar and NeedHorzBar and FShowHorzScrollbar;
+  ShowOsBarHorz:= not FThemedScrollbar and NeedHorzBar;
 
   if FThemedScrollbar then
   begin
@@ -636,7 +645,7 @@ begin
   else
     C:= Canvas;
 
-  if FShowHorzScrollbar then
+  if FScrollbars in [ssHorizontal, ssAutoHorizontal, ssBoth, ssAutoBoth] then
     FMaxWidth:= GetMaxWidth(C)
   else
     FMaxWidth:= 1;
@@ -796,16 +805,6 @@ procedure TATListbox.SetThemedScrollbar(AValue: boolean);
 begin
   if FThemedScrollbar=AValue then Exit;
   FThemedScrollbar:= AValue;
-
-  FScrollbar.Visible:= FThemedScrollbar;
-  FScrollbarHorz.Visible:= FThemedScrollbar and FShowHorzScrollbar;
-
-  if AValue then
-  begin
-    ShowOsBarVert:= false;
-    ShowOsBarHorz:= false;
-  end;
-
   Invalidate;
 end;
 
@@ -821,13 +820,13 @@ begin
   Font.Size:= 9;
 
   CanGetFocus:= false;
-  FAutoHideScrollbars:= true;
   FList:= TStringList.Create;
   FVirtualItemCount:= 0;
   FItemIndex:= 0;
   FItemHeightPercents:= 100;
   FItemHeight:= 17;
   FItemTop:= 0;
+  FScrollbars:= ssVertical;
   FScrollHorz:= 0;
   FIndentLeft:= 4;
   FIndentTop:= 2;
@@ -838,7 +837,6 @@ begin
   SetLength(FColumnSizes, 0);
   SetLength(FColumnWidths, 0);
   FShowX:= albsxNone;
-  FShowHorzScrollbar:= false;
 
   FBitmap:= Graphics.TBitmap.Create;
   FBitmap.SetSize(1600, 1200);
