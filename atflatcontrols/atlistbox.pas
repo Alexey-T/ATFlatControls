@@ -126,6 +126,7 @@ type
   protected
     procedure Paint; override;
     procedure Click; override;
+    procedure DoOnResize; override;
     {$ifdef FPC}
     procedure LMVScroll(var Msg: TLMVScroll); message LM_VSCROLL;
     procedure LMHScroll(var Msg: TLMHScroll); message LM_HSCROLL;
@@ -666,6 +667,12 @@ begin
       end;
 
   inherited; //OnClick must be after ItemIndex set
+end;
+
+procedure TATListbox.DoOnResize;
+begin
+  inherited;
+  Invalidate;
 end;
 
 function TATListbox.GetItemIndexAt(Pnt: TPoint): integer;
