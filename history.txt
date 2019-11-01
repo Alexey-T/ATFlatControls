@@ -4,6 +4,7 @@
   + prop ShowHorzScrollbar
   + prop ScrollHorz
   + event OnCalcScrollWidth
+  + prop AutoHideScrollbars
 
 2019.10.30
 + packages ATTabs and ATCanvasPrimitives merged in ATFlatControls
