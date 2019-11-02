@@ -3151,10 +3151,12 @@ procedure TATTabs.SetTabIndex(AIndex: integer);
 //note: check "if AIndex=FTabIndex" must not be here, must be in outer funcs.
 //Sometimes SetTabIndex(TabIndex) is needed, eg in DeleteTab().
 var
-  CanChange: boolean;
+  CanChange, DisableEvent: boolean;
 begin
   if csLoading in ComponentState then
     FTabIndexLoaded:= AIndex;
+
+  DisableEvent:= (csLoading in ComponentState) or (AIndex=FTabIndex);
 
   if IsIndexOk(AIndex) then
   begin
@@ -3169,8 +3171,10 @@ begin
 
     MakeVisible(AIndex);
     Invalidate;
-    if Assigned(FOnTabClick) then
-      FOnTabClick(Self);
+
+    if not DisableEvent then
+      if Assigned(FOnTabClick) then
+        FOnTabClick(Self);
   end;
 end;
 
