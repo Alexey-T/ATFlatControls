@@ -3156,7 +3156,8 @@ begin
   if csLoading in ComponentState then
     FTabIndexLoaded:= AIndex;
 
-  DisableEvent:= (csLoading in ComponentState) or (AIndex=FTabIndex);
+  DisableEvent:= (csLoading in ComponentState);
+    //or (AIndex=FTabIndex); //don't add - it causes problems in CudaText, so clicking active tab title won't focus the tab
 
   if IsIndexOk(AIndex) then
   begin
