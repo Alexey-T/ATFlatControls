@@ -21,9 +21,12 @@ type
     chkVirtual: TCheckBox;
     chkOwnerDrawn: TCheckBox;
     chkThemedScroll: TCheckBox;
-    comboScrolls: TComboBox;
+    comboScrollHorz: TComboBox;
+    comboScrollVert: TComboBox;
     ComboShowX: TComboBox;
     Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
     MenuItem1: TMenuItem;
     Panel1: TPanel;
     PopupMenu1: TPopupMenu;
@@ -34,7 +37,8 @@ type
     procedure chkOwnerDrawnChange(Sender: TObject);
     procedure chkThemedScrollChange(Sender: TObject);
     procedure chkVirtualChange(Sender: TObject);
-    procedure comboScrollsChange(Sender: TObject);
+    procedure comboScrollVertChange(Sender: TObject);
+    procedure comboScrollHorzChange(Sender: TObject);
     procedure ComboShowXChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MenuItem1Click(Sender: TObject);
@@ -118,9 +122,15 @@ begin
   list.Invalidate;
 end;
 
-procedure TfmMain.comboScrollsChange(Sender: TObject);
+procedure TfmMain.comboScrollVertChange(Sender: TObject);
 begin
-  List.Scrollbars:= TATListboxScrollStyle(comboScrolls.ItemIndex);
+  List.ScrollStyleVert:= TATListboxScrollStyle(comboScrollVert.ItemIndex);
+  List.Invalidate;
+end;
+
+procedure TfmMain.comboScrollHorzChange(Sender: TObject);
+begin
+  List.ScrollStyleHorz:= TATListboxScrollStyle(comboScrollHorz.ItemIndex);
   List.Invalidate;
 end;
 

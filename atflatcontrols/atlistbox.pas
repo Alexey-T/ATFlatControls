@@ -37,13 +37,9 @@ type
     );
 
   TATListboxScrollStyle = (
-    alssNone,
-    alssHorizontal,
-    alssVertical,
-    alssBoth,
-    alssAutoHorizontal,
-    alssAutoVertical,
-    alssAutoBoth
+    alssHide,
+    alssShow,
+    alssAuto
     );
 
 type
@@ -67,7 +63,8 @@ type
     FThemedFont: boolean;
     FScrollbar: TATScrollbar;
     FScrollbarHorz: TATScrollbar;
-    FScrollbars: TATListboxScrollStyle;
+    FScrollStyleHorz: TATListboxScrollStyle;
+    FScrollStyleVert: TATListboxScrollStyle;
     FOwnerDrawn: boolean;
     FVirtualMode: boolean;
     FVirtualItemCount: integer;
@@ -206,7 +203,8 @@ type
     property ParentFont;
     property ParentShowHint;
     property PopupMenu;
-    property ScrollBars: TATListboxScrollStyle read FScrollbars write FScrollbars default alssVertical;
+    property ScrollStyleHorz: TATListboxScrollStyle read FScrollStyleHorz write FScrollStyleHorz default alssAuto;
+    property ScrollStyleVert: TATListboxScrollStyle read FScrollStyleVert write FScrollStyleVert default alssShow;
     property ShowHint;
     property ShowXMark: TATListboxShowX read FShowX write FShowX default albsxNone;
     property VirtualMode: boolean read FVirtualMode write FVirtualMode default true;
@@ -347,30 +345,26 @@ var
   NeedVertBar, NeedHorzBar: boolean;
   si: TScrollInfo;
 begin
-  if FScrollbars in [alssHorizontal, alssAutoHorizontal, alssBoth, alssAutoBoth] then
+  if FScrollStyleHorz in [alssShow, alssAuto] then
     FMaxWidth:= GetMaxWidth(C)
   else
     FMaxWidth:= 10;
 
-  case FScrollbars of
-    alssAutoVertical,
-    alssAutoBoth:
+  case FScrollStyleVert of
+    alssAuto:
       NeedVertBar:= ItemCount*ItemHeight>Height; //not ClientHeight
-    alssVertical,
-    alssBoth:
+    alssShow:
       NeedVertBar:= true;
-    else
+    alssHide:
       NeedVertBar:= false;
   end;
 
-  case FScrollbars of
-    alssAutoHorizontal,
-    alssAutoBoth:
+  case FScrollStyleHorz of
+    alssAuto:
       NeedHorzBar:= FMaxWidth>Width; //not ClientWidth
-    alssHorizontal,
-    alssBoth:
+    alssShow:
       NeedHorzBar:= true;
-    else
+    alssHide:
       NeedHorzBar:= false;
   end;
 
@@ -839,7 +833,8 @@ begin
   FItemHeightPercents:= 100;
   FItemHeight:= 17;
   FItemTop:= 0;
-  FScrollbars:= alssVertical;
+  FScrollStyleVert:= alssShow;
+  FScrollStyleHorz:= alssAuto;
   FScrollHorz:= 0;
   FIndentLeft:= 4;
   FIndentTop:= 2;

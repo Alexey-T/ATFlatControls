@@ -1,9 +1,7 @@
 
-2019.11.01
-+ ATListbox: added horizontal scrollbar:
-  + prop ScrollBars (enum)
-  + prop ScrollHorz
-  + event OnCalcScrollWidth
+2019.11.03
++ ATListbox: prop ScrollStyleHorz, ScrollStyleVert
++ ATListbox: event OnCalcScrollWidth
 
 2019.10.30
 + packages ATTabs and ATCanvasPrimitives merged in ATFlatControls
