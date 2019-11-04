@@ -386,9 +386,11 @@ begin
 
     if FScrollbarHorz.Visible then
     begin
-      FScrollbarHorz.IndentCorner:= 0;
       if FScrollbar.Visible then
-        FScrollbarHorz.IndentCorner:= 100;
+        FScrollbarHorz.IndentCorner:= 100
+      else
+        FScrollbarHorz.IndentCorner:= 0;
+
       FScrollbarHorz.Min:= 0;
       FScrollbarHorz.Max:= FMaxWidth;
       FScrollbarHorz.PageSize:= ClientWidth;
