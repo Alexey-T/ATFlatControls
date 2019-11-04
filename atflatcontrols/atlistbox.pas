@@ -386,6 +386,9 @@ begin
 
     if FScrollbarHorz.Visible then
     begin
+      FScrollbarHorz.IndentCorner:= 0;
+      if FScrollbar.Visible then
+        FScrollbarHorz.IndentCorner:= 100;
       FScrollbarHorz.Min:= 0;
       FScrollbarHorz.Max:= FMaxWidth;
       FScrollbarHorz.PageSize:= ClientWidth;
@@ -1045,7 +1048,8 @@ begin
   inherited Invalidate;
   {$else}
   // https://github.com/Alexey-T/ATFlatControls/issues/32
-  if Assigned(FScrollbar) and FScrollbar.Visible then
+  if (Assigned(FScrollbar) and FScrollbar.Visible) or
+  (Assigned(FScrollbarHorz) and FScrollbarHorz.Visible) then
   begin
     R:= Rect(0, 0, ClientWidth, ClientHeight);
     InvalidateRect(Handle, R, false);
