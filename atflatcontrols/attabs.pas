@@ -2190,7 +2190,7 @@ begin
         begin
           Result.Top:= DoScale(FOptSpacer);
           Result.Bottom:= Result.Top + DoScale(FOptTabHeight);
-          Result.Left:= FRealIndentLeft;
+          Result.Left:= FRealIndentLeft + FOptSpaceSide;
           Result.Right:= Result.Left + GetTabRectWidth(true);
         end;
       end;
