@@ -2428,7 +2428,8 @@ begin
 
       if IsPaintNeeded(ElemType, i, C, RRect) then
       begin
-        Data:= TATTabData(FTabList.Items[i]);                                   if not data.TabVisible then continue;
+        Data:= TATTabData(FTabList.Items[i]);
+        if not Data.TabVisible then Continue;
 
         if FOptHotFontStyleUsed and bMouseOver then
           NFontStyle:= FOptHotFontStyle
@@ -2466,7 +2467,8 @@ begin
   if IsIndexOk(i) then
   begin
     Data:= TATTabData(FTabList.Items[i]);
-if data.tabvisible then begin
+   if Data.TabVisible then
+   begin
     RRect:= GetTabRect(i);
     GetTabXProps(i, RRect, bMouseOverX, RectX);
 
@@ -2474,8 +2476,6 @@ if data.tabvisible then begin
 
     if IsPaintNeeded(aeTabActive, i, C, RRect) then
     begin
-      Data:= TATTabData(FTabList.Items[i]);
-
       if FOptActiveFontStyleUsed then
         NFontStyle:= FOptActiveFontStyle
       else
@@ -2505,7 +2505,7 @@ if data.tabvisible then begin
     begin
       DoPaintX(C, RectX, i, true, bMouseOverX);
     end;
-  end;
+   end;
   end;
 
   //button back
