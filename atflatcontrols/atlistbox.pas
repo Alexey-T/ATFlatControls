@@ -18,6 +18,7 @@ uses
   {$else}
   Messages, Windows, System.UITypes,
   {$endif}
+  StrUtils,
   ATScrollBar,
   ATFlatThemes,
   ATCanvasPrimitives;
@@ -243,21 +244,39 @@ uses
   {$endif}
   Math;
 
-function SGetItem(var S: string; const ch: Char): string;
-var
-  i: integer;
-begin
-  i:= Pos(ch, S);
-  if i=0 then
-  begin
-    Result:= S;
-    S:= '';
-  end
-  else
-  begin
-    Result:= Copy(S, 1, i-1);
-    Delete(S, 1, i);
+type
+  TATStringSeparator = record
+  private
+    FSep: char;
+    FStr: string;
+    FPos: integer;
+  public
+    procedure Init(const AStr: string; ASep: char);
+    function GetItemStr(out AValue: string): boolean;
   end;
+
+procedure TATStringSeparator.Init(const AStr: string; ASep: char);
+begin
+  FStr:= AStr;
+  FSep:= ASep;
+  FPos:= 1;
+end;
+
+function TATStringSeparator.GetItemStr(out AValue: string): boolean;
+var
+  N: integer;
+begin
+  if FPos>Length(FStr) then
+  begin
+    AValue:= '';
+    exit(false);
+  end;
+  N:= PosEx(FSep, FStr, FPos);
+  if N=0 then
+    N:= Length(FStr)+1;
+  AValue:= Copy(FStr, FPos, N-FPos);
+  FPos:= N+1;
+  Result:= true;
 end;
 
 function IsDoubleBufferedNeeded: boolean;
@@ -578,7 +597,8 @@ end;
 
 procedure TATListbox.DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
 var
-  S, SItem: string;
+  Sep: TATStringSeparator;
+  SLine, SItem: string;
   NIndentLeft,
   NColOffset, NColWidth, NAllWidth, i: integer;
 begin
@@ -601,9 +621,9 @@ begin
   C.FillRect(R);
 
   if (AIndex>=0) and (AIndex<FList.Count) then
-    S:= FList[AIndex]
+    SLine:= FList[AIndex]
   else
-    S:= '('+IntToStr(AIndex)+')';
+    SLine:= '('+IntToStr(AIndex)+')';
 
   NIndentLeft:= FIndentLeft+FIndentForX;
 
@@ -612,18 +632,19 @@ begin
     C.TextOut(
       R.Left+NIndentLeft-ScrollHorz,
       R.Top+FIndentTop,
-      S);
+      SLine);
   end
   else
   begin
     NAllWidth:= ClientWidth;
     NColOffset:= R.Left+FIndentLeft-ScrollHorz;
     C.Pen.Color:= Theme^.ColorSeparators;
+    Sep.Init(SLine, FColumnSep);
 
     for i:= 0 to Length(FColumnSizes)-1 do
     begin
       NColWidth:= FColumnWidths[i];
-      SItem:= SGetItem(S, FColumnSep);
+      Sep.GetItemStr(SItem);
 
       C.FillRect(
         Rect(NColOffset,
