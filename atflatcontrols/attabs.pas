@@ -885,7 +885,7 @@ end;
 
 procedure TATTabData.SetTabImageIndex(const Value: TImageIndex);
 begin
-  if FTabImageIndex <> Value then
+  if FTabImageIndex<>Value then
   begin
     FTabImageIndex:= Value;
     UpdateTabSet;
@@ -894,38 +894,56 @@ end;
 
 procedure TATTabData.SetTabCaption(const Value: TATTabString);
 begin
-  FTabCaption:= Value;
-  UpdateTabSet;
+  if FTabCaption<>Value then
+  begin
+    FTabCaption:= Value;
+    UpdateTabSet;
+  end;
 end;
 
 procedure TATTabData.SetTabColor(const Value: TColor);
 begin
-  FTabColor:= Value;
-  UpdateTabSet;
+  if FTabColor<>Value then
+  begin
+    FTabColor:= Value;
+    UpdateTabSet;
+  end;
 end;
 
 procedure TATTabData.SetTabColorActive(const Value: TColor);
 begin
-  FTabColorActive:= Value;
-  UpdateTabSet;
+  if FTabColorActive<>Value then
+  begin
+    FTabColorActive:= Value;
+    UpdateTabSet;
+  end;
 end;
 
 procedure TATTabData.SetTabColorOver(const Value: TColor);
 begin
-  FTabColorOver:= Value;
-  UpdateTabSet;
+  if FTabColorOver<>Value then
+  begin
+    FTabColorOver:= Value;
+    UpdateTabSet;
+  end;
 end;
 
 procedure TATTabData.SetTabHideXButton(const Value: boolean);
 begin
-  FTabHideXButton:= Value;
-  UpdateTabSet;
+  if FTabHideXButton<>Value then
+  begin
+    FTabHideXButton:= Value;
+    UpdateTabSet;
+  end;
 end;
 
 procedure TATTabData.SetTabVisible(const Value: boolean);
 begin
-  FTabVisible:= Value;
-  UpdateTabSet;
+  if FTabVisible<>Value then
+  begin
+    FTabVisible:= Value;
+    UpdateTabSet;
+  end;
 end;
 
 procedure TATTabs.SetOptShowPlusTab(const Value: boolean);
