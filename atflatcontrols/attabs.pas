@@ -3226,26 +3226,30 @@ end;
 
 function TATTabs.HideTab(AIndex: integer): boolean;
 begin
-  if (AIndex < 0) or (AIndex >= FTablist.Count) then exit(false);
-  TATTabData(FTabList.Items[AIndex]).TabVisible:= false;
-  // if the deleted tab has focus then this needs to shift to the next
-  // tab or - if there are none - to the first.
-  if AIndex=TabIndex then
+  Result:= IsIndexOk(AIndex);
+  if Result then
   begin
-    if FTabList.Count -1 > AIndex then
-       SetTabIndex(AIndex-1)
-    else
-       SetTabIndex(0);
+    GetTabData(AIndex).TabVisible:= false;
+    // if the deleted tab has focus then this needs to shift to the next
+    // tab or - if there are none - to the first
+    if AIndex=TabIndex then
+    begin
+      if IsIndexOk(AIndex+1) then
+        SetTabIndex(AIndex+1)
+      else
+        SetTabIndex(0);
+    end;
   end;
-  Result:= true;
 end;
 
 function TATTabs.ShowTab(AIndex: integer): boolean;
 begin
-  if (AIndex < 0) or (AIndex >= FTablist.Count) then exit(false);
-  TATTabData(FTabList.Items[AIndex]).TabVisible:= true;
-  SetTabIndex(AIndex);
-  Result:= true;
+  Result:= IsIndexOk(AIndex);
+  if Result then
+  begin
+    GetTabData(AIndex).TabVisible:= true;
+    SetTabIndex(AIndex);
+  end;
 end;
 
 function TATTabs.GetTabData(AIndex: integer): TATTabData;
