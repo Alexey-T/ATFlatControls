@@ -90,7 +90,7 @@ type
     procedure SetTabColorActive(const Value: TColor);
     procedure SetTabColorOver(const Value: TColor);
     procedure SetTabHideXButton(const Value: boolean);
-    procedure SetTabVisible(const Value : boolean);
+    procedure SetTabVisible(const Value: boolean);
   public
     constructor Create(ACollection: TCollection); override;
     property TabObject: TObject read FTabObject write FTabObject;
@@ -514,7 +514,7 @@ type
 
     //events    
     FOnTabClick: TNotifyEvent;
-    FOnTabChanged : TNotifyEvent;                   // aducom
+    FOnTabChanged: TNotifyEvent;                   // aducom
     FOnTabPlusClick: TNotifyEvent;
     FOnTabClickUserButton: TATTabClickUserButton;
     FOnTabClose: TATTabCloseEvent;
@@ -641,8 +641,8 @@ type
     procedure Clear;
     function DeleteTab(AIndex: integer; AAllowEvent, AWithCancelBtn: boolean;
       AAction: TATTabActionOnClose=aocDefault): boolean;
-    function HideTab(AIndex : integer) : boolean;
-    function ShowTab(AIndex : integer) : boolean;
+    function HideTab(AIndex: integer): boolean;
+    function ShowTab(AIndex: integer): boolean;
     procedure MakeVisible(AIndex: integer);
     function IsTabVisible(AIndex: integer): boolean;
     procedure ShowTabMenu;
@@ -830,7 +830,7 @@ type
 
     //events
     property OnTabClick: TNotifyEvent read FOnTabClick write FOnTabClick;
-    property OnTabChanged : TNotifyEvent read FOnTabChanged write FOnTabChanged;           // aducom
+    property OnTabChanged: TNotifyEvent read FOnTabChanged write FOnTabChanged;           // aducom
     property OnTabPlusClick: TNotifyEvent read FOnTabPlusClick write FOnTabPlusClick;
     property OnTabClickUserButton: TATTabClickUserButton read FOnTabClickUserButton write FOnTabClickUserButton;
     property OnTabClose: TATTabCloseEvent read FOnTabClose write FOnTabClose;
@@ -887,50 +887,50 @@ procedure TATTabData.SetTabImageIndex(const Value: TImageIndex);
 begin
   if FTabImageIndex <> Value then
   begin
-  FTabImageIndex := Value;
-  UpdateTabSet;
+    FTabImageIndex:= Value;
+    UpdateTabSet;
   end;
 end;
 
 procedure TATTabData.SetTabCaption(const Value: TATTabString);
 begin
-  FTabCaption := Value;
+  FTabCaption:= Value;
   UpdateTabSet;
 end;
 
 procedure TATTabData.SetTabColor(const Value: TColor);
 begin
-  FTabColor := Value;
+  FTabColor:= Value;
   UpdateTabSet;
 end;
 
 procedure TATTabData.SetTabColorActive(const Value: TColor);
 begin
-  FTabColorActive := Value;
+  FTabColorActive:= Value;
   UpdateTabSet;
 end;
 
 procedure TATTabData.SetTabColorOver(const Value: TColor);
 begin
-  FTabColorOver := Value;
+  FTabColorOver:= Value;
   UpdateTabSet;
 end;
 
 procedure TATTabData.SetTabHideXButton(const Value: boolean);
 begin
-  FTabHideXButton := Value;
+  FTabHideXButton:= Value;
   UpdateTabSet;
 end;
 
-procedure TATTabData.SetTabVisible(const Value : boolean);
+procedure TATTabData.SetTabVisible(const Value: boolean);
 begin
-  FTabVisible := Value;
+  FTabVisible:= Value;
   UpdateTabSet;
 end;
 
 procedure TATTabs.SetOptShowPlusTab(const Value: boolean);
 begin
-  FOptShowPlusTab := Value;
+  FOptShowPlusTab:= Value;
   Invalidate;
 end;
 
@@ -1131,7 +1131,7 @@ end;
 constructor TATTabData.Create(ACollection: TCollection);
 begin
   inherited;
-  TabVisible := true;
+  TabVisible:= true;
   TabColor:= clNone;
   TabColorActive:= clNone;
   TabColorOver:= clNone;
@@ -2110,7 +2110,7 @@ begin
       FTabWidth:= Extent.CX + 2*DoScale(FOptSpaceBeforeText);
 
       if not Assigned(FImages) then //no imagelist
-        Data.TabImageIndex := -1;
+        Data.TabImageIndex:= -1;
 
       if Data.TabImageIndex>=0 then
         if FOptIconPosition in [aipIconLefterThanText, aipIconRighterThanText] then
@@ -3179,7 +3179,7 @@ begin
     FTabIndexLoaded:= AIndex;
 
   DisableEvent:= (csLoading in ComponentState);
-  TabChanged :=  (AIndex<>FTabIndex);
+  TabChanged:=  (AIndex<>FTabIndex);
 
   if IsIndexOk(AIndex) then
   begin
@@ -3206,10 +3206,10 @@ begin
   end;
 end;
 
-function TATTabs.HideTab(AIndex : integer) : boolean;
+function TATTabs.HideTab(AIndex: integer): boolean;
 begin
   if (AIndex < 0) or (AIndex >= FTablist.Count) then exit(false);
-  TATTabData(FTabList.Items[AIndex]).TabVisible := false;
+  TATTabData(FTabList.Items[AIndex]).TabVisible:= false;
   // if the deleted tab has focus then this needs to shift to the next
   // tab or - if there are none - to the first.
   if AIndex=TabIndex then
@@ -3219,15 +3219,15 @@ begin
     else
        SetTabIndex(0);
   end;
-  result := true;
+  Result:= true;
 end;
 
-function TATTabs.ShowTab(AIndex : integer) : boolean;
+function TATTabs.ShowTab(AIndex: integer): boolean;
 begin
   if (AIndex < 0) or (AIndex >= FTablist.Count) then exit(false);
-  TATTabData(FTabList.Items[AIndex]).TabVisible := true;
+  TATTabData(FTabList.Items[AIndex]).TabVisible:= true;
   SetTabIndex(AIndex);
-  result := true;
+  Result:= true;
 end;
 
 function TATTabs.GetTabData(AIndex: integer): TATTabData;
