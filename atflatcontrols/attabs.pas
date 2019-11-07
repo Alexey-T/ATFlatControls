@@ -2975,7 +2975,7 @@ begin
 
   // LCL dragging with DragMode=automatic is started too early.
   // so use DragMode=manual and DragStart.
-  if OptMouseDragEnabled and FMouseDown and not _IsDrag then
+  if OptMouseDragEnabled and FMouseDown and (FMouseDownButton=mbLeft) and not _IsDrag then
   begin
     BeginDrag(false, Mouse.DragThreshold);
     Exit
