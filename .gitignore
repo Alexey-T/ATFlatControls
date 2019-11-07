@@ -24,6 +24,7 @@
 *.lps
 
 lib/
+out/
 backup/
 project?
 demo

@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CONFIG>
-  <Compiler Value="/usr/bin/fpc" Date="1491731098"/>
-  <Params Value=" -MDelphi -Scghi -Cg -O1 -g -gl -l -vewnhibq -Fi/home/user/cuda/ATTabs/demo_lazarus/out -Fu/home/user/cuda/ATTabs/attabs/lib/x86_64-linux -Fu/home/user/lazarus/lcl/units/x86_64-linux/gtk2 -Fu/home/user/lazarus/lcl/units/x86_64-linux -Fu/home/user/lazarus/components/lazutils/lib/x86_64-linux -Fu/home/user/lazarus/packager/units/x86_64-linux -Fu/home/user/cuda/ATTabs/demo_lazarus/ -FU/home/user/cuda/ATTabs/demo_lazarus/out/ -FE/home/user/cuda/ATTabs/demo_lazarus/out/ -dLCL -dLCLgtk2 Demo.lpr"/>
-</CONFIG>
