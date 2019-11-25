@@ -588,6 +588,7 @@ type
     procedure SetOptScalePercents(AValue: integer);
     procedure SetOptVarWidth(AValue: boolean);
     procedure SetScrollPos(AValue: integer);
+    procedure SetTabIndexEx(AIndex: integer; ADisableEvent: boolean);
     procedure SetTabIndex(AIndex: integer);
     procedure GetTabXProps(AIndex: integer; const ARect: TRect; out
       AMouseOverX: boolean; out ARectX: TRect);
@@ -3100,7 +3101,7 @@ function TATTabs.DeleteTab(AIndex: integer;
   procedure _ActivateRightTab;
   begin
     if FTabIndex>AIndex then
-      SetTabIndex(FTabIndex-1)
+      SetTabIndexEx(FTabIndex-1, true)
     else
     if (FTabIndex=AIndex) and (FTabIndex>0) and (FTabIndex>=TabCount) then
       SetTabIndex(FTabIndex-1)
@@ -3188,6 +3189,11 @@ begin
 end;
 
 procedure TATTabs.SetTabIndex(AIndex: integer);
+begin
+  SetTabIndexEx(AIndex, false);
+end;
+
+procedure TATTabs.SetTabIndexEx(AIndex: integer; ADisableEvent: boolean);
 //note: check "if AIndex=FTabIndex" must not be here, must be in outer funcs.
 //Sometimes SetTabIndex(TabIndex) is used in CudaText: do focus of clicked tab, and in DeleteTab.
 var
@@ -3195,7 +3201,7 @@ var
 begin
   if csLoading in ComponentState then
     FTabIndexLoaded:= AIndex;
-  DisableEvent:= csLoading in ComponentState;
+  DisableEvent:= (csLoading in ComponentState) or ADisableEvent;
   TabChanged:= AIndex<>FTabIndex;
 
   if IsIndexOk(AIndex) then
