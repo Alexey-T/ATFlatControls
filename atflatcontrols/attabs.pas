@@ -1001,14 +1001,16 @@ begin
 end;
 
 
-procedure DrawPlusSign(C: TCanvas; const R: TRect; ASize: integer; AColor: TColor);
+procedure DrawPlusSign(C: TCanvas; const R: TRect; ASize, ALineWidth: integer; AColor: TColor);
 var
   CX, CY: integer;
 begin
   CX:= (R.Left+R.Right) div 2;
   CY:= (R.Top+R.Bottom) div 2;
+  C.Pen.Width:= ALineWidth;
   DrawLine(C, CX-ASize, CY, CX+ASize, CY, AColor);
   DrawLine(C, CX, CY-ASize, CX, CY+ASize, AColor);
+  C.Pen.Width:= 1;
 end;
 
 
@@ -1641,7 +1643,7 @@ begin
       exit;
     end
     else
-      DrawPlusSign(C, ARect, DoScale(FOptArrowSize), FColorFont);
+      DrawPlusSign(C, ARect, DoScale(FOptArrowSize), DoScale(1), FColorFont);
 
     DoPaintAfter(ElemType, -1, C, ARect);
   end;
@@ -3851,7 +3853,7 @@ begin
         FColorArrow);
 
       DoPaintBgTo(C, R);
-      DrawPlusSign(C, R, DoScale(FOptArrowSize), NColor);
+      DrawPlusSign(C, R, DoScale(FOptArrowSize), DoScale(1), NColor);
       DoPaintAfter(ElemType, -1, C, R);
     end;
 end;
