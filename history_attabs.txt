@@ -1,4 +1,7 @@
 
+2019.12.21
++ add: property OptUnderlineWidth (0 means 1 px with auto scaling)
+
 2019.09.07
 * change: remove published ClientWidth, ClientHeight
 
