@@ -294,6 +294,7 @@ const
   _InitOptSpaceXInner = 3;
   _InitOptSpaceXSize = 12;
   _InitOptSpaceXIncrementRound = 1;
+  _InitOptUnderlineWidth = 1;
   _InitOptArrowSize = 4;
   _InitOptArrowSpaceLeft = 4;
   _InitOptColoredBandSize = 4;
@@ -781,7 +782,7 @@ type
     property OptSpaceXInner: integer read FOptSpaceXInner write FOptSpaceXInner default _InitOptSpaceXInner;
     property OptSpaceXSize: integer read FOptSpaceXSize write FOptSpaceXSize default _InitOptSpaceXSize;
     property OptSpaceXIncrementRound: integer read FOptSpaceXIncrementRound write FOptSpaceXIncrementRound default _InitOptSpaceXIncrementRound;
-    property OptUnderlineWidth: integer read FOptUnderlineWidth write FOptUnderlineWidth default 0;
+    property OptUnderlineWidth: integer read FOptUnderlineWidth write FOptUnderlineWidth default _InitOptUnderlineWidth;
     property OptColoredBandSize: integer read FOptColoredBandSize write FOptColoredBandSize default _InitOptColoredBandSize;
     property OptColoredBandForTop: TATTabPosition read FOptColoredBandForTop write FOptColoredBandForTop default atpTop;
     property OptColoredBandForBottom: TATTabPosition read FOptColoredBandForBottom write FOptColoredBandForBottom default atpBottom;
@@ -1263,7 +1264,7 @@ begin
   FOptSpaceXInner:= _InitOptSpaceXInner;
   FOptSpaceXSize:= _InitOptSpaceXSize;
   FOptSpaceXIncrementRound:= _InitOptSpaceXIncrementRound;
-  FOptUnderlineWidth:= 0;
+  FOptUnderlineWidth:= _InitOptUnderlineWidth;
   FOptArrowSize:= _InitOptArrowSize;
   FOptColoredBandSize:= _InitOptColoredBandSize;
   FOptColoredBandForTop:= atpTop;
