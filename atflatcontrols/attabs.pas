@@ -294,7 +294,6 @@ const
   _InitOptSpaceXInner = 3;
   _InitOptSpaceXSize = 12;
   _InitOptSpaceXIncrementRound = 1;
-  _InitOptUnderlineWidth = 1;
   _InitOptArrowSize = 4;
   _InitOptArrowSpaceLeft = 4;
   _InitOptColoredBandSize = 4;
@@ -405,7 +404,6 @@ type
     FOptSpaceXInner: integer; //space from "x" square edge to "x" mark
     FOptSpaceXSize: integer; //size of "x" mark
     FOptSpaceXIncrementRound: integer;
-    FOptUnderlineWidth: integer;
     FOptColoredBandSize: integer; //height of "misc color" line
     FOptColoredBandForTop: TATTabPosition;
     FOptColoredBandForBottom: TATTabPosition;
@@ -462,7 +460,6 @@ type
 
     FRealIndentLeft: integer;
     FRealIndentRight: integer;
-    FRealUnderlineWidth: integer;
     FOptSpaceSide: integer;
     FAnimationOffset: integer;
     FPaintCount: integer;
@@ -782,7 +779,6 @@ type
     property OptSpaceXInner: integer read FOptSpaceXInner write FOptSpaceXInner default _InitOptSpaceXInner;
     property OptSpaceXSize: integer read FOptSpaceXSize write FOptSpaceXSize default _InitOptSpaceXSize;
     property OptSpaceXIncrementRound: integer read FOptSpaceXIncrementRound write FOptSpaceXIncrementRound default _InitOptSpaceXIncrementRound;
-    property OptUnderlineWidth: integer read FOptUnderlineWidth write FOptUnderlineWidth default _InitOptUnderlineWidth;
     property OptColoredBandSize: integer read FOptColoredBandSize write FOptColoredBandSize default _InitOptColoredBandSize;
     property OptColoredBandForTop: TATTabPosition read FOptColoredBandForTop write FOptColoredBandForTop default atpTop;
     property OptColoredBandForBottom: TATTabPosition read FOptColoredBandForBottom write FOptColoredBandForBottom default atpBottom;
@@ -1264,7 +1260,6 @@ begin
   FOptSpaceXInner:= _InitOptSpaceXInner;
   FOptSpaceXSize:= _InitOptSpaceXSize;
   FOptSpaceXIncrementRound:= _InitOptSpaceXIncrementRound;
-  FOptUnderlineWidth:= _InitOptUnderlineWidth;
   FOptArrowSize:= _InitOptArrowSize;
   FOptColoredBandSize:= _InitOptColoredBandSize;
   FOptColoredBandForTop:= atpTop;
@@ -2326,10 +2321,6 @@ begin
   ElemType:= aeBackground;
   RRect:= ClientRect;
 
-  FRealUnderlineWidth:= FOptUnderlineWidth;
-  if FRealUnderlineWidth<1 then
-    FRealUnderlineWidth:= DoScale(1);
-
   //update index here, because user can add/del tabs by keyboard
   with ScreenToClient(Mouse.CursorPos) do
     FTabIndexOver:= GetTabAt(X, Y, bMouseOverX);
@@ -2414,9 +2405,7 @@ begin
     begin
       C.Brush.Color:= FColorTabActive;
       C.FillRect(RBottom);
-      C.Pen.Width:= FRealUnderlineWidth;
       DrawLine(C, NLineX1, NLineY1, NLineX2, NLineY2, FColorBorderActive);
-      C.Pen.Width:= 1;
       DoPaintAfter(ElemType, -1, C, RBottom);
     end;
   end;
@@ -3388,7 +3377,7 @@ begin
   else
     Result.Top:= 0;
 
-  Result.Bottom:= Result.Top+DoScale(FOptTabHeight)-FRealUnderlineWidth div 2;
+  Result.Bottom:= Result.Top+DoScale(FOptTabHeight);
 
   if FOptPosition=atpBottom then
     Inc(Result.Top);
@@ -4054,7 +4043,7 @@ begin
   R.Left:= 0;
   R.Top:= 0;
   R.Right:= DoScale(FOptSpaceInitial);
-  R.Bottom:= DoScale(FOptTabHeight)+DoScale(FOptSpacer)-FRealUnderlineWidth div 2;
+  R.Bottom:= DoScale(FOptTabHeight)+DoScale(FOptSpacer);
   DoPaintBgTo(C, R);
 end;
 
