@@ -5,15 +5,32 @@ String of few chars, one char is one button at left or right side. Comma separat
 
 * `<` - scroll tabs left
 * `>` - scroll tabs right
-* `v` - show dropdown menu of all tabs
+* `v` - show drop-down menu of all tabs
 * `+` - plus button, does the same as plus pseudo-tab
 * `x` - close button, does the same as x icon on active tab
 * `0`..`4` - user buttons; they are owner drawn and handled in event OnTabClickUserButton
+* `_` - space (blank separator)
+* `|` - vertical separator
 
 OptButtonSize: integer
 ======
 
 Width of one button, from OptButtonLayout. Height of buttons is OptTabHeight.
+
+OptButtonSizeSpace: integer
+=====
+
+Width of space button with caption `_`.
+
+OptButtonSizeSeparator: integer
+=====
+
+Width of separator button with caption `|`.
+
+OptScalePercents
+=====
+
+Scale of entire control, in percents, default is 100.
 
 OptPosition: enum
 ======
@@ -40,6 +57,26 @@ Allow auto-sizing of control's height and multi-line mode. Only for top/bottom O
 In this mode, OptSpacer is indent from top, OptSpacer2 is indent from bottom.
 Note: after you turn off this prop, you need to restore control's height.
 
+OptFillWidth: boolean
+=====
+
+Allow tabs, when they are wrapped to several rows, to fill the entire control width, except for the last row. 
+
+OptFillWidthLastToo: boolean
+=====
+
+Allow tabs, when they are wrapped to several rows, to fill the entire control width, for the last row.
+
+OptTruncateCaption: enum
+=====
+
+Enum which controls how to truncate too long tab captions, on small sized tabs.
+
+* attcNone
+* attcDotsLeft
+* attcDotsMiddle
+* attcDotsRight
+
 OptTabHeight: integer
 ======
 
@@ -64,6 +101,11 @@ OptTabWidthMinimalHidesX: integer
 ======
 
 When current tab width (for top/bottom OptPosition) becomes smaller than option, X mark hides on all tabs.
+
+OptSpaceSide
+=====
+
+Controls shape of tab left/right side: if 0, tab side is vertical; if >0, tab side is angled and have the given horizontal width.
 
 OptSpaceBetweenTabs: integer
 ======
@@ -91,6 +133,16 @@ OptSpaceBeforeText: integer
 
 Indent between tab caption edge and tab rect. When caption is long, indent is smaller.
 
+OptSpaceBeforeTextForMinWidth: integer
+=====
+
+Like OptSpaceBeforeText, but for tabs of minimal width.
+
+OptSpaceSeparator: integer
+=====
+
+Width of vertical separator lines between tabs.
+
 OptSpacer: integer
 ======
 
@@ -115,6 +167,11 @@ OptSpaceXSize: integer
 ======
 
 Size of X icon lines.
+
+OptSpaceXIncrementRound: integer
+=====
+
+Additional size of X mark, when it has rounded shape (OptShowXRounded=True).
 
 OptColoredBandSize: integer
 ======
@@ -141,21 +198,35 @@ OptDropMarkSize: integer
 
 Width of drag-drop mark. It is shown when you drag a tab to another pos, in the same control.
 
-OptShowAngled: boolean
-======
+OptActiveVisibleOnResize: boolean
+=====
 
-Show angled sides for tabs. Only for top/bottom OptPosition. 
-For angled tabs, you should set OptSpaceInitial to bigger value. And should set OptSpaceBetweenTabs too.
+If True, active tab will be made visible on control resizing.
 
-OptShowAngleTangent: single
-======
+OptWhichActivateOnClose: enum
+=====
 
-Tangent of angle for OptShowAngled. Value 1.0 means 45 degrees. Good value here is about 2..5. For bigger values don't use OptShowAngled.
+Controls which tab should be activated after tab closing: default, righter, recently active.
+
+OptCaptionAlignment: TAlignment
+=====
+
+Alignment of tab caption inside wider tab.
 
 OptShowFlat: boolean
 ======
 
 Activates flat look: in this mode tab edges and bottom lines are not painted, and tabs have the same BG color as control's BG color.
+
+OptShowFlatMouseOver: boolean
+=====
+
+In OptShowFlat mode, makes additional highlighting of tab on mouse-over.
+
+OptShowFlatSepar: boolean
+=====
+
+In OptShowFlat mode, shows separator lines between tabs.
 
 OptShowScrollMark: boolean
 ======
@@ -166,6 +237,11 @@ OptShowDropMark: boolean
 ======
 
 Allow to show drop mark. When drag-drop is active.
+
+OptShowXRounded: boolean
+=====
+
+Show X icons as round shape, on mouse-over.
 
 OptShowXButtons: enum
 ======
@@ -188,11 +264,6 @@ OptShowModifiedText: string
 
 String to show before tab caption, for modified tab. E.g. "*". Modified: bool TATTabData field.
 
-OptShowBorderActiveLow: boolean
-======
-
-Allow to show horiz line, below active tab (top/bottom OptPosition). Usually not needed.
-
 OptShowEntireColor: boolean
 ======
 
@@ -202,6 +273,11 @@ OptShowNumberPrefix: TATTabString
 ======
 
 String with `%d`, which makes numbered prefix for all tabs. Eg, `'%d) '` makes prefix with number and bracket. If empty, no prefix used.
+
+OptShowActiveMarkInverted: boolean
+=====
+
+In OptShowFlat mode, show active tab's mark in inverted position (left-> right, right-> left).
 
 OptActiveFontStyle: TFontStyles
 ======
@@ -247,3 +323,8 @@ OptMouseDragOutEnabled: boolean
 ======
 
 Also enable drag-drop to/from another ATTabs control.
+
+OptHintForXXXX: string
+=====
+
+Mouse-over hint string for various UI elements: X icon, Plus tab, arrows left/right/dropdown, user buttons 0..4.
