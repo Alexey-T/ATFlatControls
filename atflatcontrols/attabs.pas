@@ -666,6 +666,7 @@ type
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: integer); override;
+    function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint): Boolean; override;
     procedure CMMouseLeave(var Msg: TMessage); message CM_MOUSELEAVE;
     {$ifdef windows}
     procedure WMEraseBkgnd(var Message: TMessage); message WM_ERASEBKGND;
@@ -3043,6 +3044,15 @@ begin
   begin
     Invalidate;
   end;
+end;
+
+function TATTabs.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint): Boolean;
+begin
+  if WheelDelta<0 then
+    DoScrollRight
+  else
+    DoScrollLeft;
+  Result:= true;
 end;
 
 procedure TATTabs.Resize;
