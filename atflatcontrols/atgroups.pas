@@ -296,6 +296,7 @@ type
     procedure SetTabOption(Id: TATTabsOptionId; N: Integer);
     procedure SetTabOptionString(Id: TATTabsStringOptionId; const AValue: string);
     procedure SetTabFont(AFont: TFont);
+    function GetTabSingleRowHeight: integer;
     //
     function CloseTabsOther(APages: TATPages; ATabIndex: Integer;
       ADoRighter, ADoLefter: boolean): boolean;
@@ -1651,6 +1652,12 @@ begin
     Pages[i].Tabs.Font.Assign(AFont);
 end;
 
+function TATGroups.GetTabSingleRowHeight: integer;
+begin
+  with Pages1.Tabs do
+    Result:= DoScale(OptTabHeight+OptSpacer{+1});
+end;
+
 procedure TATGroups.SetTabOptionString(Id: TATTabsStringOptionId; const AValue: string);
 var
   i: Integer;
@@ -1716,7 +1723,7 @@ begin
           begin
             Font.Size:= N;
             OptTabHeight:= Trunc(N * 1.8) + 8; //tested for sizes 8..38
-            Height:= DoScale(OptTabHeight+OptSpacer+1);
+            Height:= GetTabSingleRowHeight;
           end;
         //
         tabOptionPosition:
@@ -1726,12 +1733,12 @@ begin
               atpTop:
                 begin
                   Align:= alTop;
-                  Height:= DoScale(OptTabHeight+OptSpacer+1);
+                  Height:= GetTabSingleRowHeight;
                 end;
               atpBottom:
                 begin
                   Align:= alBottom;
-                  Height:= DoScale(OptTabHeight+OptSpacer+1);
+                  Height:= GetTabSingleRowHeight;
                 end;
               atpLeft:
                 begin
