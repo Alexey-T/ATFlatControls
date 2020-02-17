@@ -133,7 +133,6 @@ type
     tabOptionDoubleClickClose,
     tabOptionMiddleClickClose,
     tabOptionDragDrop,
-    tabOptionHeight,
     tabOptionHeightInner,
     tabOptionWidthNormal,
     tabOptionWidthMin,
@@ -1655,7 +1654,7 @@ end;
 function TATGroups.GetTabSingleRowHeight: integer;
 begin
   with Pages1.Tabs do
-    Result:= DoScale(OptTabHeight+OptSpacer{+1});
+    Result:= DoScale(OptTabHeight+OptSpacer)+1;
 end;
 
 procedure TATGroups.SetTabOptionString(Id: TATTabsStringOptionId; const AValue: string);
@@ -1769,7 +1768,6 @@ begin
         tabOptionDoubleClickClose: OptMouseDoubleClickClose:= Boolean(N);
         tabOptionMiddleClickClose: OptMouseMiddleClickClose:= Boolean(N);
         tabOptionDragDrop:         OptMouseDragEnabled:= Boolean(N);
-        tabOptionHeight:           Height:= DoScale(N);
         tabOptionHeightInner:      OptTabHeight:= N;
         tabOptionWidthMin:         OptTabWidthMinimal:= N;
         tabOptionWidthMax:         OptTabWidthMaximal:= N;
