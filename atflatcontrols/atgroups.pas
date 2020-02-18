@@ -349,22 +349,18 @@ uses
 const
   cAbsMin = 4;
 
-procedure UpdW(C: TControl; Value: Integer);
+procedure UpdW(C: TControl; Value: Integer); inline;
 begin
   if C.Align<>alClient then
     if Value>cAbsMin then
-    begin
       C.Width:= Value;
-    end;
 end;
 
-procedure UpdH(C: TControl; Value: Integer);
+procedure UpdH(C: TControl; Value: Integer); inline;
 begin
   if C.Align<>alClient then
     if Value>cAbsMin then
-    begin
       C.Height:= Value;
-    end;
 end;
 
 function PtInControl(Control: TControl; const ScreenPnt: TPoint): boolean;
@@ -372,7 +368,7 @@ begin
   Result:= PtInRect(Control.ClientRect, Control.ScreenToClient(ScreenPnt));
 end;
 
-procedure DoControlLock(Ctl: TWinControl);
+procedure DoControlLock(Ctl: TWinControl); inline;
 begin
   ////If it's called, CudaText has bug: change group mode from 1 to 4Vert,
   ////and splitters show on wrong positions
@@ -384,7 +380,7 @@ begin
   {$endif}
 end;
 
-procedure DoControlUnlock(Ctl: TWinControl);
+procedure DoControlUnlock(Ctl: TWinControl); inline;
 begin
   //Ctl.EnableAutoSizing;
 
