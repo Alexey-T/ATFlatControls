@@ -19,10 +19,13 @@ type
   { TATPanelSimple }
 
   TATPanelSimple = class(TCustomControl)
+  private
+    FFocusable: boolean;
   public
     constructor Create(AOwner: TComponent); override;
   public
     function CanFocus: boolean; override;
+    property Focusable: boolean read FFocusable write FFocusable;
   published
     property Align;
     property Anchors;
@@ -54,11 +57,12 @@ begin
   Width:= 150;
   Height:= 100;
   Caption:= '';
+  FFocusable:= false;
 end;
 
 function TATPanelSimple.CanFocus: boolean;
 begin
-  Result:= false;
+  Result:= FFocusable;
 end;
 
 end.
