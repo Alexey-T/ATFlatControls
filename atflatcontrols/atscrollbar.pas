@@ -330,8 +330,8 @@ begin
 
   FBitmap:= TBitmap.Create;
   FBitmap.PixelFormat:= pf24bit;
-  FBitmap.Width:= 1600;
-  FBitmap.Height:= 60;
+  FBitmap.Width:= 600;
+  FBitmap.Height:= 50;
 
   FTimer:= TTimer.Create(Self);
   FTimer.Enabled:= false;
@@ -578,23 +578,32 @@ begin
   Invalidate;
 end;
 
+procedure _BitmapResize(b: TBitmap; X, Y: integer); inline;
+begin
+  {$ifdef fpc}
+  b.SetSize(X, Y);
+  b.FreeImage; //recommended, else seen black bitmap on bigsize
+  {$else}
+  b.Width:= X;
+  b.Height:= Y;
+  {$endif}
+end;
+
 procedure TATScrollbar.Resize;
+const
+  cStep = 50; //resize bitmap by N pixels step
+var
+  SizeX, SizeY: integer;
 begin
   inherited;
 
+  //ATSynEdit has the same code
   if Assigned(FBitmap) then
   begin
-    //little complicated to speed up
-    if IsHorz then
-    begin
-      FBitmap.Width:= Math.Max(FBitmap.Width, Width);
-      FBitmap.Height:= Height;
-    end
-    else
-    begin
-      FBitmap.Width:= Width;
-      FBitmap.Height:= Math.Max(FBitmap.Height, Height);
-    end;
+    SizeX:= (Width div cStep + 1)*cStep;
+    SizeY:= (Height div cStep + 1)*cStep;
+    if (SizeX>FBitmap.Width) or (SizeY>FBitmap.Height) then
+      _BitmapResize(FBitmap, SizeX, SizeY);
   end;
 
   Invalidate;

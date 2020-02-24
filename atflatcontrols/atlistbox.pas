@@ -719,10 +719,21 @@ begin
   inherited; //OnClick must be after ItemIndex set
 end;
 
+procedure _BitmapResize(b: TBitmap; X, Y: integer); inline;
+begin
+  {$ifdef fpc}
+  b.SetSize(X, Y);
+  b.FreeImage; //recommended, else seen black bitmap on bigsize
+  {$else}
+  b.Width:= X;
+  b.Height:= Y;
+  {$endif}
+end;
+
 {$ifdef FPC}
 procedure TATListbox.DoOnResize;
 const
-  cResizeBitmapStep = 200; //resize bitmap by N pixels step
+  cStep = 200; //resize bitmap by N pixels step
 var
   SizeX, SizeY: integer;
 begin
@@ -732,13 +743,10 @@ begin
   if DoubleBuffered then
     if Assigned(FBitmap) then
     begin
-      SizeX:= (Width div cResizeBitmapStep + 1)*cResizeBitmapStep;
-      SizeY:= (Height div cResizeBitmapStep + 1)*cResizeBitmapStep;
+      SizeX:= (Width div cStep + 1)*cStep;
+      SizeY:= (Height div cStep + 1)*cStep;
       if (SizeX>FBitmap.Width) or (SizeY>FBitmap.Height) then
-      begin
-        FBitmap.SetSize(SizeX, SizeY);
-        FBitmap.FreeImage; //recommended, else seen black bitmap on bigsize
-      end;
+        _BitmapResize(FBitmap, SizeX, SizeY);
     end;
 
   Invalidate;
