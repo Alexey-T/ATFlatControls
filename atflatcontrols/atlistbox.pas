@@ -721,8 +721,26 @@ end;
 
 {$ifdef FPC}
 procedure TATListbox.DoOnResize;
+const
+  cResizeBitmapStep = 200; //resize bitmap by N pixels step
+var
+  SizeX, SizeY: integer;
 begin
   inherited;
+
+  //ATSynEdit has the same code
+  if DoubleBuffered then
+    if Assigned(FBitmap) then
+    begin
+      SizeX:= (Width div cResizeBitmapStep + 1)*cResizeBitmapStep;
+      SizeY:= (Height div cResizeBitmapStep + 1)*cResizeBitmapStep;
+      if (SizeX>FBitmap.Width) or (SizeY>FBitmap.Height) then
+      begin
+        FBitmap.SetSize(SizeX, SizeY);
+        FBitmap.FreeImage; //recommended, else seen black bitmap on bigsize
+      end;
+    end;
+
   Invalidate;
 end;
 {$endif}
