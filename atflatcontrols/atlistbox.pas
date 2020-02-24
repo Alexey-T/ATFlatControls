@@ -891,7 +891,7 @@ begin
   FShowX:= albsxNone;
 
   FBitmap:= Graphics.TBitmap.Create;
-  FBitmap.SetSize(1600, 1200);
+  FBitmap.SetSize(800, 600);
 
   FTheme:= @ATFlatTheme;
   FThemedScrollbar:= true;
