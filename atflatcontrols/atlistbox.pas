@@ -134,8 +134,8 @@ type
   protected
     procedure Paint; override;
     procedure Click; override;
+    procedure Resize; override;
     {$ifdef FPC}
-    procedure DoOnResize; override;
     procedure LMVScroll(var Msg: TLMVScroll); message LM_VSCROLL;
     procedure LMHScroll(var Msg: TLMHScroll); message LM_HSCROLL;
     procedure MouseLeave; override;
@@ -730,8 +730,7 @@ begin
   {$endif}
 end;
 
-{$ifdef FPC}
-procedure TATListbox.DoOnResize;
+procedure TATListbox.Resize;
 const
   cStep = 200; //resize bitmap by N pixels step
 var
@@ -751,7 +750,6 @@ begin
 
   Invalidate;
 end;
-{$endif}
 
 function TATListbox.GetItemIndexAt(Pnt: TPoint): integer;
 begin
