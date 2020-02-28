@@ -719,7 +719,7 @@ begin
   inherited; //OnClick must be after ItemIndex set
 end;
 
-procedure _BitmapResize(b: TBitmap; X, Y: integer); inline;
+procedure _BitmapResize(b: Graphics.TBitmap; X, Y: integer); inline;
 begin
   {$ifdef fpc}
   b.SetSize(X, Y);
