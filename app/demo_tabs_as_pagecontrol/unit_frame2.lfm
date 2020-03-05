@@ -1,0 +1,44 @@
+object FormFrame2: TFormFrame2
+  Left = 1530
+  Height = 240
+  Top = 195
+  Width = 320
+  Caption = 'FormFrame2'
+  ClientHeight = 240
+  ClientWidth = 320
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    Left = 8
+    Height = 17
+    Top = 41
+    Width = 53
+    Caption = 'frame-2'
+    ParentColor = False
+  end
+  object RadioButton1: TRadioButton
+    Left = 20
+    Height = 24
+    Top = 61
+    Width = 119
+    Caption = 'RadioButton1'
+    Checked = True
+    TabOrder = 0
+    TabStop = True
+  end
+  object RadioButton2: TRadioButton
+    Left = 20
+    Height = 24
+    Top = 88
+    Width = 119
+    Caption = 'RadioButton2'
+    TabOrder = 1
+  end
+  object RadioButton3: TRadioButton
+    Left = 20
+    Height = 24
+    Top = 112
+    Width = 119
+    Caption = 'RadioButton3'
+    TabOrder = 2
+  end
+end

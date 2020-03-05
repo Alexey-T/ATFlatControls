@@ -1,0 +1,58 @@
+object Form1: TForm1
+  Left = 1530
+  Height = 509
+  Top = 203
+  Width = 727
+  Caption = 'ATTabs as PageControl'
+  ClientHeight = 509
+  ClientWidth = 727
+  Color = clMoneyGreen
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poScreenCenter
+  LCLVersion = '2.1.0.0'
+  object PanelTabs: TPanel
+    Left = 27
+    Height = 405
+    Top = 21
+    Width = 655
+    BevelOuter = bvNone
+    ClientHeight = 405
+    ClientWidth = 655
+    Color = clSilver
+    ParentColor = False
+    TabOrder = 0
+    object Tabs: TATTabs
+      Left = 0
+      Height = 35
+      Top = 0
+      Width = 655
+      Align = alTop
+      ParentColor = False
+      Tabs = <      
+        item
+          TabCaption = 'first tab'
+        end      
+        item
+          TabCaption = '2nd tab'
+        end      
+        item
+          TabCaption = '3rd tab'
+        end>
+      DoubleBuffered = True
+      OptButtonLayout = '<>,v'
+      OptShowModifiedText = '*'
+      OptHintForX = 'Close tab'
+      OptHintForPlus = 'Add tab'
+      OptHintForArrowLeft = 'Scroll tabs left'
+      OptHintForArrowRight = 'Scroll tabs right'
+      OptHintForArrowMenu = 'Show tabs list'
+      OptHintForUser0 = '0'
+      OptHintForUser1 = '1'
+      OptHintForUser2 = '2'
+      OptHintForUser3 = '3'
+      OptHintForUser4 = '4'
+      OnTabClick = TabsTabClick
+    end
+  end
+end

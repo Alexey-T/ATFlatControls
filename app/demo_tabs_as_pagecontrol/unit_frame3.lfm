@@ -1,0 +1,44 @@
+object FormFrame3: TFormFrame3
+  Left = 1530
+  Height = 240
+  Top = 195
+  Width = 320
+  Caption = 'FormFrame3'
+  ClientHeight = 240
+  ClientWidth = 320
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    Left = 105
+    Height = 17
+    Top = 12
+    Width = 53
+    Caption = 'frame-3'
+    ParentColor = False
+  end
+  object CheckBox1: TCheckBox
+    Left = 105
+    Height = 24
+    Top = 39
+    Width = 100
+    Caption = 'CheckBox1'
+    TabOrder = 0
+  end
+  object CheckBox2: TCheckBox
+    Left = 105
+    Height = 24
+    Top = 64
+    Width = 100
+    Caption = 'CheckBox2'
+    TabOrder = 1
+  end
+  object Memo1: TMemo
+    Left = 105
+    Height = 122
+    Top = 96
+    Width = 207
+    Lines.Strings = (
+      'Memo1'
+    )
+    TabOrder = 2
+  end
+end

@@ -1,0 +1,34 @@
+object FormFrame1: TFormFrame1
+  Left = 1610
+  Height = 295
+  Top = 294
+  Width = 478
+  Caption = 'FormFrame1'
+  ClientHeight = 295
+  ClientWidth = 478
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    Left = 8
+    Height = 17
+    Top = 8
+    Width = 53
+    Caption = 'frame-1'
+    ParentColor = False
+  end
+  object Edit1: TEdit
+    Left = 8
+    Height = 27
+    Top = 34
+    Width = 264
+    TabOrder = 0
+    Text = 'Edit1'
+  end
+  object ToggleBox1: TToggleBox
+    Left = 8
+    Height = 25
+    Top = 64
+    Width = 104
+    Caption = 'ToggleBox1'
+    TabOrder = 1
+  end
+end
