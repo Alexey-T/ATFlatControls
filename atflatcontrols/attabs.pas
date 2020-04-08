@@ -1060,6 +1060,12 @@ var
 begin
     BitmapSetSize(b, ASizeX*AScale, ASizeY*AScale);
 
+    b.Canvas.Brush.Style:= bsSolid;
+    b.Canvas.Brush.Color:= {$IFDEF MSWINDOWS}clWhite{$ELSE}clBlack{$ENDIF};
+    b.Canvas.FillRect(0, 0, b.Width, b.Height);
+    b.TransparentColor:= {$IFDEF MSWINDOWS}clWhite{$ELSE}clBlack{$ENDIF};
+    b.Transparent:= true;
+
     p0:= Point(0, 0);
     p1:= Point(b.Width, 0);
     p2:= Point(0, b.Height);
@@ -1071,14 +1077,6 @@ begin
       ampnBottomLeft: begin ar[0]:= p0; ar[1]:= p1; ar[2]:= p3; line1:= p0; line2:= p3; end;
       ampnBottomRight: begin ar[0]:= p0; ar[1]:= p1; ar[2]:= p2; line1:= p1; line2:= p2; end;
     end;
-
-    //b.Canvas.Brush.Color:= AColorBG;
-    //b.Canvas.FillRect(0, 0, b.Width, b.Height);
-    b.Canvas.CopyRect(
-      Rect(0, 0, b.Width, b.Height),
-      C,
-      Rect(AX, AY, AX+ASizeX, AY+ASizeY)
-      );
 
     b.Canvas.Pen.Style:= psClear;
     b.Canvas.Brush.Color:= AColorFill;
