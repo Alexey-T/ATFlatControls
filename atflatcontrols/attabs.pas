@@ -469,7 +469,8 @@ type
     FScrollPos: integer;
     FImages: TImageList;
     FBitmap: TBitmap;
-    FBitmapAngle: TBitmap;
+    FBitmapAngleL: TBitmap;
+    FBitmapAngleR: TBitmap;
     FBitmapRound: TBitmap;
 
     FRectArrowDown: TRect;
@@ -1313,8 +1314,10 @@ begin
   FBitmap.PixelFormat:= pf24bit;
   BitmapSetSize(FBitmap, 1600, 60);
 
-  FBitmapAngle:= TBitmap.Create;
-  FBitmapAngle.PixelFormat:= pf24bit;
+  FBitmapAngleL:= TBitmap.Create;
+  FBitmapAngleL.PixelFormat:= pf24bit;
+  FBitmapAngleR:= TBitmap.Create;
+  FBitmapAngleR.PixelFormat:= pf24bit;
 
   FBitmapRound:= TBitmap.Create;
   FBitmapRound.PixelFormat:= pf24bit;
@@ -1375,7 +1378,8 @@ begin
   FreeAndNil(FCaptionList);
   FreeAndNil(FTabList);
   FreeAndNil(FBitmapRound);
-  FreeAndNil(FBitmapAngle);
+  FreeAndNil(FBitmapAngleL);
+  FreeAndNil(FBitmapAngleR);
   FreeAndNil(FBitmap);
   inherited;
 end;
@@ -1816,7 +1820,7 @@ begin
             ampnTopLeft,
             AColorBg,
             AColorBorder,
-            FBitmapAngle);
+            FBitmapAngleL);
         end;
       atpBottom:
         begin
@@ -1829,7 +1833,7 @@ begin
             ampnBottomLeft,
             AColorBg,
             AColorBorder,
-            FBitmapAngle);
+            FBitmapAngleL);
         end;
     end;
 end;
@@ -1874,7 +1878,7 @@ begin
             ampnTopRight,
             AColorBg,
             AColorBorder,
-            FBitmapAngle);
+            FBitmapAngleR);
         end;
       atpBottom:
         begin
@@ -1887,7 +1891,7 @@ begin
             ampnBottomRight,
             AColorBg,
             AColorBorder,
-            FBitmapAngle);
+            FBitmapAngleR);
         end;
     end;
 end;
