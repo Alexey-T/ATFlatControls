@@ -17,6 +17,9 @@
     </i18n>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>
+      <SharedMatrixOptions Count="1">
+        <Item1 ID="615605404876" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk3"/>
+      </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
       <Version Value="2"/>

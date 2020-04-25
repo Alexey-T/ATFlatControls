@@ -1057,13 +1057,15 @@ var
   p0, p1, p2, p3: TPoint;
   line1, line2: TPoint;
   ar: array[0..2] of TPoint;
+const
+  cBk = clGreen;
 begin
     BitmapSetSize(b, ASizeX*AScale, ASizeY*AScale);
 
     b.Canvas.Brush.Style:= bsSolid;
-    b.Canvas.Brush.Color:= {$IFDEF MSWINDOWS}clWhite{$ELSE}clBlack{$ENDIF};
+    b.Canvas.Brush.Color:= cBk;
     b.Canvas.FillRect(0, 0, b.Width, b.Height);
-    b.TransparentColor:= {$IFDEF MSWINDOWS}clWhite{$ELSE}clBlack{$ENDIF};
+    b.TransparentColor:= cBk;
     b.Transparent:= true;
 
     p0:= Point(0, 0);
