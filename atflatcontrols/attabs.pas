@@ -1057,16 +1057,27 @@ var
   p0, p1, p2, p3: TPoint;
   line1, line2: TPoint;
   ar: array[0..2] of TPoint;
-const
-  cBk = clGreen;
+//const
+//  cBk = clGreen;
 begin
     BitmapSetSize(b, ASizeX*AScale, ASizeY*AScale);
 
+    {
+    //fix by forum user for Qt
     b.Canvas.Brush.Style:= bsSolid;
     b.Canvas.Brush.Color:= cBk;
     b.Canvas.FillRect(0, 0, b.Width, b.Height);
     b.TransparentColor:= cBk;
     b.Transparent:= true;
+    }
+
+    //b.Canvas.Brush.Color:= AColorBG;
+    //b.Canvas.FillRect(0, 0, b.Width, b.Height);
+    b.Canvas.CopyRect(
+      Rect(0, 0, b.Width, b.Height),
+      C,
+      Rect(AX, AY, AX+ASizeX, AY+ASizeY)
+      );
 
     p0:= Point(0, 0);
     p1:= Point(b.Width, 0);
