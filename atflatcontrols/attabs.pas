@@ -1057,52 +1057,41 @@ var
   p0, p1, p2, p3: TPoint;
   line1, line2: TPoint;
   ar: array[0..2] of TPoint;
-//const
-//  cBk = clGreen;
 begin
-    BitmapSetSize(b, ASizeX*AScale, ASizeY*AScale);
+  BitmapSetSize(b, ASizeX*AScale, ASizeY*AScale);
 
-    {
-    //fix by forum user for Qt
-    b.Canvas.Brush.Style:= bsSolid;
-    b.Canvas.Brush.Color:= cBk;
-    b.Canvas.FillRect(0, 0, b.Width, b.Height);
-    b.TransparentColor:= cBk;
-    b.Transparent:= true;
-    }
+  //b.Canvas.Brush.Color:= AColorBG;
+  //b.Canvas.FillRect(0, 0, b.Width, b.Height);
+  b.Canvas.CopyRect(
+    Rect(0, 0, b.Width, b.Height),
+    C,
+    Rect(AX, AY, AX+ASizeX, AY+ASizeY)
+    );
 
-    //b.Canvas.Brush.Color:= AColorBG;
-    //b.Canvas.FillRect(0, 0, b.Width, b.Height);
-    b.Canvas.CopyRect(
-      Rect(0, 0, b.Width, b.Height),
-      C,
-      Rect(AX, AY, AX+ASizeX, AY+ASizeY)
-      );
+  p0:= Point(0, 0);
+  p1:= Point(b.Width, 0);
+  p2:= Point(0, b.Height);
+  p3:= Point(b.Width, b.Height);
 
-    p0:= Point(0, 0);
-    p1:= Point(b.Width, 0);
-    p2:= Point(0, b.Height);
-    p3:= Point(b.Width, b.Height);
+  case ATriKind of
+    ampnTopLeft: begin ar[0]:= p1; ar[1]:= p2; ar[2]:= p3; line1:= p1; line2:= p2; end;
+    ampnTopRight: begin ar[0]:= p0; ar[1]:= p2; ar[2]:= p3; line1:= p0; line2:= p3; end;
+    ampnBottomLeft: begin ar[0]:= p0; ar[1]:= p1; ar[2]:= p3; line1:= p0; line2:= p3; end;
+    ampnBottomRight: begin ar[0]:= p0; ar[1]:= p1; ar[2]:= p2; line1:= p1; line2:= p2; end;
+  end;
 
-    case ATriKind of
-      ampnTopLeft: begin ar[0]:= p1; ar[1]:= p2; ar[2]:= p3; line1:= p1; line2:= p2; end;
-      ampnTopRight: begin ar[0]:= p0; ar[1]:= p2; ar[2]:= p3; line1:= p0; line2:= p3; end;
-      ampnBottomLeft: begin ar[0]:= p0; ar[1]:= p1; ar[2]:= p3; line1:= p0; line2:= p3; end;
-      ampnBottomRight: begin ar[0]:= p0; ar[1]:= p1; ar[2]:= p2; line1:= p1; line2:= p2; end;
-    end;
+  b.Canvas.Pen.Style:= psClear;
+  b.Canvas.Brush.Color:= AColorFill;
+  b.Canvas.Polygon(ar);
+  b.Canvas.Pen.Style:= psSolid;
 
-    b.Canvas.Pen.Style:= psClear;
-    b.Canvas.Brush.Color:= AColorFill;
-    b.Canvas.Polygon(ar);
-    b.Canvas.Pen.Style:= psSolid;
+  b.Canvas.Pen.Color:= AColorLine;
+  b.Canvas.Pen.Width:= AScale;
+  b.Canvas.MoveTo(line1.X, line1.Y);
+  b.Canvas.LineTo(line2.X, line2.Y);
+  b.Canvas.Pen.Width:= 1;
 
-    b.Canvas.Pen.Color:= AColorLine;
-    b.Canvas.Pen.Width:= AScale;
-    b.Canvas.MoveTo(line1.X, line1.Y);
-    b.Canvas.LineTo(line2.X, line2.Y);
-    b.Canvas.Pen.Width:= 1;
-
-    CanvasStretchDraw(C, Rect(AX, AY, AX+ASizeX, AY+ASizeY), b);
+  CanvasStretchDraw(C, Rect(AX, AY, AX+ASizeX, AY+ASizeY), b);
 end;
 
 function _ShortenStringEx(C: TCanvas;
