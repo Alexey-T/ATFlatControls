@@ -26,6 +26,7 @@ type
     chkCenterCaption: TCheckBox;
     chkShowFlat: TCheckBox;
     chkVarSize_Bottom: TCheckBox;
+    comboWheelMode: TComboBox;
     comboThemes: TComboBox;
     comboTruncate: TComboBox;
     comboLayout: TComboBox;
@@ -36,6 +37,7 @@ type
     GroupBox1: TGroupBox;
     ImageList1: TImageList;
     Label1: TLabel;
+    Label10: TLabel;
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
@@ -71,6 +73,7 @@ type
     procedure comboLayoutChange(Sender: TObject);
     procedure comboShowXChange(Sender: TObject);
     procedure comboTruncateChange(Sender: TObject);
+    procedure comboWheelModeChange(Sender: TObject);
     procedure edInitialChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnAddClick(Sender: TObject);
@@ -419,6 +422,11 @@ procedure TForm1.comboTruncateChange(Sender: TObject);
 begin
   t_top.OptTruncateCaption:= TATTabTruncateCaption(comboTruncate.ItemIndex);
   t_top.Invalidate;
+end;
+
+procedure TForm1.comboWheelModeChange(Sender: TObject);
+begin
+  t_top.OptMouseWheelMode:= TATTabMouseWheelMode(comboWheelMode.ItemIndex);
 end;
 
 procedure TForm1.edInitialChange(Sender: TObject);

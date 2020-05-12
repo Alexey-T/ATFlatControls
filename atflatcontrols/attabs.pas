@@ -209,7 +209,9 @@ type
 
   TATTabMouseWheelMode = (
     amwIgnoreWheel,
+    amwNormalScroll,
     amwNormalScrollAndShiftSwitch,
+    amwNormalSwitch,
     amwNormalSwitchAndShiftScroll
     );
 
@@ -3065,19 +3067,32 @@ var
   bToRight: boolean;
   bSwitchTab: boolean;
 begin
-  bToRight:= WheelDelta<0;
+  Result:= false;
 
   case FOptMouseWheelMode of
     amwIgnoreWheel:
+      exit;
+    amwNormalScroll:
       begin
-        Result:= false;
-        exit;
+        bSwitchTab:= ssShift in Shift;
+        if bSwitchTab then exit;
       end;
     amwNormalScrollAndShiftSwitch:
-      bSwitchTab:= ssShift in Shift;
+      begin
+        bSwitchTab:= ssShift in Shift;
+      end;
+    amwNormalSwitch:
+      begin
+        bSwitchTab:= not (ssShift in Shift);
+        if not bSwitchTab then exit;
+      end;
     amwNormalSwitchAndShiftScroll:
-      bSwitchTab:= not (ssShift in Shift);
+      begin
+        bSwitchTab:= not (ssShift in Shift);
+      end;
   end;
+
+  bToRight:= WheelDelta<0;
 
   if bSwitchTab then
   begin
