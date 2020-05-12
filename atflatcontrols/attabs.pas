@@ -308,6 +308,7 @@ const
   _InitOptActiveMarkSize = 4;
   _InitOptScrollMarkSizeX = 20;
   _InitOptScrollMarkSizeY = 3;
+  _InitOptScrollPagesizePercents = 20;
   _InitOptDropMarkSize = 6;
   _InitOptActiveFontStyle = [fsUnderline];
   _InitOptActiveFontStyleUsed = false;
@@ -423,6 +424,7 @@ type
     FOptDropMarkSize: integer;
     FOptScrollMarkSizeX: integer;
     FOptScrollMarkSizeY: integer;
+    FOptScrollPagesizePercents: integer;
     FOptActiveVisibleOnResize: boolean;
 
     FOptPosition: TATTabPosition;
@@ -800,6 +802,7 @@ type
     property OptArrowSize: integer read FOptArrowSize write FOptArrowSize default _InitOptArrowSize;
     property OptScrollMarkSizeX: integer read FOptScrollMarkSizeX write FOptScrollMarkSizeX default _InitOptScrollMarkSizeX;
     property OptScrollMarkSizeY: integer read FOptScrollMarkSizeY write FOptScrollMarkSizeY default _InitOptScrollMarkSizeY;
+    property OptScrollPagesizePercents: integer read FOptScrollPagesizePercents write FOptScrollPagesizePercents default _InitOptScrollPagesizePercents;
     property OptDropMarkSize: integer read FOptDropMarkSize write FOptDropMarkSize default _InitOptDropMarkSize;
     property OptActiveVisibleOnResize: boolean read FOptActiveVisibleOnResize write FOptActiveVisibleOnResize default true;
 
@@ -1282,6 +1285,7 @@ begin
   FOptActiveMarkSize:= _InitOptActiveMarkSize;
   FOptScrollMarkSizeX:= _InitOptScrollMarkSizeX;
   FOptScrollMarkSizeY:= _InitOptScrollMarkSizeY;
+  FOptScrollPagesizePercents:= _InitOptScrollPagesizePercents;
   FOptActiveVisibleOnResize:= true;
   FOptDropMarkSize:= _InitOptDropMarkSize;
   FOptActiveFontStyle:= _InitOptActiveFontStyle;
@@ -3791,15 +3795,13 @@ begin
 end;
 
 function TATTabs.GetScrollPageSize: integer;
-const
-  cPercents = 80;
 begin
   case FOptPosition of
     atpTop,
     atpBottom:
-      Result:= Width * cPercents div 100;
+      Result:= Width * FOptScrollPagesizePercents div 100;
     else
-      Result:= Height * cPercents div 100;
+      Result:= Height * FOptScrollPagesizePercents div 100;
   end;
 end;
 

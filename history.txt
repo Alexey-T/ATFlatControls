@@ -1,5 +1,6 @@
 
 2020.05.12
++ ATTabs: prop OptScrollPagesizePercents
 + ATTabs: prop OptMouseWheelMode (enum, 3 modes)
 
 2019.11.03
