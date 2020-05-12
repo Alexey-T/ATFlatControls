@@ -279,6 +279,9 @@ const
   _InitOptAnimationStepV = 4;
   _InitOptAnimationStepH = 25;
   _InitOptAnimationPause = 60;
+  _InitOptAnimationStepInPixels = 70;
+  _InitOptAnimationStepSleepTime = 20;
+
   _InitOptButtonLayout = '<>,v';
   _InitOptButtonSize = 16;
   _InitOptButtonSizeSpace = 10;
@@ -389,6 +392,8 @@ type
     FOptAnimationStepV: integer;
     FOptAnimationStepH: integer;
     FOptAnimationPause: integer;
+    FOptAnimationStepInPixels: integer;
+    FOptAnimationStepSleepTime: integer;
 
     FOptScalePercents: integer;
     FOptVarWidth: boolean;
@@ -764,6 +769,9 @@ type
     property OptAnimationStepVert: integer read FOptAnimationStepV write FOptAnimationStepV default _InitOptAnimationStepV;
     property OptAnimationStepHorz: integer read FOptAnimationStepH write FOptAnimationStepH default _InitOptAnimationStepH;
     property OptAnimationPause: integer read FOptAnimationPause write FOptAnimationPause default _InitOptAnimationPause;
+    property OptAnimationStepInPixels: integer read FOptAnimationStepInPixels write FOptAnimationStepInPixels default _InitOptAnimationStepInPixels;
+    property OptAnimationStepSleepTime: integer read FOptAnimationStepSleepTime write FOptAnimationStepSleepTime default _InitOptAnimationStepSleepTime;
+
     property OptButtonLayout: string read FOptButtonLayout write SetOptButtonLayout;
     property OptButtonSize: integer read FOptButtonSize write FOptButtonSize default _InitOptButtonSize;
     property OptButtonSizeSpace: integer read FOptButtonSizeSpace write FOptButtonSizeSpace default _InitOptButtonSizeSpace;
@@ -1242,6 +1250,8 @@ begin
   FOptAnimationStepV:= _InitOptAnimationStepV;
   FOptAnimationStepH:= _InitOptAnimationStepH;
   FOptAnimationPause:= _InitOptAnimationPause;
+  FOptAnimationStepInPixels:= _InitOptAnimationStepInPixels;
+  FOptAnimationStepSleepTime:=_InitOptAnimationStepSleepTime;
 
   FOptScalePercents:= 100;
   FOptButtonSize:= _InitOptButtonSize;
@@ -3841,9 +3851,6 @@ begin
 end;
 
 procedure TATTabs.DoScrollAnimation(APosTo: integer);
-const
-  cStep = 70; //pixels
-  cSleepTime = 20; //msec
 begin
   if not FOptAnimationEnabled then
   begin
@@ -3856,17 +3863,17 @@ begin
   try
     if APosTo>FScrollPos then
       repeat
-        FScrollPos:= Min(APosTo, FScrollPos+cStep);
+        FScrollPos:= Min(APosTo, FScrollPos+FOptAnimationStepInPixels);
         Invalidate;
         Application.ProcessMessages;
-        Sleep(cSleepTime);
+        Sleep(FOptAnimationStepSleepTime);
       until FScrollPos=APosTo
     else
       repeat
-        FScrollPos:= Max(APosTo, FScrollPos-cStep);
+        FScrollPos:= Max(APosTo, FScrollPos-FOptAnimationStepInPixels);
         Invalidate;
         Application.ProcessMessages;
-        Sleep(cSleepTime);
+        Sleep(FOptAnimationStepSleepTime);
       until FScrollPos=APosTo;
   finally
     Enabled:= true;
