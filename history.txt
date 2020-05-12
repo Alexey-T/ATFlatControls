@@ -1,4 +1,7 @@
 
+2020.05.12
++ ATTabs: prop OptMouseWheelMode (enum, 3 modes)
+
 2019.11.03
 + ATListbox: prop ScrollStyleHorz, ScrollStyleVert
 + ATListbox: event OnCalcScrollWidth

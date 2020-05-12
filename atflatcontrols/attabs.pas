@@ -207,6 +207,12 @@ type
     atbxShowActiveAndMouseOver
     );
 
+  TATTabMouseWheelMode = (
+    amwIgnoreWheel,
+    amwNormalScrollAndShiftSwitch,
+    amwNormalSwitchAndShiftScroll
+    );
+
   TATTabTheme = record
     FileName_Left: string;
     FileName_Right: string;
@@ -324,6 +330,7 @@ const
   _InitOptShowActiveMarkInverted = true;
   _InitRoundedBitmapSize = 60;
 
+  _InitOptMouseWheelMode = amwNormalScrollAndShiftSwitch;
   _InitOptMouseMiddleClickClose = true;
   _InitOptMouseDoubleClickClose = true;
   _InitOptMouseDoubleClickPlus = false;
@@ -438,6 +445,7 @@ type
     FOptHotFontStyle: TFontStyles;
     FOptHotFontStyleUsed: boolean;
 
+    FOptMouseWheelMode: TATTabMouseWheelMode;
     FOptMouseMiddleClickClose: boolean; //enable close tab by middle-click
     FOptMouseDoubleClickClose: boolean;
     FOptMouseDoubleClickPlus: boolean; //enable call "+" tab with dbl-click on empty area
@@ -815,6 +823,7 @@ type
     property OptHotFontStyle: TFontStyles read FOptHotFontStyle write FOptHotFontStyle default _InitOptHotFontStyle;
     property OptHotFontStyleUsed: boolean read FOptHotFontStyleUsed write FOptHotFontStyleUsed default _InitOptHotFontStyleUsed;
 
+    property OptMouseWheelMode: TATTabMouseWheelMode read FOptMouseWheelMode write FOptMouseWheelMode default _InitOptMouseWheelMode;
     property OptMouseMiddleClickClose: boolean read FOptMouseMiddleClickClose write FOptMouseMiddleClickClose default _InitOptMouseMiddleClickClose;
     property OptMouseDoubleClickClose: boolean read FOptMouseDoubleClickClose write FOptMouseDoubleClickClose default _InitOptMouseDoubleClickClose;
     property OptMouseDoubleClickPlus: boolean read FOptMouseDoubleClickPlus write FOptMouseDoubleClickPlus default _InitOptMouseDoubleClickPlus;
@@ -1293,6 +1302,7 @@ begin
   FOptShowEntireColor:= _InitOptShowEntireColor;
   FOptShowActiveMarkInverted:= _InitOptShowActiveMarkInverted;
 
+  FOptMouseWheelMode:= _InitOptMouseWheelMode;
   FOptMouseMiddleClickClose:= _InitOptMouseMiddleClickClose;
   FOptMouseDoubleClickClose:= _InitOptMouseDoubleClickClose;
   FOptMouseDoubleClickPlus:= _InitOptMouseDoubleClickPlus;
@@ -3051,11 +3061,36 @@ begin
 end;
 
 function TATTabs.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint): Boolean;
+var
+  bToRight: boolean;
+  bSwitchTab: boolean;
 begin
-  if WheelDelta<0 then
-    DoScrollRight
+  bToRight:= WheelDelta<0;
+
+  case FOptMouseWheelMode of
+    amwIgnoreWheel:
+      begin
+        Result:= false;
+        exit;
+      end;
+    amwNormalScrollAndShiftSwitch:
+      bSwitchTab:= ssShift in Shift;
+    amwNormalSwitchAndShiftScroll:
+      bSwitchTab:= not (ssShift in Shift);
+  end;
+
+  if bSwitchTab then
+  begin
+    SwitchTab(bToRight, false{LoopAtEdge});
+  end
   else
-    DoScrollLeft;
+  begin
+    if bToRight then
+      DoScrollRight
+    else
+      DoScrollLeft;
+  end;
+
   Result:= true;
 end;
 
