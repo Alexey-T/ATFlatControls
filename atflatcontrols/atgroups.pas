@@ -130,6 +130,7 @@ type
     tabOptionShowPlus,
     tabOptionShowNums,
     tabOptionShowEntireColor,
+    tabOptionMouseWheelMode,
     tabOptionDoubleClickClose,
     tabOptionMiddleClickClose,
     tabOptionDragDrop,
@@ -1761,6 +1762,7 @@ begin
         tabOptionShowNums:         OptShowNumberPrefix:= IfThen(Boolean(N), '%d. ', '');
         tabOptionShowEntireColor:  OptShowEntireColor:= Boolean(N);
         tabOptionShowArrowsNear:   OptShowArrowsNear:= Boolean(N);
+        tabOptionMouseWheelMode:   OptMouseWheelMode:= TATTabMouseWheelMode(N);
         tabOptionDoubleClickClose: OptMouseDoubleClickClose:= Boolean(N);
         tabOptionMiddleClickClose: OptMouseMiddleClickClose:= Boolean(N);
         tabOptionDragDrop:         OptMouseDragEnabled:= Boolean(N);
