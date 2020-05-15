@@ -764,10 +764,12 @@ end;
 procedure TATScrollbar.DoUpdateThumbRect;
 var
   R: TRect;
+  NMin: integer;
 begin
   FRectThumb:= Rect(0, 0, 0, 0);
   FRectPageUp:= Rect(0, 0, 0, 0);
   FRectPageDown:= Rect(0, 0, 0, 0);
+  NMin:= FTheme^.ThumbMinSize;
 
   if IsHorz then
   begin
@@ -776,9 +778,9 @@ begin
     R.Bottom:= FRectMain.Bottom;
     R.Left:= PosToCoord(FPos);
     R.Right:= PosToCoord(FPos+FPageSize);
-    FDeltaOfThumb:= R.Right-R.Left-FTheme^.ThumbMinSize;
-    R.Left:= Math.Min(R.Left, FRectMain.Right-FTheme^.ThumbMinSize);
-    R.Right:= Math.Max(R.Right, R.Left+FTheme^.ThumbMinSize);
+    FDeltaOfThumb:= R.Right-R.Left-NMin;
+    R.Left:= Math.Min(R.Left, FRectMain.Right-NMin);
+    R.Right:= Math.Max(R.Right, R.Left+NMin);
     R.Right:= Math.Min(R.Right, FRectMain.Right);
   end
   else
@@ -788,9 +790,9 @@ begin
     R.Right:= FRectMain.Right;
     R.Top:= PosToCoord(FPos);
     R.Bottom:= PosToCoord(FPos+FPageSize);
-    FDeltaOfThumb:= R.Bottom-R.Top-FTheme^.ThumbMinSize;
-    R.Top:= Math.Min(R.Top, FRectMain.Bottom-FTheme^.ThumbMinSize);
-    R.Bottom:= Math.Max(R.Bottom, R.Top+FTheme^.ThumbMinSize);
+    FDeltaOfThumb:= R.Bottom-R.Top-NMin;
+    R.Top:= Math.Min(R.Top, FRectMain.Bottom-NMin);
+    R.Bottom:= Math.Max(R.Bottom, R.Top+NMin);
     R.Bottom:= Math.Min(R.Bottom, FRectMain.Bottom);
   end;
   FRectThumb:= R;
@@ -1128,7 +1130,7 @@ initialization
     DirectJumpOnClickPageUpDown:= false;
 
     MinSizeToShowThumb:= 10;
-    ThumbMinSize:= 4;
+    ThumbMinSize:= 8;
     ThumbMarkerOffset:= 4;
     ThumbMarkerMinimalSize:= 20;
     ThumbMarkerDecorSize:= 2;
