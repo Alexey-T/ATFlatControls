@@ -337,8 +337,8 @@ const
   _InitRoundedBitmapSize = 60;
 
   _InitOptMouseWheelMode = amwNormalScrollAndShiftSwitch;
-  _InitOptMouseMiddleClickClose = true;
-  _InitOptMouseDoubleClickClose = true;
+  _InitOptMouseMiddleClickClose = false;
+  _InitOptMouseDoubleClickClose = false;
   _InitOptMouseDoubleClickPlus = false;
   _InitOptMouseDragEnabled = true;
   _InitOptMouseDragOutEnabled = true;
