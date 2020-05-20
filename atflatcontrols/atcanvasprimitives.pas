@@ -47,6 +47,7 @@ procedure CanvasArrowWrapped(C: TCanvas;
   const ARect: TRect;
   AColorFont: TColor;
   ALengthScale: integer;
+  AWidthScale: integer;
   APointerScale: integer);
 
 procedure CanvasPaintPlusMinus(C: TCanvas;
@@ -334,16 +335,18 @@ procedure CanvasArrowWrapped(C: TCanvas;
   const ARect: TRect;
   AColorFont: TColor;
   ALengthScale: integer;
+  AWidthScale: integer;
   APointerScale: integer);
 var
-  Len, X1, X2, Y1, Y2, Dx: integer;
+  Len, W, X1, X2, Y1, Y2, Dx: integer;
 begin
   Len:= ARect.Height * ALengthScale div 100;
+  W:= ARect.Width * AWidthScale div 100;
   Dx:= ARect.Height * APointerScale div 100;
   C.Pen.Color:= AColorFont;
 
-  X1:= ARect.Left;
-  X2:= ARect.Right-Dx;
+  X1:= (ARect.Left+ARect.Right-W) div 2;
+  X2:= X1+W;
   Y1:= (ARect.Bottom+ARect.Top-Len) div 2;
   Y2:= Y1+Len-1;
 
