@@ -345,7 +345,7 @@ begin
   X1:= ARect.Left;
   X2:= ARect.Right-Dx;
   Y1:= (ARect.Bottom+ARect.Top-Len) div 2;
-  Y2:= Y1+Len-2;
+  Y2:= Y1+Len-1;
 
   //C.MoveTo(X1, Y1);
   //C.LineTo(X2, Y1);
