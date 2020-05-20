@@ -43,6 +43,12 @@ procedure CanvasArrowDown(C: TCanvas;
   ALengthScale: integer;
   APointerScale: integer);
 
+procedure CanvasArrowWrapped(C: TCanvas;
+  const ARect: TRect;
+  AColorFont: TColor;
+  ALengthScale: integer;
+  APointerScale: integer);
+
 procedure CanvasPaintPlusMinus(C: TCanvas;
   AColorBorder, AColorBG: TColor;
   ACenter: TPoint;
@@ -322,6 +328,36 @@ begin
   C.LineTo(X-Dx, Y2-Dx);
   C.MoveTo(X, Y2);
   C.LineTo(X+Dx, Y2-Dx);
+end;
+
+procedure CanvasArrowWrapped(C: TCanvas;
+  const ARect: TRect;
+  AColorFont: TColor;
+  ALengthScale: integer;
+  APointerScale: integer);
+var
+  Len, X1, X2, Y1, Y2, Dx: integer;
+begin
+  Len:= ARect.Height * ALengthScale div 100;
+  Dx:= ARect.Height * APointerScale div 100;
+  C.Pen.Color:= AColorFont;
+
+  X1:= ARect.Left;
+  X2:= ARect.Right-Dx;
+  Y1:= (ARect.Bottom+ARect.Top-Len) div 2;
+  Y2:= Y1+Len;
+
+  //C.MoveTo(X1, Y1);
+  //C.LineTo(X2, Y1);
+  C.MoveTo(X2, Y1);
+  C.LineTo(X2, Y2+1);
+  C.MoveTo(X1, Y2);
+  C.LineTo(X2, Y2);
+
+  C.MoveTo(X1, Y2);
+  C.LineTo(X1+Dx, Y2-Dx);
+  C.MoveTo(X1, Y2);
+  C.LineTo(X1+Dx, Y2+Dx);
 end;
 
 
