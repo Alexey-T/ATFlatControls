@@ -2735,7 +2735,7 @@ var
   RectTab: TRect;
   i: integer;
 begin
-  Result:= -1;
+  Result:= cTabIndexNone;
   APressedX:= false;
   Pnt:= Point(X, Y);
 
@@ -3006,6 +3006,7 @@ begin
 
   FTabIndexOver:= GetTabAt(X, Y, IsX);
   FTabIndexDrop:= FTabIndexOver;
+  if FTabIndexOver=cTabIndexNone then exit;
   Data:= nil;
 
   // LCL dragging with DragMode=automatic is started too early.
@@ -3166,6 +3167,8 @@ begin
   Data.TabFontStyle:= AFontStyle;
 
   DoAnimationTabAdd(AIndex);
+  FTabIndexHinted:= cTabIndexNone;
+  FTabIndexHintedPrev:= cTabIndexNone;
 
   Invalidate;
 
@@ -3236,6 +3239,8 @@ begin
   if IsIndexOk(AIndex) then
   begin
     DoAnimationTabClose(AIndex);
+    FTabIndexHinted:= cTabIndexNone;
+    FTabIndexHintedPrev:= cTabIndexNone;
 
     FTabList.Delete(AIndex);
 

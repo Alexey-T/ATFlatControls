@@ -62,6 +62,7 @@ type
       AModified: boolean;
       AColor: TColor=clNone;
       AImageIndex: integer=-1;
+      const AHint: TATTabString='';
       AndActivate: boolean=true): integer;
     property Tabs: TATTabs read FTabs;
     property EnabledEmpty: boolean read FEnabledEmpty write FEnabledEmpty;
@@ -441,7 +442,7 @@ end;
 
 function TATPages.AddTab(AIndex: integer; AControl: TControl;
   const ACaption: TATTabString; AModified: boolean; AColor: TColor;
-  AImageIndex: integer; AndActivate: boolean): integer;
+  AImageIndex: integer; const AHint: TATTabString; AndActivate: boolean): integer;
 begin
   FTabs.AddTab(
     AIndex,
@@ -449,7 +450,10 @@ begin
     AControl,
     AModified,
     AColor,
-    AImageIndex
+    AImageIndex,
+    nil,
+    [],
+    AHint
     );
   AControl.Parent:= Self;
   AControl.Align:= alClient;
@@ -1520,6 +1524,7 @@ begin
     D.TabModified,
     D.TabColor,
     D.TabImageIndex,
+    D.TabHint,
     false);
   AFromPages.Tabs.DeleteTab(AFromIndex, false, false);
 
