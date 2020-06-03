@@ -282,7 +282,7 @@ type
     procedure PagesSetNext(ANext: boolean);
     function PagesIndexOf(APages: TATPages): Integer;
     function PagesNextIndex(AIndex: Integer; ANext: boolean; AEnableEmpty: boolean): Integer;
-    procedure PagesAndTabIndexOfControl(AObject: TObject; out NPages, NTab: Integer);
+    procedure PagesAndTabIndexOfControl(AObject: TObject; out APagesIndex, ATabIndex: Integer);
     procedure GetSizes(out APanelSize: TPoint; out APageSize: TATGroupsPoints);
     procedure SetSizes(const APanelSize: TPoint; const APageSize: TATGroupsPoints);
     //
@@ -1994,28 +1994,25 @@ end;
 
 
 procedure TATGroups.PagesAndTabIndexOfControl(AObject: TObject;
-  out NPages, NTab: Integer);
+  out APagesIndex, ATabIndex: Integer);
 var
-  i, j: Integer;
-  D: TATTabData;
+  iPage, iTab: Integer;
 begin
-  NPages:= -1;
-  NTab:= -1;
+  APagesIndex:= -1;
+  ATabIndex:= -1;
   if AObject=nil then Exit;
 
-  for i:= Low(Pages) to High(Pages) do
-    with Pages[i].Tabs do
-      for j:= 0 to TabCount-1 do
+  for iPage:= Low(Pages) to High(Pages) do
+    with Pages[iPage].Tabs do
+    begin
+      iTab:= FindTabByObject(AObject);
+      if iTab>=0 then
       begin
-        D:= GetTabData(j);
-        if D<>nil then
-          if D.TabObject=AObject then
-          begin
-            NPages:= i;
-            NTab:= j;
-            Exit
-          end;
+        APagesIndex:= iPage;
+        ATabIndex:= iTab;
+        Exit
       end;
+    end;
 end;
 
 function TATGroups.GetImages: TImageList;

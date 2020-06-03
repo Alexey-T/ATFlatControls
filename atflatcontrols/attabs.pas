@@ -668,6 +668,7 @@ type
     procedure ShowTabMenu;
     procedure SwitchTab(ANext: boolean; ALoopAtEdge: boolean= true);
     procedure MoveTab(AFrom, ATo: integer; AActivateThen: boolean);
+    function FindTabByObject(AObject: TObject): integer;
     procedure DoScrollLeft;
     procedure DoScrollRight;
     procedure DoScrollAnimation(APosTo: integer);
@@ -3636,6 +3637,24 @@ begin
   FTabList.Items[AFrom].Index:= ATo;
   if AActivateThen then
     SetTabIndex(ATo);
+end;
+
+function TATTabs.FindTabByObject(AObject: TObject): integer;
+var
+  D: TATTabData;
+  i: integer;
+begin
+  Result:= -1;
+  for i:= 0 to TabCount-1 do
+  begin
+    D:= GetTabData(i);
+    if D<>nil then
+      if D.TabObject=AObject then
+      begin
+        Result:= i;
+        exit;
+      end;
+  end;
 end;
 
 procedure TATTabs.DoTabDropToOtherControl(ATarget: TControl; const APnt: TPoint);
