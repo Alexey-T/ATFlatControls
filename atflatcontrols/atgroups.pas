@@ -1996,23 +1996,15 @@ end;
 procedure TATGroups.FindPositionOfControl(AObject: TObject;
   out APagesIndex, ATabIndex: Integer);
 var
-  iPage, iTab: Integer;
+  TempPages: TATPages;
 begin
   APagesIndex:= -1;
   ATabIndex:= -1;
   if AObject=nil then Exit;
 
-  for iPage:= Low(Pages) to High(Pages) do
-    with Pages[iPage].Tabs do
-    begin
-      iTab:= FindTabByObject(AObject);
-      if iTab>=0 then
-      begin
-        APagesIndex:= iPage;
-        ATabIndex:= iTab;
-        Exit
-      end;
-    end;
+  TempPages:= TWinControl(AObject).Parent as TATPages;
+  APagesIndex:= FindPages(TempPages);
+  ATabIndex:= TempPages.Tabs.FindTabByObject(AObject);
 end;
 
 function TATGroups.GetImages: TImageList;
