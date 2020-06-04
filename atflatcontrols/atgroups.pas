@@ -280,9 +280,9 @@ type
     function PagesVisibleCount: Integer;
     function PagesSetIndex(ANum: Integer): boolean;
     procedure PagesSetNext(ANext: boolean);
-    function PagesIndexOf(APages: TATPages): Integer;
     function PagesNextIndex(AIndex: Integer; ANext: boolean; AEnableEmpty: boolean): Integer;
-    procedure PagesAndTabIndexOfControl(AObject: TObject; out APagesIndex, ATabIndex: Integer);
+    function FindPages(APages: TATPages): Integer;
+    procedure FindPositionOfControl(AObject: TObject; out APagesIndex, ATabIndex: Integer);
     procedure GetSizes(out APanelSize: TPoint; out APageSize: TATGroupsPoints);
     procedure SetSizes(const APanelSize: TPoint; const APageSize: TATGroupsPoints);
     //
@@ -729,7 +729,7 @@ begin
     DoControlLock(Self);
 
     //actions before changing FMode
-    NPagesBefore:= PagesIndexOf(PagesCurrent);
+    NPagesBefore:= FindPages(PagesCurrent);
     MoveTabsOnModeChanging(Value);
 
     case FMode of
@@ -1552,7 +1552,7 @@ procedure TATGroups.PagesSetNext(ANext: boolean);
 var
   Num0, Num1: Integer;
 begin
-  Num0:= PagesIndexOf(PagesCurrent);
+  Num0:= FindPages(PagesCurrent);
   if Num0<0 then Exit;
   Num1:= PagesNextIndex(Num0, ANext, false);
   if Num1<0 then Exit;
@@ -1560,7 +1560,7 @@ begin
 end;
 
 
-function TATGroups.PagesIndexOf(APages: TATPages): Integer;
+function TATGroups.FindPages(APages: TATPages): Integer;
 var
   i: Integer;
 begin
@@ -1608,7 +1608,7 @@ procedure TATGroups.MovePopupTabToNext(ANext: boolean);
 var
   N0, N1: Integer;
 begin
-  N0:= PagesIndexOf(PopupPages);
+  N0:= FindPages(PopupPages);
   if N0<0 then Exit;
   N1:= PagesNextIndex(N0, ANext, true);
   if N1<0 then Exit;
@@ -1619,7 +1619,7 @@ procedure TATGroups.MoveCurrentTabToNext(ANext: boolean);
 var
   N0, N1: Integer;
 begin
-  N0:= PagesIndexOf(PagesCurrent);
+  N0:= FindPages(PagesCurrent);
   if N0<0 then Exit;
   N1:= PagesNextIndex(N0, ANext, true);
   if N1<0 then Exit;
@@ -1801,7 +1801,7 @@ procedure TATGroups.MoveCurrentTabToOpposite;
 var
   NFrom, NTo, NTabIndex: Integer;
 begin
-  NFrom:= PagesIndexOf(PagesCurrent);
+  NFrom:= FindPages(PagesCurrent);
   if NFrom<0 then Exit;
   if NFrom=0 then NTo:= 1 else NTo:= 0;
 
@@ -1883,13 +1883,13 @@ begin
   if AForPopupMenu then
   begin
     if not Assigned(PopupPages) then exit;
-    APagesIndex:= PagesIndexOf(PopupPages);
+    APagesIndex:= FindPages(PopupPages);
     ATabIndex:= PopupTabIndex;
   end
   else
   begin
     if not Assigned(PagesCurrent) then exit;
-    APagesIndex:= PagesIndexOf(PagesCurrent);
+    APagesIndex:= FindPages(PagesCurrent);
     ATabIndex:= PagesCurrent.Tabs.TabIndex;
   end;
 
@@ -1993,7 +1993,7 @@ begin
 end;
 
 
-procedure TATGroups.PagesAndTabIndexOfControl(AObject: TObject;
+procedure TATGroups.FindPositionOfControl(AObject: TObject;
   out APagesIndex, ATabIndex: Integer);
 var
   iPage, iTab: Integer;
