@@ -1,4 +1,7 @@
 
+2020.06.07
++ ATScrollbar: events OnMouseDown, OnMouseUp
+
 2020.05.12
 + ATTabs: prop OptScrollPagesizePercents
 + ATTabs: prop OptMouseWheelMode (enum, 3 modes)

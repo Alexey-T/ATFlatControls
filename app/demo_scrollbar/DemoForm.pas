@@ -50,6 +50,10 @@ type
     procedure trackCornerHChange(Sender: TObject);
     procedure trackThumbSizeChange(Sender: TObject);
   private
+    procedure BarMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure BarMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     { Private declarations }
     procedure ChangeH(S: TObject);
     procedure ChangeV(S: TObject);
@@ -65,8 +69,6 @@ var
 
 implementation
 
-uses StrUtils, Math;
-
 {$R *.lfm}
 
 procedure TFormDemo.FormCreate(Sender: TObject);
@@ -76,6 +78,8 @@ begin
   bar_h.Align:= alBottom;
   bar_h.Kind:= sbHorizontal;
   bar_h.OnChange:= ChangeH;
+  bar_h.OnMouseDown:=BarMouseDown;
+  bar_h.OnMouseUp:=BarMouseUp;
   bar_h.Min:= 20;
   bar_h.Max:= 200;
 
@@ -85,6 +89,8 @@ begin
   bar_v.Align:= alRight;
   bar_v.Kind:= sbVertical;
   bar_v.OnChange:= ChangeV;
+  bar_v.OnMouseDown:= BarMouseDown;
+  bar_v.OnMouseUp:= BarMouseUp;
   bar_v.Min:= 10;
   bar_v.Max:= 100;
 
@@ -254,6 +260,18 @@ begin
   ATScrollbarTheme.ThumbMinSize:= trackThumbSize.Position;
   bar_v.Invalidate;
   bar_h.Invalidate;
+end;
+
+procedure TFormDemo.BarMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  Caption:= 'BarMouseDown';
+end;
+
+procedure TFormDemo.BarMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  Caption:= 'BarMouseUp';
 end;
 
 end.

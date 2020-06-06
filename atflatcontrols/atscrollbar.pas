@@ -248,6 +248,8 @@ type
     property IndentCorner: Integer read FIndentCorner write FIndentCorner default 0;
 
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
+    property OnMouseDown;
+    property OnMouseUp;
     property OnOwnerDraw: TATScrollbarDrawEvent read FOnOwnerDraw write FOnOwnerDraw;
     property OnContextPopup;
     property OnResize;
@@ -509,6 +511,8 @@ procedure TATScrollbar.MouseDown(Button: TMouseButton; Shift: TShiftState;
 var
   ScrollVal: integer;
 begin
+  inherited;
+
   FMouseDown:= Button=mbLeft;
   FMouseDownOnThumb:= PtInRect(FRectThumb, Point(X, Y));
   FMouseDownOnUp:= PtInRect(FRectArrUp, Point(X, Y));
@@ -568,6 +572,8 @@ end;
 procedure TATScrollbar.MouseUp(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
 begin
+  inherited;
+
   FMouseDown:= false;
   FMouseDownOnThumb:= false;
 

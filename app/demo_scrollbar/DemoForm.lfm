@@ -87,7 +87,7 @@ object FormDemo: TFormDemo
     end
     object chkDraw: TCheckBox
       Left = 8
-      Height = 24
+      Height = 23
       Top = 296
       Width = 99
       Caption = 'Owner-draw'
@@ -96,7 +96,7 @@ object FormDemo: TFormDemo
     end
     object trackBor: TTrackBar
       Left = 104
-      Height = 46
+      Height = 49
       Top = 136
       Width = 113
       Max = 4
@@ -107,7 +107,7 @@ object FormDemo: TFormDemo
     end
     object trackPage: TTrackBar
       Left = 104
-      Height = 46
+      Height = 49
       Top = 96
       Width = 113
       Frequency = 20
@@ -120,7 +120,7 @@ object FormDemo: TFormDemo
     end
     object trackSize: TTrackBar
       Left = 104
-      Height = 46
+      Height = 49
       Top = 48
       Width = 113
       Frequency = 20
@@ -133,7 +133,7 @@ object FormDemo: TFormDemo
     end
     object trackLonger: TTrackBar
       Left = 104
-      Height = 46
+      Height = 49
       Top = 176
       Width = 113
       Frequency = 5
@@ -146,7 +146,7 @@ object FormDemo: TFormDemo
     end
     object trackCornerV: TTrackBar
       Left = 104
-      Height = 46
+      Height = 49
       Top = 216
       Width = 113
       Frequency = 10
@@ -159,7 +159,7 @@ object FormDemo: TFormDemo
     end
     object trackCornerH: TTrackBar
       Left = 230
-      Height = 46
+      Height = 49
       Top = 216
       Width = 113
       Frequency = 10
@@ -189,16 +189,16 @@ object FormDemo: TFormDemo
     end
     object chkInstant: TCheckBox
       Left = 8
-      Height = 24
+      Height = 23
       Top = 320
-      Width = 150
+      Width = 147
       Caption = 'Instant move on click'
       OnChange = chkInstantChange
       TabOrder = 8
     end
     object trackThumbSize: TTrackBar
       Left = 328
-      Height = 46
+      Height = 49
       Top = 144
       Width = 64
       Frequency = 20
@@ -219,7 +219,7 @@ object FormDemo: TFormDemo
     end
     object trackMax: TTrackBar
       Left = 328
-      Height = 46
+      Height = 49
       Top = 96
       Width = 64
       Frequency = 20
