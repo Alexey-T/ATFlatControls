@@ -2251,18 +2251,17 @@ end;
 
 function TATTabs.GetTabRect_X(const ARect: TRect): TRect;
 var
-  P: TPoint;
+  X, Y: integer;
 begin
-  P:= Point(
-    ARect.Right-DoScale(FOptSpaceXRight),
-    (ARect.Top+ARect.Bottom) div 2 + 1);
-  Dec(P.X, DoScale(FOptSpaceXSize) div 2);
-  Dec(P.Y, DoScale(FOptSpaceXSize) div 2);
+  X:= ARect.Right-DoScale(FOptSpaceXRight);
+  Y:= (ARect.Top+ARect.Bottom) div 2 + 1;
+  Dec(X, DoScale(FOptSpaceXSize) div 2);
+  Dec(Y, DoScale(FOptSpaceXSize) div 2);
   Result:= Rect(
-    P.X,
-    P.Y,
-    P.X+DoScale(FOptSpaceXSize),
-    P.Y+DoScale(FOptSpaceXSize));
+    X,
+    Y,
+    X+DoScale(FOptSpaceXSize),
+    Y+DoScale(FOptSpaceXSize));
 end;
 
 function TATTabs._IsDrag: boolean;
