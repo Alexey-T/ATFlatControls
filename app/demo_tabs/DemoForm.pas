@@ -243,8 +243,13 @@ var
 begin
   for i:= t_top.TabCount-1 downto 1 do
     t_top.DeleteTab(i, false, false);
-  for i:= 1 to 300 do
-    t_top.AddTab(-1, IntToStr(i));
+  for i:= 1 to 1000 do
+  begin
+    t_top.AddTab(-1, IntToStr(i)+'_'+StringOfChar('a', 3+Random(i mod 15)) );
+    t_top.TabIndex:= t_top.TabCount-1;
+    if i mod 20 = 0 then
+      Application.ProcessMessages;
+  end;
 end;
 
 procedure TForm1.BarScaleChange(Sender: TObject);

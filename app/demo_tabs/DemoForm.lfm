@@ -1,7 +1,7 @@
 object Form1: TForm1
   Left = 222
   Height = 566
-  Top = 167
+  Top = 165
   Width = 925
   Caption = 'ATTabs demo'
   ClientHeight = 566
@@ -85,7 +85,7 @@ object Form1: TForm1
   end
   object EditInfo: TEdit
     Left = 416
-    Height = 26
+    Height = 32
     Top = 352
     Width = 209
     OnChange = EditInfoChange
@@ -127,7 +127,7 @@ object Form1: TForm1
     Height = 25
     Top = 320
     Width = 208
-    Caption = 'stress (300 tabs)'
+    Caption = 'stress (1K tabs)'
     OnClick = btnStressClick
     TabOrder = 18
   end
@@ -141,7 +141,7 @@ object Form1: TForm1
   end
   object comboShowX: TComboBox
     Left = 301
-    Height = 26
+    Height = 28
     Top = 136
     Width = 160
     ItemHeight = 0
@@ -166,7 +166,7 @@ object Form1: TForm1
   end
   object comboLayout: TComboBox
     Left = 301
-    Height = 26
+    Height = 28
     Top = 168
     Width = 160
     DropDownCount = 20
@@ -213,7 +213,7 @@ object Form1: TForm1
   end
   object comboIconPos: TComboBox
     Left = 301
-    Height = 26
+    Height = 28
     Top = 200
     Width = 160
     DropDownCount = 20
@@ -262,7 +262,7 @@ object Form1: TForm1
   end
   object chkFill: TCheckBox
     Left = 136
-    Height = 24
+    Height = 23
     Top = 248
     Width = 144
     Caption = 'fill entire tabs width'
@@ -271,7 +271,7 @@ object Form1: TForm1
   end
   object chkNewNearCurrent: TCheckBox
     Left = 136
-    Height = 24
+    Height = 23
     Top = 272
     Width = 146
     Caption = 'add tab near current'
@@ -287,7 +287,7 @@ object Form1: TForm1
   end
   object comboTruncate: TComboBox
     Left = 301
-    Height = 26
+    Height = 28
     Top = 232
     Width = 160
     DropDownCount = 20
@@ -304,7 +304,7 @@ object Form1: TForm1
   end
   object chkAngled: TCheckBox
     Left = 136
-    Height = 24
+    Height = 23
     Top = 296
     Width = 96
     Caption = 'angled tabs'
@@ -313,7 +313,7 @@ object Form1: TForm1
   end
   object edInitial: TSpinEdit
     Left = 728
-    Height = 26
+    Height = 32
     Top = 248
     Width = 56
     OnChange = edInitialChange
@@ -329,7 +329,7 @@ object Form1: TForm1
   end
   object comboThemes: TComboBox
     Left = 301
-    Height = 30
+    Height = 31
     Top = 100
     Width = 160
     ItemHeight = 0
@@ -351,12 +351,12 @@ object Form1: TForm1
     Top = 128
     Width = 160
     Caption = 'bottom tabs'
-    ClientHeight = 94
-    ClientWidth = 156
+    ClientHeight = 95
+    ClientWidth = 158
     TabOrder = 24
     object chkNums_Bottom: TCheckBox
       Left = 8
-      Height = 24
+      Height = 23
       Top = 56
       Width = 111
       Caption = 'show numbers'
@@ -386,7 +386,7 @@ object Form1: TForm1
   end
   object BarScale: TTrackBar
     Left = 705
-    Height = 46
+    Height = 49
     Top = 280
     Width = 79
     LineSize = 10
@@ -407,7 +407,7 @@ object Form1: TForm1
   end
   object comboWheelMode: TComboBox
     Left = 301
-    Height = 27
+    Height = 28
     Top = 263
     Width = 160
     ItemHeight = 0
@@ -431,8 +431,8 @@ object Form1: TForm1
     ParentColor = False
   end
   object ImageList1: TImageList
-    left = 568
-    top = 392
+    Left = 568
+    Top = 392
     Bitmap = {
       4C7A0300000010000000100000006F0100000000000078DAFBCFF09F62B863C7
       8EFF252525FFCFCC4C23886F6CEAF98FAE1FA477F7EE55FF0F1EDCF8FFF8F19D
