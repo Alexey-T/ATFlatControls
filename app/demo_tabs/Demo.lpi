@@ -20,12 +20,12 @@
     <VersionInfo>
       <StringTable ProductVersion="0.0.0.0"/>
     </VersionInfo>
-    <MacroValues Count="1">
-      <Macro1 Name="LCLWidgetType" Value="qt5"/>
-    </MacroValues>
     <BuildModes Count="2">
       <Item1 Name="Default" Default="True"/>
       <Item2 Name="qt5">
+        <MacroValues Count="1">
+          <Macro1 Name="LCLWidgetType" Value="qt5"/>
+        </MacroValues>
         <CompilerOptions>
           <Version Value="11"/>
           <Target>
@@ -50,7 +50,7 @@
         </CompilerOptions>
       </Item2>
       <SharedMatrixOptions Count="2">
-        <Item1 ID="182804183314" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="qt5"/>
+        <Item1 ID="182804183314" Modes="qt5" Type="IDEMacro" MacroName="LCLWidgetType" Value="qt5"/>
         <Item2 ID="275425992458" Type="IDEMacro" MacroName="LCLWidgetType" Value="qt"/>
       </SharedMatrixOptions>
     </BuildModes>
