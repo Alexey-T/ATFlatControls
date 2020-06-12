@@ -78,7 +78,7 @@ function CanvasCollapseStringByDots(C: TCanvas;
   const Text: string;
   Mode: TATCollapseStringMode;
   Width: integer;
-  DotsString: string='...'): string;
+  DotsString: string='…'): string;
 
 
 implementation
@@ -460,7 +460,7 @@ function CanvasCollapseStringByDots(C: TCanvas;
   const Text: string;
   Mode: TATCollapseStringMode;
   Width: integer;
-  DotsString: string='...'): string;
+  DotsString: string='…'): string;
 const
   cMinLen = 3;
 var
