@@ -66,6 +66,20 @@ procedure CanvasPaintXMark(C: TCanvas;
   AColor: TColor;
   AIndentLeft, AIndentRight, ALineWidth: integer);
 
+type
+  TATCollapseStringMode = (
+    acsmNone,
+    acsmLeft,
+    acsmMiddle,
+    acsmRight
+    );
+
+function CanvasCollapseStringByDots(C: TCanvas;
+  const Text: string;
+  Mode: TATCollapseStringMode;
+  Width: integer;
+  DotsString: string='...'): string;
+
 
 implementation
 
@@ -439,6 +453,62 @@ begin
     C.LineTo(X2, Y2-1);
     //don't draw pixels, other lines did it
   end;
+end;
+
+
+function CanvasCollapseStringByDots(C: TCanvas;
+  const Text: string;
+  Mode: TATCollapseStringMode;
+  Width: integer;
+  DotsString: string='...'): string;
+const
+  cMinLen = 3;
+var
+  S, STemp: UnicodeString; //UnicodeString to do steps by 1 widechar
+  N, i: integer;
+begin
+  if (Mode=acsmNone) or
+    (C.TextWidth(Text)<=Width) then
+  begin
+    Result:= Text;
+    exit
+  end;
+
+  if DotsString='' then
+    DotsString:= {$ifdef fpc}UTF8Encode{$endif}(#$2026);
+
+  S:= Text;
+  STemp:= S;
+
+  case Mode of
+    acsmLeft:
+      begin
+        repeat
+          Delete(STemp, 1, 1);
+          S:= DotsString+STemp;
+        until (Length(S)<=cMinLen) or (C.TextWidth(S)<=Width);
+      end;
+
+    acsmMiddle:
+      begin
+        for i:= 2 to $FFFF do
+        begin
+          N:= (Length(STemp)+1) div 2 - i div 2;
+          S:= Copy(STemp, 1, N)+DotsString+Copy(STemp, N+i, MaxInt);
+          if (Length(S)<=cMinLen) or (C.TextWidth(S)<=Width) then Break;
+        end;
+      end;
+
+    acsmRight:
+      begin
+        repeat
+          SetLength(STemp, Length(STemp)-1);
+          S:= STemp+DotsString;
+        until (Length(S)<=cMinLen) or (C.TextWidth(S)<=Width);
+      end;
+  end;
+
+  Result:= S;
 end;
 
 

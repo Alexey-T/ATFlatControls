@@ -48,13 +48,6 @@ type
     atpRight
     );
 
-  TATTabTruncateCaption = (
-    attcNone,
-    attcDotsLeft,
-    attcDotsMiddle,
-    attcDotsRight
-    );
-
 type
   TATTabListCollection = class(TCollection)
   public
@@ -274,7 +267,7 @@ const
   _InitTabColorScrollMark = _InitTabColorDropMark;
 
 const
-  _InitOptTruncateCaption = attcDotsMiddle;
+  _InitOptTruncateCaption = acsmMiddle;
   _InitOptAnimationEnabled = false;
   _InitOptAnimationStepV = 4;
   _InitOptAnimationStepH = 25;
@@ -398,7 +391,7 @@ type
     FOptScalePercents: integer;
     FOptVarWidth: boolean;
     FOptMultiline: boolean;
-    FOptTruncateCaption: TATTabTruncateCaption;
+    FOptTruncateCaption: TATCollapseStringMode;
     FOptFillWidth: boolean;
     FOptFillWidthLastToo: boolean;
     FOptTabHeight: integer;
@@ -782,7 +775,7 @@ type
     property OptMultiline: boolean read FOptMultiline write FOptMultiline default false;
     property OptFillWidth: boolean read FOptFillWidth write FOptFillWidth default _InitOptFillWidth;
     property OptFillWidthLastToo: boolean read FOptFillWidthLastToo write FOptFillWidthLastToo default _InitOptFillWidthLastToo;
-    property OptTruncateCaption: TATTabTruncateCaption read FOptTruncateCaption write FOptTruncateCaption default _InitOptTruncateCaption;
+    property OptTruncateCaption: TATCollapseStringMode read FOptTruncateCaption write FOptTruncateCaption default _InitOptTruncateCaption;
     property OptTabHeight: integer read FOptTabHeight write FOptTabHeight default _InitOptTabHeight;
     property OptTabWidthNormal: integer read FOptTabWidthNormal write FOptTabWidthNormal default _InitOptTabWidthNormal;
     property OptTabWidthMinimal: integer read FOptTabWidthMinimal write FOptTabWidthMinimal default _InitOptTabWidthMinimal;
@@ -877,12 +870,6 @@ type
 var
   cTabsMouseMinDistanceToDrag: integer = 10; //mouse must move >=N pixels to start drag-drop
   cTabsMouseMaxDistanceToClick: integer = 4; //if mouse moves during mouse-down >=N pixels, dont click
-
-function CollapseStringByEllipsis(C: TCanvas;
-  const Text: string;
-  Mode: TATTabTruncateCaption;
-  Width: integer;
-  DotsString: string='...'): string;
 
 implementation
 
@@ -1116,62 +1103,6 @@ begin
 
   CanvasStretchDraw(C, Rect(AX, AY, AX+ASizeX, AY+ASizeY), b);
 end;
-
-function CollapseStringByEllipsis(C: TCanvas;
-  const Text: string;
-  Mode: TATTabTruncateCaption;
-  Width: integer;
-  DotsString: string='...'): string;
-const
-  cMinLen = 3;
-var
-  S, STemp: WideString;
-  N, i: integer;
-begin
-  if (Mode=attcNone) or
-    (C.TextWidth(Text)<=Width) then
-  begin
-    Result:= Text;
-    exit
-  end;
-
-  if DotsString='' then
-    DotsString:= {$ifdef fpc}UTF8Encode{$endif}(#$2026);
-
-  S:= Text;
-  STemp:= S;
-
-  case Mode of
-    attcDotsLeft:
-      begin
-        repeat
-          Delete(STemp, 1, 1);
-          S:= DotsString+STemp;
-        until (Length(S)<=cMinLen) or (C.TextWidth(S)<=Width);
-      end;
-
-    attcDotsMiddle:
-      begin
-        for i:= 2 to $FFFF do
-        begin
-          N:= (Length(STemp)+1) div 2 - i div 2;
-          S:= Copy(STemp, 1, N)+DotsString+Copy(STemp, N+i, MaxInt);
-          if (Length(S)<=cMinLen) or (C.TextWidth(S)<=Width) then Break;
-        end;
-      end;
-
-    attcDotsRight:
-      begin
-        repeat
-          SetLength(STemp, Length(STemp)-1);
-          S:= STemp+DotsString;
-        until (Length(S)<=cMinLen) or (C.TextWidth(S)<=Width);
-      end;
-  end;
-
-  Result:= S;
-end;
-
 
 { TATTabData }
 
@@ -1599,7 +1530,7 @@ begin
         NIndentL,
         RectText.Top+NIndentTop+i*NLineHeight,
         RectText,
-        CollapseStringByEllipsis(C, FCaptionList[i], FOptTruncateCaption, RectText.Right-RectText.Left)
+        CanvasCollapseStringByDots(C, FCaptionList[i], FOptTruncateCaption, RectText.Right-RectText.Left)
         );
     end;
   end;
