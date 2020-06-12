@@ -878,11 +878,11 @@ var
   cTabsMouseMinDistanceToDrag: integer = 10; //mouse must move >=N pixels to start drag-drop
   cTabsMouseMaxDistanceToClick: integer = 4; //if mouse moves during mouse-down >=N pixels, dont click
 
-  function _ShortenStringEx(C: TCanvas;
-    const Text: string;
-    Mode: TATTabTruncateCaption;
-    Width: integer;
-    DotsString: string=''): string;
+function CollapseStringByEllipsis(C: TCanvas;
+  const Text: string;
+  Mode: TATTabTruncateCaption;
+  Width: integer;
+  DotsString: string='...'): string;
 
 implementation
 
@@ -1117,11 +1117,11 @@ begin
   CanvasStretchDraw(C, Rect(AX, AY, AX+ASizeX, AY+ASizeY), b);
 end;
 
-function _ShortenStringEx(C: TCanvas;
+function CollapseStringByEllipsis(C: TCanvas;
   const Text: string;
   Mode: TATTabTruncateCaption;
   Width: integer;
-  DotsString: string=''): string;
+  DotsString: string='...'): string;
 const
   cMinLen = 3;
 var
@@ -1599,7 +1599,7 @@ begin
         NIndentL,
         RectText.Top+NIndentTop+i*NLineHeight,
         RectText,
-        _ShortenStringEx(C, FCaptionList[i], FOptTruncateCaption, RectText.Right-RectText.Left)
+        CollapseStringByEllipsis(C, FCaptionList[i], FOptTruncateCaption, RectText.Right-RectText.Left)
         );
     end;
   end;
