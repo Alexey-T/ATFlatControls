@@ -402,6 +402,7 @@ var
   PointCount, PointIndex: integer;
   X, Y, NSign: integer;
 begin
+  //some initial len of array, not accurate
   PointCount:= (X2-X1+1) div 2;
   if PointCount<3 then exit;
   SetLength(Points, PointCount);
@@ -412,17 +413,16 @@ begin
   for X:= X1 to X2 do
     if not Odd(X) then
     begin
-      if PointIndex>=PointCount then Break;
       Y:= Y2 + NSign * cWaveInc[(X-X1) div 2 mod cWavePeriod];
+      if PointIndex>High(Points) then
+        SetLength(Points, Length(Points)+1);
       Points[PointIndex]:= Point(X, Y);
       Inc(PointIndex);
     end;
 
-  if PointIndex+1<PointCount then
-    SetLength(Points, PointIndex+1);
-
   C.Pen.Color:= Color;
   C.Polyline(Points);
+  SetLength(Points, 0);
 end;
 
 procedure CanvasLine_RoundedEdge(C: TCanvas; Color: TColor; X1, Y1, X2, Y2: integer; AtDown: boolean);
