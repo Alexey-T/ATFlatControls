@@ -360,8 +360,8 @@ procedure TATButton.Paint;
 begin
   inherited;
 
-  //reset value set by LCL scaling, because LCL scaling +theme scaling -> overscaling
-  Canvas.Font.PixelsPerInch:= 96;
+  //override value set by LCL scaling to make all buttons look the same
+  Canvas.Font.PixelsPerInch:= Screen.PixelsPerInch;
 
   PaintTo(Canvas);
 end;
