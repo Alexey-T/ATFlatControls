@@ -359,6 +359,10 @@ end;
 procedure TATButton.Paint;
 begin
   inherited;
+
+  //reset value set by LCL scaling, because LCL scaling +theme scaling -> overscaling
+  Canvas.Font.PixelsPerInch:= 96;
+
   PaintTo(Canvas);
 end;
 
