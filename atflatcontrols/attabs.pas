@@ -470,6 +470,7 @@ type
 
     FRealIndentLeft: integer;
     FRealIndentRight: integer;
+    FOptFontScale: integer;
     FOptSpaceSide: integer;
     FAnimationOffset: integer;
     FPaintCount: integer;
@@ -781,6 +782,7 @@ type
     property OptTabWidthMinimal: integer read FOptTabWidthMinimal write FOptTabWidthMinimal default _InitOptTabWidthMinimal;
     property OptTabWidthMaximal: integer read FOptTabWidthMaximal write FOptTabWidthMaximal default _InitOptTabWidthMaximal;
     property OptTabWidthMinimalHidesX: integer read FOptTabWidthMinimalHidesX write FOptTabWidthMinimalHidesX default _InitOptTabWidthMinimalHidesX;
+    property OptFontScale: integer read FOptFontScale write FOptFontScale default 100;
     property OptSpaceSide: integer read FOptSpaceSide write FOptSpaceSide default _InitOptSpaceSide;
     property OptSpaceBetweenTabs: integer read FOptSpaceBetweenTabs write FOptSpaceBetweenTabs default _InitOptSpaceBetweenTabs;
     property OptSpaceBetweenLines: integer read FOptSpaceBetweenLines write FOptSpaceBetweenLines default _InitOptSpaceBetweenLines;
@@ -1204,6 +1206,7 @@ begin
   FOptTabWidthMaximal:= _InitOptTabWidthMaximal;
   FOptTabWidthNormal:= _InitOptTabWidthNormal;
   FOptTabWidthMinimalHidesX:= _InitOptTabWidthMinimalHidesX;
+  FOptFontScale:= 100;
   FOptSpaceSide:= _InitOptSpaceSide;
   FOptSpaceInitial:= _InitOptSpaceInitial;
   FOptSpaceBeforeText:= _InitOptSpaceBeforeText;
@@ -1486,6 +1489,9 @@ begin
     C.Font.Assign(Self.Font);
     C.Font.Style:= AFontStyle;
     C.Font.Color:= AColorFont;
+
+    if FOptFontScale<>100 then
+      C.Font.Size:= C.Font.Size * FOptFontScale div 100;
 
     TempCaption:= ACaption;
     if ATabModified then

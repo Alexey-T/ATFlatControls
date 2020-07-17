@@ -145,6 +145,7 @@ type
     tabOptionSpaceBeforeText,
     tabOptionSpaceBetweenTabs,
     tabOptionSpaceSide,
+    tabOptionFontScale,
     tabOptionColoredBandSize,
     tabOptionActiveMarkSize,
     tabOptionScrollMarkSizeX,
@@ -1787,6 +1788,7 @@ begin
         tabOptionSpaceBeforeText:  OptSpaceBeforeText:= N;
         tabOptionSpaceBetweenTabs: OptSpaceBetweenTabs:= N;
         tabOptionSpaceSide:        OptSpaceSide:= N;
+        tabOptionFontScale:        OptFontScale:= N;
         tabOptionColoredBandSize:  OptColoredBandSize:= N;
         tabOptionActiveMarkSize:   OptActiveMarkSize:= N;
         tabOptionScrollMarkSizeX:  OptScrollMarkSizeX:= N;
