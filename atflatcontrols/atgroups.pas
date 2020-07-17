@@ -142,6 +142,7 @@ type
     tabOptionSpacer,
     tabOptionSpacer2,
     tabOptionSpaceInitial,
+    tabOptionSpaceBeforeText,
     tabOptionSpaceBetweenTabs,
     tabOptionSpaceSide,
     tabOptionColoredBandSize,
@@ -1783,6 +1784,7 @@ begin
         tabOptionSpacer:           OptSpacer:= N;
         tabOptionSpacer2:          OptSpacer2:= N;
         tabOptionSpaceInitial:     OptSpaceInitial:= N;
+        tabOptionSpaceBeforeText:  OptSpaceBeforeText:= N;
         tabOptionSpaceBetweenTabs: OptSpaceBetweenTabs:= N;
         tabOptionSpaceSide:        OptSpaceSide:= N;
         tabOptionColoredBandSize:  OptColoredBandSize:= N;
