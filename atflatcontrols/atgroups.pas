@@ -100,6 +100,7 @@ type
 type
   TATTabsOptionId = (
     tabColorText,
+    tabColorTextActive,
     tabColorTextModified,
     tabColorBg,
     tabColorBgActive,
@@ -1708,6 +1709,7 @@ begin
         tabColorBgPassive: ColorTabPassive:= N;
         tabColorBgPassiveOver: ColorTabOver:= N;
         tabColorText: ColorFont:= N;
+        tabColorTextActive: ColorFontActive:= N;
         tabColorTextModified: ColorFontModified:= N;
         tabColorBorderActive: ColorBorderActive:= N;
         tabColorBorderPassive: ColorBorderPassive:= N;
