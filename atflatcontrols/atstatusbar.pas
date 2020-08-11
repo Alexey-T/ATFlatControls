@@ -348,7 +348,7 @@ begin
 
     ExtTextOut(C.Handle,
       RectText.Left+NOffsetLeft,
-      (ARect.Top+ARect.Bottom-TextSize.cy) div 2+1,
+      (ARect.Top+ARect.Bottom-TextSize.cy) div 2,
       ETO_CLIPPED+ETO_OPAQUE,
       @RectText,
       PChar(AData.Caption),
