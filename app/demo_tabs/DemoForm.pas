@@ -4,7 +4,9 @@ interface
 
 uses
   SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs, ExtCtrls,
-  StdCtrls, LCLProc, LCLType, Spin, ComCtrls, FileUtil, attabs;
+  StdCtrls, LCLProc, LCLType, Spin, ComCtrls, FileUtil,
+  ATCanvasPrimitives,
+  attabs;
 
 type
   { TForm1 }
@@ -425,7 +427,7 @@ end;
 
 procedure TForm1.comboTruncateChange(Sender: TObject);
 begin
-  t_top.OptTruncateCaption:= TATTabTruncateCaption(comboTruncate.ItemIndex);
+  t_top.OptTruncateCaption:= TATCollapseStringMode(comboTruncate.ItemIndex);
   t_top.Invalidate;
 end;
 

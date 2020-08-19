@@ -20,7 +20,7 @@
     <VersionInfo>
       <StringTable ProductVersion="0.0.0.0"/>
     </VersionInfo>
-    <BuildModes Count="2">
+    <BuildModes Count="3">
       <Item1 Name="Default" Default="True"/>
       <Item2 Name="qt5">
         <MacroValues Count="1">
@@ -49,9 +49,37 @@
           </Linking>
         </CompilerOptions>
       </Item2>
-      <SharedMatrixOptions Count="2">
+      <Item3 Name="gtk3">
+        <MacroValues Count="1">
+          <Macro3 Name="LCLWidgetType" Value="gtk3"/>
+        </MacroValues>
+        <CompilerOptions>
+          <Version Value="11"/>
+          <Target>
+            <Filename Value="demo"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+            </SyntaxOptions>
+          </Parsing>
+          <Linking>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+        </CompilerOptions>
+      </Item3>
+      <SharedMatrixOptions Count="3">
         <Item1 ID="182804183314" Modes="qt5" Type="IDEMacro" MacroName="LCLWidgetType" Value="qt5"/>
         <Item2 ID="275425992458" Type="IDEMacro" MacroName="LCLWidgetType" Value="qt"/>
+        <Item3 ID="196033858525" Modes="gtk3" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk3"/>
       </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
