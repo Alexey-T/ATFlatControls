@@ -39,26 +39,26 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     function CanFocus: boolean; override;
-    procedure AddButton(
+    function AddButton(
       AImageIndex: integer;
       AOnClick: TNotifyEvent;
       const ACaption, AHint, ADataString: string;
-      AShowCaption: boolean);
-    procedure AddDropdown(
+      AShowCaption: boolean): TATButton;
+    function AddDropdown(
       AImageIndex: integer;
       AMenu: TPopupMenu;
       ADropdownEvent: TNotifyEvent=nil;
       const ACaption: string='';
       const AHint: string='';
-      const ADataString: string='');
-    procedure AddChoice(
+      const ADataString: string=''): TATButton;
+    function AddChoice(
       AOnClick: TNotifyEvent;
       AWidth: integer;
       AItems: TStrings;
       AItemIndex: integer;
       const AHint: string='';
-      const ADataString: string='');
-    procedure AddSep;
+      const ADataString: string=''): TATButton;
+    function AddSep: TATButton;
     procedure UpdateControls(AInvalidate: boolean=false);
     function ButtonCount: integer;
     function IsIndexOk(AIndex: integer): boolean;
@@ -320,13 +320,13 @@ begin
   UpdateControls;
 end;
 
-procedure TATFlatToolbar.AddButton(AImageIndex: integer;
-  AOnClick: TNotifyEvent; const ACaption, AHint, ADataString: string;
-  AShowCaption: boolean);
+function TATFlatToolbar.AddButton(AImageIndex: integer; AOnClick: TNotifyEvent;
+  const ACaption, AHint, ADataString: string; AShowCaption: boolean): TATButton;
 var
   b: TATButton;
 begin
   b:= TATButton.Create(Self);
+  Result:= b;
   b.Parent:= Self;
   b.Focusable:= false;
   b.Flat:= true;
@@ -355,17 +355,14 @@ begin
   end;
 end;
 
-procedure TATFlatToolbar.AddDropdown(
-  AImageIndex: integer;
-  AMenu: TPopupMenu;
-  ADropdownEvent: TNotifyEvent=nil;
-  const ACaption: string='';
-  const AHint: string='';
-  const ADataString: string='');
+function TATFlatToolbar.AddDropdown(AImageIndex: integer; AMenu: TPopupMenu;
+  ADropdownEvent: TNotifyEvent; const ACaption: string; const AHint: string;
+  const ADataString: string): TATButton;
 var
   b: TATButton;
 begin
   b:= TATButton.Create(Self);
+  Result:= b;
   b.Parent:= Self;
   b.Images:= FImages;
   b.ImageIndex:= AImageIndex;
@@ -403,13 +400,14 @@ begin
     b.Kind:= abuTextOnly;
 end;
 
-procedure TATFlatToolbar.AddChoice(AOnClick: TNotifyEvent;
-  AWidth: integer; AItems: TStrings; AItemIndex: integer;
-  const AHint: string; const ADataString: string);
+function TATFlatToolbar.AddChoice(AOnClick: TNotifyEvent; AWidth: integer;
+  AItems: TStrings; AItemIndex: integer; const AHint: string;
+  const ADataString: string): TATButton;
 var
   b: TATButton;
 begin
   b:= TATButton.Create(Self);
+  Result:= b;
   b.Parent:= Self;
   b.Caption:= '';
   b.Width:= AWidth;
@@ -426,11 +424,12 @@ begin
   b.DataString:= ADataString;
 end;
 
-procedure TATFlatToolbar.AddSep;
+function TATFlatToolbar.AddSep: TATButton;
 var
   b: TATButton;
 begin
   b:= TATButton.Create(Self);
+  Result:= b;
   b.Parent:= Self;
   b.Focusable:= false;
   b.Caption:= '';
