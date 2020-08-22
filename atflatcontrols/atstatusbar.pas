@@ -90,6 +90,7 @@ type
     FPadding: integer;
     FClickedIndex: integer;
     FPrevPanelMouseOver: integer;
+    FScaleFromFont: boolean;
 
     FItems: TCollection;
     FBitmap: TBitmap;
@@ -166,6 +167,7 @@ type
     property Padding: integer read FPadding write FPadding default cDefaultStatusbarPadding;
     property Panels: TCollection read FItems write FItems;
     property Images: TImageList read FImages write FImages;
+    property ScaleFromFont: boolean read FScaleFromFont write FScaleFromFont default false;
     property ShowHint;
     property ParentShowHint;
     property OnClick;
@@ -708,8 +710,12 @@ end;
 procedure TATStatus.Invalidate;
 begin
   if FHeightInitial>0 then
-    Height:= Theme^.DoScale(FHeightInitial);
-  inherited Invalidate;
+    if FScaleFromFont then
+      Height:= Theme^.DoScaleFont(FHeightInitial)
+    else
+      Height:= Theme^.DoScale(FHeightInitial);
+
+  inherited;
 end;
 
 
