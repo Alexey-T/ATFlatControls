@@ -1128,7 +1128,10 @@ end;
 
 function TATTabs.TabCount: integer;
 begin
-  Result:= FTabList.Count;
+  if Assigned(FTabList) then
+    Result:= FTabList.Count
+  else
+    Result:= 0;
 end;
 
 constructor TATTabs.Create(AOwner: TComponent);
@@ -3067,6 +3070,10 @@ begin
   if FOptActiveVisibleOnResize then
     if FTabIndex>=0 then
       MakeVisible(FTabIndex);
+
+  //auto-scroll tabs to right when width is shrinked
+  if FScrollPos>0 then
+    FScrollPos:= Min(FScrollPos, GetMaxScrollPos);
 
   Invalidate;
 end;
