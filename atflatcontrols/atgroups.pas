@@ -129,6 +129,7 @@ type
     tabOptionShowFlat,
     tabOptionShowTabs,
     tabOptionShowXButtons,
+    tabOptionShowXRounded,
     tabOptionShowPlus,
     tabOptionShowNums,
     tabOptionShowEntireColor,
@@ -1768,6 +1769,7 @@ begin
         tabOptionShowFlat:         OptShowFlat:= Boolean(N);
         tabOptionShowTabs:         Visible:= Boolean(N);
         tabOptionShowXButtons:     OptShowXButtons:= TATTabShowClose(N);
+        tabOptionShowXRounded:     OptShowXRounded:= Boolean(N);
         tabOptionShowPlus:         OptShowPlusTab:= Boolean(N);
         tabOptionShowNums:         OptShowNumberPrefix:= IfThen(Boolean(N), '%d. ', '');
         tabOptionShowEntireColor:  OptShowEntireColor:= Boolean(N);
