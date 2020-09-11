@@ -3455,12 +3455,13 @@ begin
   for i:= 0 to TabCount-1 do
   begin
     Data:= GetTabData(i);
-    if Data.TabVisible then begin
+    if Data.TabVisible then
+    begin
       mi:= TMenuItem.Create(Self);
       mi.Tag:= i;
       mi.Caption:= TATTabData(FTabList.Items[i]).TabCaption;
       mi.OnClick:= TabMenuClick;
-      //mi.RadioItem:= true; //bug in Lazarus/gtk2
+      mi.RadioItem:= true;
       mi.Checked:= i=FTabIndex;
       FTabMenu.Items.Add(mi);
     end;
