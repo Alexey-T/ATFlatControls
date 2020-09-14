@@ -723,7 +723,9 @@ var
   NPagesBefore, NPagesAfter: Integer;
   w, h, i: Integer;
 begin
-  if Value=FMode then Exit;
+  if Value=gmUninited then
+    Value:= gmOne;
+  if (Value<>gmOne) and (Value=FMode) then Exit;
 
   w:= ClientWidth;
   h:= ClientHeight;
