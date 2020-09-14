@@ -162,7 +162,7 @@ type
 
 type
   TATGroupsMode = (
-    gmNone,
+    gmUninited,
     gmOne,
     gm2v,
     gm2h,
@@ -664,7 +664,7 @@ begin
   InitSplitterPopup;
   FPopupPages:= nil;
   FPopupTabIndex:= -1;
-  FMode:= gmNone;
+  FMode:= gmOne;
 end;
 
 procedure TATGroups.InitSplitterPopup;
