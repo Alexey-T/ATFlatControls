@@ -71,7 +71,7 @@ type
     {$ifdef FPC}
     property BorderSpacing;
     {$endif}
-    property ButtonWidth: integer read FButtonWidth write SetButtonWidth default 50;
+    //property ButtonWidth: integer read FButtonWidth write SetButtonWidth default 50;
     property Color;
     property Enabled;
     property Visible;
@@ -120,6 +120,7 @@ begin
   ImgSize:= 0;
   if Assigned(Images) then
     ImgSize:= Images.Width;
+
   FButtonWidth:= ImgSize+ATFlatTheme.GapForAutoSize;
 
   Canvas.Font.Name:= ATFlatTheme.FontName;
