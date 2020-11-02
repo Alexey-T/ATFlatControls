@@ -262,6 +262,7 @@ begin
   FBitmap.Height:= 60;
 
   FItems:= TCollection.Create(TATStatusData);
+  FPrevPanelMouseOver:= -1;
 end;
 
 destructor TATStatus.Destroy;
