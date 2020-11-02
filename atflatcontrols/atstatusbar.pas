@@ -68,7 +68,7 @@ type
     ACanvas: TCanvas; const ARect: TRect; var ACanDraw: boolean) of object;
 
 const
-  cDefaultStatusbarPadding = 2;
+  cDefaultStatusbarPadding = 5;
   cDefaultStatusbarColorBack = clBtnFace;
   cDefaultStatusbarColorBorderTop = clGray;
   cDefaultStatusbarColorBorderR = clGray;
