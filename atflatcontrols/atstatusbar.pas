@@ -132,7 +132,8 @@ type
       ATag: IntPtr= 0;
       AAutoSize: boolean= false;
       AAutoStretch: boolean= false;
-      AFontColor: TColor=clNone);
+      AFontColor: TColor=clNone;
+      AHotTrack: boolean=false);
     procedure DeletePanel(AIndex: integer);
     procedure DeletePanels;
     property Theme: PATFlatTheme read FTheme write FTheme;
@@ -573,7 +574,8 @@ procedure TATStatus.AddPanel(
   ATag: IntPtr= 0;
   AAutoSize: boolean=false;
   AAutoStretch: boolean=false;
-  AFontColor: TColor=clNone);
+  AFontColor: TColor=clNone;
+  AHotTrack: boolean=false);
 var
   Data: TATStatusData;
 begin
@@ -590,6 +592,8 @@ begin
   Data.AutoSize:= AAutoSize;
   Data.AutoStretch:= AAutoStretch;
   Data.Tag:= ATag;
+  Data.HotTrack:= AHotTrack;
+
   Invalidate;
 end;
 
