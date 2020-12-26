@@ -268,13 +268,6 @@ const
 
 const
   _InitOptTruncateCaption = acsmMiddle;
-  _InitOptAnimationEnabled = false;
-  _InitOptAnimationStepV = 4;
-  _InitOptAnimationStepH = 25;
-  _InitOptAnimationPause = 60;
-  _InitOptAnimationStepInPixels = 70;
-  _InitOptAnimationStepSleepTime = 20;
-
   _InitOptButtonLayout = '<>,v';
   _InitOptButtonSize = 16;
   _InitOptButtonSizeSpace = 10;
@@ -380,13 +373,6 @@ type
     FOptButtonSizeSpace: integer;
     FOptButtonSizeSeparator: integer;
     FOptButtonLayout: string;
-
-    FOptAnimationEnabled: boolean;
-    FOptAnimationStepV: integer;
-    FOptAnimationStepH: integer;
-    FOptAnimationPause: integer;
-    FOptAnimationStepInPixels: integer;
-    FOptAnimationStepSleepTime: integer;
 
     FOptScalePercents: integer;
     FOptVarWidth: boolean;
@@ -543,8 +529,6 @@ type
     FOnTabDropQuery: TATTabDropQueryEvent;
 
     function ConvertButtonIdToTabIndex(Id: TATTabButton): integer; inline;
-    procedure DoAnimationTabAdd(AIndex: integer);
-    procedure DoAnimationTabClose(AIndex: integer);
     procedure DoClickUser(AIndex: integer);
     procedure DoHandleClick;
     procedure DoHandleRightClick;
@@ -760,13 +744,6 @@ type
     property ColorScrollMark: TColor read FColorScrollMark write FColorScrollMark default _InitTabColorScrollMark;
 
     //options
-    property OptAnimationEnabled: boolean read FOptAnimationEnabled write FOptAnimationEnabled default _InitOptAnimationEnabled;
-    property OptAnimationStepVert: integer read FOptAnimationStepV write FOptAnimationStepV default _InitOptAnimationStepV;
-    property OptAnimationStepHorz: integer read FOptAnimationStepH write FOptAnimationStepH default _InitOptAnimationStepH;
-    property OptAnimationPause: integer read FOptAnimationPause write FOptAnimationPause default _InitOptAnimationPause;
-    property OptAnimationStepInPixels: integer read FOptAnimationStepInPixels write FOptAnimationStepInPixels default _InitOptAnimationStepInPixels;
-    property OptAnimationStepSleepTime: integer read FOptAnimationStepSleepTime write FOptAnimationStepSleepTime default _InitOptAnimationStepSleepTime;
-
     property OptButtonLayout: string read FOptButtonLayout write SetOptButtonLayout;
     property OptButtonSize: integer read FOptButtonSize write FOptButtonSize default _InitOptButtonSize;
     property OptButtonSizeSpace: integer read FOptButtonSizeSpace write FOptButtonSizeSpace default _InitOptButtonSizeSpace;
@@ -1182,13 +1159,6 @@ begin
   FColorArrowOver:= _InitTabColorArrowOver;
   FColorDropMark:= _InitTabColorDropMark;
   FColorScrollMark:= _InitTabColorScrollMark;
-
-  FOptAnimationEnabled:= _InitOptAnimationEnabled;
-  FOptAnimationStepV:= _InitOptAnimationStepV;
-  FOptAnimationStepH:= _InitOptAnimationStepH;
-  FOptAnimationPause:= _InitOptAnimationPause;
-  FOptAnimationStepInPixels:= _InitOptAnimationStepInPixels;
-  FOptAnimationStepSleepTime:=_InitOptAnimationStepSleepTime;
 
   FOptScalePercents:= 100;
   FOptButtonSize:= _InitOptButtonSize;
@@ -3107,7 +3077,6 @@ begin
   Data.TabPopupMenu:= APopupMenu;
   Data.TabFontStyle:= AFontStyle;
 
-  DoAnimationTabAdd(AIndex);
   FTabIndexHinted:= cTabIndexNone;
   FTabIndexHintedPrev:= cTabIndexNone;
 
@@ -3179,7 +3148,6 @@ begin
 
   if IsIndexOk(AIndex) then
   begin
-    DoAnimationTabClose(AIndex);
     FTabIndexHinted:= cTabIndexNone;
     FTabIndexHintedPrev:= cTabIndexNone;
 
@@ -3817,32 +3785,11 @@ end;
 
 procedure TATTabs.DoScrollAnimation(APosTo: integer);
 begin
-  if not FOptAnimationEnabled then
+  //if not FOptAnimationEnabled then
   begin
     FScrollPos:= APosTo;
     Invalidate;
     exit;
-  end;
-
-  Enabled:= false;
-  try
-    if APosTo>FScrollPos then
-      repeat
-        FScrollPos:= Min(APosTo, FScrollPos+FOptAnimationStepInPixels);
-        Invalidate;
-        Application.ProcessMessages;
-        Sleep(FOptAnimationStepSleepTime);
-      until FScrollPos=APosTo
-    else
-      repeat
-        FScrollPos:= Max(APosTo, FScrollPos-FOptAnimationStepInPixels);
-        Invalidate;
-        Application.ProcessMessages;
-        Sleep(FOptAnimationStepSleepTime);
-      until FScrollPos=APosTo;
-  finally
-    Enabled:= true;
-    Invalidate;
   end;
 end;
 
@@ -4374,89 +4321,6 @@ begin
   Invalidate;
 end;
 
-
-procedure TATTabs.DoAnimationTabClose(AIndex: integer);
-var
-  Data: TATTabData;
-  i: integer;
-begin
-  if not FOptAnimationEnabled then exit;
-
-  Data:= GetTabData(AIndex);
-  if Data=nil then exit;
-
-  Enabled:= false;
-  FTabIndexAnimated:= AIndex;
-
-  case FOptPosition of
-    atpTop,
-    atpBottom:
-      begin
-        for i:= 0 to DoScale(FOptTabHeight) div FOptAnimationStepV-1 do
-        begin
-          FAnimationOffset:= i*FOptAnimationStepV;
-          Invalidate;
-          Application.ProcessMessages;
-          Sleep(FOptAnimationPause);
-        end;
-      end;
-    else
-      begin
-        for i:= 0 to DoScale(FOptTabWidthNormal) div FOptAnimationStepH-1 do
-        begin
-          FAnimationOffset:= i*FOptAnimationStepH;
-          Invalidate;
-          Application.ProcessMessages;
-          Sleep(FOptAnimationPause);
-        end;
-      end;
-  end;
-
-  FTabIndexAnimated:= -1;
-  Enabled:= true;
-end;
-
-
-procedure TATTabs.DoAnimationTabAdd(AIndex: integer);
-var
-  Data: TATTabData;
-  i: integer;
-begin
-  if not FOptAnimationEnabled then exit;
-
-  Data:= GetTabData(AIndex);
-  if Data=nil then exit;
-
-  Enabled:= false;
-  FTabIndexAnimated:= AIndex;
-
-  case FOptPosition of
-    atpTop,
-    atpBottom:
-      begin
-        for i:= DoScale(FOptTabHeight) div FOptAnimationStepV-1 downto 0 do
-        begin
-          FAnimationOffset:= i*FOptAnimationStepV;
-          Invalidate;
-          Application.ProcessMessages;
-          Sleep(FOptAnimationPause);
-        end;
-      end;
-    else
-      begin
-        for i:= DoScale(FOptTabWidthNormal) div FOptAnimationStepH-1 downto 0 do
-        begin
-          FAnimationOffset:= i*FOptAnimationStepH;
-          Invalidate;
-          Application.ProcessMessages;
-          Sleep(FOptAnimationPause);
-        end;
-      end;
-  end;
-
-  FTabIndexAnimated:= -1;
-  Enabled:= true;
-end;
 
 function TATTabs.GetTabFlatEffective(AIndex: integer): boolean;
 begin

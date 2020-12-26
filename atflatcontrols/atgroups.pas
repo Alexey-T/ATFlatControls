@@ -122,8 +122,6 @@ type
     tabOptionVarWidth,
     tabOptionMultiline,
     tabOptionScalePercents,
-    tabOptionAnimationEn,
-    tabOptionAnimationPause,
     tabOptionFontSize,
     tabOptionPosition,
     tabOptionShowFlat,
@@ -1766,8 +1764,6 @@ begin
         tabOptionVarWidth:         OptVarWidth:= Boolean(N);
         tabOptionMultiline:        OptMultiline:= Boolean(N);
         tabOptionScalePercents:    OptScalePercents:= N;
-        tabOptionAnimationEn:      OptAnimationEnabled:= Boolean(N);
-        tabOptionAnimationPause:   OptAnimationPause:= N;
         tabOptionShowFlat:         OptShowFlat:= Boolean(N);
         tabOptionShowTabs:         Visible:= Boolean(N);
         tabOptionShowXButtons:     OptShowXButtons:= TATTabShowClose(N);
