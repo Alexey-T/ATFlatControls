@@ -421,10 +421,10 @@ begin
   FTabs.OnTabOver:= TabOver;
   FTabs.OnTabMove:= TabMove;
   FTabs.OnTabGetTick:= TabGetTick;
-  {$ifdef fpc}
-  FTabs.DragMode:= dmAutomatic; //allow DnD between groups
-    //it breaks all on Delphi7
-  {$endif}
+
+  //dont set FTabs.DragMode:=dmAutomatic, because then
+  //DragNDrop is called (Lazarus) even with simple closing of tabs by X icon
+  // http://synwrite.sourceforge.net/forums/viewtopic.php?f=20&t=2604
 
   FTabs.OptTabHeight:= 24;
   FTabs.OptSpacer:= 2;
