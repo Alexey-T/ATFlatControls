@@ -418,7 +418,7 @@ end;
 procedure TfmTest.MemoFocus(Sender: TObject);
 begin
   Groups.PagesCurrent:= (Sender as TMemo).Parent as TATPages;
-  Caption:= Format('Group: %d', [Groups.PagesIndexOf(Groups.PagesCurrent)]);
+  Caption:= Format('Group: %d', [Groups.FindPages(Groups.PagesCurrent)]);
 end;
 
 procedure TfmTest.tonext1Click(Sender: TObject);
