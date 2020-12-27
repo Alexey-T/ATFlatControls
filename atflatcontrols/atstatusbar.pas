@@ -149,7 +149,7 @@ type
     procedure Resize; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: integer); override;
-    procedure MouseLeave; override;
+    procedure MouseLeave; {$ifdef fpc}override;{$endif}
     procedure Click; override;
     {$ifdef windows}
     procedure WMEraseBkgnd(var Message: TMessage); message WM_ERASEBKGND;
