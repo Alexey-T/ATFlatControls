@@ -216,15 +216,19 @@ procedure TfmTest.TabClose(Sender: TObject; ATabIndex: Integer;
   var ACanClose, ACanContinue: boolean);
 var
   D: TATTabData;
-  Id, Res: Integer;
+  Res: TModalResult;
+  Btns: TMsgDlgButtons;
 begin
   D:= (Sender as TATTabs).GetTabData(ATabIndex);
 
-  if ACanContinue then Id:= mb_yesnocancel else Id:= mb_okcancel;
-  Res:= Application.MessageBox(PChar(string('Close: '+D.TabCaption)), 'Close', Id);
+  if ACanContinue then
+    Btns:= mbYesNoCancel
+  else
+    Btns:= mbOKCancel;
+  Res:= MessageDlg('Close tab', 'Close: '+D.TabCaption, mtConfirmation, Btns, 0);
   
-  ACanClose:= (Res=idok) or (Res=idyes);
-  ACanContinue:= Res<>idcancel;
+  ACanClose:= Res in [mrOk, mrYes];
+  ACanContinue:= Res<>mrCancel;
 
   if ACanClose then
     D.TabObject.Free;
