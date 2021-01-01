@@ -448,7 +448,6 @@ type
     FTabIndexDrop: integer;
     FTabIndexHinted: integer;
     FTabIndexHintedPrev: integer;
-    FTabIndexAnimated: integer;
     FTabList: TATTabListCollection;
     FTabMenu: TPopupMenu;
     FCaptionList: TStringList;
@@ -458,7 +457,6 @@ type
     FRealIndentRight: integer;
     FOptFontScale: integer;
     FOptSpaceSide: integer;
-    FAnimationOffset: integer;
     FPaintCount: integer;
     FLastOverIndex: integer;
     FLastOverX: boolean;
@@ -619,8 +617,7 @@ type
 
     procedure ApplyButtonLayout;
     function GetTabRectWidth(APlusBtn: boolean): integer;
-    function GetTabRect(AIndex: integer; AWithScroll: boolean=true;
-      AWithAnimation: boolean=true): TRect;
+    function GetTabRect(AIndex: integer; AWithScroll: boolean=true): TRect;
     function GetTabRect_Plus(AWithScroll: boolean= true): TRect;
     function GetTabRect_X(const ARect: TRect): TRect;
     function GetTabAt(X, Y: integer; out APressedX: boolean): integer;
@@ -1261,8 +1258,6 @@ begin
   FTabIndexOver:= -1;
   FTabIndexHinted:= -1;
   FTabIndexHintedPrev:= -1;
-  FTabIndexAnimated:= -1;
-  FAnimationOffset:= 0;
   //FTabList:= TCollection.Create(TATTabData);
   FTabList:= TATTabListCollection.Create(TATTabData);
   FTabList.AOwner:= Self;
@@ -1944,7 +1939,7 @@ begin
 end;
 
 
-function TATTabs.GetTabRect(AIndex: integer; AWithScroll: boolean=true; AWithAnimation: boolean=true): TRect;
+function TATTabs.GetTabRect(AIndex: integer; AWithScroll: boolean): TRect;
 var
   Data: TATTabData;
 begin
@@ -1952,17 +1947,6 @@ begin
   if Assigned(Data) then
   begin
     Result:= Data.TabRect;
-    if AWithAnimation and (AIndex=FTabIndexAnimated) then
-      case FOptPosition of
-        atpTop:
-          Inc(Result.Top, FAnimationOffset);
-        atpBottom:
-          Dec(Result.Bottom, FAnimationOffset);
-        atpLeft:
-          Inc(Result.Left, FAnimationOffset);
-        atpRight:
-          Dec(Result.Right, FAnimationOffset);
-      end;
   end
   else
     Result:= Rect(0, 0, 10, 10);
@@ -2128,7 +2112,7 @@ begin
       begin
         if TabCount>0 then
         begin
-          Result:= GetTabRect(TabCount-1, AWithScroll, false);
+          Result:= GetTabRect(TabCount-1, AWithScroll);
           Result.Left:= Result.Right + DoScale(FOptSpaceBetweenTabs);
           Result.Right:= Result.Left + GetTabRectWidth(true);
         end
@@ -2144,7 +2128,7 @@ begin
       begin
         if TabCount>0 then
         begin
-          Result:= GetTabRect(TabCount-1, AWithScroll, false);
+          Result:= GetTabRect(TabCount-1, AWithScroll);
           Result.Top:= Result.Bottom + DoScale(FOptSpaceBetweenTabs);
           Result.Bottom:= Result.Top + DoScale(FOptTabHeight);
         end
@@ -3758,7 +3742,7 @@ begin
   if FOptShowPlusTab then
     R:= GetTabRect_Plus(false)
   else
-    R:= GetTabRect(TabCount-1, false, false);
+    R:= GetTabRect(TabCount-1, false);
 
   case FOptPosition of
     atpTop,
