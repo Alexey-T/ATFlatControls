@@ -46,8 +46,10 @@ type
     FFontSize: integer;
     FTag: Int64;
     FHotTrack: boolean;
+    FCallback: string;
   public
     constructor Create(ACollection: TCollection); override;
+    property Callback: string read FCallback write FCallback;
   published
     property Width: integer read FWidth write FWidth;
     property Align: TAlignment read FAlign write FAlign default taLeftJustify;
