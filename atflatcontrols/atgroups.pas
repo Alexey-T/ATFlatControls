@@ -63,7 +63,8 @@ type
       AColor: TColor=clNone;
       AImageIndex: integer=-1;
       const AHint: TATTabString='';
-      AndActivate: boolean=true): integer;
+      AndActivate: boolean=true;
+      ASpecial: boolean=false): integer;
     property Tabs: TATTabs read FTabs;
     property EnabledEmpty: boolean read FEnabledEmpty write FEnabledEmpty;
     property OnTabFocus: TNotifyEvent read FOnTabFocus write FOnTabFocus;
@@ -445,7 +446,8 @@ end;
 
 function TATPages.AddTab(AIndex: integer; AControl: TControl;
   const ACaption: TATTabString; AModified: boolean; AColor: TColor;
-  AImageIndex: integer; const AHint: TATTabString; AndActivate: boolean): integer;
+  AImageIndex: integer; const AHint: TATTabString; AndActivate: boolean;
+  ASpecial: boolean): integer;
 begin
   FTabs.AddTab(
     AIndex,
@@ -456,7 +458,8 @@ begin
     AImageIndex,
     nil,
     [],
-    AHint
+    AHint,
+    ASpecial
     );
   AControl.Parent:= Self;
   AControl.Align:= alClient;
@@ -1530,7 +1533,8 @@ begin
     D.TabColor,
     D.TabImageIndex,
     D.TabHint,
-    false);
+    false,
+    D.TabSpecial);
   AFromPages.Tabs.DeleteTab(AFromIndex, false, false);
 
   if AActivateTabAfter then

@@ -632,7 +632,8 @@ type
       AImageIndex: TImageIndex = -1;
       APopupMenu: TPopupMenu = nil;
       AFontStyle: TFontStyles = [];
-      const AHint: TATTabString = ''): TATTabData;
+      const AHint: TATTabString = '';
+      ASpecial: boolean=false): TATTabData;
     procedure Clear;
     function DeleteTab(AIndex: integer; AAllowEvent, AWithCancelBtn: boolean;
       AAction: TATTabActionOnClose=aocDefault): boolean;
@@ -3042,7 +3043,8 @@ function TATTabs.AddTab(
   AImageIndex: TImageIndex = -1;
   APopupMenu: TPopupMenu = nil;
   AFontStyle: TFontStyles = [];
-  const AHint: TATTabString = ''): TATTabData;
+  const AHint: TATTabString = '';
+  ASpecial: boolean=false): TATTabData;
 var
   Data: TATTabData;
 begin
@@ -3060,6 +3062,7 @@ begin
   Data.TabImageIndex:= AImageIndex;
   Data.TabPopupMenu:= APopupMenu;
   Data.TabFontStyle:= AFontStyle;
+  Data.TabSpecial:= ASpecial;
 
   FTabIndexHinted:= cTabIndexNone;
   FTabIndexHintedPrev:= cTabIndexNone;
@@ -3587,7 +3590,8 @@ begin
     Data.TabImageIndex,
     Data.TabPopupMenu,
     Data.TabFontStyle,
-    Data.TabHint
+    Data.TabHint,
+    Data.TabSpecial
     );
 
   //correct TabObject parent
