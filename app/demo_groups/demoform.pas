@@ -423,6 +423,7 @@ begin
     if D.TabObject is TWinControl then
     begin
       Ctl:= D.TabObject as TWinControl;
+      Ctl.Visible:= true;
       if Ctl.Enabled and Ctl.Visible and Ctl.CanFocus then
         Ctl.SetFocus;
     end;

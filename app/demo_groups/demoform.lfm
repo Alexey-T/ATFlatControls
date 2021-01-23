@@ -4,7 +4,7 @@ object fmTest: TfmTest
   Top = 137
   Width = 914
   Caption = 'Groups'
-  ClientHeight = 522
+  ClientHeight = 520
   ClientWidth = 914
   Color = clBtnFace
   Font.Color = clWindowText
@@ -14,10 +14,10 @@ object fmTest: TfmTest
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '1.9.0.0'
+  LCLVersion = '2.1.0.0'
   object Tree: TTreeView
     Left = 0
-    Height = 501
+    Height = 502
     Top = 0
     Width = 170
     Align = alLeft
@@ -40,14 +40,14 @@ object fmTest: TfmTest
   end
   object Status: TStatusBar
     Left = 0
-    Height = 21
-    Top = 501
+    Height = 18
+    Top = 502
     Width = 914
     Panels = <>
   end
   object PopupMenu1: TPopupMenu
-    left = 408
-    top = 80
+    Left = 408
+    Top = 80
     object mnuClose: TMenuItem
       Caption = 'close'
       object mnuCloseThis: TMenuItem
@@ -125,8 +125,8 @@ object fmTest: TfmTest
     end
   end
   object MainMenu1: TMainMenu
-    left = 368
-    top = 96
+    Left = 368
+    Top = 96
     object Mode1: TMenuItem
       Caption = 'Mode'
       object mnuMode1: TMenuItem
