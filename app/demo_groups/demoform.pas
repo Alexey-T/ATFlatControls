@@ -142,6 +142,7 @@ var
   F: TMemo;
   i: Integer;
   ch: Char;
+  Data: TATTabData;
 begin
   F:= TMemo.Create(Self);
   F.Visible:= false;
@@ -153,7 +154,11 @@ begin
   ch:= Chr(Ord('A')+Random(26));
   for i:= 0 to 1+Random(4) do
     F.Lines.Add(StringOfChar(ch, 2+Random(50)));
-  APages.AddTab(-1, F, 'tab'+ch, false);
+
+  Data:= TATTabData.Create(nil);
+  Data.TabObject:= F;
+  Data.TabCaption:= 'tab'+ch;
+  APages.AddTab(-1, Data, false);
 end;
 
 
@@ -411,12 +416,16 @@ end;
 procedure TfmTest.TabFocus(Sender: TObject);
 var
   D: TATTabData;
+  Ctl: TWinControl;
 begin
   D:= (Sender as TATTabs).GetTabData((Sender as TATTabs).TabIndex);
   if D<>nil then
-  begin
-    (D.TabObject as TMemo).SetFocus;
-  end;
+    if D.TabObject is TWinControl then
+    begin
+      Ctl:= D.TabObject as TWinControl;
+      if Ctl.Enabled and Ctl.Visible and Ctl.CanFocus then
+        Ctl.SetFocus;
+    end;
 end;
 
 procedure TfmTest.MemoFocus(Sender: TObject);

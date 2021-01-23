@@ -630,8 +630,7 @@ type
       AObject: TObject = nil;
       AModified: boolean = false;
       AColor: TColor = clNone;
-      AImageIndex: TImageIndex = -1;
-      APopupMenu: TPopupMenu = nil): TATTabData; overload;
+      AImageIndex: TImageIndex = -1): TATTabData; overload;
     procedure AddTab(AIndex: integer; AData: TATTabData); overload;
     procedure Clear;
     function DeleteTab(AIndex: integer; AAllowEvent, AWithCancelBtn: boolean;
@@ -3066,8 +3065,7 @@ function TATTabs.AddTab(
   AObject: TObject = nil;
   AModified: boolean = false;
   AColor: TColor = clNone;
-  AImageIndex: TImageIndex = -1;
-  APopupMenu: TPopupMenu = nil): TATTabData;
+  AImageIndex: TImageIndex = -1): TATTabData;
 var
   Data: TATTabData;
 begin
@@ -3083,7 +3081,7 @@ begin
   Data.TabModified:= AModified;
   Data.TabColor:= AColor;
   Data.TabImageIndex:= AImageIndex;
-  Data.TabPopupMenu:= APopupMenu;
+  //Data.TabPopupMenu:= APopupMenu;
   //Data.TabFontStyle:= AFontStyle;
   //Data.TabSpecial:= ASpecial;
 
