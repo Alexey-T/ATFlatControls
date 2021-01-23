@@ -56,15 +56,7 @@ type
     procedure Resize; override;
   public
     constructor Create(AOwner: TComponent); override;
-    function AddTab(AIndex: integer;
-      AControl: TControl;
-      const ACaption: TATTabString;
-      AModified: boolean;
-      AColor: TColor=clNone;
-      AImageIndex: integer=-1;
-      const AHint: TATTabString='';
-      AndActivate: boolean=true;
-      ASpecial: boolean=false): integer;
+    function AddTab(AIndex: integer; AData: TATTabData; AndActivate: boolean=true): integer;
     property Tabs: TATTabs read FTabs;
     property EnabledEmpty: boolean read FEnabledEmpty write FEnabledEmpty;
     property OnTabFocus: TNotifyEvent read FOnTabFocus write FOnTabFocus;
@@ -444,25 +436,16 @@ begin
   FTabs.ColorCloseX:= clDkGray;
 end;
 
-function TATPages.AddTab(AIndex: integer; AControl: TControl;
-  const ACaption: TATTabString; AModified: boolean; AColor: TColor;
-  AImageIndex: integer; const AHint: TATTabString; AndActivate: boolean;
-  ASpecial: boolean): integer;
+function TATPages.AddTab(AIndex: integer; AData: TATTabData;
+  AndActivate: boolean): integer;
 begin
-  FTabs.AddTab(
-    AIndex,
-    ACaption,
-    AControl,
-    AModified,
-    AColor,
-    AImageIndex,
-    nil,
-    [],
-    AHint,
-    ASpecial
-    );
-  AControl.Parent:= Self;
-  AControl.Align:= alClient;
+  FTabs.AddTab(AIndex, AData);
+
+  if AData.TabObject is TControl then
+  begin
+    TControl(AData.TabObject).Parent:= Self;
+    TControl(AData.TabObject).Align:= alClient;
+  end;
 
   if AIndex<0 then
     Result:= FTabs.TabCount-1
@@ -1526,15 +1509,7 @@ begin
   D:= AFromPages.Tabs.GetTabData(AFromIndex);
   if D=nil then Exit;
 
-  AToPages.AddTab(AToIndex,
-    D.TabObject as TControl,
-    D.TabCaption,
-    D.TabModified,
-    D.TabColor,
-    D.TabImageIndex,
-    D.TabHint,
-    false,
-    D.TabSpecial);
+  AToPages.AddTab(AToIndex, D);
   AFromPages.Tabs.DeleteTab(AFromIndex, false, false);
 
   if AActivateTabAfter then

@@ -90,6 +90,7 @@ type
     property TabRect: TRect read FTabRect write FTabRect;
     property TabSpecial: boolean read FTabSpecial write FTabSpecial default false;
     property TabStartsNewLine: boolean read FTabStartsNewLine write FTabStartsNewLine;
+    procedure Assign(Source: TPersistent); override;
   published
     property TabCaption: TATTabString read FTabCaption write SetTabCaption;
     property TabHint: TATTabString read FTabHint write FTabHint;
@@ -630,10 +631,8 @@ type
       AModified: boolean = false;
       AColor: TColor = clNone;
       AImageIndex: TImageIndex = -1;
-      APopupMenu: TPopupMenu = nil;
-      AFontStyle: TFontStyles = [];
-      const AHint: TATTabString = '';
-      ASpecial: boolean=false): TATTabData;
+      APopupMenu: TPopupMenu = nil): TATTabData; overload;
+    procedure AddTab(AIndex: integer; AData: TATTabData); overload;
     procedure Clear;
     function DeleteTab(AIndex: integer; AAllowEvent, AWithCancelBtn: boolean;
       AAction: TATTabActionOnClose=aocDefault): boolean;
@@ -1092,6 +1091,33 @@ begin
   TabColorOver:= clNone;
   TabImageIndex:= -1;
   TabFontStyle:= [];
+end;
+
+procedure TATTabData.Assign(Source: TPersistent);
+var
+  D: TATTabData;
+begin
+  if Source is TATTabData then
+  begin
+    D:= TATTabData(Source);
+    TabCaption:= D.TabCaption;
+    TabObject:= D.TabObject;
+    TabHint:= D.TabHint;
+    TabColor:= D.TabColor;
+    TabColorActive:= D.TabColorActive;
+    TabColorOver:= D.TabColorOver;
+    TabModified:= D.TabModified;
+    TabImageIndex:= D.TabImageIndex;
+    TabFontStyle:= D.TabFontStyle;
+    TabPopupMenu:= D.TabPopupMenu;
+    TabSpecialWidth:= D.TabSpecialWidth;
+    TabSpecialHeight:= D.TabSpecialHeight;
+    TabHideXButton:= D.TabHideXButton;
+    TabVisible:= D.TabVisible;
+    TabSpecial:= D.TabSpecial;
+  end
+  else
+    inherited Assign(Source);
 end;
 
 { TATTabs }
@@ -3041,10 +3067,7 @@ function TATTabs.AddTab(
   AModified: boolean = false;
   AColor: TColor = clNone;
   AImageIndex: TImageIndex = -1;
-  APopupMenu: TPopupMenu = nil;
-  AFontStyle: TFontStyles = [];
-  const AHint: TATTabString = '';
-  ASpecial: boolean=false): TATTabData;
+  APopupMenu: TPopupMenu = nil): TATTabData;
 var
   Data: TATTabData;
 begin
@@ -3055,14 +3078,14 @@ begin
     AIndex:= TabCount-1;
 
   Data.TabCaption:= ACaption;
-  Data.TabHint:= AHint;
+  //Data.TabHint:= AHint;
   Data.TabObject:= AObject;
   Data.TabModified:= AModified;
   Data.TabColor:= AColor;
   Data.TabImageIndex:= AImageIndex;
   Data.TabPopupMenu:= APopupMenu;
-  Data.TabFontStyle:= AFontStyle;
-  Data.TabSpecial:= ASpecial;
+  //Data.TabFontStyle:= AFontStyle;
+  //Data.TabSpecial:= ASpecial;
 
   FTabIndexHinted:= cTabIndexNone;
   FTabIndexHintedPrev:= cTabIndexNone;
@@ -3073,6 +3096,29 @@ begin
     FOnTabMove(Self, -1, AIndex);
 
   Result:= Data;
+end;
+
+procedure TATTabs.AddTab(AIndex: integer; AData: TATTabData);
+var
+  Data: TATTabData;
+begin
+  Data:= TATTabData(FTabList.Add);
+  Data.Assign(AData);
+  if IsIndexOk(AIndex) then
+    Data.Index:= AIndex
+  else
+  begin
+    AIndex:= TabCount-1;
+    Data.Index:= AIndex;
+  end;
+
+  FTabIndexHinted:= cTabIndexNone;
+  FTabIndexHintedPrev:= cTabIndexNone;
+
+  Invalidate;
+
+  if Assigned(FOnTabMove) then
+    FOnTabMove(Self, -1, AIndex);
 end;
 
 function TATTabs.DeleteTab(AIndex: integer;
@@ -3582,17 +3628,7 @@ begin
   Data:= GetTabData(NTab);
   if Data=nil then Exit;
 
-  ATabs.AddTab(NTabTo,
-    Data.TabCaption,
-    Data.TabObject,
-    Data.TabModified,
-    Data.TabColor,
-    Data.TabImageIndex,
-    Data.TabPopupMenu,
-    Data.TabFontStyle,
-    Data.TabHint,
-    Data.TabSpecial
-    );
+  ATabs.AddTab(NTabTo, Data);
 
   //correct TabObject parent
   if Data.TabObject is TWinControl then
