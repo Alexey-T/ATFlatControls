@@ -278,6 +278,7 @@ const
   _InitOptTabWidthMaximal = 300;
   _InitOptTabWidthNormal = 130;
   _InitOptTabWidthMinimalHidesX = 55;
+  _InitOptMinimalWidthForSides = 140;
   _InitOptSpaceSide = 10;
   _InitOptSpaceInitial = 5;
   _InitOptSpaceBeforeText = 6;
@@ -457,6 +458,7 @@ type
     FRealIndentLeft: integer;
     FRealIndentRight: integer;
     FOptFontScale: integer;
+    FOptMinimalWidthForSides: integer;
     FOptSpaceSide: integer;
     FPaintCount: integer;
     FLastOverIndex: integer;
@@ -757,6 +759,7 @@ type
     property OptTabWidthMaximal: integer read FOptTabWidthMaximal write FOptTabWidthMaximal default _InitOptTabWidthMaximal;
     property OptTabWidthMinimalHidesX: integer read FOptTabWidthMinimalHidesX write FOptTabWidthMinimalHidesX default _InitOptTabWidthMinimalHidesX;
     property OptFontScale: integer read FOptFontScale write FOptFontScale default 100;
+    property OptMinimalWidthForSides: integer read FOptMinimalWidthForSides write FOptMinimalWidthForSides default _InitOptMinimalWidthForSides;
     property OptSpaceSide: integer read FOptSpaceSide write FOptSpaceSide default _InitOptSpaceSide;
     property OptSpaceBetweenTabs: integer read FOptSpaceBetweenTabs write FOptSpaceBetweenTabs default _InitOptSpaceBetweenTabs;
     property OptSpaceBetweenLines: integer read FOptSpaceBetweenLines write FOptSpaceBetweenLines default _InitOptSpaceBetweenLines;
@@ -1204,6 +1207,7 @@ begin
   FOptTabWidthNormal:= _InitOptTabWidthNormal;
   FOptTabWidthMinimalHidesX:= _InitOptTabWidthMinimalHidesX;
   FOptFontScale:= 100;
+  FOptMinimalWidthForSides:= _InitOptMinimalWidthForSides;
   FOptSpaceSide:= _InitOptSpaceSide;
   FOptSpaceInitial:= _InitOptSpaceInitial;
   FOptSpaceBeforeText:= _InitOptSpaceBeforeText;
@@ -2270,7 +2274,7 @@ begin
   ElemType:= aeBackground;
   RRect:= ClientRect;
 
-  if Width>=DoScale(140) then //TODO make the property
+  if Width>=DoScale(FOptMinimalWidthForSides) then
     FLastSpaceSide:= FOptSpaceSide
   else
     FLastSpaceSide:= 0;
