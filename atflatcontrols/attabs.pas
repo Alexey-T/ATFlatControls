@@ -461,6 +461,7 @@ type
     FPaintCount: integer;
     FLastOverIndex: integer;
     FLastOverX: boolean;
+    FLastSpaceSide: integer;
 
     FScrollPos: integer;
     FImages: TImageList;
@@ -1406,9 +1407,9 @@ begin
 
   DoPaintTabShape(C,
     Rect(
-      ARect.Left-DoScale(FOptSpaceSide),
+      ARect.Left-DoScale(FLastSpaceSide),
       ARect.Top,
-      ARect.Right+DoScale(FOptSpaceSide),
+      ARect.Right+DoScale(FLastSpaceSide),
       ARect.Bottom),
     ATabActive,
     ATabIndex
@@ -1623,8 +1624,8 @@ var
 begin
   R.Top:= ATabRect.Top;
   R.Bottom:= ATabRect.Bottom;
-  R.Left:= ATabRect.Left+DoScale(FOptSpaceSide);
-  R.Right:= ATabRect.Right-DoScale(FOptSpaceSide);
+  R.Left:= ATabRect.Left+DoScale(FLastSpaceSide);
+  R.Right:= ATabRect.Right-DoScale(FLastSpaceSide);
 
   if not FThemed then
   begin
@@ -1647,7 +1648,7 @@ begin
   DoPaintTabShape_C(C, ATabActive, ATabIndex, R, PL1, PL2, PR1, PR2);
 
   //left/right edges
-  if FOptSpaceSide>0 then
+  if FLastSpaceSide>0 then
   begin
     DoPaintTabShape_L(C, R, ATabActive, ATabIndex);
     DoPaintTabShape_R(C, R, ATabActive, ATabIndex);
@@ -1701,14 +1702,14 @@ begin
   case FOptPosition of
     atpTop:
       begin
-        if FOptSpaceSide=0 then
+        if FLastSpaceSide=0 then
           DrawLine(C, PL1.X, PL1.Y, PL2.X, PL2.Y+1, AColorBorder);
-        if FOptSpaceSide=0 then
+        if FLastSpaceSide=0 then
           DrawLine(C, PR1.X, PR1.Y, PR2.X, PR2.Y+1, AColorBorder);
         DrawLine(C, PL1.X, PL1.Y, PR1.X, PL1.Y, AColorBorder);
         if AColorBorderLow<>clNone then
-          DrawLine(C, PL2.X-DoScale(FOptSpaceSide), ARect.Bottom,
-                      PR2.X+DoScale(FOptSpaceSide), ARect.Bottom, AColorBorderLow)
+          DrawLine(C, PL2.X-DoScale(FLastSpaceSide), ARect.Bottom,
+                      PR2.X+DoScale(FLastSpaceSide), ARect.Bottom, AColorBorderLow)
         else
           DrawLine(C, PL2.X+1, ARect.Bottom, PR2.X-1, ARect.Bottom, AColorBg);
       end;
@@ -1718,8 +1719,8 @@ begin
         DrawLine(C, PR1.X, PR1.Y, PR2.X, PR2.Y+1, AColorBorder);
         DrawLine(C, PL2.X, PL2.Y+1, PR2.X, PL2.Y+1, AColorBorder);
         if AColorBorderLow<>clNone then
-          DrawLine(C, PL1.X-DoScale(FOptSpaceSide), ARect.Top,
-                      PR1.X+DoScale(FOptSpaceSide), ARect.Top, AColorBorderLow)
+          DrawLine(C, PL1.X-DoScale(FLastSpaceSide), ARect.Top,
+                      PR1.X+DoScale(FLastSpaceSide), ARect.Top, AColorBorderLow)
       end;
     atpLeft:
       begin
@@ -1750,7 +1751,7 @@ begin
       Pic:= FPic_Side_L_a
     else
       Pic:= FPic_Side_L;
-    Pic.Draw(C, ARect.Left-DoScale(FOptSpaceSide), ARect.Top);
+    Pic.Draw(C, ARect.Left-DoScale(FLastSpaceSide), ARect.Top);
     exit;
   end;
 
@@ -1770,9 +1771,9 @@ begin
       atpTop:
         begin
           DrawTriangleRectFramed(C,
-            ARect.Left-DoScale(FOptSpaceSide)+1,
+            ARect.Left-DoScale(FLastSpaceSide)+1,
             ARect.Top,
-            DoScale(FOptSpaceSide),
+            DoScale(FLastSpaceSide),
             DoScale(FOptTabHeight)+IfThen(ATabActive, 1),
             cSmoothScale,
             ampnTopLeft,
@@ -1783,9 +1784,9 @@ begin
       atpBottom:
         begin
           DrawTriangleRectFramed(C,
-            ARect.Left-DoScale(FOptSpaceSide)+1,
+            ARect.Left-DoScale(FLastSpaceSide)+1,
             ARect.Top+IfThen(not ATabActive, 1),
-            DoScale(FOptSpaceSide),
+            DoScale(FLastSpaceSide),
             DoScale(FOptTabHeight),
             cSmoothScale,
             ampnBottomLeft,
@@ -1830,7 +1831,7 @@ begin
           DrawTriangleRectFramed(C,
             ARect.Right-1,
             ARect.Top,
-            DoScale(FOptSpaceSide),
+            DoScale(FLastSpaceSide),
             DoScale(FOptTabHeight)+IfThen(ATabActive, 1),
             cSmoothScale,
             ampnTopRight,
@@ -1843,7 +1844,7 @@ begin
           DrawTriangleRectFramed(C,
             ARect.Right-1,
             ARect.Top+IfThen(not ATabActive, 1),
-            DoScale(FOptSpaceSide),
+            DoScale(FLastSpaceSide),
             DoScale(FOptTabHeight),
             cSmoothScale,
             ampnBottomRight,
@@ -2047,7 +2048,7 @@ begin
     FTabWidth:= DoScale(FOptTabWidthNormal);
   NWidthSaved:= FTabWidth;
 
-  R.Left:= FRealIndentLeft+DoScale(FOptSpaceSide);
+  R.Left:= FRealIndentLeft+DoScale(FLastSpaceSide);
   R.Right:= R.Left;
   R.Top:= DoScale(FOptSpacer);
   R.Bottom:= R.Top+DoScale(FOptTabHeight);
@@ -2146,7 +2147,7 @@ begin
         begin
           Result.Top:= DoScale(FOptSpacer);
           Result.Bottom:= Result.Top + DoScale(FOptTabHeight);
-          Result.Left:= FRealIndentLeft + FOptSpaceSide;
+          Result.Left:= FRealIndentLeft + FLastSpaceSide;
           Result.Right:= Result.Left + GetTabRectWidth(true);
         end;
       end;
@@ -2268,6 +2269,11 @@ var
 begin
   ElemType:= aeBackground;
   RRect:= ClientRect;
+
+  if Width>=DoScale(140) then //TODO make the property
+    FLastSpaceSide:= FOptSpaceSide
+  else
+    FLastSpaceSide:= 0;
 
   //update index here, because user can add/del tabs by keyboard
   with ScreenToClient(Mouse.CursorPos) do
