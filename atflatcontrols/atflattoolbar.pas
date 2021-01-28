@@ -61,6 +61,7 @@ type
     function AddSep: TATButton;
     procedure UpdateControls(AInvalidate: boolean=false);
     function ButtonCount: integer;
+    function ButtonWithMouseOver: integer;
     function IsIndexOk(AIndex: integer): boolean;
     property Buttons[AIndex: integer]: TATButton read GetButton;
     property Themed: boolean read FThemed write FThemed;
@@ -280,6 +281,20 @@ end;
 function TATFlatToolbar.ButtonCount: integer;
 begin
   Result:= ControlCount;
+end;
+
+function TATFlatToolbar.ButtonWithMouseOver: integer;
+var
+  Btn: TATButton;
+  i: integer;
+begin
+  Result:= -1;
+  for i:= 0 to ButtonCount-1 do
+  begin
+    Btn:= Buttons[i];
+    if Assigned(Btn) and Btn.IsMouseOver then
+      exit(i);
+  end;
 end;
 
 function TATFlatToolbar.IsIndexOk(AIndex: integer): boolean;
