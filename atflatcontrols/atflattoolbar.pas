@@ -289,6 +289,8 @@ begin
   Result:= ControlCount;
 end;
 
+{
+//ok for win32, bad for linux gtk2 for CudaText plugin cuda_testing_dlg_proc
 function TATFlatToolbar.ButtonWithMouseOver: integer;
 var
   Btn: TATButton;
@@ -302,6 +304,25 @@ begin
       exit(i);
   end;
 end;
+}
+
+function TATFlatToolbar.ButtonWithMouseOver: integer;
+var
+  Btn: TATButton;
+  P: TPoint;
+  i: integer;
+begin
+  Result:= -1;
+  P:= ScreenToClient(Mouse.CursorPos);
+  for i:= 0 to ButtonCount-1 do
+  begin
+    Btn:= Buttons[i];
+    if Btn=nil then Continue;
+    if PtInRect(Btn.BoundsRect, P) then
+      exit(i);
+  end;
+end;
+
 
 function TATFlatToolbar.IsIndexOk(AIndex: integer): boolean;
 begin
