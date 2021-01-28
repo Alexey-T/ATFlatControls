@@ -27,9 +27,11 @@ type
     FButtonWidth: integer;
     FThemed: boolean; //for use in CudaText
     FWrapable: boolean;
+    FOnMouseMove: TMouseMoveEvent;
     procedure PopupForDropdownClick(Sender: TObject);
     function GetButton(AIndex: integer): TATButton;
     procedure SetButtonWidth(AValue: integer);
+    procedure SetMouseMove(AValue: TMouseMoveEvent);
     procedure SetVertical(AValue: boolean);
     procedure SetWrapable(AValue: boolean);
     procedure UpdateAnchors;
@@ -82,6 +84,7 @@ type
     property Images: TImageList read FImages write FImages;
     property Vertical: boolean read FVertical write SetVertical default false;
     property Wrapable: boolean read FWrapable write SetWrapable default false;
+    property OnMouseMove: TMouseMoveEvent read FOnMouseMove write SetMouseMove;
   end;
 
 implementation
@@ -216,6 +219,9 @@ begin
   if AInvalidate then
     for i:= 0 to ControlCount-1 do
       Controls[i].Invalidate;
+
+  for i:= 0 to ButtonCount-1 do
+    Buttons[i].OnMouseMove:= FOnMouseMove;
 end;
 
 procedure TATFlatToolbar.UpdateAnchors;
@@ -320,6 +326,12 @@ begin
   else
   if not Wrapable then
     Height:= ATFlatTheme.DoScale(AValue);
+end;
+
+procedure TATFlatToolbar.SetMouseMove(AValue: TMouseMoveEvent);
+begin
+  if FOnMouseMove=AValue then Exit;
+  FOnMouseMove:= AValue;
 end;
 
 procedure TATFlatToolbar.SetVertical(AValue: boolean);
