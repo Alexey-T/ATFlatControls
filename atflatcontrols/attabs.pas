@@ -3520,6 +3520,9 @@ function TATTabs.IsShowX(AIndex: integer): boolean;
 var
   D: TATTabData;
 begin
+  if Width<FOptMinimalWidthForSides then
+    exit(false);
+
   case FOptShowXButtons of
     atbxShowNone:
       Result:= false;
