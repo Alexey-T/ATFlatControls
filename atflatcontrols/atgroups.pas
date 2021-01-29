@@ -56,14 +56,7 @@ type
     procedure Resize; override;
   public
     constructor Create(AOwner: TComponent); override;
-    function AddTab(AIndex: integer;
-      AControl: TControl;
-      const ACaption: TATTabString;
-      AModified: boolean;
-      AColor: TColor=clNone;
-      AImageIndex: integer=-1;
-      const AHint: TATTabString='';
-      AndActivate: boolean=true): integer;
+    function AddTab(AIndex: integer; AData: TATTabData; AndActivate: boolean=true): integer;
     property Tabs: TATTabs read FTabs;
     property EnabledEmpty: boolean read FEnabledEmpty write FEnabledEmpty;
     property OnTabFocus: TNotifyEvent read FOnTabFocus write FOnTabFocus;
@@ -122,8 +115,6 @@ type
     tabOptionVarWidth,
     tabOptionMultiline,
     tabOptionScalePercents,
-    tabOptionAnimationEn,
-    tabOptionAnimationPause,
     tabOptionFontSize,
     tabOptionPosition,
     tabOptionShowFlat,
@@ -162,7 +153,7 @@ type
 
 type
   TATGroupsMode = (
-    gmNone,
+    gmUninited,
     gmOne,
     gm2v,
     gm2h,
@@ -423,10 +414,10 @@ begin
   FTabs.OnTabOver:= TabOver;
   FTabs.OnTabMove:= TabMove;
   FTabs.OnTabGetTick:= TabGetTick;
-  {$ifdef fpc}
-  FTabs.DragMode:= dmAutomatic; //allow DnD between groups
-    //it breaks all on Delphi7
-  {$endif}
+
+  //dont set FTabs.DragMode:=dmAutomatic, because then
+  //DragNDrop is called (Lazarus) even with simple closing of tabs by X icon
+  // http://synwrite.sourceforge.net/forums/viewtopic.php?f=20&t=2604
 
   FTabs.OptTabHeight:= 24;
   FTabs.OptSpacer:= 2;
@@ -445,23 +436,16 @@ begin
   FTabs.ColorCloseX:= clDkGray;
 end;
 
-function TATPages.AddTab(AIndex: integer; AControl: TControl;
-  const ACaption: TATTabString; AModified: boolean; AColor: TColor;
-  AImageIndex: integer; const AHint: TATTabString; AndActivate: boolean): integer;
+function TATPages.AddTab(AIndex: integer; AData: TATTabData;
+  AndActivate: boolean): integer;
 begin
-  FTabs.AddTab(
-    AIndex,
-    ACaption,
-    AControl,
-    AModified,
-    AColor,
-    AImageIndex,
-    nil,
-    [],
-    AHint
-    );
-  AControl.Parent:= Self;
-  AControl.Align:= alClient;
+  FTabs.AddTab(AIndex, AData);
+
+  if AData.TabObject is TControl then
+  begin
+    TControl(AData.TabObject).Parent:= Self;
+    TControl(AData.TabObject).Align:= alClient;
+  end;
 
   if AIndex<0 then
     Result:= FTabs.TabCount-1
@@ -664,7 +648,7 @@ begin
   InitSplitterPopup;
   FPopupPages:= nil;
   FPopupTabIndex:= -1;
-  FMode:= gmNone;
+  FMode:= gmOne;
 end;
 
 procedure TATGroups.InitSplitterPopup;
@@ -723,7 +707,9 @@ var
   NPagesBefore, NPagesAfter: Integer;
   w, h, i: Integer;
 begin
-  if Value=FMode then Exit;
+  if Value=gmUninited then
+    Value:= gmOne;
+  if (Value<>gmOne) and (Value=FMode) then Exit;
 
   w:= ClientWidth;
   h:= ClientHeight;
@@ -1523,14 +1509,7 @@ begin
   D:= AFromPages.Tabs.GetTabData(AFromIndex);
   if D=nil then Exit;
 
-  AToPages.AddTab(AToIndex,
-    D.TabObject as TControl,
-    D.TabCaption,
-    D.TabModified,
-    D.TabColor,
-    D.TabImageIndex,
-    D.TabHint,
-    false);
+  AToPages.AddTab(AToIndex, D);
   AFromPages.Tabs.DeleteTab(AFromIndex, false, false);
 
   if AActivateTabAfter then
@@ -1764,8 +1743,6 @@ begin
         tabOptionVarWidth:         OptVarWidth:= Boolean(N);
         tabOptionMultiline:        OptMultiline:= Boolean(N);
         tabOptionScalePercents:    OptScalePercents:= N;
-        tabOptionAnimationEn:      OptAnimationEnabled:= Boolean(N);
-        tabOptionAnimationPause:   OptAnimationPause:= N;
         tabOptionShowFlat:         OptShowFlat:= Boolean(N);
         tabOptionShowTabs:         Visible:= Boolean(N);
         tabOptionShowXButtons:     OptShowXButtons:= TATTabShowClose(N);

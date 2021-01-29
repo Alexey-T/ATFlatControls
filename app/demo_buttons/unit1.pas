@@ -17,6 +17,7 @@ type
     chkFocus: TCheckBox;
     ImageList1: TImageList;
     Label1: TLabel;
+    LabelStatus: TLabel;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
     PanelRight: TPanel;
@@ -28,6 +29,7 @@ type
     procedure chkFocusChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure ToolbarMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure TrackScaleChange(Sender: TObject);
   private
     { private declarations }
@@ -119,6 +121,7 @@ begin
   bar.Parent:= PanelToolbar;
   bar.Align:= alClient;
   bar.Images:= ImageList1;
+  bar.OnMouseMove:= @ToolbarMouseMove;
   bar.AddButton(0, @BtnColorsClick, 'Open', 'hint1', '', true);
   bar.AddDropdown(-1, PopupMenu1, nil, '', 'Some menu');
   bar.AddDropdown(-1, PopupMenu1, nil, 'Sub:', 'Does same as btn before');
@@ -134,6 +137,7 @@ begin
   bar2.Align:= alClient;
   bar2.Vertical:= true;
   bar2.Images:= ImageList1;
+  bar2.OnMouseMove:= @ToolbarMouseMove;
   bar2.AddButton(0, @BtnColorsClick, 'Open', 'hint1', '', true);
   bar2.AddDropdown(-1, PopupMenu1, nil, '', 'Some menu');
   bar2.AddDropdown(-1, PopupMenu1, nil, 'Sub:', 'Does same as btn before');
@@ -148,6 +152,19 @@ procedure TfmMain.FormShow(Sender: TObject);
 begin
   bar.UpdateControls;
   bar2.UpdateControls;
+end;
+
+procedure TfmMain.ToolbarMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+var
+  TmpBar: TATFlatToolbar;
+begin
+  if Sender is TATButton then
+  begin
+    TmpBar:= TATButton(Sender).Parent as TATFlatToolbar;
+    LabelStatus.Caption:= Format('toolbar MouseOver: %d', [TmpBar.ButtonWithMouseOver]);
+  end
+  else
+    LabelStatus.Caption:= 'toolbar MouseOver: none';
 end;
 
 procedure TfmMain.TrackScaleChange(Sender: TObject);

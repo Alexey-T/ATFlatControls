@@ -11,7 +11,7 @@ object Form1: TForm1
   LCLVersion = '2.1.0.0'
   object chkPosTop: TRadioButton
     Left = 208
-    Height = 24
+    Height = 23
     Top = 112
     Width = 50
     Caption = 'top'
@@ -22,7 +22,7 @@ object Form1: TForm1
   end
   object chkPosBottom: TRadioButton
     Left = 208
-    Height = 24
+    Height = 23
     Top = 136
     Width = 78
     Caption = 'bottom'
@@ -31,7 +31,7 @@ object Form1: TForm1
   end
   object chkPosLeft: TRadioButton
     Left = 208
-    Height = 24
+    Height = 23
     Top = 160
     Width = 50
     Caption = 'left'
@@ -40,7 +40,7 @@ object Form1: TForm1
   end
   object chkPosRight: TRadioButton
     Left = 208
-    Height = 24
+    Height = 23
     Top = 184
     Width = 58
     Caption = 'right'
@@ -49,7 +49,7 @@ object Form1: TForm1
   end
   object chkEmptyBtns: TCheckBox
     Left = 312
-    Height = 24
+    Height = 23
     Top = 112
     Width = 99
     Caption = 'no buttons'
@@ -58,7 +58,7 @@ object Form1: TForm1
   end
   object chkFlat: TCheckBox
     Left = 312
-    Height = 24
+    Height = 23
     Top = 136
     Width = 50
     Caption = 'flat'
@@ -67,7 +67,7 @@ object Form1: TForm1
   end
   object chkFullColor: TCheckBox
     Left = 312
-    Height = 24
+    Height = 23
     Top = 160
     Width = 103
     Caption = 'full colored'
@@ -76,9 +76,9 @@ object Form1: TForm1
   end
   object chkColorAllowVert: TCheckBox
     Left = 312
-    Height = 24
+    Height = 23
     Top = 184
-    Width = 171
+    Width = 170
     Caption = 'color band: allow vert'
     Checked = True
     OnChange = chkColorAllowVertChange
@@ -87,7 +87,7 @@ object Form1: TForm1
   end
   object chkAngled: TCheckBox
     Left = 312
-    Height = 24
+    Height = 23
     Top = 208
     Width = 104
     Caption = 'angled tabs'
@@ -96,7 +96,7 @@ object Form1: TForm1
   end
   object chkBetween: TCheckBox
     Left = 312
-    Height = 24
+    Height = 23
     Top = 232
     Width = 159
     Caption = 'space between tabs'
@@ -110,7 +110,7 @@ object Form1: TForm1
     Width = 136
     Caption = 'add tab'
     OnClick = btnAddTabClick
-    TabOrder = 11
+    TabOrder = 10
   end
   object btnPrev: TButton
     Left = 448
@@ -119,7 +119,7 @@ object Form1: TForm1
     Width = 64
     Caption = '<'
     OnClick = btnPrevClick
-    TabOrder = 12
+    TabOrder = 11
   end
   object btnNext: TButton
     Left = 512
@@ -128,17 +128,6 @@ object Form1: TForm1
     Width = 72
     Caption = '>'
     OnClick = btnNextClick
-    TabOrder = 13
-  end
-  object chkAnim: TCheckBox
-    Left = 312
-    Height = 24
-    Top = 256
-    Width = 214
-    Caption = 'animation for tab add/close'
-    Checked = True
-    OnChange = chkAnimChange
-    State = cbChecked
-    TabOrder = 10
+    TabOrder = 12
   end
 end

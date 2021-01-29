@@ -142,6 +142,7 @@ var
   F: TMemo;
   i: Integer;
   ch: Char;
+  Data: TATTabData;
 begin
   F:= TMemo.Create(Self);
   F.Visible:= false;
@@ -153,7 +154,11 @@ begin
   ch:= Chr(Ord('A')+Random(26));
   for i:= 0 to 1+Random(4) do
     F.Lines.Add(StringOfChar(ch, 2+Random(50)));
-  APages.AddTab(-1, F, 'tab'+ch, false);
+
+  Data:= TATTabData.Create(nil);
+  Data.TabObject:= F;
+  Data.TabCaption:= 'tab'+ch;
+  APages.AddTab(-1, Data, false);
 end;
 
 
@@ -216,15 +221,19 @@ procedure TfmTest.TabClose(Sender: TObject; ATabIndex: Integer;
   var ACanClose, ACanContinue: boolean);
 var
   D: TATTabData;
-  Id, Res: Integer;
+  Res: TModalResult;
+  Btns: TMsgDlgButtons;
 begin
   D:= (Sender as TATTabs).GetTabData(ATabIndex);
 
-  if ACanContinue then Id:= mb_yesnocancel else Id:= mb_okcancel;
-  Res:= Application.MessageBox(PChar(string('Close: '+D.TabCaption)), 'Close', Id);
+  if ACanContinue then
+    Btns:= mbYesNoCancel
+  else
+    Btns:= mbOKCancel;
+  Res:= MessageDlg('Close tab', 'Close: '+D.TabCaption, mtConfirmation, Btns, 0);
   
-  ACanClose:= (Res=idok) or (Res=idyes);
-  ACanContinue:= Res<>idcancel;
+  ACanClose:= Res in [mrOk, mrYes];
+  ACanContinue:= Res<>mrCancel;
 
   if ACanClose then
     D.TabObject.Free;
@@ -407,18 +416,23 @@ end;
 procedure TfmTest.TabFocus(Sender: TObject);
 var
   D: TATTabData;
+  Ctl: TWinControl;
 begin
   D:= (Sender as TATTabs).GetTabData((Sender as TATTabs).TabIndex);
   if D<>nil then
-  begin
-    (D.TabObject as TMemo).SetFocus;
-  end;
+    if D.TabObject is TWinControl then
+    begin
+      Ctl:= D.TabObject as TWinControl;
+      Ctl.Visible:= true;
+      if Ctl.Enabled and Ctl.Visible and Ctl.CanFocus then
+        Ctl.SetFocus;
+    end;
 end;
 
 procedure TfmTest.MemoFocus(Sender: TObject);
 begin
   Groups.PagesCurrent:= (Sender as TMemo).Parent as TATPages;
-  Caption:= Format('Group: %d', [Groups.PagesIndexOf(Groups.PagesCurrent)]);
+  Caption:= Format('Group: %d', [Groups.FindPages(Groups.PagesCurrent)]);
 end;
 
 procedure TfmTest.tonext1Click(Sender: TObject);

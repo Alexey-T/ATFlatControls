@@ -27,9 +27,11 @@ type
     FButtonWidth: integer;
     FThemed: boolean; //for use in CudaText
     FWrapable: boolean;
+    FOnMouseMove: TMouseMoveEvent;
     procedure PopupForDropdownClick(Sender: TObject);
     function GetButton(AIndex: integer): TATButton;
     procedure SetButtonWidth(AValue: integer);
+    procedure SetMouseMove(AValue: TMouseMoveEvent);
     procedure SetVertical(AValue: boolean);
     procedure SetWrapable(AValue: boolean);
     procedure UpdateAnchors;
@@ -61,6 +63,7 @@ type
     function AddSep: TATButton;
     procedure UpdateControls(AInvalidate: boolean=false);
     function ButtonCount: integer;
+    function ButtonWithMouseOver: integer;
     function IsIndexOk(AIndex: integer): boolean;
     property Buttons[AIndex: integer]: TATButton read GetButton;
     property Themed: boolean read FThemed write FThemed;
@@ -71,7 +74,7 @@ type
     {$ifdef FPC}
     property BorderSpacing;
     {$endif}
-    property ButtonWidth: integer read FButtonWidth write SetButtonWidth default 50;
+    //property ButtonWidth: integer read FButtonWidth write SetButtonWidth default 50;
     property Color;
     property Enabled;
     property Visible;
@@ -81,6 +84,7 @@ type
     property Images: TImageList read FImages write FImages;
     property Vertical: boolean read FVertical write SetVertical default false;
     property Wrapable: boolean read FWrapable write SetWrapable default false;
+    property OnMouseMove: TMouseMoveEvent read FOnMouseMove write SetMouseMove;
   end;
 
 implementation
@@ -120,6 +124,7 @@ begin
   ImgSize:= 0;
   if Assigned(Images) then
     ImgSize:= Images.Width;
+
   FButtonWidth:= ImgSize+ATFlatTheme.GapForAutoSize;
 
   Canvas.Font.Name:= ATFlatTheme.FontName;
@@ -214,6 +219,9 @@ begin
   if AInvalidate then
     for i:= 0 to ControlCount-1 do
       Controls[i].Invalidate;
+
+  for i:= 0 to ButtonCount-1 do
+    Buttons[i].OnMouseMove:= FOnMouseMove;
 end;
 
 procedure TATFlatToolbar.UpdateAnchors;
@@ -281,6 +289,41 @@ begin
   Result:= ControlCount;
 end;
 
+{
+//ok for win32, bad for linux gtk2 for CudaText plugin cuda_testing_dlg_proc
+function TATFlatToolbar.ButtonWithMouseOver: integer;
+var
+  Btn: TATButton;
+  i: integer;
+begin
+  Result:= -1;
+  for i:= 0 to ButtonCount-1 do
+  begin
+    Btn:= Buttons[i];
+    if Assigned(Btn) and Btn.IsMouseOver then
+      exit(i);
+  end;
+end;
+}
+
+function TATFlatToolbar.ButtonWithMouseOver: integer;
+var
+  Btn: TATButton;
+  P: TPoint;
+  i: integer;
+begin
+  Result:= -1;
+  P:= ScreenToClient(Mouse.CursorPos);
+  for i:= 0 to ButtonCount-1 do
+  begin
+    Btn:= Buttons[i];
+    if Btn=nil then Continue;
+    if PtInRect(Btn.BoundsRect, P) then
+      exit(i);
+  end;
+end;
+
+
 function TATFlatToolbar.IsIndexOk(AIndex: integer): boolean;
 begin
   Result:= (AIndex>=0) and (AIndex<ButtonCount);
@@ -304,6 +347,12 @@ begin
   else
   if not Wrapable then
     Height:= ATFlatTheme.DoScale(AValue);
+end;
+
+procedure TATFlatToolbar.SetMouseMove(AValue: TMouseMoveEvent);
+begin
+  if FOnMouseMove=AValue then Exit;
+  FOnMouseMove:= AValue;
 end;
 
 procedure TATFlatToolbar.SetVertical(AValue: boolean);

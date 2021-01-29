@@ -39,14 +39,17 @@ type
     FImageIndex: integer;
     FAutoSize: boolean;
     FAutoStretch: boolean;
-    FColorFont: TColor; //integer;
-    FColorBack: TColor; //integer;
+    FColorFont: TColor;
+    FColorBack: TColor;
+    FColorBackOver: TColor;
     FFontName: string;
     FFontSize: integer;
     FTag: Int64;
-
+    FHotTrack: boolean;
+    FCallback: string;
   public
     constructor Create(ACollection: TCollection); override;
+    property Callback: string read FCallback write FCallback;
   published
     property Width: integer read FWidth write FWidth;
     property Align: TAlignment read FAlign write FAlign default taLeftJustify;
@@ -57,9 +60,11 @@ type
     property AutoStretch: boolean read FAutoStretch write FAutoStretch default false;
     property ColorFont: TColor read FColorFont write FColorFont default clNone;
     property ColorBack: TColor read FColorBack write FColorBack default clNone;
+    property ColorBackOver: TColor read FColorBackOver write FColorBackOver default clNone;
     property FontName: string read FFontName write FFontName;
     property FontSize: integer read FFontSize write FFontSize default 0;
     property Tag: Int64 read FTag write FTag default 0;
+    property HotTrack: boolean read FHotTrack write FHotTrack default false;
   end;
 
 type
@@ -68,7 +73,7 @@ type
     ACanvas: TCanvas; const ARect: TRect; var ACanDraw: boolean) of object;
 
 const
-  cDefaultStatusbarPadding = 2;
+  cDefaultStatusbarPadding = 5;
   cDefaultStatusbarColorBack = clBtnFace;
   cDefaultStatusbarColorBorderTop = clGray;
   cDefaultStatusbarColorBorderR = clGray;
@@ -102,11 +107,12 @@ type
     FOnPanelDrawAfter: TATStatusDrawEvent;
 
     procedure DoPaintTo(C: TCanvas);
-    procedure DoPaintPanelTo(C: TCanvas; ARect: TRect; AData: TATStatusData);
+    procedure DoPaintPanelTo(C: TCanvas; ARect: TRect; AData: TATStatusData; AMouseOver: boolean);
     function DoDrawBefore(AIndex: integer; ACanvas: TCanvas; const ARect: TRect): boolean;
     function DoDrawAfter(AIndex: integer; ACanvas: TCanvas; const ARect: TRect): boolean;
     function GetCaption(AIndex: integer): TCaption;
     function GetHint(AIndex: integer): string;
+    function IsHotTrackUsed: boolean;
     procedure SetCaption(AIndex: integer; const AValue: TCaption);
     procedure SetHint(AIndex: integer; const AValue: string); reintroduce;
     procedure UpdateCanvasFont(C: TCanvas; D: TATStatusData);
@@ -128,7 +134,8 @@ type
       ATag: IntPtr= 0;
       AAutoSize: boolean= false;
       AAutoStretch: boolean= false;
-      AFontColor: TColor=clNone);
+      AFontColor: TColor=clNone;
+      AHotTrack: boolean=false);
     procedure DeletePanel(AIndex: integer);
     procedure DeletePanels;
     property Theme: PATFlatTheme read FTheme write FTheme;
@@ -144,6 +151,7 @@ type
     procedure Resize; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: integer); override;
+    procedure MouseLeave; {$ifdef fpc}override;{$endif}
     procedure Click; override;
     {$ifdef windows}
     procedure WMEraseBkgnd(var Message: TMessage); message WM_ERASEBKGND;
@@ -205,9 +213,11 @@ begin
   FWidth:= 100;
   FColorFont:= clNone;
   FColorBack:= clNone;
+  FColorBackOver:= clNone;
   FFontName:= '';
   FFontSize:= 0;
   FTag:= 0;
+  FHotTrack:= false;
 end;
 
 { TATStatus }
@@ -254,6 +264,7 @@ begin
   FBitmap.Height:= 60;
 
   FItems:= TCollection.Create(TATStatusData);
+  FPrevPanelMouseOver:= -1;
 end;
 
 destructor TATStatus.Destroy;
@@ -297,17 +308,30 @@ begin
     C.Font.Color:= ColorToRGB(Theme^.ColorFont);
 end;
 
-procedure TATStatus.DoPaintPanelTo(C: TCanvas; ARect: TRect; AData: TATStatusData);
+procedure TATStatus.DoPaintPanelTo(C: TCanvas; ARect: TRect;
+  AData: TATStatusData; AMouseOver: boolean);
 var
   RectText: TRect;
   PosIcon: TPoint;
   TextSize: TSize;
   NOffsetLeft, NPad: integer;
+  NColor: TColor;
 begin
-  if AData.ColorBack<>clNone then
-    C.Brush.Color:= ColorToRGB(AData.ColorBack)
+  if AMouseOver then
+  begin
+    if AData.ColorBackOver<>clNone then
+      NColor:= ColorToRGB(AData.ColorBackOver)
+    else
+      NColor:= ColorToRGB(Theme^.ColorBgOver);
+  end
   else
-    C.Brush.Color:= ColorToRGB(Color);
+  begin
+    if AData.ColorBack<>clNone then
+      NColor:= ColorToRGB(AData.ColorBack)
+    else
+      NColor:= ColorToRGB(Color);
+  end;
+  C.Brush.Color:= NColor;
   C.FillRect(ARect);
 
   NPad:= Theme^.DoScale(FPadding);
@@ -416,10 +440,18 @@ procedure TATStatus.DoPaintTo(C: TCanvas);
 var
   PanelRect: TRect;
   D: TATStatusData;
+  PntMouse: TPoint;
+  bHottrackUsed, bHottrack: boolean;
   i: integer;
 begin
   C.Brush.Color:= ColorToRGB(Color);
   C.FillRect(ClientRect);
+
+  bHottrackUsed:= IsHotTrackUsed;
+  if bHottrackUsed then
+    PntMouse:= ScreenToClient(Mouse.CursorPos)
+  else
+    PntMouse:= Point(-1, -1);
 
   //consider AutoSize
   for i:= 0 to PanelCount-1 do
@@ -446,7 +478,9 @@ begin
     PanelRect:= GetPanelRect(i);
     if DoDrawBefore(i, C, PanelRect) then
     begin
-      DoPaintPanelTo(C, PanelRect, TATStatusData(FItems.Items[i]));
+      D:= GetPanelData(i);
+      bHottrack:= bHottrackUsed and D.HotTrack and PtInRect(PanelRect, PntMouse);
+      DoPaintPanelTo(C, PanelRect, D, bHottrack);
       DoDrawAfter(i, C, PanelRect);
     end;  
   end;
@@ -476,6 +510,14 @@ begin
   FClickedIndex:= GetPanelAt(X, Y);
 end;
 
+procedure TATStatus.MouseLeave;
+begin
+  inherited;
+  FPrevPanelMouseOver:= -1;
+  if IsHotTrackUsed then
+    Invalidate;
+end;
+
 function TATStatus.CanFocus: boolean;
 begin
   Result:= false;
@@ -503,6 +545,11 @@ begin
   begin
     Hint:= '';
     Application.HideHint;
+
+    FPrevPanelMouseOver:= -1;
+    if IsHotTrackUsed then
+      Invalidate;
+
     exit;
   end;
 
@@ -514,6 +561,9 @@ begin
     Application.HideHint;
     if ShowHint and (Hint<>'') then
       Application.ActivateHint(ClientToScreen(Point(X, Y)));
+
+    if IsHotTrackUsed then
+      Invalidate;
   end;
 end;
 
@@ -527,7 +577,8 @@ procedure TATStatus.AddPanel(
   ATag: IntPtr= 0;
   AAutoSize: boolean=false;
   AAutoStretch: boolean=false;
-  AFontColor: TColor=clNone);
+  AFontColor: TColor=clNone;
+  AHotTrack: boolean=false);
 var
   Data: TATStatusData;
 begin
@@ -544,6 +595,8 @@ begin
   Data.AutoSize:= AAutoSize;
   Data.AutoStretch:= AAutoStretch;
   Data.Tag:= ATag;
+  Data.HotTrack:= AHotTrack;
+
   Invalidate;
 end;
 
@@ -718,5 +771,14 @@ begin
   inherited;
 end;
 
+function TATStatus.IsHotTrackUsed: boolean;
+var
+  i: integer;
+begin
+  Result:= false;
+  for i:= 0 to PanelCount-1 do
+    if GetPanelData(i).HotTrack then
+      exit(true);
+end;
 
 end.

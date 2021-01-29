@@ -108,7 +108,6 @@ type
     function GetIconHeight: integer;
     function GetIconWidth: integer;
     function GetTextItem(AIndex: integer; const ADefault: string): string;
-    function IsPressed: boolean;
     procedure PaintBorder(C: TCanvas; R: TRect; AColor: TColor; AWidth: integer);
     procedure PaintIcon(C: TCanvas; AX, AY: integer);
     procedure PaintArrow(C: TCanvas; AX, AY: integer; AColorBg, AColorArrow: TColor);
@@ -149,6 +148,8 @@ type
     destructor Destroy; override;
     procedure Click; override;
     function CanFocus: boolean; override;
+    function IsPressed: boolean;
+    property IsMouseOver: boolean read FOver;
     property DataString: string read FDataString write FDataString;
     property DataString2: string read FDataString2 write FDataString2;
     property DataString3: string read FDataString3 write FDataString3;

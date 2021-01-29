@@ -46,7 +46,7 @@ type
     Label6: TLabel;
     Label7: TLabel;
     Label8: TLabel;
-    Label9: TLabel;
+    LabelThemes: TLabel;
     labStatus: TLabel;
     btnModify: TButton;
     Label2: TLabel;
@@ -160,8 +160,10 @@ begin
   tabTopHeight:= t_top.Height;
 
   t_top.AddTab(-1, 'Tab'#10'multiline');
-  t_top.AddTab(-1, 'Tab middle len', nil, false, clGreen, 1, nil, [], 'tab some hint');
-  t_top.AddTab(-1, 'Tab ____________', nil, false, clBlue, 2, nil, [], 'tab another hint');
+  t_top.AddTab(-1, 'Tab middle len', nil, false, clGreen, 1);
+  t_top.GetTabData(t_top.TabCount-1).TabHint:= 'tab some hint';
+  t_top.AddTab(-1, 'Tab ____________', nil, false, clBlue, 2);
+  t_top.GetTabData(t_top.TabCount-1).TabHint:= 'tab another hint';
   t_top.AddTab(-1, 'I'#10'mulline', nil, false, clNone, 0);
   t_top.AddTab(-1, 'I');
   t_top.AddTab(-1, 'I');
@@ -230,13 +232,18 @@ begin
   t_fox.AddTab(-1, 'A tab _____________________________________________________', nil, false, clGreen);
   t_fox.AddTab(-1, 'Tab middle len', nil, false, clBlue);
 
-  DirThemes:= ExtractFileDir(ExtractFileDir(Application.ExeName))+DirectorySeparator+'img_themes';
-
-  List:= TStringList.Create;
-  FindAllDirectories(List, DirThemes);
-  List.Sort;
-  for S in List do
-    comboThemes.Items.Add(ExtractFileName(S));
+  DirThemes:= ExtractFileDir(ExtractFileDir(ExtractFileDir(Application.ExeName)))+DirectorySeparator+'img_themes';
+  comboThemes.Enabled:= DirectoryExists(DirThemes);
+  if comboThemes.Enabled then
+  begin
+    List:= TStringList.Create;
+    FindAllDirectories(List, DirThemes);
+    List.Sort;
+    for S in List do
+      comboThemes.Items.Add(ExtractFileName(S));
+  end
+  else
+    LabelThemes.Caption:= 'no folder: '+DirThemes;
 end;
 
 procedure TForm1.btnStressClick(Sender: TObject);

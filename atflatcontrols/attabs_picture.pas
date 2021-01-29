@@ -34,6 +34,7 @@ type
     constructor Create;
     destructor Destroy; override;
     procedure LoadFromFile(const AFileName: string);
+    procedure LoadFromPicture(APic: TPngPic);
     property Width: integer read FWidth;
     property Height: integer read FHeight;
     procedure Draw(C: TCanvas; X, Y: integer);
@@ -60,6 +61,15 @@ begin
   if not FileExists(AFileName) then exit;
   FFileName:= AFileName;
   FPic.LoadFromFile(AFileName);
+  FPic.Transparent:= true;
+  FWidth:= FPic.Width;
+  FHeight:= FPic.Height;
+end;
+
+procedure TATTabsPicture.LoadFromPicture(APic: TPngPic);
+begin
+  FFileName:= '';
+  FPic.Assign(APic);
   FPic.Transparent:= true;
   FWidth:= FPic.Width;
   FHeight:= FPic.Height;

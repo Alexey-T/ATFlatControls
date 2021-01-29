@@ -16,7 +16,6 @@ type
     btnAddTab: TButton;
     btnPrev: TButton;
     btnNext: TButton;
-    chkAnim: TCheckBox;
     chkBetween: TCheckBox;
     chkAngled: TCheckBox;
     chkColorAllowVert: TCheckBox;
@@ -31,7 +30,6 @@ type
     procedure btnNextClick(Sender: TObject);
     procedure btnPrevClick(Sender: TObject);
     procedure chkAngledChange(Sender: TObject);
-    procedure chkAnimChange(Sender: TObject);
     procedure chkBetweenChange(Sender: TObject);
     procedure chkColorAllowVertChange(Sender: TObject);
     procedure chkEmptyBtnsChange(Sender: TObject);
@@ -69,7 +67,6 @@ begin
   t.Align:= alTop;
 
   t.OptSpaceSide:= 0;
-  t.OptAnimationEnabled:= true;
   t.OptMouseDragEnabled:= true;
   t.DragMode:= dmAutomatic;
   t.OnTabPlusClick:= @TabPlusClick;
@@ -130,11 +127,6 @@ begin
   t.OptSpaceInitial:= IfThen(chkAngled.Checked, 10, 4);
   t.OptSpaceBetweenTabs:= IfThen(chkAngled.Checked, 10, 0);
   t.Invalidate;
-end;
-
-procedure TForm1.chkAnimChange(Sender: TObject);
-begin
-  t.OptAnimationEnabled:= chkAnim.Checked;
 end;
 
 procedure TForm1.btnAddTabClick(Sender: TObject);
