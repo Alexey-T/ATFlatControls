@@ -2931,18 +2931,19 @@ begin
     exit;
   end;
 
-  FTabIndexOver:= GetTabAt(X, Y, IsX);
-  FTabIndexDrop:= FTabIndexOver;
-  if FTabIndexOver=cTabIndexNone then exit;
-  Data:= nil;
-
   // LCL dragging with DragMode=automatic is started too early.
   // so use DragMode=manual and DragStart.
   if OptMouseDragEnabled and FMouseDown and (FMouseDownButton=mbLeft) and not _IsDrag then
   begin
     BeginDrag(false, Mouse.DragThreshold);
+    Screen.Cursor:= crDrag; //needed for Lazarus, when dragging tab below the control to another ATTabs
     Exit
   end;
+
+  FTabIndexOver:= GetTabAt(X, Y, IsX);
+  FTabIndexDrop:= FTabIndexOver;
+  if FTabIndexOver=cTabIndexNone then exit;
+  Data:= nil;
 
   if ShowHint then
   begin
