@@ -190,6 +190,9 @@ begin
   AddTab(Groups.Pages1);
   AddTab(Groups.Pages2);
   AddTab(Groups.Pages2);
+
+  Groups.Pages1.Tabs.TabIndex:= 0;
+  Groups.Pages2.Tabs.TabIndex:= 0;
 end;
 
 procedure TfmTest.mnuMode12HClick(Sender: TObject);
