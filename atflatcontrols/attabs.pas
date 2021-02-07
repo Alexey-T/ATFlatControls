@@ -2509,26 +2509,27 @@ end;
 
 procedure TATTabs.DoPaintDropMark(C: TCanvas);
 var
-  i: integer;
   R: TRect;
+  N: integer;
 begin
-  i:= FTabIndexDrop;
-  if i<0 then i:= TabCount-1;
-  if i<>FTabIndex then
+  N:= FTabIndexDrop;
+  if N<0 then
+    N:= TabCount-1;
+  //if N<>FTabIndex then
   begin
-    R:= GetTabRect(i);
+    R:= GetTabRect(N);
 
     case FOptPosition of
       atpTop,
       atpBottom:
         begin
-          R.Left:= IfThen(i<=FTabIndex, R.Left, R.Right);
+          R.Left:= IfThen(N<=FTabIndex, R.Left, R.Right);
           R.Left:= R.Left - DoScale(FOptDropMarkSize) div 2;
           R.Right:= R.Left + DoScale(FOptDropMarkSize);
         end;
       else
         begin
-          R.Top:= IfThen(i<=FTabIndex, R.Top, R.Bottom);
+          R.Top:= IfThen(N<=FTabIndex, R.Top, R.Bottom);
           R.Top:= R.Top  - DoScale(FOptDropMarkSize) div 2;
           R.Bottom:= R.Top + DoScale(FOptDropMarkSize);
         end;
@@ -3732,10 +3733,12 @@ begin
     if Accept then
     begin
       FTabIndexDrop:= GetTabAt(X, Y, IsX);
-      Invalidate;
     end;
     {$endif}
-  end    
+
+    if Accept then
+      Invalidate;
+  end
   else
     inherited;
 end;
