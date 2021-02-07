@@ -3504,7 +3504,9 @@ begin
   NValue:= (Width
     - IfThen(FOptShowPlusTab, GetTabWidth_Plus_Raw + 2*DoScale(FOptSpaceBeforeText))
     - FRealIndentLeft
-    - FRealIndentRight) div NCount
+    - FRealIndentRight
+    - FOptSpaceSide
+    ) div NCount
       - DoScale(FOptSpaceBetweenTabs);
 
   NValue:= Max(NValue, DoScale(FOptTabWidthMinimal));
