@@ -34,6 +34,7 @@ type
     comboLayout: TComboBox;
     comboIconPos: TComboBox;
     comboShowX: TComboBox;
+    edBetween: TSpinEdit;
     EditInfo: TEdit;
     chkShowPlus: TCheckBox;
     GroupBox1: TGroupBox;
@@ -46,6 +47,7 @@ type
     Label6: TLabel;
     Label7: TLabel;
     Label8: TLabel;
+    Label9: TLabel;
     LabelThemes: TLabel;
     labStatus: TLabel;
     btnModify: TButton;
@@ -76,6 +78,7 @@ type
     procedure comboShowXChange(Sender: TObject);
     procedure comboTruncateChange(Sender: TObject);
     procedure comboWheelModeChange(Sender: TObject);
+    procedure edBetweenChange(Sender: TObject);
     procedure edInitialChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnAddClick(Sender: TObject);
@@ -244,6 +247,9 @@ begin
   end
   else
     LabelThemes.Caption:= 'no folder: '+DirThemes;
+
+  edInitial.Value:= t_top.OptSpaceInitial;
+  edBetween.Value:= t_top.OptSpaceBetweenTabs;
 end;
 
 procedure TForm1.btnStressClick(Sender: TObject);
@@ -441,6 +447,12 @@ end;
 procedure TForm1.comboWheelModeChange(Sender: TObject);
 begin
   t_top.OptMouseWheelMode:= TATTabMouseWheelMode(comboWheelMode.ItemIndex);
+end;
+
+procedure TForm1.edBetweenChange(Sender: TObject);
+begin
+  t_top.OptSpaceBetweenTabs:= edBetween.Value;
+  t_top.Invalidate;
 end;
 
 procedure TForm1.edInitialChange(Sender: TObject);
