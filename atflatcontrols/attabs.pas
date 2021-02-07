@@ -3487,12 +3487,12 @@ end;
 
 procedure TATTabs.UpdateTabWidths;
 var
-  Value, Count: integer;
+  NValue, NCount: integer;
 begin
   if FOptVarWidth then Exit;
 
-  Count:= TabCount;
-  if Count=0 then Exit;
+  NCount:= TabCount;
+  if NCount=0 then Exit;
 
   if FOptPosition in [atpLeft, atpRight] then
   begin
@@ -3501,19 +3501,16 @@ begin
   end;
 
   //tricky formula: calculate auto-width
-  Value:= (Width
+  NValue:= (Width
     - IfThen(FOptShowPlusTab, GetTabWidth_Plus_Raw + 2*DoScale(FOptSpaceBeforeText))
     - FRealIndentLeft
-    - FRealIndentRight) div Count
+    - FRealIndentRight) div NCount
       - DoScale(FOptSpaceBetweenTabs);
 
-  if Value<DoScale(FOptTabWidthMinimal) then
-    Value:= DoScale(FOptTabWidthMinimal)
-  else
-  if Value>DoScale(FOptTabWidthNormal) then
-    Value:= DoScale(FOptTabWidthNormal);
+  NValue:= Max(NValue, DoScale(FOptTabWidthMinimal));
+  NValue:= Min(NValue, DoScale(FOptTabWidthNormal));
 
-  FTabWidth:= Value;
+  FTabWidth:= NValue;
 end;
 
 function TATTabs.IsShowX(AIndex: integer): boolean;
