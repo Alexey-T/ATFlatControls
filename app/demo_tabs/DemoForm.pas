@@ -261,10 +261,10 @@ begin
   for i:= 1 to 200 do
   begin
     t_top.AddTab(-1, IntToStr(i)+'_'+StringOfChar('a', 3+Random(i mod 15)) );
-    t_top.TabIndex:= t_top.TabCount-1;
-    if i mod 20 = 0 then
+    if i mod 100 = 0 then
       Application.ProcessMessages;
   end;
+  t_top.TabIndex:= t_top.TabCount-1;
 end;
 
 procedure TForm1.BarScaleChange(Sender: TObject);

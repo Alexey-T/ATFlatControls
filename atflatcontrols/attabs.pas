@@ -2413,8 +2413,10 @@ begin
     if i<>FTabIndex then
     begin
       RRect:= GetTabRect(i);
-      GetTabXProps(i, RRect, bMouseOverX, RectX);
+      if FOptMultiline then
+        if RRect=cRect0 then Continue;
 
+      GetTabXProps(i, RRect, bMouseOverX, RectX);
       bMouseOver:= i=FTabIndexOver;
 
       if bMouseOver then
