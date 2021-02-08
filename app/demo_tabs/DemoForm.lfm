@@ -322,7 +322,7 @@ object Form1: TForm1
   object Label8: TLabel
     Left = 624
     Height = 16
-    Top = 250
+    Top = 256
     Width = 72
     Caption = 'initial indent'
     ParentColor = False
@@ -442,8 +442,8 @@ object Form1: TForm1
     Left = 624
     Height = 16
     Top = 224
-    Width = 83
-    Caption = 'between tabs:'
+    Width = 80
+    Caption = 'between tabs'
     ParentColor = False
   end
   object ImageList1: TImageList

@@ -861,6 +861,8 @@ uses
 
 const
   cSmoothScale = 5;
+var
+  cRect0: TRect;
 
 procedure AddTabButton(var Buttons: TATTabButtons; Id: TATTabButton; Size: integer);
 begin
@@ -1986,11 +1988,9 @@ var
 begin
   Data:= GetTabData(AIndex);
   if Assigned(Data) then
-  begin
-    Result:= Data.TabRect;
-  end
+    Result:= Data.TabRect
   else
-    Result:= Rect(0, 0, 10, 10);
+    Result:= cRect0;
 
   if AWithScroll then
   case FOptPosition of
@@ -2015,8 +2015,12 @@ var
   R: TRect;
   Extent: TSize;
   NWidthPlus, NIndexLineStart, NLineHeight, NWidthSaved: integer;
+  NSelfHeight, NFormHeight: integer;
+  bStopUpdate: boolean;
   i: integer;
 begin
+  bStopUpdate:= false;
+
   //left/right tabs
   if FOptPosition in [atpLeft, atpRight] then
   begin
@@ -2074,6 +2078,17 @@ begin
     if not Assigned(Data) then Continue;
     if not Data.TabVisible then Continue;
     Data.TabStartsNewLine:= false;
+
+    //optimize of multi-line tabs which have too many tabs
+    if bStopUpdate then
+    begin
+      Data.TabRect:= cRect0;
+      Continue;
+    end;
+
+    if FOptMultiline then
+      if R.Top>=Height then
+        bStopUpdate:= true;
 
     R.Left:= R.Right;
     if i>0 then
@@ -2138,7 +2153,16 @@ begin
     UpdateTabRectsToFillLine(NIndexLineStart, TabCount-1, true);
 
   if FOptMultiline then
-    Height:= R.Bottom+DoScale(FOptSpacer2);
+  begin
+    NFormHeight:= GetParentForm(Self).Height;
+    NSelfHeight:= R.Bottom+DoScale(FOptSpacer2);
+    NSelfHeight:= Min(NSelfHeight, NFormHeight);
+    if Constraints.MaxHeight>0 then
+      NSelfHeight:= Min(NSelfHeight, Constraints.MaxHeight);
+    if Height<>NSelfHeight then
+      Height:= NSelfHeight;
+    //Application.MainForm.Caption:='newh '+inttostr(NSelfHeight)+', tabs '+inttostr(TabCount);
+  end;
 
   //restore FTabWidth for other methods
   if not FOptVarWidth then
@@ -2741,6 +2765,9 @@ begin
   for i:= 0 to TabCount-1 do
   begin
     RectTab:= GetTabRect(i);
+
+    if FOptMultiline then
+      if RectTab=cRect0 then exit;
 
     if not FOptMultiline then
       if RectTab.Left>Pnt.X then exit;
@@ -3432,7 +3459,7 @@ function TATTabs.GetRectOfButton(AButton: TATTabButton): TRect;
 var
   N: integer;
 begin
-  Result:= Rect(0, 0, 0, 0);
+  Result:= cRect0;
 
   N:= GetIndexOfButton(FButtonsLeft, AButton);
   if N>=0 then
@@ -4257,6 +4284,8 @@ begin
     D:= GetTabData(i);
     if D=nil then Continue;
     R:= D.TabRect;
+    if R=cRect0 then Continue;
+
     Inc(R.Left, (i-AIndexFrom)*NDelta);
     Inc(R.Right, (i+1-AIndexFrom)*NDelta);
 
@@ -4318,13 +4347,25 @@ var
   D: TATTabData;
   R: TRect;
 begin
-  if not IsScrollMarkNeeded then
-    begin Result:= true; exit end;
-
   D:= GetTabData(AIndex);
   if D=nil then
-    begin Result:= false; exit end;
+  begin
+    Result:= false;
+    exit
+  end;
+
   R:= D.TabRect;
+  if R=cRect0 then
+  begin
+    Result:= false;
+    exit
+  end;
+
+  if not IsScrollMarkNeeded then
+  begin
+    Result:= true;
+    exit
+  end;
 
   case FOptPosition of
     atpTop,
@@ -4529,5 +4570,8 @@ begin
   Height:= FOptTabHeight+FOptSpacer;
 end;
 
+
+initialization
+  cRect0:= Rect(0, 0, 0, 0);
 
 end.
