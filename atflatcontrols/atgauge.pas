@@ -1,7 +1,6 @@
 {
 Copyright (C) Alexey Torgashin, uvviewsoft.com
-Written for Lazarus LCL
-License: MPL 2.0 or LGPL or any license which LCL can use
+License: MPL 2.0 or LGPL
 }
 
 unit ATGauge;
