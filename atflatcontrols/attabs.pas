@@ -35,6 +35,7 @@ uses
   {$endif}
   ATCanvasPrimitives,
   ATTabs_Picture,
+  ATFlatControls_Separator,
   Menus;
 
 type
@@ -452,7 +453,6 @@ type
     FTabIndexHintedPrev: integer;
     FTabList: TATTabListCollection;
     FTabMenu: TPopupMenu;
-    FCaptionList: TStringList;
     FMultilineActive: boolean;
 
     FRealIndentLeft: integer;
@@ -1294,10 +1294,6 @@ begin
   FTabList.AOwner:= Self;
   FTabMenu:= nil;
   FScrollPos:= 0;
-  FCaptionList:= TStringList.Create;
-  {$ifdef FPC}
-  FCaptionList.TextLineBreakStyle:= tlbsLF;
-  {$endif}
 end;
 
 function TATTabs.CanFocus: boolean;
@@ -1335,7 +1331,6 @@ begin
   end;
 
   Clear;
-  FreeAndNil(FCaptionList);
   FreeAndNil(FTabList);
   FreeAndNil(FBitmapRound);
   FreeAndNil(FBitmapAngleL);
@@ -1376,7 +1371,8 @@ const
   cIndentSep = 2;
 var
   RectText: TRect;
-  NIndentL, NIndentR, NIndentTop, NLineHeight, NLineWidth: integer;
+  NIndentL, NIndentR, NIndentTop, NLeft,
+  NLineHeight, NLineWidth, NLineIndex: integer;
   AImageIndex: integer;
   ATabModified: boolean;
   TempCaption: TATTabString;
@@ -1385,7 +1381,9 @@ var
   NColor: TColor;
   ColorPos: TATTabPosition;
   Data: TATTabData;
-  i: integer;
+  Sep: TATStringSeparator;
+  SepItem: string;
+  bOneLiner: boolean;
 begin
   //optimize for 200 tabs
   if ARect.Left>=Width then exit;
@@ -1428,8 +1426,8 @@ begin
   if not FThemed then
   if FOptShowFlat and FOptShowFlatSepar then
   begin
-    i:= ARect.Left - DoScale(FOptSpaceBetweenTabs) div 2;
-    DrawLine(C, i, ARect.Top+cIndentSep, i, ARect.Bottom-cIndentSep, FColorSeparator);
+    NLeft:= ARect.Left - DoScale(FOptSpaceBetweenTabs) div 2;
+    DrawLine(C, NLeft, ARect.Top+cIndentSep, NLeft, ARect.Bottom-cIndentSep, FColorSeparator);
   end;
 
   //imagelist
@@ -1495,23 +1493,30 @@ begin
     TempCaption:= ACaption;
     if ATabModified then
       TempCaption:= FOptShowModifiedText+TempCaption;
+
     UpdateCaptionProps(C, TempCaption, NLineHeight, Extent);
 
     NIndentTop:= (RectText.Bottom-RectText.Top-Extent.cy) div 2 + 1;
 
-    for i:= 0 to FCaptionList.Count-1 do
+    bOneLiner:= Pos(#10, TempCaption)=0;
+    Sep.Init(TempCaption, #10);
+    NLineIndex:= -1;
+
+    while Sep.GetItemStr(SepItem) do
     begin
-      //calculate center pos for each FCaptionList[i]
+      Inc(NLineIndex);
+
+      //calculate center pos for each SepItem
       case FOptCaptionAlignment of
         taLeftJustify:
           NIndentL:= RectText.Left;
 
         taCenter:
           begin
-            if FCaptionList.Count<2 then
+            if bOneLiner then
               NLineWidth:= Extent.cx
             else
-              NLineWidth:= C.TextWidth(FCaptionList[i]);
+              NLineWidth:= C.TextWidth(SepItem);
             NIndentL:= Max(
               RectText.Left,
               (RectText.Left+RectText.Right-NLineWidth) div 2
@@ -1520,10 +1525,10 @@ begin
 
         taRightJustify:
           begin
-            if FCaptionList.Count<2 then
+            if bOneLiner then
               NLineWidth:= Extent.cx
             else
-              NLineWidth:= C.TextWidth(FCaptionList[i]);
+              NLineWidth:= C.TextWidth(SepItem);
             NIndentL:= Max(
               RectText.Left,
               RectText.Right-NLineWidth
@@ -1531,11 +1536,16 @@ begin
           end;
       end;
 
+      SepItem:= CanvasCollapseStringByDots(C,
+        SepItem,
+        FOptTruncateCaption,
+        RectText.Right-RectText.Left
+        );
       DoTextOut(C,
         NIndentL,
-        RectText.Top+NIndentTop+i*NLineHeight,
+        RectText.Top+NIndentTop+NLineIndex*NLineHeight,
         RectText,
-        CanvasCollapseStringByDots(C, FCaptionList[i], FOptTruncateCaption, RectText.Right-RectText.Left)
+        SepItem
         );
     end;
   end;
@@ -4264,23 +4274,21 @@ var
   {$ifdef WIDE}
   StrW: WideString;
   {$endif}
+  Sep: TATStringSeparator;
+  SepItem: string;
   Ex: TSize;
-  i: integer;
 begin
   ALineHeight:= 0;
   ATextSize.cx:= 0;
   ATextSize.cy:= 0;
-  FCaptionList.Text:=
-    {$ifdef WIDE}UTF8Encode{$endif}
-    (ACaption);
-
-  for i:= 0 to FCaptionList.Count-1 do
+  Sep.Init({$ifdef WIDE}UTF8Encode{$endif}(ACaption), #10);
+  while Sep.GetItemStr(SepItem) do
   begin
     {$ifdef WIDE}
-    StrW:= UTF8Decode(FCaptionList[i]);
+    StrW:= UTF8Decode(SepItem);
     Windows.GetTextExtentPoint32W(C.Handle, PWideChar(StrW), Length(StrW), Ex);
     {$else}
-    Ex:= C.TextExtent(FCaptionList[i]);
+    Ex:= C.TextExtent(SepItem);
     {$endif}
 
     Inc(ATextSize.CY, Ex.CY);
