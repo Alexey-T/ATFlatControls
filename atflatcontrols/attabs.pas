@@ -4270,10 +4270,22 @@ end;
 
 procedure TATTabs.UpdateCaptionProps(C: TCanvas; const ACaption: TATTabString;
   out ALineHeight: integer; out ATextSize: TSize);
-var
+  //
+  procedure _GetExtent(const S: string; var Ex: TSize);
   {$ifdef WIDE}
-  StrW: WideString;
+  var
+    StrW: WideString;
   {$endif}
+  begin
+    {$ifdef WIDE}
+    StrW:= UTF8Decode(S);
+    Windows.GetTextExtentPoint32W(C.Handle, PWideChar(StrW), Length(StrW), Ex);
+    {$else}
+    Ex:= C.TextExtent(S);
+    {$endif}
+  end;
+  //
+var
   Sep: TATStringSeparator;
   SepItem: string;
   Ex: TSize;
@@ -4281,16 +4293,20 @@ begin
   ALineHeight:= 0;
   ATextSize.cx:= 0;
   ATextSize.cy:= 0;
+
+  if Pos(#10, ACaption)=0 then
+  begin
+    _GetExtent(ACaption, Ex);
+    ATextSize.CY:= Ex.CY;
+    ALineHeight:= Ex.CY;
+    ATextSize.CX:= Ex.CX;
+    exit;
+  end;
+
   Sep.Init({$ifdef WIDE}UTF8Encode{$endif}(ACaption), #10);
   while Sep.GetItemStr(SepItem) do
   begin
-    {$ifdef WIDE}
-    StrW:= UTF8Decode(SepItem);
-    Windows.GetTextExtentPoint32W(C.Handle, PWideChar(StrW), Length(StrW), Ex);
-    {$else}
-    Ex:= C.TextExtent(SepItem);
-    {$endif}
-
+    _GetExtent(SepItem, Ex);
     Inc(ATextSize.CY, Ex.CY);
     ALineHeight:= Max(ALineHeight, Ex.CY);
     ATextSize.CX:= Max(ATextSize.CX, Ex.CX);
