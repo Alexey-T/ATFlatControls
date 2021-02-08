@@ -2181,6 +2181,8 @@ begin
         if TabCount>0 then
         begin
           Result:= GetTabRect(TabCount-1, AWithScroll);
+          if Result=cRect0 then
+            exit(cRect0);
           Result.Left:= Result.Right + DoScale(FOptSpaceBetweenTabs);
           Result.Right:= Result.Left + GetTabRectWidth(true);
         end
@@ -2197,6 +2199,8 @@ begin
         if TabCount>0 then
         begin
           Result:= GetTabRect(TabCount-1, AWithScroll);
+          if Result=cRect0 then
+            exit(cRect0);
           Result.Top:= Result.Bottom + DoScale(FOptSpaceBetweenTabs);
           Result.Bottom:= Result.Top + DoScale(FOptTabHeight);
         end
