@@ -140,6 +140,7 @@ begin
   Mouse.DragThreshold:= 20;
 
   t_top:= TATTabs.Create(Self);
+  t_top.Constraints.MaxHeight:= 200;
   t_top.Parent:= Self;
   t_top.ParentColor:= false;
   t_top.Align:= alTop;

@@ -2086,10 +2086,6 @@ begin
       Continue;
     end;
 
-    if FOptMultiline then
-      if R.Top>=Height then
-        bStopUpdate:= true;
-
     R.Left:= R.Right;
     if i>0 then
       Inc(R.Left, DoScale(FOptSpaceBetweenTabs));
@@ -2147,6 +2143,13 @@ begin
 
     R.Right:= R.Left + FTabWidth;
     Data.TabRect:= R;
+
+    if FOptMultiline then
+      if Data.TabRect.Top>=Height then
+      begin
+        Data.TabRect:= cRect0;
+        bStopUpdate:= true;
+      end;
   end;
 
   if FOptFillWidth and FOptFillWidthLastToo then
