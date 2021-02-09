@@ -4,12 +4,17 @@ License: MPL 2.0 or LGPL
 }
 unit ATFlatControls_Separator;
 
+{$ifdef FPC}
 {$mode objfpc}{$H+}
 {$ModeSwitch advancedrecords}
+{$endif}
 
 interface
 
 uses
+  {$ifndef FPC}
+  System.Types,
+  {$endif}
   SysUtils, StrUtils;
 
 type
@@ -22,11 +27,11 @@ type
     FPos: integer;
   public
     procedure Init(const AStr: string; ASep: char=',');
-    function GetRest(out AValue: string): boolean;
-    function GetItemStr(out AValue: string): boolean;
-    function GetItemStr(out AValue: UnicodeString): boolean;
-    function GetItemInt(out AValue: integer; const ADefault: integer): boolean;
-    function GetItemInt(out AValue: integer; const ADefault, AMin, AMax: integer): boolean;
+    function GetRest(out AValue: string): boolean; overload;
+    function GetItemStr(out AValue: string): boolean; overload;
+    function GetItemStr(out AValue: UnicodeString): boolean; overload;
+    function GetItemInt(out AValue: integer; const ADefault: integer): boolean; overload;
+    function GetItemInt(out AValue: integer; const ADefault, AMin, AMax: integer): boolean; overload;
     function GetItemInt64(out AValue: Int64; const ADefault: Int64): boolean;
     function GetItemDWord(out AValue: DWord; const ADefault: DWord): boolean;
   end;
