@@ -3056,6 +3056,7 @@ var
   bSwitchTab: boolean;
 begin
   Result:= false;
+  bSwitchTab:= false;
 
   case FOptMouseWheelMode of
     amwIgnoreWheel:
