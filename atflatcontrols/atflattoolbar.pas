@@ -6,7 +6,7 @@ License: MPL 2.0 or LGPL
 unit ATFlatToolbar;
 
 {$ifdef FPC}
-{$mode objfpc}{$H+}
+{$mode delphi}{$H+}
 {$endif}
 
 interface
@@ -31,7 +31,6 @@ type
     procedure PopupForDropdownClick(Sender: TObject);
     function GetButton(AIndex: integer): TATButton;
     procedure SetButtonWidth(AValue: integer);
-    procedure SetMouseMove(AValue: TMouseMoveEvent);
     procedure SetVertical(AValue: boolean);
     procedure SetWrapable(AValue: boolean);
     procedure UpdateAnchors;
@@ -84,7 +83,7 @@ type
     property Images: TImageList read FImages write FImages;
     property Vertical: boolean read FVertical write SetVertical default false;
     property Wrapable: boolean read FWrapable write SetWrapable default false;
-    property OnMouseMove: TMouseMoveEvent read FOnMouseMove write SetMouseMove;
+    property OnMouseMove: TMouseMoveEvent read FOnMouseMove write FOnMouseMove;
   end;
 
 implementation
@@ -349,12 +348,6 @@ begin
     Height:= ATFlatTheme.DoScale(AValue);
 end;
 
-procedure TATFlatToolbar.SetMouseMove(AValue: TMouseMoveEvent);
-begin
-  if FOnMouseMove=AValue then Exit;
-  FOnMouseMove:= AValue;
-end;
-
 procedure TATFlatToolbar.SetVertical(AValue: boolean);
 begin
   if FVertical=AValue then Exit;
@@ -429,8 +422,8 @@ begin
     b.ArrowAlign:= taRightJustify;
 
   {$ifdef FPC}
-  if ADropdownEvent = nil then
-    b.OnClick:= @PopupForDropdownClick
+  if not Assigned(ADropdownEvent) then
+    b.OnClick:= PopupForDropdownClick
   else
   {$endif}
     b.OnClick:= ADropdownEvent;
