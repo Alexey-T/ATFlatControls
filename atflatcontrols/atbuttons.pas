@@ -18,6 +18,7 @@ uses
   LCLType,
   {$else}
   Windows, Messages,
+  System.UITypes, //solve H2443 Inline function 'CanvasLine' has not been expanded
   {$endif}
   ATFlatThemes,
   ATCanvasPrimitives;

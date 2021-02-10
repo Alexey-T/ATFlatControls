@@ -32,8 +32,8 @@ type
     function GetItemStr(out AValue: UnicodeString): boolean; overload;
     function GetItemInt(out AValue: integer; const ADefault: integer): boolean; overload;
     function GetItemInt(out AValue: integer; const ADefault, AMin, AMax: integer): boolean; overload;
-    function GetItemInt64(out AValue: Int64; const ADefault: Int64): boolean;
-    function GetItemDWord(out AValue: DWord; const ADefault: DWord): boolean;
+    //function GetItemInt64(out AValue: Int64; const ADefault: Int64): boolean;
+    //function GetItemDWord(out AValue: DWord; const ADefault: DWord): boolean;
   end;
 
 implementation
@@ -106,6 +106,7 @@ begin
     AValue:= ADefault;
 end;
 
+{
 function TATStringSeparator.GetItemInt64(out AValue: Int64; const ADefault: Int64): boolean;
 var
   SVal: string;
@@ -116,7 +117,9 @@ begin
   else
     AValue:= ADefault;
 end;
+}
 
+{
 function TATStringSeparator.GetItemDWord(out AValue: DWord; const ADefault: DWord): boolean;
 var
   SVal: string;
@@ -127,5 +130,6 @@ begin
   else
     AValue:= ADefault;
 end;
+}
 
 end.
