@@ -29,7 +29,7 @@ type
     procedure Init(const AStr: string; ASep: char=',');
     function GetRest(out AValue: string): boolean; overload;
     function GetItemStr(out AValue: string): boolean; overload;
-    function GetItemStr(out AValue: UnicodeString): boolean; overload;
+    //function GetItemStr(out AValue: UnicodeString): boolean; overload;
     function GetItemInt(out AValue: integer; const ADefault: integer): boolean; overload;
     function GetItemInt(out AValue: integer; const ADefault, AMin, AMax: integer): boolean; overload;
     //function GetItemInt64(out AValue: Int64; const ADefault: Int64): boolean;
@@ -70,6 +70,7 @@ begin
   Result:= true;
 end;
 
+{
 function TATStringSeparator.GetItemStr(out AValue: UnicodeString): boolean;
 var
   SVal: string;
@@ -77,6 +78,7 @@ begin
   Result:= GetItemStr(SVal);
   AValue:= SVal;
 end;
+}
 
 function TATStringSeparator.GetItemInt(out AValue: integer; const ADefault: integer): boolean;
 var
