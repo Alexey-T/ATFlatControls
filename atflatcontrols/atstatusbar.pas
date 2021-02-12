@@ -762,7 +762,8 @@ end;
 
 procedure TATStatus.Invalidate;
 begin
-  if FHeightInitial>0 then
+  if Align in [alNone, alTop, alBottom] then
+   if FHeightInitial>0 then
     if FScaleFromFont then
       Height:= Theme^.DoScaleFont(FHeightInitial)
     else
