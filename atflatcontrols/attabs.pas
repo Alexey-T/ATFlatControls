@@ -2971,7 +2971,11 @@ begin
   if OptMouseDragEnabled and FMouseDown and (FMouseDownButton=mbLeft) and not _IsDrag then
   begin
     BeginDrag(false, Mouse.DragThreshold);
-    Screen.Cursor:= crDrag; //needed for Lazarus, when dragging tab below the control to another ATTabs
+    {$ifdef fpc}
+    //needed for Lazarus, when dragging tab below the control to another ATTabs
+    //but it's bad for Delphi
+    Screen.Cursor:= crDrag;
+    {$endif}
     Exit
   end;
 
