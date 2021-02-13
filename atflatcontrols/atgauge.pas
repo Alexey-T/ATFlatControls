@@ -18,6 +18,7 @@ uses
   InterfaceBase,
   LCLType, LCLIntf,
   {$endif}
+  ATCanvasPrimitives,
   ATFlatThemes;
 
 type
@@ -146,7 +147,7 @@ begin
   Bmp:= TBitmap.Create;
   try
     Bmp.PixelFormat:= pf24bit;
-    Bmp.SetSize(StrSize.cx, StrSize.cy);
+    BitmapResize(Bmp, StrSize.cx, StrSize.cy);
     Bmp.Transparent:= true;
     Bmp.TransparentColor:= ColorEmpty;
 
@@ -403,7 +404,7 @@ begin
 
   FBitmap:= TBitmap.Create;
   FBitmap.PixelFormat:= pf24bit;
-  FBitmap.SetSize(500, 80);
+  BitmapResize(FBitmap, 500, 80);
 
   FDoubleBuffered:= IsDoubleBufferedNeeded;
   FKind:= gkHorizontalBar;
@@ -433,23 +434,13 @@ end;
 {$ifdef FPC}
 procedure TATGauge.DoOnResize;
 const
-  cResizeBitmapStep = 100;
-var
-  SizeX, SizeY: integer;
+  cStep = 100;
 begin
   inherited;
 
   if DoubleBuffered then
-  if Assigned(FBitmap) then
-  begin
-    SizeX:= (Width div cResizeBitmapStep + 1)*cResizeBitmapStep;
-    SizeY:= (Height div cResizeBitmapStep + 1)*cResizeBitmapStep;
-    if (SizeX>FBitmap.Width) or (SizeY>FBitmap.Height) then
-    begin
-      FBitmap.SetSize(SizeX, SizeY);
-      FBitmap.FreeImage; //recommended, else seen black bitmap on bigsize
-    end;
-  end;
+    if Assigned(FBitmap) then
+      BitmapResizeBySteps(FBitmap, Width, Height, cStep, cStep);
 
   Invalidate;
 end;

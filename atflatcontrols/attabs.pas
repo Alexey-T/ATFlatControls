@@ -1021,16 +1021,6 @@ begin
   {$endif}
 end;
 
-procedure BitmapSetSize(b: TBitmap; W, H: integer); {$ifdef fpc}inline;{$endif}
-begin
-  {$ifdef fpc}
-  b.SetSize(W, H);
-  {$else}
-  b.Width:= W;
-  b.Height:= H;
-  {$endif}
-end;
-
 type
   TATMissedPoint = (
     ampnTopLeft,
@@ -1049,7 +1039,7 @@ var
   line1, line2: TPoint;
   ar: array[0..2] of TPoint;
 begin
-  BitmapSetSize(b, ASizeX*AScale, ASizeY*AScale);
+  BitmapResize(b, ASizeX*AScale, ASizeY*AScale);
 
   //b.Canvas.Brush.Color:= AColorBG;
   //b.Canvas.FillRect(0, 0, b.Width, b.Height);
@@ -1276,7 +1266,7 @@ begin
 
   FBitmap:= TBitmap.Create;
   FBitmap.PixelFormat:= pf24bit;
-  BitmapSetSize(FBitmap, 1600, 60);
+  BitmapResize(FBitmap, 1600, 60);
 
   FBitmapAngleL:= TBitmap.Create;
   FBitmapAngleL.PixelFormat:= pf24bit;
@@ -1285,7 +1275,7 @@ begin
 
   FBitmapRound:= TBitmap.Create;
   FBitmapRound.PixelFormat:= pf24bit;
-  BitmapSetSize(FBitmapRound, _InitRoundedBitmapSize, _InitRoundedBitmapSize);
+  BitmapResize(FBitmapRound, _InitRoundedBitmapSize, _InitRoundedBitmapSize);
 
   FTabIndex:= 0;
   FTabIndexOver:= -1;
@@ -3099,10 +3089,13 @@ begin
 end;
 
 procedure TATTabs.Resize;
+const
+  cStep = 100;
 begin
   inherited;
+
   if Assigned(FBitmap) then
-    BitmapSetSize(FBitmap, Max(FBitmap.Width, Width), Max(FBitmap.Height, Height));
+    BitmapResizeBySteps(FBitmap, Width, Height, cStep, cStep);
 
   if FOptActiveVisibleOnResize then
     if FTabIndex>=0 then

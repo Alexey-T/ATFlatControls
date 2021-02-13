@@ -17,6 +17,9 @@ uses
   Types,
   Math;
 
+procedure BitmapResize(b: TBitmap; W, H: integer);
+procedure BitmapResizeBySteps(b: TBitmap; W, H, StepW, StepH: integer);
+
 procedure CanvasInvertRect(C: TCanvas; const R: TRect; AColor: TColor);
 
 procedure CanvasLine(C: TCanvas; P1, P2: TPoint; AColor: TColor); inline;
@@ -511,6 +514,28 @@ begin
   Result:= S;
 end;
 
+
+procedure BitmapResize(b: TBitmap; W, H: integer);
+begin
+  {$ifdef fpc}
+  b.SetSize(W, H);
+  b.FreeImage; //recommended, otherwise black bitmap on big size
+  {$else}
+  b.Width:= W;
+  b.Height:= H;
+  {$endif}
+end;
+
+procedure BitmapResizeBySteps(b: TBitmap; W, H, StepW, StepH: integer);
+var
+  SizeX, SizeY: integer;
+begin
+  SizeX:= (W div StepW + 1)*StepW;
+  SizeY:= (H div StepH + 1)*StepH;
+  if (SizeX>b.Width) or
+    (SizeY>b.Height) then
+    BitmapResize(b, SizeX, SizeY);
+end;
 
 initialization
   _Pen:= TPen.Create;
