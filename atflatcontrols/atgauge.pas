@@ -433,14 +433,12 @@ end;
 
 {$ifdef FPC}
 procedure TATGauge.DoOnResize;
-const
-  cStep = 100;
 begin
   inherited;
 
   if DoubleBuffered then
     if Assigned(FBitmap) then
-      BitmapResizeBySteps(FBitmap, Width, Height, cStep, cStep);
+      BitmapResizeBySteps(FBitmap, Width, Height);
 
   Invalidate;
 end;

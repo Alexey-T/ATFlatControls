@@ -524,14 +524,11 @@ begin
 end;
 
 procedure TATStatus.Resize;
-const
-  cStepX = 200; //resize bitmap by N pixels step
-  cStepY = 30;
 begin
   inherited;
 
   if Assigned(FBitmap) then
-    BitmapResizeBySteps(FBitmap, Width, Height, cStepX, cStepY);
+    BitmapResizeBySteps(FBitmap, Width, Height);
 
   Invalidate;
 end;

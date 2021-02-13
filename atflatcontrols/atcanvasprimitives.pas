@@ -18,7 +18,7 @@ uses
   Math;
 
 procedure BitmapResize(b: TBitmap; W, H: integer);
-procedure BitmapResizeBySteps(b: TBitmap; W, H, StepW, StepH: integer);
+procedure BitmapResizeBySteps(b: TBitmap; W, H: integer);
 
 procedure CanvasInvertRect(C: TCanvas; const R: TRect; AColor: TColor);
 
@@ -526,7 +526,10 @@ begin
   {$endif}
 end;
 
-procedure BitmapResizeBySteps(b: TBitmap; W, H, StepW, StepH: integer);
+procedure BitmapResizeBySteps(b: TBitmap; W, H: integer);
+const
+  StepW = 60;
+  StepH = 40;
 var
   SizeX, SizeY: integer;
 begin

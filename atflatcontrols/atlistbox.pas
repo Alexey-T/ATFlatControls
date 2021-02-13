@@ -720,15 +720,13 @@ begin
 end;
 
 procedure TATListbox.Resize;
-const
-  cStep = 200; //resize bitmap by N pixels step
 begin
   inherited;
 
   //ATSynEdit has the same code
   if DoubleBuffered then
     if Assigned(FBitmap) then
-      BitmapResizeBySteps(FBitmap, Width, Height, cStep, cStep);
+      BitmapResizeBySteps(FBitmap, Width, Height);
 
   Invalidate;
 end;

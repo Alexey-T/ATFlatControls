@@ -584,13 +584,11 @@ begin
 end;
 
 procedure TATScrollbar.Resize;
-const
-  cStep = 50; //resize bitmap by N pixels step
 begin
   inherited;
 
   if Assigned(FBitmap) then
-    BitmapResizeBySteps(FBitmap, Width, Height, cStep, cStep);
+    BitmapResizeBySteps(FBitmap, Width, Height);
 
   Invalidate;
 end;

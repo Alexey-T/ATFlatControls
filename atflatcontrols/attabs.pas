@@ -3093,13 +3093,11 @@ begin
 end;
 
 procedure TATTabs.Resize;
-const
-  cStep = 100;
 begin
   inherited;
 
   if Assigned(FBitmap) then
-    BitmapResizeBySteps(FBitmap, Width, Height, cStep, cStep);
+    BitmapResizeBySteps(FBitmap, Width, Height);
 
   if FOptActiveVisibleOnResize then
     if FTabIndex>=0 then
