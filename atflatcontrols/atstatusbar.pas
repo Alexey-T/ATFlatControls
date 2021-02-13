@@ -261,7 +261,7 @@ begin
   FBitmap:= TBitmap.Create;
   FBitmap.PixelFormat:= pf24bit;
   FBitmap.Width:= 1600;
-  FBitmap.Height:= 60;
+  FBitmap.Height:= 50;
 
   FItems:= TCollection.Create(TATStatusData);
   FPrevPanelMouseOver:= -1;
@@ -523,13 +523,31 @@ begin
   Result:= false;
 end;
 
+procedure _BitmapResize(b: Graphics.TBitmap; X, Y: integer);
+begin
+  {$ifdef fpc}
+  b.SetSize(X, Y);
+  b.FreeImage; //recommended, otherwise black bitmap on big size
+  {$else}
+  b.Width:= X;
+  b.Height:= Y;
+  {$endif}
+end;
+
 procedure TATStatus.Resize;
+const
+  cStepX = 200; //resize bitmap by N pixels step
+  cStepY = 30;
+var
+  SizeX, SizeY: integer;
 begin
   inherited;
   if Assigned(FBitmap) then
   begin
-    FBitmap.Width:= Max(FBitmap.Width, Width);
-    FBitmap.Height:= Max(FBitmap.Height, Height);
+    SizeX:= (Width div cStepX + 1)*cStepX;
+    SizeY:= (Height div cStepY + 1)*cStepY;
+    if (SizeX>FBitmap.Width) or (SizeY>FBitmap.Height) then
+      _BitmapResize(FBitmap, SizeX, SizeY);
   end;
   Invalidate;
 end;

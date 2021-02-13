@@ -719,11 +719,11 @@ begin
   inherited; //OnClick must be after ItemIndex set
 end;
 
-procedure _BitmapResize(b: Graphics.TBitmap; X, Y: integer); inline;
+procedure _BitmapResize(b: Graphics.TBitmap; X, Y: integer);
 begin
   {$ifdef fpc}
   b.SetSize(X, Y);
-  b.FreeImage; //recommended, else seen black bitmap on bigsize
+  b.FreeImage; //recommended, otherwise black bitmap on big size
   {$else}
   b.Width:= X;
   b.Height:= Y;
