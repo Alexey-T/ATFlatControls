@@ -174,6 +174,17 @@ type
     aocRecent
     );
 
+  TATTabPaintInfo = record
+    Rect: TRect;
+    Caption: TATTabString;
+    TabIndex: integer;
+    ColorFont: TColor;
+    TabActive,
+    TabMouseOver,
+    TabMouseOverX: boolean;
+    FontStyle: TFontStyles;
+  end;
+
 type
   TATTabOverEvent = procedure (Sender: TObject; ATabIndex: integer) of object;
   TATTabCloseEvent = procedure (Sender: TObject; ATabIndex: integer;
@@ -566,9 +577,7 @@ type
       ATabActive, AMouseOverX: boolean);
     procedure DoTextOut(C: TCanvas; AX, AY: integer; const AClipRect: TRect; const AText: string); inline;
     procedure DoPaintBgTo(C: TCanvas; const ARect: TRect);
-    procedure DoPaintTabTo(C: TCanvas; const ARect: TRect;
-      const ACaption: TATTabString; ATabIndex: integer; AColorFont: TColor;
-  ATabActive, ATabMouseOver, ATabMouseOverX: boolean; AFontStyle: TFontStyles);
+    procedure DoPaintTabTo(C: TCanvas; const AInfo: TATTabPaintInfo);
     procedure DoPaintArrowTo(C: TCanvas; ATyp: TATTabTriangle; ARect: TRect; AActive: boolean);
     procedure DoPaintUserButtons(C: TCanvas; const AButtons: TATTabButtons; AtLeft: boolean);
     procedure DoPaintXTo(C: TCanvas; const R: TRect; ATabIndex: integer;
@@ -1363,12 +1372,7 @@ begin
   {$endif}
 end;
 
-procedure TATTabs.DoPaintTabTo(
-  C: TCanvas; const ARect: TRect; const ACaption: TATTabString;
-  ATabIndex: integer;
-  AColorFont: TColor;
-  ATabActive, ATabMouseOver, ATabMouseOverX: boolean;
-  AFontStyle: TFontStyles);
+procedure TATTabs.DoPaintTabTo(C: TCanvas; const AInfo: TATTabPaintInfo);
 const
   cIndentSep = 2;
 var
@@ -1388,11 +1392,11 @@ var
   bOneLiner: boolean;
 begin
   //optimize for 200 tabs
-  if ARect.Left>=Width then exit;
+  if AInfo.Rect.Left>=Width then exit;
   //skip tabs scrolled lefter
-  if ARect.Right<=0 then exit;
+  if AInfo.Rect.Right<=0 then exit;
 
-  Data:= GetTabData(ATabIndex);
+  Data:= GetTabData(AInfo.TabIndex);
   if Assigned(Data) then
   begin
     AImageIndex:= Data.TabImageIndex;
@@ -1411,25 +1415,25 @@ begin
 
   DoPaintTabShape(C,
     Rect(
-      ARect.Left-DoScale(FLastSpaceSide),
-      ARect.Top,
-      ARect.Right+DoScale(FLastSpaceSide),
-      ARect.Bottom),
-    ATabActive,
-    ATabIndex
+      AInfo.Rect.Left-DoScale(FLastSpaceSide),
+      AInfo.Rect.Top,
+      AInfo.Rect.Right+DoScale(FLastSpaceSide),
+      AInfo.Rect.Bottom),
+    AInfo.TabActive,
+    AInfo.TabIndex
     );
 
-  RectText:= Rect(ARect.Left, ARect.Top, ARect.Right, ARect.Bottom);
-  bNeedMoreSpace:= (RectText.Right-RectText.Left<=DoScale(FOptSpaceBeforeTextForMinWidth)) and (ACaption<>'');
+  RectText:= AInfo.Rect;
+  bNeedMoreSpace:= (RectText.Right-RectText.Left<=DoScale(FOptSpaceBeforeTextForMinWidth)) and (AInfo.Caption<>'');
   NIndentL:= IfThen(not bNeedMoreSpace, DoScale(FOptSpaceBeforeText), 2);
   NIndentR:= NIndentL+IfThen(Assigned(Data) and Data.TabVisibleX, DoScale(FOptSpaceXRight));
-  RectText:= Rect(ARect.Left+NIndentL, ARect.Top, ARect.Right-NIndentR, ARect.Bottom);
+  RectText:= Rect(AInfo.Rect.Left+NIndentL, AInfo.Rect.Top, AInfo.Rect.Right-NIndentR, AInfo.Rect.Bottom);
 
   if not FThemed then
   if FOptShowFlat and FOptShowFlatSepar then
   begin
-    NLeft:= ARect.Left - DoScale(FOptSpaceBetweenTabs) div 2;
-    DrawLine(C, NLeft, ARect.Top+cIndentSep, NLeft, ARect.Bottom-cIndentSep, FColorSeparator);
+    NLeft:= AInfo.Rect.Left - DoScale(FOptSpaceBetweenTabs) div 2;
+    DrawLine(C, NLeft, AInfo.Rect.Top+cIndentSep, NLeft, AInfo.Rect.Bottom-cIndentSep, FColorSeparator);
   end;
 
   //imagelist
@@ -1486,13 +1490,13 @@ begin
   if RectText.Right-RectText.Left>=8 then
   begin
     C.Font.Assign(Self.Font);
-    C.Font.Style:= AFontStyle;
-    C.Font.Color:= AColorFont;
+    C.Font.Style:= AInfo.FontStyle;
+    C.Font.Color:= AInfo.ColorFont;
 
     if FOptFontScale<>100 then
       C.Font.Size:= C.Font.Size * FOptFontScale div 100;
 
-    TempCaption:= ACaption;
+    TempCaption:= AInfo.Caption;
     if ATabModified then
       TempCaption:= FOptShowModifiedText+TempCaption;
 
@@ -1553,10 +1557,10 @@ begin
   end;
 
   NColor:= clNone;
-  if ATabMouseOver and not ATabActive and Assigned(Data) and (Data.TabColorOver<>clNone) then
+  if AInfo.TabMouseOver and not AInfo.TabActive and Assigned(Data) and (Data.TabColorOver<>clNone) then
     NColor:= Data.TabColorOver
   else
-  if ATabActive and Assigned(Data) and (Data.TabColorActive<>clNone) then
+  if AInfo.TabActive and Assigned(Data) and (Data.TabColorActive<>clNone) then
     NColor:= Data.TabColorActive
   else
   if Assigned(Data) and (Data.TabColor<>clNone) then
@@ -1579,7 +1583,7 @@ begin
         else
           raise Exception.Create('Unknown tab pos');
       end;
-      DoPaintColoredBand(C, ARect, NColor, ColorPos);
+      DoPaintColoredBand(C, AInfo.Rect, NColor, ColorPos);
     end;
   end;
 end;
@@ -1590,6 +1594,7 @@ var
   ElemType: TATTabElemType;
   Pic: TATTabsPicture;
   bActive: boolean;
+  Info: TATTabPaintInfo;
 begin
   bActive:= FTabIndexOver=cTabIndexPlus;
   if bActive then
@@ -1601,15 +1606,11 @@ begin
   begin
     NColorFont:= FColorFont;
 
-    DoPaintTabTo(C, ARect,
-      '',
-      cTabIndexPlus,
-      NColorFont,
-      false,
-      false,
-      false,
-      []
-      );
+    FillChar(Info, SizeOf(Info), 0);
+    Info.Rect:= ARect;
+    Info.TabIndex:= cTabIndexPlus;
+    Info.ColorFont:= NColorFont;
+    DoPaintTabTo(C, Info);
 
     if FThemed then
     begin
@@ -2350,6 +2351,7 @@ var
   Data: TATTabData;
   NFontStyle: TFontStyles;
   bMouseOver, bMouseOverX: boolean;
+  Info: TATTabPaintInfo;
   i: integer;
 begin
   ElemType:= aeBackground;
@@ -2492,15 +2494,16 @@ begin
         else
           NColorFont:= FColorFont;
 
-        DoPaintTabTo(C, RRect,
-          Format(FOptShowNumberPrefix, [i+1]) + Data.TabCaption,
-          i,
-          NColorFont,
-          false,
-          bMouseOver,
-          bMouseOverX,
-          NFontStyle
-          );
+        FillChar(Info, SizeOf(Info), 0);
+        Info.Rect:= RRect;
+        Info.Caption:= Format(FOptShowNumberPrefix, [i+1]) + Data.TabCaption;
+        Info.TabIndex:= i;
+        Info.ColorFont:= NColorFont;
+        Info.TabMouseOver:= bMouseOver;
+        Info.TabMouseOverX:= bMouseOverX;
+        Info.FontStyle:= NFontStyle;
+
+        DoPaintTabTo(C, Info);
         DoPaintAfter(ElemType, i, C, RRect);
       end;
 
@@ -2537,15 +2540,17 @@ begin
       else
         NColorFont:= FColorFont;
 
-      DoPaintTabTo(C, RRect,
-        Format(FOptShowNumberPrefix, [i+1]) + Data.TabCaption,
-        i,
-        NColorFont,
-        true,
-        bMouseOver,
-        bMouseOverX,
-        NFontStyle
-        );
+      FillChar(Info, SizeOf(Info), 0);
+      Info.Rect:= RRect;
+      Info.Caption:= Format(FOptShowNumberPrefix, [i+1]) + Data.TabCaption;
+      Info.TabIndex:= i;
+      Info.ColorFont:= NColorFont;
+      Info.TabActive:= true;
+      Info.TabMouseOver:= bMouseOver;
+      Info.TabMouseOverX:= bMouseOverX;
+      Info.FontStyle:= NFontStyle;
+
+      DoPaintTabTo(C, Info);
       DoPaintAfter(aeTabActive, i, C, RRect);
     end;
 
