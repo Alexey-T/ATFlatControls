@@ -474,8 +474,10 @@ type
     FBitmapAngleR: TBitmap;
     FBitmapRound: TBitmap;
 
-    FRectTabPlus: TRect; //uses scroll pos
-    FRectTabPlus2: TRect; //ignores scroll pos, not real
+    FRectTabLast_Scrolled: TRect;
+    FRectTabLast_NotScrolled: TRect;
+    FRectTabPlus_Scrolled: TRect; //uses scroll pos
+    FRectTabPlus_NotScrolled: TRect; //ignores scroll pos, not real
     FRectArrowDown: TRect;
     FRectArrowLeft: TRect;
     FRectArrowRight: TRect;
@@ -605,6 +607,7 @@ type
     function GetTabWidth_Plus_Raw: integer; inline;
     procedure UpdateTabWidths;
     procedure UpdateTabRects(C: TCanvas);
+    procedure UpdateTabRectsSpecial;
     procedure UpdateTabRectsToFillLine(AIndexFrom, AIndexTo: integer; ALastLine: boolean);
     procedure UpdateCanvasAntialiasMode(C: TCanvas); inline;
     procedure UpdateCaptionProps(C: TCanvas; const ACaption: TATTabString;
@@ -625,9 +628,9 @@ type
 
     procedure ApplyButtonLayout;
     function GetTabRectWidth(APlusBtn: boolean): integer;
-    function GetTabRect(AIndex: integer; AWithScroll: boolean=true): TRect;
-    function GetTabRect_Plus(AWithScroll: boolean= true): TRect;
+    function GetTabRect_Plus: TRect;
     function GetTabRect_X(const ARect: TRect): TRect;
+    function GetTabRect_Scrolled(const R: TRect): TRect;
     function GetTabAt(X, Y: integer; out APressedX: boolean): integer;
     function GetTabData(AIndex: integer): TATTabData;
     function TabCount: integer;
@@ -1976,20 +1979,11 @@ begin
 end;
 
 
-function TATTabs.GetTabRect(AIndex: integer; AWithScroll: boolean): TRect;
-var
-  Data: TATTabData;
+function TATTabs.GetTabRect_Scrolled(const R: TRect): TRect;
 begin
-  Data:= GetTabData(AIndex);
-  if Assigned(Data) then
-    Result:= Data.TabRect
-  else
-  begin
-    Result:= cRect0;
-    exit;
-  end;
-
-  if AWithScroll then
+  Result:= R;
+  if Result=cRect0 then
+    Exit;
   case FOptPosition of
     atpTop,
     atpBottom:
@@ -2173,7 +2167,27 @@ begin
     FTabWidth:= NWidthSaved;
 end;
 
-function TATTabs.GetTabRect_Plus(AWithScroll: boolean=true): TRect;
+procedure TATTabs.UpdateTabRectsSpecial;
+var
+  Data: TATTabData;
+begin
+  FRectTabLast_NotScrolled:= cRect0;
+  FRectTabLast_Scrolled:= cRect0;
+
+  Data:= GetTabData(TabCount-1);
+  if Assigned(Data) then
+  begin
+    FRectTabLast_NotScrolled:= Data.TabRect;
+    FRectTabLast_Scrolled:= GetTabRect_Scrolled(FRectTabLast_NotScrolled);
+  end;
+
+  FRectTabPlus_NotScrolled:= GetTabRect_Plus;
+  FRectTabPlus_Scrolled:= GetTabRect_Scrolled(FRectTabPlus_NotScrolled);
+end;
+
+function TATTabs.GetTabRect_Plus: TRect;
+var
+  D: TATTabData;
 begin
   case FOptPosition of
     atpTop,
@@ -2181,7 +2195,13 @@ begin
       begin
         if TabCount>0 then
         begin
-          Result:= GetTabRect(TabCount-1, AWithScroll);
+          D:= GetTabData(TabCount-1);
+          if D=nil then
+          begin
+            Result:= cRect0;
+            Exit;
+          end;
+          Result:= D.TabRect;
           if Result=cRect0 then exit;
           Result.Left:= Result.Right + DoScale(FOptSpaceBetweenTabs);
           Result.Right:= Result.Left + GetTabRectWidth(true);
@@ -2198,7 +2218,13 @@ begin
       begin
         if TabCount>0 then
         begin
-          Result:= GetTabRect(TabCount-1, AWithScroll);
+          D:= GetTabData(TabCount-1);
+          if D=nil then
+          begin
+            Result:= cRect0;
+            Exit;
+          end;
+          Result:= D.TabRect;
           if Result=cRect0 then exit;
           Result.Top:= Result.Bottom + DoScale(FOptSpaceBetweenTabs);
           Result.Bottom:= Result.Top + DoScale(FOptTabHeight);
@@ -2218,6 +2244,11 @@ function TATTabs.GetTabRect_X(const ARect: TRect): TRect;
 var
   X, Y, W: integer;
 begin
+  if ARect=cRect0 then
+  begin
+    Result:= cRect0;
+    Exit;
+  end;
   X:= ARect.Right-DoScale(FOptSpaceXRight);
   Y:= (ARect.Top+ARect.Bottom) div 2 + 1;
   W:= DoScale(FOptSpaceXSize);
@@ -2262,7 +2293,7 @@ begin
 
   Data:= GetTabData(AIndex);
   if Data=nil then Exit;
-  ARectX:= Data.TabRectX;
+  ARectX:= GetTabRect_Scrolled(Data.TabRectX);
 
   if _IsDrag then Exit;
 
@@ -2360,8 +2391,7 @@ begin
   C.Font.Assign(Self.Font);
   UpdateTabWidths;
   UpdateTabRects(C);
-  FRectTabPlus:= GetTabRect_Plus(true);
-  FRectTabPlus2:= GetTabRect_Plus(false);
+  UpdateTabRectsSpecial;
 
   //paint spacer rect
   if not FOptShowFlat then
@@ -2419,14 +2449,16 @@ begin
   //paint "plus" tab
   if FOptShowPlusTab then
   begin
-    DoPaintPlus(C, FRectTabPlus);
+    DoPaintPlus(C, FRectTabPlus_Scrolled);
   end;
 
   //paint passive tabs
   for i:= TabCount-1 downto 0 do
     if i<>FTabIndex then
     begin
-      RRect:= GetTabRect(i);
+      Data:= TATTabData(FTabList.Items[i]);
+      if Data=nil then Continue;
+      RRect:= GetTabRect_Scrolled(Data.TabRect);
       if FOptMultiline then
         if RRect=cRect0 then Continue;
 
@@ -2440,7 +2472,6 @@ begin
 
       if IsPaintNeeded(ElemType, i, C, RRect) then
       begin
-        Data:= TATTabData(FTabList.Items[i]);
         if not Data.TabVisible then Continue;
 
         if FOptHotFontStyleUsed and bMouseOver then
@@ -2478,10 +2509,10 @@ begin
   i:= FTabIndex;
   if IsIndexOk(i) then
   begin
-    Data:= TATTabData(FTabList.Items[i]);
-   if Data.TabVisible then
+   Data:= TATTabData(FTabList.Items[i]);
+   if Assigned(Data) and Data.TabVisible then
    begin
-    RRect:= GetTabRect(i);
+    RRect:= GetTabRect_Scrolled(Data.TabRect);
     GetTabXProps(i, RRect, bMouseOverX, RectX);
 
     bMouseOver:= i=FTabIndexOver;
@@ -2559,6 +2590,7 @@ end;
 
 procedure TATTabs.DoPaintDropMark(C: TCanvas);
 var
+  D: TATTabData;
   R: TRect;
   N: integer;
 begin
@@ -2567,7 +2599,9 @@ begin
     N:= TabCount-1;
   //if N<>FTabIndex then
   begin
-    R:= GetTabRect(N);
+    D:= GetTabData(N);
+    if D=nil then Exit;
+    R:= GetTabRect_Scrolled(D.TabRect);
 
     case FOptPosition of
       atpTop,
@@ -2711,6 +2745,7 @@ function TATTabs.GetTabAt(X, Y: integer; out APressedX: boolean): integer;
 var
   Pnt: TPoint;
   RectTab: TRect;
+  D: TATTabData;
   i: integer;
 begin
   Result:= cTabIndexNone;
@@ -2780,7 +2815,9 @@ begin
   //normal tab?
   for i:= 0 to TabCount-1 do
   begin
-    RectTab:= GetTabRect(i);
+    D:= GetTabData(i);
+    if D=nil then Continue;
+    RectTab:= GetTabRect_Scrolled(D.TabRect);
 
     if FOptMultiline then
       if RectTab=cRect0 then exit;
@@ -2791,14 +2828,14 @@ begin
     if PtInRect(RectTab, Pnt) then
     begin
       Result:= i;
-      APressedX:= IsShowX(i) and PtInRect(GetTabRect_X(RectTab), Pnt);
+      APressedX:= IsShowX(i) and PtInRect(GetTabRect_Scrolled(D.TabRectX), Pnt);
       Exit;
     end;
   end;
 
   //plus tab?
   if FOptShowPlusTab then
-    if PtInRect(FRectTabPlus, Pnt) then
+    if PtInRect(FRectTabPlus_Scrolled, Pnt) then
     begin
       Result:= cTabIndexPlus;
       Exit
@@ -2874,6 +2911,7 @@ end;
 procedure TATTabs.DoHandleClick;
 var
   Action: TATTabActionOnClose;
+  D: TATTabData;
   R: TRect;
 begin
   if FMouseDownButton=mbMiddle then
@@ -2933,8 +2971,9 @@ begin
         begin
           if IsShowX(FTabIndexOver) then
           begin
-            R:= GetTabRect(FTabIndexOver);
-            R:= GetTabRect_X(R);
+            D:= GetTabData(FTabIndexOver);
+            if D=nil then Exit;
+            R:= GetTabRect_Scrolled(D.TabRectX);
             if PtInRect(R, FMouseDownPnt) then
             begin
               EndDrag(false);
@@ -3847,15 +3886,20 @@ end;
 
 function TATTabs.GetMaxEdgePos: integer;
 var
+  D: TATTabData;
   R: TRect;
 begin
   Result:= 0;
   if TabCount=0 then exit;
 
   if FOptShowPlusTab then
-    R:= FRectTabPlus2
+    R:= FRectTabPlus_NotScrolled
   else
-    R:= GetTabRect(TabCount-1, false);
+  begin
+    D:= GetTabData(TabCount-1);
+    if D=nil then Exit;
+    R:= D.TabRect;
+  end;
 
   case FOptPosition of
     atpTop,
