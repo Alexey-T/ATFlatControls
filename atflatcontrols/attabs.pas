@@ -610,7 +610,7 @@ type
     procedure UpdateTabWidths;
     procedure UpdateTabRects(C: TCanvas);
     procedure UpdateTabRectsSpecial;
-    procedure UpdateTabVisibleX;
+    procedure UpdateTabPropsX;
     procedure UpdateTabRectsToFillLine(AIndexFrom, AIndexTo: integer; ALastLine: boolean);
     procedure UpdateCanvasAntialiasMode(C: TCanvas); inline;
     procedure UpdateCaptionProps(C: TCanvas; const ACaption: TATTabString;
@@ -2046,7 +2046,6 @@ begin
 
       R.Bottom:= R.Top + NLineHeight;
       Data.TabRect:= R;
-      Data.TabRectX:= GetTabRect_X(R);
     end;
 
     exit;
@@ -2078,7 +2077,6 @@ begin
     if bStopUpdate then
     begin
       Data.TabRect:= cRect0;
-      Data.TabRectX:= cRect0;
       Continue;
     end;
 
@@ -2139,13 +2137,11 @@ begin
 
     R.Right:= R.Left + FTabWidth;
     Data.TabRect:= R;
-    Data.TabRectX:= GetTabRect_X(R);
 
     if FOptMultiline then
       if Data.TabRect.Top>=Height then
       begin
         Data.TabRect:= cRect0;
-        Data.TabRectX:= cRect0;
         bStopUpdate:= true;
       end;
   end;
@@ -2188,7 +2184,7 @@ begin
   FRectTabPlus_Scrolled:= GetTabRect_Scrolled(FRectTabPlus_NotScrolled);
 end;
 
-procedure TATTabs.UpdateTabVisibleX;
+procedure TATTabs.UpdateTabPropsX;
 var
   D: TATTabData;
   i: integer;
@@ -2196,8 +2192,12 @@ begin
   for i:= 0 to TabCount-1 do
   begin
     D:= GetTabData(i);
-    if Assigned(D) then
-      D.TabVisibleX:= GetTabVisibleX(i, D);
+    if D=nil then Continue;
+    D.TabVisibleX:= GetTabVisibleX(i, D);
+    if D.TabVisibleX and (D.TabRect<>cRect0) then
+      D.TabRectX:= GetTabRect_X(D.TabRect)
+    else
+      D.TabRectX:= cRect0;
   end;
 end;
 
@@ -2394,7 +2394,7 @@ begin
   UpdateTabWidths;
   UpdateTabRects(C);
   UpdateTabRectsSpecial;
-  UpdateTabVisibleX;
+  UpdateTabPropsX;
 
   //paint spacer rect
   if not FOptShowFlat then
