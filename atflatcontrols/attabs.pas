@@ -2186,8 +2186,6 @@ begin
 end;
 
 function TATTabs.GetTabRect_Plus: TRect;
-var
-  D: TATTabData;
 begin
   case FOptPosition of
     atpTop,
@@ -2195,13 +2193,7 @@ begin
       begin
         if TabCount>0 then
         begin
-          D:= GetTabData(TabCount-1);
-          if D=nil then
-          begin
-            Result:= cRect0;
-            Exit;
-          end;
-          Result:= D.TabRect;
+          Result:= FRectTabLast_NotScrolled;
           if Result=cRect0 then exit;
           Result.Left:= Result.Right + DoScale(FOptSpaceBetweenTabs);
           Result.Right:= Result.Left + GetTabRectWidth(true);
@@ -2218,13 +2210,7 @@ begin
       begin
         if TabCount>0 then
         begin
-          D:= GetTabData(TabCount-1);
-          if D=nil then
-          begin
-            Result:= cRect0;
-            Exit;
-          end;
-          Result:= D.TabRect;
+          Result:= FRectTabLast_NotScrolled;
           if Result=cRect0 then exit;
           Result.Top:= Result.Bottom + DoScale(FOptSpaceBetweenTabs);
           Result.Bottom:= Result.Top + DoScale(FOptTabHeight);
@@ -2456,7 +2442,7 @@ begin
   for i:= TabCount-1 downto 0 do
     if i<>FTabIndex then
     begin
-      Data:= TATTabData(FTabList.Items[i]);
+      Data:= GetTabData(i);
       if Data=nil then Continue;
       RRect:= GetTabRect_Scrolled(Data.TabRect);
       if FOptMultiline then
@@ -2509,7 +2495,7 @@ begin
   i:= FTabIndex;
   if IsIndexOk(i) then
   begin
-   Data:= TATTabData(FTabList.Items[i]);
+   Data:= GetTabData(i);
    if Assigned(Data) and Data.TabVisible then
    begin
     RRect:= GetTabRect_Scrolled(Data.TabRect);
@@ -3568,7 +3554,7 @@ begin
     begin
       mi:= TMenuItem.Create(Self);
       mi.Tag:= i;
-      mi.Caption:= TATTabData(FTabList.Items[i]).TabCaption;
+      mi.Caption:= GetTabData(i).TabCaption;
       mi.OnClick:= TabMenuClick;
       mi.RadioItem:= true;
       mi.Checked:= i=FTabIndex;
@@ -3886,20 +3872,11 @@ end;
 
 function TATTabs.GetMaxEdgePos: integer;
 var
-  D: TATTabData;
   R: TRect;
 begin
   Result:= 0;
-  if TabCount=0 then exit;
-
-  if FOptShowPlusTab then
-    R:= FRectTabPlus_NotScrolled
-  else
-  begin
-    D:= GetTabData(TabCount-1);
-    if D=nil then Exit;
-    R:= D.TabRect;
-  end;
+  if TabCount=0 then Exit;
+  R:= FRectTabPlus_NotScrolled;
 
   case FOptPosition of
     atpTop,
