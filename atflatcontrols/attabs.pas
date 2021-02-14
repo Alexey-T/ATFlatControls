@@ -71,6 +71,7 @@ type
     FTabSpecialWidth: integer;
     FTabSpecialHeight: integer;
     FTabRect: TRect;
+    FTabRectX: TRect;
     FTabImageIndex: TImageIndex;
     FTabPopupMenu: TPopupMenu;
     FTabFontStyle: TFontStyles;
@@ -89,6 +90,7 @@ type
     constructor Create(ACollection: TCollection); override;
     property TabObject: TObject read FTabObject write FTabObject;
     property TabRect: TRect read FTabRect write FTabRect;
+    property TabRectX: TRect read FTabRectX write FTabRectX;
     property TabSpecial: boolean read FTabSpecial write FTabSpecial default false;
     property TabStartsNewLine: boolean read FTabStartsNewLine write FTabStartsNewLine;
     procedure Assign(Source: TPersistent); override;
@@ -472,6 +474,8 @@ type
     FBitmapAngleR: TBitmap;
     FBitmapRound: TBitmap;
 
+    FRectTabPlus: TRect; //uses scroll pos
+    FRectTabPlus2: TRect; //ignores scroll pos, not real
     FRectArrowDown: TRect;
     FRectArrowLeft: TRect;
     FRectArrowRight: TRect;
@@ -1980,7 +1984,10 @@ begin
   if Assigned(Data) then
     Result:= Data.TabRect
   else
+  begin
     Result:= cRect0;
+    exit;
+  end;
 
   if AWithScroll then
   case FOptPosition of
@@ -2042,6 +2049,7 @@ begin
 
       R.Bottom:= R.Top + NLineHeight;
       Data.TabRect:= R;
+      Data.TabRectX:= GetTabRect_X(R);
     end;
 
     exit;
@@ -2073,6 +2081,7 @@ begin
     if bStopUpdate then
     begin
       Data.TabRect:= cRect0;
+      Data.TabRectX:= cRect0;
       Continue;
     end;
 
@@ -2133,11 +2142,13 @@ begin
 
     R.Right:= R.Left + FTabWidth;
     Data.TabRect:= R;
+    Data.TabRectX:= GetTabRect_X(R);
 
     if FOptMultiline then
       if Data.TabRect.Top>=Height then
       begin
         Data.TabRect:= cRect0;
+        Data.TabRectX:= cRect0;
         bStopUpdate:= true;
       end;
   end;
@@ -2243,9 +2254,15 @@ end;
 procedure TATTabs.GetTabXProps(AIndex: integer; const ARect: TRect;
   out AMouseOverX: boolean;
   out ARectX: TRect);
+var
+  Data: TATTabData;
 begin
   AMouseOverX:= false;
-  ARectX:= GetTabRect_X(ARect);
+  ARectX:= cRect0;
+
+  Data:= GetTabData(AIndex);
+  if Data=nil then Exit;
+  ARectX:= Data.TabRectX;
 
   if _IsDrag then Exit;
 
@@ -2343,6 +2360,8 @@ begin
   C.Font.Assign(Self.Font);
   UpdateTabWidths;
   UpdateTabRects(C);
+  FRectTabPlus:= GetTabRect_Plus(true);
+  FRectTabPlus2:= GetTabRect_Plus(false);
 
   //paint spacer rect
   if not FOptShowFlat then
@@ -2400,7 +2419,7 @@ begin
   //paint "plus" tab
   if FOptShowPlusTab then
   begin
-    DoPaintPlus(C, GetTabRect_Plus);
+    DoPaintPlus(C, FRectTabPlus);
   end;
 
   //paint passive tabs
@@ -2779,7 +2798,7 @@ begin
 
   //plus tab?
   if FOptShowPlusTab then
-    if PtInRect(GetTabRect_Plus, Pnt) then
+    if PtInRect(FRectTabPlus, Pnt) then
     begin
       Result:= cTabIndexPlus;
       Exit
@@ -3834,7 +3853,7 @@ begin
   if TabCount=0 then exit;
 
   if FOptShowPlusTab then
-    R:= GetTabRect_Plus(false)
+    R:= FRectTabPlus2
   else
     R:= GetTabRect(TabCount-1, false);
 
