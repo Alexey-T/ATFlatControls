@@ -631,9 +631,9 @@ type
 
     procedure ApplyButtonLayout;
     function GetTabRectWidth(APlusBtn: boolean): integer;
-    function GetTabRect_Plus: TRect;
+    procedure UpdateRectPlus(var R: TRect);
     function GetTabRect_X(const ARect: TRect): TRect;
-    function GetTabRect_Scrolled(const R: TRect): TRect;
+    function GetRectScrolled(const R: TRect): TRect;
     function GetTabAt(X, Y: integer; out APressedX: boolean): integer;
     function GetTabData(AIndex: integer): TATTabData;
     function TabCount: integer;
@@ -1982,7 +1982,7 @@ begin
 end;
 
 
-function TATTabs.GetTabRect_Scrolled(const R: TRect): TRect;
+function TATTabs.GetRectScrolled(const R: TRect): TRect;
 begin
   Result:= R;
   if Result=cRect0 then
@@ -2170,18 +2170,20 @@ procedure TATTabs.UpdateTabRectsSpecial;
 var
   Data: TATTabData;
 begin
-  FRectTabLast_NotScrolled:= cRect0;
-  FRectTabLast_Scrolled:= cRect0;
-
   Data:= GetTabData(TabCount-1);
   if Assigned(Data) then
   begin
     FRectTabLast_NotScrolled:= Data.TabRect;
-    FRectTabLast_Scrolled:= GetTabRect_Scrolled(FRectTabLast_NotScrolled);
+    FRectTabLast_Scrolled:= GetRectScrolled(FRectTabLast_NotScrolled);
+  end
+  else
+  begin
+    FRectTabLast_NotScrolled:= cRect0;
+    FRectTabLast_Scrolled:= cRect0;
   end;
 
-  FRectTabPlus_NotScrolled:= GetTabRect_Plus;
-  FRectTabPlus_Scrolled:= GetTabRect_Scrolled(FRectTabPlus_NotScrolled);
+  UpdateRectPlus(FRectTabPlus_NotScrolled);
+  FRectTabPlus_Scrolled:= GetRectScrolled(FRectTabPlus_NotScrolled);
 end;
 
 procedure TATTabs.UpdateTabPropsX;
@@ -2201,7 +2203,7 @@ begin
   end;
 end;
 
-function TATTabs.GetTabRect_Plus: TRect;
+procedure TATTabs.UpdateRectPlus(var R: TRect);
 begin
   case FOptPosition of
     atpTop,
@@ -2209,34 +2211,34 @@ begin
       begin
         if TabCount>0 then
         begin
-          Result:= FRectTabLast_NotScrolled;
-          if Result=cRect0 then exit;
-          Result.Left:= Result.Right + DoScale(FOptSpaceBetweenTabs);
-          Result.Right:= Result.Left + GetTabRectWidth(true);
+          R:= FRectTabLast_NotScrolled;
+          if R=cRect0 then exit;
+          R.Left:= R.Right + DoScale(FOptSpaceBetweenTabs);
+          R.Right:= R.Left + GetTabRectWidth(true);
         end
         else
         begin
-          Result.Top:= DoScale(FOptSpacer);
-          Result.Bottom:= Result.Top + DoScale(FOptTabHeight);
-          Result.Left:= FRealIndentLeft + FLastSpaceSide;
-          Result.Right:= Result.Left + GetTabRectWidth(true);
+          R.Top:= DoScale(FOptSpacer);
+          R.Bottom:= R.Top + DoScale(FOptTabHeight);
+          R.Left:= FRealIndentLeft + FLastSpaceSide;
+          R.Right:= R.Left + GetTabRectWidth(true);
         end;
       end;
     else
       begin
         if TabCount>0 then
         begin
-          Result:= FRectTabLast_NotScrolled;
-          if Result=cRect0 then exit;
-          Result.Top:= Result.Bottom + DoScale(FOptSpaceBetweenTabs);
-          Result.Bottom:= Result.Top + DoScale(FOptTabHeight);
+          R:= FRectTabLast_NotScrolled;
+          if R=cRect0 then exit;
+          R.Top:= R.Bottom + DoScale(FOptSpaceBetweenTabs);
+          R.Bottom:= R.Top + DoScale(FOptTabHeight);
         end
         else
         begin
-          Result.Left:= IfThen(FOptPosition=atpLeft, DoScale(FOptSpacer), DoScale(FOptSpacer2));
-          Result.Right:= IfThen(FOptPosition=atpLeft, Width-DoScale(FOptSpacer2), Width-DoScale(FOptSpacer));
-          Result.Top:= GetInitialVerticalIndent;
-          Result.Bottom:= Result.Top + DoScale(FOptTabHeight);
+          R.Left:= IfThen(FOptPosition=atpLeft, DoScale(FOptSpacer), DoScale(FOptSpacer2));
+          R.Right:= IfThen(FOptPosition=atpLeft, Width-DoScale(FOptSpacer2), Width-DoScale(FOptSpacer));
+          R.Top:= GetInitialVerticalIndent;
+          R.Bottom:= R.Top + DoScale(FOptTabHeight);
         end;
       end;
   end;
@@ -2295,7 +2297,7 @@ begin
 
   Data:= GetTabData(AIndex);
   if Data=nil then Exit;
-  ARectX:= GetTabRect_Scrolled(Data.TabRectX);
+  ARectX:= GetRectScrolled(Data.TabRectX);
 
   if _IsDrag then Exit;
 
@@ -2461,7 +2463,7 @@ begin
     begin
       Data:= GetTabData(i);
       if Data=nil then Continue;
-      RRect:= GetTabRect_Scrolled(Data.TabRect);
+      RRect:= GetRectScrolled(Data.TabRect);
       if FOptMultiline then
         if RRect=cRect0 then Continue;
 
@@ -2515,7 +2517,7 @@ begin
    Data:= GetTabData(i);
    if Assigned(Data) and Data.TabVisible then
    begin
-    RRect:= GetTabRect_Scrolled(Data.TabRect);
+    RRect:= GetRectScrolled(Data.TabRect);
     GetTabXProps(i, RRect, bMouseOverX, RectX);
 
     bMouseOver:= i=FTabIndexOver;
@@ -2604,7 +2606,7 @@ begin
   begin
     D:= GetTabData(N);
     if D=nil then Exit;
-    R:= GetTabRect_Scrolled(D.TabRect);
+    R:= GetRectScrolled(D.TabRect);
 
     case FOptPosition of
       atpTop,
@@ -2820,7 +2822,7 @@ begin
   begin
     D:= GetTabData(i);
     if D=nil then Continue;
-    RectTab:= GetTabRect_Scrolled(D.TabRect);
+    RectTab:= GetRectScrolled(D.TabRect);
 
     if FOptMultiline then
       if RectTab=cRect0 then exit;
@@ -2831,7 +2833,7 @@ begin
     if PtInRect(RectTab, Pnt) then
     begin
       Result:= i;
-      APressedX:= D.TabVisibleX and PtInRect(GetTabRect_Scrolled(D.TabRectX), Pnt);
+      APressedX:= D.TabVisibleX and PtInRect(GetRectScrolled(D.TabRectX), Pnt);
       Exit;
     end;
   end;
@@ -2975,7 +2977,7 @@ begin
           D:= GetTabData(FTabIndexOver);
           if Assigned(D) and D.TabVisibleX then
           begin
-            R:= GetTabRect_Scrolled(D.TabRectX);
+            R:= GetRectScrolled(D.TabRectX);
             if PtInRect(R, FMouseDownPnt) then
             begin
               EndDrag(false);
