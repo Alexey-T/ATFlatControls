@@ -78,6 +78,7 @@ type
     FTabStartsNewLine: boolean;
     FTabHideXButton: boolean;
     FTabVisible: boolean;
+    FTabVisibleX: boolean;
     procedure UpdateTabSet;
     procedure SetTabImageIndex(const Value: TImageIndex);
     procedure SetTabCaption(const Value: TATTabString);
@@ -91,8 +92,9 @@ type
     property TabObject: TObject read FTabObject write FTabObject;
     property TabRect: TRect read FTabRect write FTabRect;
     property TabRectX: TRect read FTabRectX write FTabRectX;
-    property TabSpecial: boolean read FTabSpecial write FTabSpecial default false;
+    property TabSpecial: boolean read FTabSpecial write FTabSpecial;
     property TabStartsNewLine: boolean read FTabStartsNewLine write FTabStartsNewLine;
+    property TabVisibleX: boolean read FTabVisibleX write FTabVisibleX;
     procedure Assign(Source: TPersistent); override;
   published
     property TabCaption: TATTabString read FTabCaption write SetTabCaption;
@@ -598,7 +600,7 @@ type
     procedure GetTabXProps(AIndex: integer; const ARect: TRect; out
       AMouseOverX: boolean; out ARectX: TRect);
     function IsIndexOk(AIndex: integer): boolean; inline;
-    function IsShowX(AIndex: integer): boolean;
+    function GetTabVisibleX(AIndex: integer; const D: TATTabData): boolean;
     function IsPaintNeeded(AElemType: TATTabElemType;
       AIndex: integer; ACanvas: TCanvas; const ARect: TRect): boolean;
     function DoPaintAfter(AElemType: TATTabElemType;
@@ -608,6 +610,7 @@ type
     procedure UpdateTabWidths;
     procedure UpdateTabRects(C: TCanvas);
     procedure UpdateTabRectsSpecial;
+    procedure UpdateTabVisibleX;
     procedure UpdateTabRectsToFillLine(AIndexFrom, AIndexTo: integer; ALastLine: boolean);
     procedure UpdateCanvasAntialiasMode(C: TCanvas); inline;
     procedure UpdateCaptionProps(C: TCanvas; const ACaption: TATTabString;
@@ -1419,7 +1422,7 @@ begin
   RectText:= Rect(ARect.Left, ARect.Top, ARect.Right, ARect.Bottom);
   bNeedMoreSpace:= (RectText.Right-RectText.Left<=DoScale(FOptSpaceBeforeTextForMinWidth)) and (ACaption<>'');
   NIndentL:= IfThen(not bNeedMoreSpace, DoScale(FOptSpaceBeforeText), 2);
-  NIndentR:= NIndentL+IfThen(IsShowX(ATabIndex), DoScale(FOptSpaceXRight));
+  NIndentR:= NIndentL+IfThen(Assigned(Data) and Data.TabVisibleX, DoScale(FOptSpaceXRight));
   RectText:= Rect(ARect.Left+NIndentL, ARect.Top, ARect.Right-NIndentR, ARect.Bottom);
 
   if not FThemed then
@@ -2185,6 +2188,19 @@ begin
   FRectTabPlus_Scrolled:= GetTabRect_Scrolled(FRectTabPlus_NotScrolled);
 end;
 
+procedure TATTabs.UpdateTabVisibleX;
+var
+  D: TATTabData;
+  i: integer;
+begin
+  for i:= 0 to TabCount-1 do
+  begin
+    D:= GetTabData(i);
+    if Assigned(D) then
+      D.TabVisibleX:= GetTabVisibleX(i, D);
+  end;
+end;
+
 function TATTabs.GetTabRect_Plus: TRect;
 begin
   case FOptPosition of
@@ -2283,7 +2299,7 @@ begin
 
   if _IsDrag then Exit;
 
-  if IsShowX(AIndex) then
+  if Data.TabVisibleX then
     if AIndex=FTabIndexOver then
     begin
       AMouseOverX:= PtInRect(ARectX, ScreenToClient(Mouse.CursorPos));
@@ -2378,6 +2394,7 @@ begin
   UpdateTabWidths;
   UpdateTabRects(C);
   UpdateTabRectsSpecial;
+  UpdateTabVisibleX;
 
   //paint spacer rect
   if not FOptShowFlat then
@@ -2485,7 +2502,7 @@ begin
         DoPaintAfter(ElemType, i, C, RRect);
       end;
 
-      if IsShowX(i) then
+      if Data.TabVisibleX then
       begin
         DoPaintX(C, RectX, i, false, bMouseOverX);
       end;
@@ -2530,7 +2547,7 @@ begin
       DoPaintAfter(aeTabActive, i, C, RRect);
     end;
 
-    if IsShowX(i) then
+    if Data.TabVisibleX then
     begin
       DoPaintX(C, RectX, i, true, bMouseOverX);
     end;
@@ -2814,7 +2831,7 @@ begin
     if PtInRect(RectTab, Pnt) then
     begin
       Result:= i;
-      APressedX:= IsShowX(i) and PtInRect(GetTabRect_Scrolled(D.TabRectX), Pnt);
+      APressedX:= D.TabVisibleX and PtInRect(GetTabRect_Scrolled(D.TabRectX), Pnt);
       Exit;
     end;
   end;
@@ -2955,10 +2972,9 @@ begin
 
       else
         begin
-          if IsShowX(FTabIndexOver) then
+          D:= GetTabData(FTabIndexOver);
+          if Assigned(D) and D.TabVisibleX then
           begin
-            D:= GetTabData(FTabIndexOver);
-            if D=nil then Exit;
             R:= GetTabRect_Scrolled(D.TabRectX);
             if PtInRect(R, FMouseDownPnt) then
             begin
@@ -3601,9 +3617,7 @@ begin
   FTabWidth:= NValue;
 end;
 
-function TATTabs.IsShowX(AIndex: integer): boolean;
-var
-  D: TATTabData;
+function TATTabs.GetTabVisibleX(AIndex: integer; const D: TATTabData): boolean;
 begin
   if Width<FOptMinimalWidthForSides then
     exit(false);
@@ -3625,8 +3639,7 @@ begin
 
   if Result then
   begin
-    D:= GetTabData(AIndex);
-    if Assigned(D) and D.TabHideXButton then
+    if D.TabHideXButton then
     begin
       Result:= false;
       Exit
