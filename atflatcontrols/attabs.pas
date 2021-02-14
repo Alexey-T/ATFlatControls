@@ -573,13 +573,13 @@ type
     procedure DoPaintTabShape_R(C: TCanvas; const ARect: TRect;
       ATabActive: boolean; ATabIndex: integer);
     procedure DoPaintTo(C: TCanvas);
-    procedure DoPaintX(C: TCanvas; const AInfo: TATTabPaintInfo);
     procedure DoTextOut(C: TCanvas; AX, AY: integer; const AClipRect: TRect; const AText: string); inline;
     procedure DoPaintBgTo(C: TCanvas; const ARect: TRect);
     procedure DoPaintTabTo(C: TCanvas; const AInfo: TATTabPaintInfo);
+    procedure DoPaintX(C: TCanvas; const AInfo: TATTabPaintInfo);
+    procedure DoPaintXTo(C: TCanvas; const AInfo: TATTabPaintInfo);
     procedure DoPaintArrowTo(C: TCanvas; ATyp: TATTabTriangle; ARect: TRect; AActive: boolean);
     procedure DoPaintUserButtons(C: TCanvas; const AButtons: TATTabButtons; AtLeft: boolean);
-    procedure DoPaintXTo(C: TCanvas; const AInfo: TATTabPaintInfo);
     procedure DoPaintDropMark(C: TCanvas);
     procedure DoPaintScrollMark(C: TCanvas);
     function GetButtonsEdgeCoord(AtLeft: boolean): integer;
