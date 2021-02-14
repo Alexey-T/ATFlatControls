@@ -573,15 +573,13 @@ type
     procedure DoPaintTabShape_R(C: TCanvas; const ARect: TRect;
       ATabActive: boolean; ATabIndex: integer);
     procedure DoPaintTo(C: TCanvas);
-    procedure DoPaintX(C: TCanvas; const ARectX: TRect; ATabIndex: integer;
-      ATabActive, AMouseOverX: boolean);
+    procedure DoPaintX(C: TCanvas; const AInfo: TATTabPaintInfo);
     procedure DoTextOut(C: TCanvas; AX, AY: integer; const AClipRect: TRect; const AText: string); inline;
     procedure DoPaintBgTo(C: TCanvas; const ARect: TRect);
     procedure DoPaintTabTo(C: TCanvas; const AInfo: TATTabPaintInfo);
     procedure DoPaintArrowTo(C: TCanvas; ATyp: TATTabTriangle; ARect: TRect; AActive: boolean);
     procedure DoPaintUserButtons(C: TCanvas; const AButtons: TATTabButtons; AtLeft: boolean);
-    procedure DoPaintXTo(C: TCanvas; const R: TRect; ATabIndex: integer;
-      ATabActive, AMouseOverX: boolean);
+    procedure DoPaintXTo(C: TCanvas; const AInfo: TATTabPaintInfo);
     procedure DoPaintDropMark(C: TCanvas);
     procedure DoPaintScrollMark(C: TCanvas);
     function GetButtonsEdgeCoord(AtLeft: boolean): integer;
@@ -1873,25 +1871,23 @@ begin
 end;
 
 
-procedure TATTabs.DoPaintX(C: TCanvas; const ARectX: TRect;
-  ATabIndex: integer; ATabActive, AMouseOverX: boolean);
+procedure TATTabs.DoPaintX(C: TCanvas; const AInfo: TATTabPaintInfo);
 var
   ElemType: TATTabElemType;
 begin
-  if AMouseOverX then
+  if AInfo.TabMouseOverX then
     ElemType:= aeTabIconXOver
   else
     ElemType:= aeTabIconX;
 
-  if IsPaintNeeded(ElemType, -1, C, ARectX) then
+  if IsPaintNeeded(ElemType, -1, C, AInfo.Rect) then
   begin
-    DoPaintXTo(C, ARectX, ATabIndex, ATabActive, AMouseOverX);
-    DoPaintAfter(ElemType, -1, C, ARectX);
+    DoPaintXTo(C, AInfo);
+    DoPaintAfter(ElemType, -1, C, AInfo.Rect);
   end;
 end;
 
-procedure TATTabs.DoPaintXTo(C: TCanvas; const R: TRect;
-  ATabIndex: integer; ATabActive, AMouseOverX: boolean);
+procedure TATTabs.DoPaintXTo(C: TCanvas; const AInfo: TATTabPaintInfo);
 var
   Pic: TATTabsPicture;
   RectRound, RectBitmap: TRect;
@@ -1900,25 +1896,25 @@ var
 begin
   if FThemed then
   begin
-    if AMouseOverX then
+    if AInfo.TabMouseOverX then
       Pic:= FPic_X_a
     else
       Pic:= FPic_X;
-    Pic.Draw(C, R.Left, R.Top);
+    Pic.Draw(C, AInfo.Rect.Left, AInfo.Rect.Top);
     exit;
   end;
 
-  if ATabActive then
-    NColorBg:= GetTabBgColor_Active(ATabIndex)
+  if AInfo.TabActive then
+    NColorBg:= GetTabBgColor_Active(AInfo.TabIndex)
   else
-    NColorBg:= GetTabBgColor_Passive(ATabIndex);
-  GetTabXColors(ATabIndex, AMouseOverX, NColorXBg, NColorXBorder, NColorXMark);
+    NColorBg:= GetTabBgColor_Passive(AInfo.TabIndex);
+  GetTabXColors(AInfo.TabIndex, AInfo.TabMouseOverX, NColorXBg, NColorXBorder, NColorXMark);
 
   if FOptShowXRounded then
   begin
     if NColorXBg<>clNone then
     begin
-      RectRound:= R;
+      RectRound:= AInfo.Rect;
       NSize:= DoScale(FOptSpaceXIncrementRound);
       InflateRect(RectRound, NSize, NSize);
 
@@ -1939,18 +1935,18 @@ begin
     else
     begin
       C.Brush.Color:= NColorBg;
-      C.FillRect(R);
+      C.FillRect(AInfo.Rect);
     end;
   end
   else
   begin
     C.Brush.Color:= IfThen(NColorXBg<>clNone, NColorXBg, NColorBg);
-    C.FillRect(R);
+    C.FillRect(AInfo.Rect);
     C.Pen.Color:= IfThen(NColorXBorder<>clNone, NColorXBorder, NColorBg);
-    C.Rectangle(R);
+    C.Rectangle(AInfo.Rect);
   end;
 
-  RectRound:= R;
+  RectRound:= AInfo.Rect;
   Dec(RectRound.Right);
   Dec(RectRound.Bottom);
   NSize:= DoScale(FOptSpaceXInner);
@@ -2509,7 +2505,11 @@ begin
 
       if Data.TabVisibleX then
       begin
-        DoPaintX(C, RectX, i, false, bMouseOverX);
+        FillChar(Info, SizeOf(Info), 0);
+        Info.Rect:= RectX;
+        Info.TabIndex:= i;
+        Info.TabMouseOverX:= bMouseOverX;
+        DoPaintX(C, Info);
       end;
     end;
 
@@ -2556,7 +2556,12 @@ begin
 
     if Data.TabVisibleX then
     begin
-      DoPaintX(C, RectX, i, true, bMouseOverX);
+      FillChar(Info, SizeOf(Info), 0);
+      Info.Rect:= RectX;
+      Info.TabIndex:= i;
+      Info.TabActive:= true;
+      Info.TabMouseOverX:= bMouseOverX;
+      DoPaintX(C, Info);
     end;
    end;
   end;
