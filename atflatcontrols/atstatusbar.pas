@@ -451,7 +451,7 @@ begin
   Result.Left:= 0;
   Result.Right:= -1;
   Result.Top:= 1;
-  Result.Bottom:= ClientHeight;
+  Result.Bottom:= Height;
 
   if IsIndexOk(AIndex) then
     for i:= 0 to PanelCount-1 do
@@ -519,7 +519,7 @@ begin
 
   C.Pen.Color:= ColorToRGB(FColorBorderTop);
   C.MoveTo(0, 0);
-  C.LineTo(ClientWidth, 0);
+  C.LineTo(Width, 0);
 end;
 
 
