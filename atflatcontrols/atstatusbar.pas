@@ -37,6 +37,7 @@ type
     FAlign: TAlignment;
     FCaption: TCaption;
     FHint: string;
+    FOverlayText: string;
     FImageIndex: integer;
     FAutoSize: boolean;
     FAutoStretch: boolean;
@@ -53,6 +54,7 @@ type
   public
     constructor Create(ACollection: TCollection); override;
     property Callback: string read FCallback write FCallback;
+    property OverlayText: string read FOverlayText write FOverlayText;
   published
     property Width: integer read FWidth write FWidth;
     property Align: TAlignment read FAlign write FAlign default taLeftJustify;
@@ -440,6 +442,41 @@ begin
       ARect.Right,
       ARect.Bottom
       ));
+  end;
+
+  if AData.OverlayText<>'' then
+  begin
+    TextSize:= C.TextExtent(AData.OverlayText);
+    C.Brush.Color:= Theme^.ColorBgOverlay;
+    C.Font.Color:= Theme^.ColorFontOverlay;
+
+    case Theme^.TextOverlayPosition of
+      bopLeftTop:
+        begin
+          PosIcon.x:= 0;
+          PosIcon.y:= 0;
+        end;
+      bopRightTop:
+        begin
+          PosIcon.x:= ARect.Width-TextSize.cx;
+          PosIcon.y:= 0;
+        end;
+      bopLeftBottom:
+        begin
+          PosIcon.x:= 0;
+          PosIcon.y:= ARect.Height-TextSize.cy;
+        end;
+      bopRightBottom:
+        begin
+          PosIcon.x:= ARect.Width-TextSize.cx;
+          PosIcon.y:= ARect.Height-TextSize.cy;
+        end;
+    end;
+
+    C.TextOut(
+      ARect.Left+PosIcon.x,
+      ARect.Top+PosIcon.y,
+      AData.OverlayText);
   end;
 end;
 

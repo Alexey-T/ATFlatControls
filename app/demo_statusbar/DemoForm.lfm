@@ -72,7 +72,7 @@ object Form1: TForm1
     Caption = 'Scale in %'
     ParentColor = False
   end
-  object ColorButton1: TColorButton
+  object btnColor: TColorButton
     Left = 164
     Height = 25
     Top = 215
@@ -80,7 +80,7 @@ object Form1: TForm1
     BorderWidth = 2
     ButtonColorSize = 16
     ButtonColor = clBlue
-    OnColorChanged = ColorButton1ColorChanged
+    OnColorChanged = btnColorColorChanged
   end
   object ImageList1: TImageList
     Left = 392
