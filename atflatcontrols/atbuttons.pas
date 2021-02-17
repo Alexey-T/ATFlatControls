@@ -97,6 +97,8 @@ type
     FTextOverlay: string;
     FTextAlign: TAlignment;
     FShowShortItems: boolean;
+    FColorLine: TColor;
+    FColorLine2: TColor;
 
     {$ifndef FPC}
     procedure CMMouseEnter(var msg: TMessage);
@@ -162,6 +164,9 @@ type
     property WidthInitial: integer read FWidthInitial write FWidthInitial;
     property TextOverlay: string read FTextOverlay write SetTextOverlay;
     property ShowShortItems: boolean read FShowShortItems write FShowShortItems;
+    property ColorLine: TColor read FColorLine write FColorLine;
+    property ColorLine2: TColor read FColorLine2 write FColorLine2;
+
   published
     property Align;
     property Anchors;
@@ -433,6 +438,26 @@ begin
       Self.Canvas.FillRect(Self.Canvas.ClipRect);
     end;
     {$endif}
+  end;
+
+  if FColorLine<>clNone then
+  begin
+    C.Brush.Color:= FColorLine;
+    C.FillRect(Rect(
+      0,
+      0,
+      Width,
+      FTheme^.DoScale(FTheme^.ColoredLineWidth)));
+  end;
+
+  if FColorLine2<>clNone then
+  begin
+    C.Brush.Color:= FColorLine2;
+    C.FillRect(Rect(
+      0,
+      Height-FTheme^.DoScale(FTheme^.ColoredLineWidth),
+      Width,
+      Height));
   end;
 
   if bUseBorder then
@@ -854,6 +879,8 @@ begin
   FItemIndex:= -1;
   FTheme:= @ATFlatTheme;
   FWidthInitial:= 0;
+  FColorLine:= clNone;
+  FColorLine2:= clNone;
 end;
 
 destructor TATButton.Destroy;

@@ -221,6 +221,8 @@ procedure TfmMain.BtnToggleClick(Sender: TObject);
 begin
   with b2 do Checked:= not Checked;
   with b3 do Checked:= not Checked;
+  b2.ColorLine:= Random($ffffff);
+  b3.ColorLine2:= Random($ffffff);
 end;
 
 procedure TfmMain.BtnColorsClick(Sender: TObject);
