@@ -43,6 +43,8 @@ type
     FColorFont: TColor;
     FColorBack: TColor;
     FColorBackOver: TColor;
+    FColorLine: TColor;
+    FColorLine2: TColor;
     FFontName: string;
     FFontSize: integer;
     FTag: Int64;
@@ -62,6 +64,8 @@ type
     property ColorFont: TColor read FColorFont write FColorFont default clNone;
     property ColorBack: TColor read FColorBack write FColorBack default clNone;
     property ColorBackOver: TColor read FColorBackOver write FColorBackOver default clNone;
+    property ColorLine: TColor read FColorLine write FColorLine default clNone;
+    property ColorLine2: TColor read FColorLine2 write FColorLine2 default clNone;
     property FontName: string read FFontName write FFontName;
     property FontSize: integer read FFontSize write FFontSize default 0;
     property Tag: Int64 read FTag write FTag default 0;
@@ -75,6 +79,7 @@ type
 
 const
   cDefaultStatusbarPadding = 5;
+  cDefaultStatusbarLineWidth = 3;
   cDefaultStatusbarColorBack = clBtnFace;
   cDefaultStatusbarColorBorderTop = clGray;
   cDefaultStatusbarColorBorderR = clGray;
@@ -93,6 +98,7 @@ type
     FColorBorderU: TColor;
     FColorBorderD: TColor;
     FHeightInitial: integer;
+    FLineWidth: integer;
     FPadding: integer;
     FClickedIndex: integer;
     FPrevPanelMouseOver: integer;
@@ -177,6 +183,7 @@ type
     property Panels: TCollection read FItems write FItems;
     property Images: TImageList read FImages write FImages;
     property ScaleFromFont: boolean read FScaleFromFont write FScaleFromFont default false;
+    property LineWidth: integer read FLineWidth write FLineWidth default cDefaultStatusbarLineWidth;
     property ShowHint;
     property ParentShowHint;
     property OnClick;
@@ -215,6 +222,8 @@ begin
   FColorFont:= clNone;
   FColorBack:= clNone;
   FColorBackOver:= clNone;
+  FColorLine:= clNone;
+  FColorLine2:= clNone;
   FFontName:= '';
   FFontSize:= 0;
   FTag:= 0;
@@ -251,6 +260,7 @@ begin
   FTheme:= @ATFlatTheme;
   FHeightInitial:= Height;
   FPadding:= cDefaultStatusbarPadding;
+  FLineWidth:= cDefaultStatusbarLineWidth;
 
   Color:= cDefaultStatusbarColorBack;
   FColorBorderTop:= cDefaultStatusbarColorBorderTop;
@@ -409,6 +419,28 @@ begin
     C.MoveTo(ARect.Left, ARect.Bottom-1);
     C.LineTo(ARect.Right, ARect.Bottom-1);
   end;  
+
+  if AData.ColorLine<>clNone then
+  begin
+    C.Brush.Color:= AData.ColorLine;
+    C.FillRect(Rect(
+      ARect.Left,
+      ARect.Top,
+      ARect.Right,
+      ARect.Top+FTheme^.DoScale(FLineWidth)
+      ));
+  end;
+
+  if AData.ColorLine2<>clNone then
+  begin
+    C.Brush.Color:= AData.ColorLine2;
+    C.FillRect(Rect(
+      ARect.Left,
+      ARect.Bottom-FTheme^.DoScale(FLineWidth),
+      ARect.Right,
+      ARect.Bottom
+      ));
+  end;
 end;
 
 function TATStatus.GetPanelRect(AIndex: integer): TRect;
