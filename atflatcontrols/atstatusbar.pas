@@ -81,7 +81,6 @@ type
 
 const
   cDefaultStatusbarPadding = 5;
-  cDefaultStatusbarLineWidth = 3;
   cDefaultStatusbarColorBack = clBtnFace;
   cDefaultStatusbarColorBorderTop = clGray;
   cDefaultStatusbarColorBorderR = clGray;
@@ -100,7 +99,6 @@ type
     FColorBorderU: TColor;
     FColorBorderD: TColor;
     FHeightInitial: integer;
-    FLineWidth: integer;
     FPadding: integer;
     FClickedIndex: integer;
     FPrevPanelMouseOver: integer;
@@ -185,7 +183,6 @@ type
     property Panels: TCollection read FItems write FItems;
     property Images: TImageList read FImages write FImages;
     property ScaleFromFont: boolean read FScaleFromFont write FScaleFromFont default false;
-    property LineWidth: integer read FLineWidth write FLineWidth default cDefaultStatusbarLineWidth;
     property ShowHint;
     property ParentShowHint;
     property OnClick;
@@ -262,7 +259,6 @@ begin
   FTheme:= @ATFlatTheme;
   FHeightInitial:= Height;
   FPadding:= cDefaultStatusbarPadding;
-  FLineWidth:= cDefaultStatusbarLineWidth;
 
   Color:= cDefaultStatusbarColorBack;
   FColorBorderTop:= cDefaultStatusbarColorBorderTop;
@@ -429,7 +425,7 @@ begin
       ARect.Left,
       ARect.Top,
       ARect.Right,
-      ARect.Top+FTheme^.DoScale(FLineWidth)
+      ARect.Top+FTheme^.DoScale(FTheme^.ColoredLineWidth)
       ));
   end;
 
@@ -438,7 +434,7 @@ begin
     C.Brush.Color:= AData.ColorLine2;
     C.FillRect(Rect(
       ARect.Left,
-      ARect.Bottom-FTheme^.DoScale(FLineWidth),
+      ARect.Bottom-FTheme^.DoScale(FTheme^.ColoredLineWidth),
       ARect.Right,
       ARect.Bottom
       ));
