@@ -2127,8 +2127,7 @@ begin
   end;
 
   //fix for the case of many tabs, vertically scrolled, and last tab is not shrinked
-  bFitLastRow:= FOptFillWidthLastToo or
-    ((NIndexLineStart>0) and (NIndexLineStart=TabCount-1) and (Width<FOptTabWidthNormal));
+  bFitLastRow:= FOptFillWidthLastToo or (Width<FOptTabWidthNormal);
 
   if FOptFillWidth and bFitLastRow then
     UpdateTabRectsToFillLine(NIndexLineStart, TabCount-1, true);
