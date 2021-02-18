@@ -666,7 +666,6 @@ type
     function FindTabByObject(AObject: TObject): integer;
     procedure DoScrollLeft;
     procedure DoScrollRight;
-    procedure DoScrollAnimation(APosTo: integer);
     function GetMaxScrollPos: integer;
     property ScrollPos: integer read FScrollPos write SetScrollPos;
     procedure SetTheme(const Data: TATTabTheme);
@@ -1985,7 +1984,7 @@ function TATTabs.GetRectScrolled(const R: TRect): TRect;
 begin
   Result:= R;
   if Result=cRect0 then Exit;
-  if (FOptPosition in [atpTop, atpBottom]) and not FOptMultiline then
+  if not FActualMultiline then
   begin
     Dec(Result.Left, FScrollPos);
     Dec(Result.Right, FScrollPos);
@@ -2370,9 +2369,6 @@ begin
     DoPaintAfter(ElemType, -1, C, RRect);
   end;
 
-  if FOptMultiline then
-    FScrollPos:= 0;
-
   C.Font.Assign(Self.Font);
   UpdateTabWidths;
   UpdateTabRects(C);
@@ -2635,7 +2631,7 @@ begin
     atpTop,
     atpBottom:
       begin
-        if not FOptVarWidth then
+        if not FOptVarWidth and not FOptMultiline then
           Result:= FTabWidth<=DoScale(FOptTabWidthMinimal)
         else
           Result:= GetMaxScrollPos>0;
@@ -3860,21 +3856,18 @@ end;
 
 function TATTabs.DoScale(AValue: integer): integer;
 begin
-  if FOptScalePercents=100 then
-    Result:= AValue
-  else
-    Result:= AValue * FOptScalePercents div 100;
+  Result:= AValue * FOptScalePercents div 100;
 end;
 
 function TATTabs.GetScrollPageSize: integer;
 begin
-  case FOptPosition of
-    atpTop,
-    atpBottom:
-      Result:= Width * FOptScrollPagesizePercents div 100;
-    else
-      Result:= Height * FOptScrollPagesizePercents div 100;
-  end;
+  if not FActualMultiline then
+    Result:= Width * FOptScrollPagesizePercents div 100
+  else
+  if FOptPosition in [atpLeft, atpRight] then
+    Result:= Height * FOptScrollPagesizePercents div 100
+  else
+    Result:= FOptTabHeight+FOptSpacer;
 end;
 
 function TATTabs.GetMaxEdgePos: integer;
@@ -3883,6 +3876,7 @@ var
 begin
   Result:= 0;
   if TabCount=0 then Exit;
+
   R:= FRectTabPlus_NotScrolled;
   if FActualMultiline then
     Result:= R.Bottom
@@ -3901,34 +3895,28 @@ begin
     Result:= Max(0, Result - Height);
 end;
 
-procedure TATTabs.DoScrollAnimation(APosTo: integer);
-begin
-  FScrollPos:= APosTo;
-  Invalidate;
-end;
-
 procedure TATTabs.DoScrollLeft;
 var
   NPos: integer;
 begin
-  if FOptMultiline then exit;
-
   NPos:= Max(0, FScrollPos-GetScrollPageSize);
-
   if NPos<>FScrollPos then
-    DoScrollAnimation(NPos);
+  begin
+    FScrollPos:= NPos;
+    Invalidate;
+  end;
 end;
 
 procedure TATTabs.DoScrollRight;
 var
   NPos: integer;
 begin
-  if FOptMultiline then exit;
-
-  NPos:= GetMaxScrollPos;
-  NPos:= Min(NPos, FScrollPos+GetScrollPageSize);
+  NPos:= Min(GetMaxScrollPos, FScrollPos+GetScrollPageSize);
   if NPos<>FScrollPos then
-    DoScrollAnimation(NPos);
+  begin
+    FScrollPos:= NPos;
+    Invalidate;
+  end;
 end;
 
 procedure TATTabs.DoPaintButtonPlus(C: TCanvas);
@@ -4406,17 +4394,14 @@ begin
     exit
   end;
 
-  case FOptPosition of
-    atpTop,
-    atpBottom:
-      Result:=
-        (R.Left-FScrollPos >= FRealIndentLeft) and
-        (R.Right-FScrollPos < Width-FRealIndentRight);
-    else
-      Result:=
-        (R.Top-FScrollPos >= FRealIndentLeft) and
-        (R.Bottom-FScrollPos < Height-FRealIndentRight);
-  end;
+  if not FActualMultiline then
+    Result:=
+      (R.Left-FScrollPos >= FRealIndentLeft) and
+      (R.Right-FScrollPos < Width-FRealIndentRight)
+  else
+    Result:=
+      (R.Top-FScrollPos >= FRealIndentLeft) and
+      (R.Bottom-FScrollPos < Height-FRealIndentRight);
 end;
 
 procedure TATTabs.MakeVisible(AIndex: integer);
@@ -4425,7 +4410,8 @@ var
   R: TRect;
 begin
   //sometimes new tab has not updated Data.TabRect
-  UpdateTabRects(FBitmap.Canvas);
+  if Assigned(FBitmap) then
+    UpdateTabRects(FBitmap.Canvas);
 
   if not IsScrollMarkNeeded then exit;
 
@@ -4435,21 +4421,10 @@ begin
   if D=nil then exit;
   R:= D.TabRect;
 
-  case FOptPosition of
-    atpTop,
-    atpBottom:
-      begin
-        FScrollPos:= Min(GetMaxScrollPos, Max(0,
-          R.Left - Width div 2
-          ));
-      end
-    else
-      begin
-        FScrollPos:= Min(GetMaxScrollPos, Max(0,
-          R.Top - Height div 2
-          ));
-      end;
-  end;
+  if not FActualMultiline then
+    FScrollPos:= Min(GetMaxScrollPos, Max(0, R.Left - Width div 2))
+  else
+    FScrollPos:= Min(GetMaxScrollPos, Max(0, R.Top - Height div 2));
 
   Invalidate;
 end;
