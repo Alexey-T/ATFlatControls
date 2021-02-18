@@ -480,6 +480,8 @@ type
     FLastOverX: boolean;
     FLastSpaceSide: integer;
     FActualMultiline: boolean;
+    FTabsChanged: boolean;
+    FTabsResized: boolean;
 
     FScrollPos: integer;
     FImages: TImageList;
@@ -3154,6 +3156,7 @@ end;
 procedure TATTabs.Resize;
 begin
   inherited;
+  FTabsResized:= true;
 
   if Assigned(FBitmap) then
     BitmapResizeBySteps(FBitmap, Width, Height);
@@ -3180,6 +3183,8 @@ function TATTabs.AddTab(
 var
   Data: TATTabData;
 begin
+  FTabsChanged:= true;
+
   Data:= TATTabData(FTabList.Add);
   if IsIndexOk(AIndex) then
     Data.Index:= AIndex
@@ -3272,6 +3277,7 @@ var
   CanClose, CanContinue: boolean;
   NMax: integer;
 begin
+  FTabsChanged:= true;
   FMouseDown:= false;
 
   if AAllowEvent then
@@ -4428,8 +4434,13 @@ var
   R: TRect;
 begin
   //sometimes new tab has not updated Data.TabRect
-  if Assigned(FBitmap) then
-    UpdateTabRects(FBitmap.Canvas);
+  if FTabsChanged or FTabsResized then
+  begin
+    FTabsChanged:= false;
+    FTabsResized:= false;
+    if Assigned(FBitmap) then
+      UpdateTabRects(FBitmap.Canvas);
+  end;
 
   if not IsScrollMarkNeeded then exit;
 
