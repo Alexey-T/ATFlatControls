@@ -2818,11 +2818,16 @@ begin
     if D=nil then Continue;
     RectTab:= GetRectScrolled(D.TabRect);
 
-    if FOptMultiline then
-      if RectTab=cRect0 then exit;
+    if RectTab=cRect0 then Continue;
 
-    if not FOptMultiline then
+    if (FOptPosition in [atpLeft, atpRight]) or FOptMultiline then
+    begin
+      if RectTab.Top>Pnt.Y then exit;
+    end
+    else
+    begin
       if RectTab.Left>Pnt.X then exit;
+    end;
 
     if PtInRect(RectTab, Pnt) then
     begin
