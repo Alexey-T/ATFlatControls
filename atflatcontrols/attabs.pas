@@ -2006,6 +2006,7 @@ var
   Extent: TSize;
   NWidthPlus, NIndexLineStart, NLineHeight, NWidthSaved: integer;
   NSelfHeight, NFormHeight: integer;
+  bFitLastRow: boolean;
   i: integer;
 begin
   //left/right tabs
@@ -2125,7 +2126,11 @@ begin
     Data.TabRect:= R;
   end;
 
-  if FOptFillWidth and FOptFillWidthLastToo then
+  //fix for the case of many tabs, vertically scrolled, and last tab is not shrinked
+  bFitLastRow:= FOptFillWidthLastToo or
+    ((NIndexLineStart>0) and (NIndexLineStart=TabCount-1) and (Width<FOptTabWidthNormal));
+
+  if FOptFillWidth and bFitLastRow then
     UpdateTabRectsToFillLine(NIndexLineStart, TabCount-1, true);
 
   if FOptMultiline then
