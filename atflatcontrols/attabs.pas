@@ -2440,9 +2440,9 @@ begin
     begin
       Data:= GetTabData(i);
       if Data=nil then Continue;
+
       RRect:= GetRectScrolled(Data.TabRect);
-      if FOptMultiline then
-        if RRect=cRect0 then Continue;
+      if RRect=cRect0 then Continue;
 
       GetTabXProps(i, RRect, bMouseOverX, RectX);
       bMouseOver:= i=FTabIndexOver;
@@ -2809,7 +2809,7 @@ begin
     RectTab:= GetRectScrolled(D.TabRect);
     if RectTab=cRect0 then Continue;
 
-    if (FOptPosition in [atpLeft, atpRight]) or FOptMultiline then
+    if FActualMultiline then
     begin
       if RectTab.Top>Pnt.Y then exit;
     end
