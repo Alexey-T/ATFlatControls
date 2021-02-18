@@ -2325,7 +2325,7 @@ var
   RBottom: TRect;
   NLineX1, NLineY1, NLineX2, NLineY2: integer;
 begin
-  ElemType:= aeSpacerRect;
+  if IsScrollMarkNeeded then exit;
 
   case FOptPosition of
     atpTop:
@@ -2367,6 +2367,7 @@ begin
       raise Exception.Create('Unknown tab pos');
   end;
 
+  ElemType:= aeSpacerRect;
   if IsPaintNeeded(ElemType, -1, C, RBottom) then
   begin
     C.Brush.Color:= FColorTabActive;
