@@ -4415,14 +4415,6 @@ begin
       (R.Left >= FRealIndentLeft) and
       (R.Right < Width-FRealIndentRight)
   else
-  {
-  //it's more correct but better without it
-  if FOptMultiline then
-    Result:=
-      (R.Top >= 0) and
-      (R.Bottom < Height)
-  else
-  }
     Result:=
       (R.Top >= FRealIndentLeft) and
       (R.Bottom < Height-FRealIndentRight);
