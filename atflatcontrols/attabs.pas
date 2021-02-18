@@ -2659,56 +2659,56 @@ begin
   if not IsScrollMarkNeeded then exit;
 
   if not FActualMultiline then
+  begin
+    NPos:= GetMaxScrollPos;
+    NSize:= Width - FRealIndentLeft - FRealIndentRight;
+
+    if NPos>0 then
+    begin
+      R.Top:= IfThen(FOptPosition=atpBottom, DoScale(FOptTabHeight) + DoScale(FOptSpacer), 0);
+      R.Bottom:= R.Top + DoScale(FOptScrollMarkSizeY);
+
+      R.Left:= FRealIndentLeft +
+        Max(0, Min(
+          NSize-DoScale(FOptScrollMarkSizeX),
+          Int64(FScrollPos) * (NSize-DoScale(FOptScrollMarkSizeX)) div NPos
+        ));
+      R.Right:= R.Left + DoScale(FOptScrollMarkSizeX);
+
+      C.Brush.Color:= FColorScrollMark;
+      C.FillRect(R);
+    end;
+  end
+  else
+  begin
+    NIndent:= GetInitialVerticalIndent;
+    NPos:= GetMaxScrollPos;
+    NSize:= Height-NIndent;
+
+    if NPos>0 then
+    begin
+      R.Top:= NIndent +
+        Max(0, Min(
+          NSize - DoScale(FOptScrollMarkSizeX),
+          Int64(FScrollPos) * (NSize-DoScale(FOptScrollMarkSizeX)) div NPos
+          ));
+      R.Bottom:= R.Top + DoScale(FOptScrollMarkSizeX);
+
+      if FOptPosition=atpLeft then
       begin
-        NPos:= GetMaxScrollPos;
-        NSize:= Width - FRealIndentLeft - FRealIndentRight;
-
-        if NPos>0 then
-        begin
-          R.Top:= IfThen(FOptPosition=atpBottom, DoScale(FOptTabHeight) + DoScale(FOptSpacer), 0);
-          R.Bottom:= R.Top + DoScale(FOptScrollMarkSizeY);
-
-          R.Left:= FRealIndentLeft +
-            Max(0, Min(
-              NSize-DoScale(FOptScrollMarkSizeX),
-              Int64(FScrollPos) * (NSize-DoScale(FOptScrollMarkSizeX)) div NPos
-            ));
-          R.Right:= R.Left + DoScale(FOptScrollMarkSizeX);
-
-          C.Brush.Color:= FColorScrollMark;
-          C.FillRect(R);
-        end;
+        R.Left:= 0;
+        R.Right:= R.Left + DoScale(FOptScrollMarkSizeY);
       end
-    else
+      else
       begin
-        NIndent:= GetInitialVerticalIndent;
-        NPos:= GetMaxScrollPos;
-        NSize:= Height-NIndent;
-
-        if NPos>0 then
-        begin
-          R.Top:= NIndent +
-            Max(0, Min(
-              NSize - DoScale(FOptScrollMarkSizeX),
-              Int64(FScrollPos) * (NSize-DoScale(FOptScrollMarkSizeX)) div NPos
-              ));
-          R.Bottom:= R.Top + DoScale(FOptScrollMarkSizeX);
-
-          if FOptPosition=atpLeft then
-          begin
-            R.Left:= 0;
-            R.Right:= R.Left + DoScale(FOptScrollMarkSizeY);
-          end
-          else
-          begin
-            R.Right:= Width;
-            R.Left:= R.Right - DoScale(FOptScrollMarkSizeY);
-          end;
-
-          C.Brush.Color:= FColorScrollMark;
-          C.FillRect(R);
-        end;
+        R.Right:= Width;
+        R.Left:= R.Right - DoScale(FOptScrollMarkSizeY);
       end;
+
+      C.Brush.Color:= FColorScrollMark;
+      C.FillRect(R);
+    end;
+  end;
 end;
 
 procedure TATTabs.SetOptButtonLayout(const AValue: string);
