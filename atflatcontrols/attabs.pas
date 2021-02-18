@@ -2816,8 +2816,8 @@ begin
   begin
     D:= GetTabData(i);
     if D=nil then Continue;
-    RectTab:= GetRectScrolled(D.TabRect);
 
+    RectTab:= GetRectScrolled(D.TabRect);
     if RectTab=cRect0 then Continue;
 
     if (FOptPosition in [atpLeft, atpRight]) or FOptMultiline then
