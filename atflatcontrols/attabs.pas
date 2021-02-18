@@ -4403,14 +4403,23 @@ begin
     exit
   end;
 
+  R:= GetRectScrolled(R);
   if not FActualMultiline then
     Result:=
-      (R.Left-FScrollPos >= FRealIndentLeft) and
-      (R.Right-FScrollPos < Width-FRealIndentRight)
+      (R.Left >= FRealIndentLeft) and
+      (R.Right < Width-FRealIndentRight)
   else
+  {
+  //it's more correct but better without it
+  if FOptMultiline then
     Result:=
-      (R.Top-FScrollPos >= FRealIndentLeft) and
-      (R.Bottom-FScrollPos < Height-FRealIndentRight);
+      (R.Top >= 0) and
+      (R.Bottom < Height)
+  else
+  }
+    Result:=
+      (R.Top >= FRealIndentLeft) and
+      (R.Bottom < Height-FRealIndentRight);
 end;
 
 procedure TATTabs.MakeVisible(AIndex: integer);
