@@ -1,4 +1,9 @@
 
+2021.02.18
++ ATTabs: in OptMultiline view, tabs can scroll vertically if too many tabs
++ ATButton, ATStatusbar: allow to paint colored lines (on top and bottom)
++ ATStatusbar: allow to paint overlay text in the cell corner
+
 2020.06.07
 + ATScrollbar: events OnMouseDown, OnMouseUp
 
