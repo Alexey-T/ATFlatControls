@@ -565,6 +565,7 @@ type
     procedure DoPaintPlus(C: TCanvas; const ARect: TRect);
     procedure DoPaintSeparator(C: TCanvas; const R: TRect);
     procedure DoPaintSpaceInital(C: TCanvas); inline;
+    procedure DoPaintSpacerRect(C: TCanvas);
     procedure DoPaintTabShape(C: TCanvas; const ATabRect: TRect;
       ATabActive: boolean; ATabIndex: integer);
     procedure DoPaintTabShape_C(C: TCanvas; ATabActive: boolean;
@@ -2318,11 +2319,67 @@ begin
   C.FillRect(ARect);
 end;
 
+procedure TATTabs.DoPaintSpacerRect(C: TCanvas);
+var
+  ElemType: TATTabElemType;
+  RBottom: TRect;
+  NLineX1, NLineY1, NLineX2, NLineY2: integer;
+begin
+  ElemType:= aeSpacerRect;
+
+  case FOptPosition of
+    atpTop:
+      begin
+        if FOptMultiline then
+          RBottom:= Rect(0, Height-DoScale(FOptSpacer2), Width, Height)
+        else
+          RBottom:= Rect(0, DoScale(FOptSpacer)+DoScale(FOptTabHeight), Width, Height);
+        NLineX1:= RBottom.Left;
+        NLineY1:= RBottom.Top;
+        NLineX2:= RBottom.Right;
+        NLineY2:= RBottom.Top;
+      end;
+    atpBottom:
+      begin
+        RBottom:= Rect(0, 0, Width, DoScale(FOptSpacer));
+        NLineX1:= RBottom.Left;
+        NLineY1:= RBottom.Bottom;
+        NLineX2:= RBottom.Right;
+        NLineY2:= RBottom.Bottom;
+      end;
+    atpLeft:
+      begin
+        RBottom:= Rect(Width-DoScale(FOptSpacer2), 0, Width, Height);
+        NLineX1:= RBottom.Left;
+        NLineY1:= RBottom.Top;
+        NLineX2:= RBottom.Left;
+        NLineY2:= RBottom.Bottom;
+      end;
+    atpRight:
+      begin
+        RBottom:= Rect(0, 0, DoScale(FOptSpacer2), Height);
+        NLineX1:= RBottom.Right;
+        NLineY1:= RBottom.Top;
+        NLineX2:= RBottom.Right;
+        NLineY2:= RBottom.Bottom;
+      end;
+    else
+      raise Exception.Create('Unknown tab pos');
+  end;
+
+  if IsPaintNeeded(ElemType, -1, C, RBottom) then
+  begin
+    C.Brush.Color:= FColorTabActive;
+    C.FillRect(RBottom);
+    DrawLine(C, NLineX1, NLineY1, NLineX2, NLineY2, FColorBorderActive);
+    DoPaintAfter(ElemType, -1, C, RBottom);
+  end;
+end;
+
 procedure TATTabs.DoPaintTo(C: TCanvas);
 var
-  RRect, RBottom, RectX: TRect;
+  RRect, RectX: TRect;
   NColorFont: TColor;
-  NLineX1, NLineY1, NLineX2, NLineY2: integer;
   ElemType: TATTabElemType;
   Data: TATTabData;
   NFontStyle: TFontStyles;
@@ -2377,56 +2434,7 @@ begin
 
   //paint spacer rect
   if not FOptShowFlat then
-  begin
-    ElemType:= aeSpacerRect;
-    case FOptPosition of
-      atpTop:
-        begin
-          if FOptMultiline then
-            RBottom:= Rect(0, Height-DoScale(FOptSpacer2), Width, Height)
-          else
-            RBottom:= Rect(0, DoScale(FOptSpacer)+DoScale(FOptTabHeight), Width, Height);
-          NLineX1:= RBottom.Left;
-          NLineY1:= RBottom.Top;
-          NLineX2:= RBottom.Right;
-          NLineY2:= RBottom.Top;
-        end;
-      atpBottom:
-        begin
-          RBottom:= Rect(0, 0, Width, DoScale(FOptSpacer));
-          NLineX1:= RBottom.Left;
-          NLineY1:= RBottom.Bottom;
-          NLineX2:= RBottom.Right;
-          NLineY2:= RBottom.Bottom;
-        end;
-      atpLeft:
-        begin
-          RBottom:= Rect(Width-DoScale(FOptSpacer2), 0, Width, Height);
-          NLineX1:= RBottom.Left;
-          NLineY1:= RBottom.Top;
-          NLineX2:= RBottom.Left;
-          NLineY2:= RBottom.Bottom;
-        end;
-      atpRight:
-        begin
-          RBottom:= Rect(0, 0, DoScale(FOptSpacer2), Height);
-          NLineX1:= RBottom.Right;
-          NLineY1:= RBottom.Top;
-          NLineX2:= RBottom.Right;
-          NLineY2:= RBottom.Bottom;
-        end;
-      else
-        raise Exception.Create('Unknown tab pos');
-    end;
-
-    if IsPaintNeeded(ElemType, -1, C, RBottom) then
-    begin
-      C.Brush.Color:= FColorTabActive;
-      C.FillRect(RBottom);
-      DrawLine(C, NLineX1, NLineY1, NLineX2, NLineY2, FColorBorderActive);
-      DoPaintAfter(ElemType, -1, C, RBottom);
-    end;
-  end;
+    DoPaintSpacerRect(C);
 
   //paint "plus" tab
   if FOptShowPlusTab then
