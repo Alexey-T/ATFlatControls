@@ -1391,8 +1391,9 @@ var
 begin
   //optimize for 200 tabs
   if AInfo.Rect.Left>=Width then exit;
-  //skip tabs scrolled lefter
+  if AInfo.Rect.Top>=Height then exit;
   if AInfo.Rect.Right<=0 then exit;
+  if AInfo.Rect.Bottom<=0 then exit;
 
   Data:= GetTabData(AInfo.TabIndex);
   if Assigned(Data) then
@@ -2007,11 +2008,8 @@ var
   Extent: TSize;
   NWidthPlus, NIndexLineStart, NLineHeight, NWidthSaved: integer;
   NSelfHeight, NFormHeight: integer;
-  bStopUpdate: boolean;
   i: integer;
 begin
-  bStopUpdate:= false;
-
   //left/right tabs
   if FOptPosition in [atpLeft, atpRight] then
   begin
@@ -2070,13 +2068,6 @@ begin
     if not Data.TabVisible then Continue;
     Data.TabStartsNewLine:= false;
 
-    //optimize of multi-line tabs which have too many tabs
-    if bStopUpdate then
-    begin
-      Data.TabRect:= cRect0;
-      Continue;
-    end;
-
     R.Left:= R.Right;
     if i>0 then
       Inc(R.Left, DoScale(FOptSpaceBetweenTabs));
@@ -2134,13 +2125,6 @@ begin
 
     R.Right:= R.Left + FTabWidth;
     Data.TabRect:= R;
-
-    if FOptMultiline then
-      if Data.TabRect.Top>=Height then
-      begin
-        Data.TabRect:= cRect0;
-        bStopUpdate:= true;
-      end;
   end;
 
   if FOptFillWidth and FOptFillWidthLastToo then
