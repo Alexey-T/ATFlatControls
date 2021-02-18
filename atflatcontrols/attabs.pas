@@ -673,7 +673,8 @@ type
     property ScrollPos: integer read FScrollPos write SetScrollPos;
     procedure SetTheme(const Data: TATTabTheme);
     property IsThemed: boolean read FThemed write FThemed;
-    function DoScale(AValue: integer): integer; inline;
+    function DoScale(AValue: integer): integer;
+    function DoScaleFont(AValue: integer): integer;
 
   protected
     procedure Paint; override;
@@ -1494,9 +1495,7 @@ begin
     C.Font.Assign(Self.Font);
     C.Font.Style:= AInfo.FontStyle;
     C.Font.Color:= AInfo.ColorFont;
-
-    if FOptFontScale<>100 then
-      C.Font.Size:= C.Font.Size * FOptFontScale div 100;
+    C.Font.Size:= DoScaleFont(C.Font.Size);
 
     TempCaption:= AInfo.Caption;
     if ATabModified then
@@ -3872,6 +3871,11 @@ end;
 function TATTabs.DoScale(AValue: integer): integer;
 begin
   Result:= AValue * FOptScalePercents div 100;
+end;
+
+function TATTabs.DoScaleFont(AValue: integer): integer;
+begin
+  Result:= AValue * FOptFontScale div 100;
 end;
 
 function TATTabs.GetScrollPageSize: integer;
