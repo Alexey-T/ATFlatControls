@@ -479,6 +479,7 @@ type
     FLastOverIndex: integer;
     FLastOverX: boolean;
     FLastSpaceSide: integer;
+    FActualMultiline: boolean;
 
     FScrollPos: integer;
     FImages: TImageList;
@@ -1983,20 +1984,16 @@ end;
 function TATTabs.GetRectScrolled(const R: TRect): TRect;
 begin
   Result:= R;
-  if Result=cRect0 then
-    Exit;
-  case FOptPosition of
-    atpTop,
-    atpBottom:
-      begin
-        Dec(Result.Left, FScrollPos);
-        Dec(Result.Right, FScrollPos);
-      end;
-    else
-      begin
-        Dec(Result.Top, FScrollPos);
-        Dec(Result.Bottom, FScrollPos);
-      end;
+  if Result=cRect0 then Exit;
+  if (FOptPosition in [atpTop, atpBottom]) and not FOptMultiline then
+  begin
+    Dec(Result.Left, FScrollPos);
+    Dec(Result.Right, FScrollPos);
+  end
+  else
+  begin
+    Dec(Result.Top, FScrollPos);
+    Dec(Result.Bottom, FScrollPos);
   end;
 end;
 
@@ -2334,6 +2331,8 @@ var
   Info: TATTabPaintInfo;
   i: integer;
 begin
+  FActualMultiline:= (FOptPosition in [atpLeft, atpRight]) or FOptMultiline;
+
   ElemType:= aeBackground;
   RRect:= ClientRect;
 
@@ -2626,9 +2625,6 @@ end;
 
 function TATTabs.IsScrollMarkNeeded: boolean;
 begin
-  if FOptMultiline then
-    Result:= false
-  else
   if TabCount=0 then
     Result:= false
   else
@@ -2658,9 +2654,7 @@ var
 begin
   if not IsScrollMarkNeeded then exit;
 
-  case FOptPosition of
-    atpTop,
-    atpBottom:
+  if not FActualMultiline then
       begin
         NPos:= GetMaxScrollPos;
         NSize:= Width - FRealIndentLeft - FRealIndentRight;
@@ -2680,7 +2674,7 @@ begin
           C.Brush.Color:= FColorScrollMark;
           C.FillRect(R);
         end;
-      end;
+      end
     else
       begin
         NIndent:= GetInitialVerticalIndent;
@@ -2711,7 +2705,6 @@ begin
           C.FillRect(R);
         end;
       end;
-  end;
 end;
 
 procedure TATTabs.SetOptButtonLayout(const AValue: string);
@@ -3891,14 +3884,10 @@ begin
   Result:= 0;
   if TabCount=0 then Exit;
   R:= FRectTabPlus_NotScrolled;
-
-  case FOptPosition of
-    atpTop,
-    atpBottom:
-      Result:= R.Right;
-    else
-      Result:= R.Bottom;
-  end;
+  if FActualMultiline then
+    Result:= R.Bottom
+  else
+    Result:= R.Right;
 end;
 
 function TATTabs.GetMaxScrollPos: integer;
@@ -3906,23 +3895,16 @@ begin
   Result:= GetMaxEdgePos;
   if Result=0 then exit;
 
-  case FOptPosition of
-    atpTop,
-    atpBottom:
-      Result:= Max(0, Result - Width + FRealIndentRight);
-    else
-      Result:= Max(0, Result - Height);
-  end;
+  if not FActualMultiline then
+    Result:= Max(0, Result - Width + FRealIndentRight)
+  else
+    Result:= Max(0, Result - Height);
 end;
 
 procedure TATTabs.DoScrollAnimation(APosTo: integer);
 begin
-  //if not FOptAnimationEnabled then
-  begin
-    FScrollPos:= APosTo;
-    Invalidate;
-    exit;
-  end;
+  FScrollPos:= APosTo;
+  Invalidate;
 end;
 
 procedure TATTabs.DoScrollLeft;
