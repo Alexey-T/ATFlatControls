@@ -240,8 +240,8 @@ type
     procedure TabMove(Sender: TObject; NFrom, NTo: Integer);
     function TabGetTick(Sender: TObject; ATabObject: TObject): Int64;
     procedure SetMode(Value: TATGroupsMode);
-    function GetSplitPos: Integer;
-    procedure SetSplitPos(N: Integer);
+    function GetMainPos: Integer;
+    procedure SetMainPos(N: Integer);
     procedure Split1Moved(Sender: TObject);
     procedure Split2Moved(Sender: TObject);
     procedure Split3Moved(Sender: TObject);
@@ -306,9 +306,9 @@ type
     procedure MoveCurrentTabToNext(ANext: boolean);
     procedure MoveCurrentTabToOpposite;
     //
-    property SplitPos: Integer read GetSplitPos write SetSplitPos;
-    procedure SplitPosIncrease;
-    procedure SplitPosDecrease;
+    property MainPos: Integer read GetMainPos write SetMainPos;
+    procedure MainPosIncrease;
+    procedure MainPosDecrease;
     procedure SaveSplitPos;
     procedure RestoreSplitPos;
     //
@@ -1468,10 +1468,10 @@ end;
 
 procedure TATGroups.SplitClick(Sender: TObject);
 begin
-  SetSplitPos((Sender as TComponent).Tag);
+  SetMainPos((Sender as TComponent).Tag);
 end;
 
-function TATGroups.GetSplitPos: Integer;
+function TATGroups.GetMainPos: Integer;
 //this is used when we have 2 cols or 2 rows, by context menu over single splitter
 begin
   case FMode of
@@ -1496,7 +1496,7 @@ begin
   end;
 end;
 
-procedure TATGroups.SetSplitPos(N: Integer);
+procedure TATGroups.SetMainPos(N: Integer);
 //this is used when we have 2 cols or 2 rows, by context menu over single splitter
 begin
   case FMode of
@@ -1952,14 +1952,14 @@ const
   cMinSplitter = 10;
   cDeltaSplitter = 5;
 
-procedure TATGroups.SplitPosIncrease;
+procedure TATGroups.MainPosIncrease;
 begin
-  SplitPos:= Min(SplitPos + cDeltaSplitter, 100-cMinSplitter);
+  MainPos:= Min(MainPos + cDeltaSplitter, 100-cMinSplitter);
 end;
 
-procedure TATGroups.SplitPosDecrease;
+procedure TATGroups.MainPosDecrease;
 begin
-  SplitPos:= Max(SplitPos - cDeltaSplitter, cMinSplitter);
+  MainPos:= Max(MainPos - cDeltaSplitter, cMinSplitter);
 end;
 
 function TATGroups.PagesVisibleCount: Integer;
