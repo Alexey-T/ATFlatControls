@@ -711,8 +711,8 @@ begin
     Value:= gmOne;
   if (Value<>gmOne) and (Value=FMode) then Exit;
 
-  w:= ClientWidth;
-  h:= ClientHeight;
+  w:= Width;
+  h:= Height;
   if w<2 then exit;
   if h<2 then exit;
 
@@ -1291,8 +1291,8 @@ procedure TATGroups.SaveSplitPos;
 var
   w, h: integer;
 begin
-  w:= ClientWidth;
-  h:= ClientHeight;
+  w:= Width;
+  h:= Height;
   if w<2 then Exit;
   if h<2 then Exit;
 
@@ -1356,8 +1356,8 @@ procedure TATGroups.RestoreSplitPos;
 var
   w, h: integer;
 begin
-  w:= ClientWidth;
-  h:= ClientHeight;
+  w:= Width;
+  h:= Height;
   if w<2 then Exit;
   if h<2 then Exit;
 
@@ -1456,19 +1456,19 @@ begin
   case FMode of
     gm2v:
       begin
-        Result:= Pages1.Width * 100 div ClientWidth;
+        Result:= Pages1.Width * 100 div Width;
       end;
     gm2h:
       begin
-        Result:= Pages1.Height * 100 div ClientHeight;
+        Result:= Pages1.Height * 100 div Height;
       end;
     gm1plus2v:
       begin
-        Result:= FPanel1.Width * 100 div ClientWidth;
+        Result:= FPanel1.Width * 100 div Width;
       end;
     gm1plus2h:
       begin
-        Result:= FPanel1.Height * 100 div ClientHeight;
+        Result:= FPanel1.Height * 100 div Height;
       end;
     else
       Result:= 50;
@@ -1480,22 +1480,22 @@ begin
   case FMode of
     gm2v:
       begin
-        UpdW(Pages1, ClientWidth * N div 100);
+        UpdW(Pages1, Width * N div 100);
         SaveSplitPos;
       end;
     gm2h:
       begin
-        UpdH(Pages1, ClientHeight * N div 100);
+        UpdH(Pages1, Height * N div 100);
         SaveSplitPos;
       end;
     gm1plus2v:
       begin
-        UpdW(FPanel1, ClientWidth * N div 100);
+        UpdW(FPanel1, Width * N div 100);
         SaveSplitPos;
       end;
     gm1plus2h:
       begin
-        UpdH(FPanel1, ClientHeight * N div 100);
+        UpdH(FPanel1, Height * N div 100);
         SaveSplitPos;
       end;
   end;
