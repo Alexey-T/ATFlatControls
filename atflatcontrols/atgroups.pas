@@ -1178,15 +1178,30 @@ begin
 end;
 
 procedure TATGroups.Split1Moved(Sender: TObject);
+var
+  R: double;
 begin
   case FMode of
+    gm3v:
+      begin
+        R:= 1/(1+FPos3/FPos2);
+        UpdW(Pages2, Trunc(R*(Width-Pages1.Width-2*FSplit1.Width)));
+      end;
+    gm3h:
+      begin
+        R:= 1/(1+FPos3/FPos2);
+        UpdH(Pages2, Trunc(R*(Height-Pages1.Height-2*FSplit1.Height)));
+      end;
     gm4grid:
       begin
         UpdW(Pages3, Pages1.Width);
       end;
     gm6grid:
       begin
+        R:= FPos2/(1-FPos1);
+        UpdW(Pages2, Trunc(R*(Width-Pages1.Width-2*FSplit1.Width)));
         UpdW(Pages4, Pages1.Width);
+        UpdW(Pages5, Pages2.Width);
       end;
   end;
 
