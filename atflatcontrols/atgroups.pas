@@ -1220,8 +1220,18 @@ begin
 end;
 
 procedure TATGroups.Split2Moved(Sender: TObject);
+var
+  R: double;
+  W3: integer;
 begin
   case FMode of
+    gm3v:
+      begin
+        W3:= Pages3.Width;
+        R:= FPos1/(FPos1+FPos2);
+        UpdW(Pages1, Trunc(R*(Width-Pages3.Width)));
+        UpdW(Pages2, Width-Pages1.Width-W3-2*FSplitW);
+      end;
     gm4grid:
       begin
         UpdW(Pages1, Pages3.Width);
