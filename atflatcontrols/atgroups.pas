@@ -1229,14 +1229,14 @@ begin
       begin
         Size3:= Pages3.Width;
         R:= FPos1/(FPos1+FPos2);
-        UpdW(Pages1, Trunc(R*(Width-Pages3.Width)));
+        UpdW(Pages1, Trunc(R*(Width-Size3)));
         UpdW(Pages2, Width-Pages1.Width-Size3-2*FSplitW);
       end;
     gm3h:
       begin
         Size3:= Pages3.Height;
         R:= FPos1/(FPos1+FPos2);
-        UpdH(Pages1, Trunc(R*(Height-Pages3.Height)));
+        UpdH(Pages1, Trunc(R*(Height-Size3)));
         UpdH(Pages2, Height-Pages1.Height-Size3-2*FSplitW);
       end;
     gm4grid:
@@ -1245,6 +1245,10 @@ begin
       end;
     gm6grid:
       begin
+        Size3:= Pages3.Width;
+        R:= FPos1/(FPos1+FPos2);
+        UpdW(Pages1, Trunc(R*(Width-Size3)));
+        UpdW(Pages2, Width-Pages1.Width-Size3-2*FSplitW);
         UpdW(Pages4, Pages1.Width);
         UpdW(Pages5, Pages2.Width);
       end;
@@ -1276,10 +1280,17 @@ begin
 end;
 
 procedure TATGroups.Split5Moved(Sender: TObject);
+var
+  R: double;
+  Size6: integer;
 begin
   case FMode of
     gm6grid:
       begin
+        Size6:= Pages6.Width;
+        R:= FPos1/(FPos1+FPos2);
+        UpdW(Pages4, Trunc(R*(Width-Size6)));
+        UpdW(Pages5, Width-Pages4.Width-Size6-2*FSplitW);
         UpdW(Pages1, Pages4.Width);
         UpdW(Pages2, Pages5.Width);
       end;
