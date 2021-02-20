@@ -216,6 +216,7 @@ type
     FPrevWidth,
     FPrevHeight: Integer;
     FSplitPopup: TMyPopupMenu;
+    FSplitW: integer;
     FMode: TATGroupsMode;
     FOnChangeMode: TNotifyEvent;
     FOnTabPopup: TATGroupsPopupEvent;
@@ -588,6 +589,8 @@ begin
       OnTabGetTick:= Self.TabGetTick;
     end;
 
+  FSplitW:= 5;
+
   FSplit1:= TMySplitter.Create(Self);
   FSplit1.Parent:= Self;
   FSplit1.OnMoved:= Split1Moved;
@@ -618,7 +621,13 @@ begin
   FSplit3.ResizeStyle:= rsPattern;
   FSplit4.ResizeStyle:= rsPattern;
   FSplit5.ResizeStyle:= rsPattern;
-  
+
+  FSplit1.Width:= FSplitW;
+  FSplit2.Width:= FSplitW;
+  FSplit3.Width:= FSplitW;
+  FSplit4.Width:= FSplitW;
+  FSplit5.Width:= FSplitW;
+
   {$ifdef fpc}
   FSplit1.AutoSnap:= false;
   FSplit2.AutoSnap:= false;
@@ -1185,12 +1194,12 @@ begin
     gm3v:
       begin
         R:= 1/(1+FPos3/FPos2);
-        UpdW(Pages2, Trunc(R*(Width-Pages1.Width-2*FSplit1.Width)));
+        UpdW(Pages2, Trunc(R*(Width-Pages1.Width-2*FSplitW)));
       end;
     gm3h:
       begin
         R:= 1/(1+FPos3/FPos2);
-        UpdH(Pages2, Trunc(R*(Height-Pages1.Height-2*FSplit1.Height)));
+        UpdH(Pages2, Trunc(R*(Height-Pages1.Height-2*FSplitW)));
       end;
     gm4grid:
       begin
@@ -1199,7 +1208,7 @@ begin
     gm6grid:
       begin
         R:= FPos2/(1-FPos1);
-        UpdW(Pages2, Trunc(R*(Width-Pages1.Width-2*FSplit1.Width)));
+        UpdW(Pages2, Trunc(R*(Width-Pages1.Width-2*FSplitW)));
         UpdW(Pages4, Pages1.Width);
         UpdW(Pages5, Pages2.Width);
       end;
