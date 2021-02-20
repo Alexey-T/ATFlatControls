@@ -231,6 +231,9 @@ type
     FPopupTabIndex: Integer;
     function GetImages: TImageList;
     procedure SetImages(AValue: TImageList);
+    procedure SetSplitterResizeStyle(AValue: TResizeStyle);
+    procedure SetSplitterColor(AValue: TColor);
+    procedure SplitterOnPaint(Sender: TObject);
     procedure TabFocus(Sender: TObject);
     procedure TabEmpty(Sender: TObject);
     procedure TabPopup(Sender: TObject; MousePos: TPoint; var Handled: Boolean);
@@ -270,6 +273,8 @@ type
     property Splitter3: TMySplitter read FSplit3;
     property Splitter4: TMySplitter read FSplit4;
     property Splitter5: TMySplitter read FSplit5;
+    property SplitterResizeStyle: TResizeStyle write SetSplitterResizeStyle;
+    property SplitterColor: TColor write SetSplitterColor;
     //
     constructor Create(AOwner: TComponent); override;
     //
@@ -616,11 +621,8 @@ begin
   FSplit5.OnMoved:= Split5Moved;
   FSplit5.MinSize:= cMinSize;
 
-  FSplit1.ResizeStyle:= rsPattern;
-  FSplit2.ResizeStyle:= rsPattern;
-  FSplit3.ResizeStyle:= rsPattern;
-  FSplit4.ResizeStyle:= rsPattern;
-  FSplit5.ResizeStyle:= rsPattern;
+  SplitterResizeStyle:= rsPattern;
+  SplitterColor:= clMoneyGreen;
 
   FSplit1.Width:= FSplitW;
   FSplit2.Width:= FSplitW;
@@ -2057,6 +2059,48 @@ var
 begin
   for i:= Low(TATGroupsNums) to High(TATGroupsNums) do
     Pages[i].Tabs.Images:= AValue;
+end;
+
+procedure TATGroups.SetSplitterResizeStyle(AValue: TResizeStyle);
+begin
+  FSplit1.ResizeStyle:= AValue;
+  FSplit2.ResizeStyle:= AValue;
+  FSplit3.ResizeStyle:= AValue;
+  FSplit4.ResizeStyle:= AValue;
+  FSplit5.ResizeStyle:= AValue;
+end;
+
+procedure TATGroups.SetSplitterColor(AValue: TColor);
+var
+  Event: TNotifyEvent;
+begin
+  if AValue=clNone then
+    Event:= nil
+  else
+    Event:= SplitterOnPaint;
+
+  FSplit1.OnPaint:= Event;
+  FSplit2.OnPaint:= Event;
+  FSplit3.OnPaint:= Event;
+  FSplit4.OnPaint:= Event;
+  FSplit5.OnPaint:= Event;
+
+  FSplit1.Color:= AValue;
+  FSplit2.Color:= AValue;
+  FSplit3.Color:= AValue;
+  FSplit4.Color:= AValue;
+  FSplit5.Color:= AValue;
+
+  FSplit1.Invalidate;
+  FSplit2.Invalidate;
+  FSplit3.Invalidate;
+  FSplit4.Invalidate;
+  FSplit5.Invalidate;
+end;
+
+procedure TATGroups.SplitterOnPaint(Sender: TObject);
+begin
+  //empty to disable themed paint
 end;
 
 function _FixOdd(N: integer): integer; inline;
