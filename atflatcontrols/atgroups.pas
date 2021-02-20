@@ -1179,20 +1179,32 @@ end;
 
 procedure TATGroups.Split1Moved(Sender: TObject);
 begin
-  if FMode=gm4grid then
-    UpdW(Pages3, Pages1.Width);
-  if FMode=gm6grid then
-    UpdW(Pages4, Pages1.Width);
+  case FMode of
+    gm4grid:
+      begin
+        UpdW(Pages3, Pages1.Width);
+      end;
+    gm6grid:
+      begin
+        UpdW(Pages4, Pages1.Width);
+      end;
+  end;
 
   SaveSplitPos;
 end;
 
 procedure TATGroups.Split2Moved(Sender: TObject);
 begin
-  if FMode=gm4grid then
-    UpdW(Pages1, Pages3.Width);
-  if FMode=gm6grid then
-    UpdW(Pages5, Pages2.Width);
+  case FMode of
+    gm4grid:
+      begin
+        UpdW(Pages1, Pages3.Width);
+      end;
+    gm6grid:
+      begin
+        UpdW(Pages5, Pages2.Width);
+      end;
+  end;
 
   SaveSplitPos;
 end;
@@ -1204,16 +1216,24 @@ end;
 
 procedure TATGroups.Split4Moved(Sender: TObject);
 begin
-  if FMode=gm6grid then
-    UpdW(Pages1, Pages4.Width);
+  case FMode of
+    gm6grid:
+      begin
+        UpdW(Pages1, Pages4.Width);
+      end;
+  end;
 
   SaveSplitPos;
 end;
 
 procedure TATGroups.Split5Moved(Sender: TObject);
 begin
-  if FMode=gm6grid then
-    UpdW(Pages2, Pages5.Width);
+  case FMode of
+    gm6grid:
+      begin
+        UpdW(Pages2, Pages5.Width);
+      end;
+  end;
 
   SaveSplitPos;
 end;
