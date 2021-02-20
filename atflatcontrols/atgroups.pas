@@ -1226,6 +1226,7 @@ begin
       end;
     gm6grid:
       begin
+        UpdW(Pages4, Pages1.Width);
         UpdW(Pages5, Pages2.Width);
       end;
   end;
@@ -1244,6 +1245,7 @@ begin
     gm6grid:
       begin
         UpdW(Pages1, Pages4.Width);
+        UpdW(Pages2, Pages5.Width);
       end;
   end;
 
@@ -1255,6 +1257,7 @@ begin
   case FMode of
     gm6grid:
       begin
+        UpdW(Pages1, Pages4.Width);
         UpdW(Pages2, Pages5.Width);
       end;
   end;
@@ -1390,8 +1393,8 @@ begin
         FPos1:= Pages1.Width / w;
         FPos2:= Pages2.Width / w;
         FPos3:= FPanel1.Height / h;
-        FPos4:= Pages4.Width / w;
-        FPos5:= Pages5.Width / w;
+        FPos4:= FPos1;
+        FPos5:= FPos2;
       end;
   end;
 end;
@@ -1449,8 +1452,8 @@ begin
         UpdW(Pages1, Trunc(FPos1 * w));
         UpdW(Pages2, Trunc(FPos2 * w));
         UpdH(FPanel1, Trunc(FPos3 * h));
-        UpdW(Pages4, Trunc(FPos4 * w));
-        UpdW(Pages5, Trunc(FPos5 * w));
+        UpdW(Pages4, Pages1.Width);
+        UpdW(Pages5, Pages2.Width);
       end;
   end;
 end;
