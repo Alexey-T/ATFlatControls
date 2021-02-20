@@ -1452,6 +1452,7 @@ begin
 end;
 
 function TATGroups.GetSplitPos: Integer;
+//this is used when we have 2 cols or 2 rows, by context menu over single splitter
 begin
   case FMode of
     gm2v:
@@ -1476,6 +1477,7 @@ begin
 end;
 
 procedure TATGroups.SetSplitPos(N: Integer);
+//this is used when we have 2 cols or 2 rows, by context menu over single splitter
 begin
   case FMode of
     gm2v:
