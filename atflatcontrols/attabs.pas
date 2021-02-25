@@ -41,6 +41,11 @@ uses
 type
   TATTabString = {$ifdef WIDE} WideString {$else} string {$endif};
 
+//these global options disable features in all ATTabs objects
+var
+  ATTabsStretchDrawEnabled: boolean = true;
+  ATTabsCircleDrawEnabled: boolean = true;
+
 type
   TATTabPosition = (
     atpTop,
@@ -1913,7 +1918,7 @@ begin
     NColorBg:= GetTabBgColor_Passive(AInfo.TabIndex);
   GetTabXColors(AInfo.TabIndex, AInfo.TabMouseOverX, NColorXBg, NColorXBorder, NColorXMark);
 
-  if FOptShowXRounded then
+  if FOptShowXRounded and ATTabsCircleDrawEnabled then
   begin
     if NColorXBg<>clNone then
     begin
@@ -2398,6 +2403,9 @@ begin
   ElemType:= aeBackground;
   RRect:= ClientRect;
 
+  if not ATTabsStretchDrawEnabled then
+    FLastSpaceSide:= 0
+  else
   if Width>=DoScale(FOptMinimalWidthForSides) then
     FLastSpaceSide:= FOptSpaceSide
   else
