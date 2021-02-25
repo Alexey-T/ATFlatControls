@@ -231,6 +231,7 @@ type
     FPopupTabIndex: Integer;
     function GetImages: TImageList;
     procedure SetImages(AValue: TImageList);
+    procedure SetSplitterMinSize(AValue: integer);
     procedure SetSplitterResizeStyle(AValue: TResizeStyle);
     procedure SetSplitterColor(AValue: TColor);
     procedure SplitterOnPaint(Sender: TObject);
@@ -274,6 +275,7 @@ type
     property Splitter4: TMySplitter read FSplit4;
     property Splitter5: TMySplitter read FSplit5;
     property SplitterResizeStyle: TResizeStyle write SetSplitterResizeStyle;
+    property SplitterMinSize: integer write SetSplitterMinSize;
     property SplitterColor: TColor write SetSplitterColor;
     //
     constructor Create(AOwner: TComponent); override;
@@ -545,8 +547,6 @@ end;
 { TATGroups }
 
 constructor TATGroups.Create(AOwner: TComponent);
-const
-  cMinSize = 60;
 var
   i: Integer;
 begin
@@ -599,29 +599,25 @@ begin
   FSplit1:= TMySplitter.Create(Self);
   FSplit1.Parent:= Self;
   FSplit1.OnMoved:= Split1Moved;
-  FSplit1.MinSize:= cMinSize;
 
   FSplit2:= TMySplitter.Create(Self);
   FSplit2.Parent:= Self;
   FSplit2.OnMoved:= Split2Moved;
-  FSplit2.MinSize:= cMinSize;
 
   FSplit3:= TMySplitter.Create(Self);
   FSplit3.Parent:= Self;
   FSplit3.OnMoved:= Split3Moved;
-  FSplit3.MinSize:= cMinSize;
 
   FSplit4:= TMySplitter.Create(Self);
   FSplit4.Parent:= Self;
   FSplit4.OnMoved:= Split4Moved;
-  FSplit4.MinSize:= cMinSize;
 
   FSplit5:= TMySplitter.Create(Self);
   FSplit5.Parent:= Self;
   FSplit5.OnMoved:= Split5Moved;
-  FSplit5.MinSize:= cMinSize;
 
   SplitterResizeStyle:= rsPattern;
+  SplitterMinSize:= 0;
   SplitterColor:= clMoneyGreen;
 
   FSplit1.Width:= FSplitW;
@@ -2087,6 +2083,15 @@ var
 begin
   for i:= Low(TATGroupsNums) to High(TATGroupsNums) do
     Pages[i].Tabs.Images:= AValue;
+end;
+
+procedure TATGroups.SetSplitterMinSize(AValue: integer);
+begin
+  FSplit1.MinSize:= AValue;
+  FSplit2.MinSize:= AValue;
+  FSplit3.MinSize:= AValue;
+  FSplit4.MinSize:= AValue;
+  FSplit5.MinSize:= AValue;
 end;
 
 procedure TATGroups.SetSplitterResizeStyle(AValue: TResizeStyle);
