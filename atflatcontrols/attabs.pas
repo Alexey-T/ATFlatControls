@@ -1676,7 +1676,7 @@ begin
   DoPaintTabShape_C(C, ATabActive, ATabIndex, R, PL1, PL2, PR1, PR2);
 
   //left/right edges
-  if FLastSpaceSide>0 then
+  if (FLastSpaceSide>0) and not FOptShowFlat then
   begin
     DoPaintTabShape_L(C, R, ATabActive, ATabIndex);
     DoPaintTabShape_R(C, R, ATabActive, ATabIndex);
