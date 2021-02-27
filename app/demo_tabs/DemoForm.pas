@@ -11,6 +11,7 @@ uses
 type
   { TForm1 }
   TForm1 = class(TForm)
+    BarScale: TTrackBar;
     btnAdd: TButton;
     btnDel: TButton;
     btnColor: TButton;
@@ -19,25 +20,28 @@ type
     btnStress: TButton;
     btnToggleSpecial: TButton;
     chkAngled: TCheckBox;
-    chkMultiline_Bottom: TCheckBox;
-    chkNewNearCurrent: TCheckBox;
+    chkCenterCaption: TCheckBox;
     chkFill: TCheckBox;
     chkMultiline: TCheckBox;
+    chkMultiline_Bottom: TCheckBox;
+    chkNewNearCurrent: TCheckBox;
     chkNums_Bottom: TCheckBox;
-    chkVarSize: TCheckBox;
-    chkCenterCaption: TCheckBox;
     chkShowFlat: TCheckBox;
+    chkShowFullColor: TCheckBox;
+    chkShowPlus: TCheckBox;
+    chkVarSize: TCheckBox;
     chkVarSize_Bottom: TCheckBox;
-    comboWheelMode: TComboBox;
+    comboIconPos: TComboBox;
+    comboLayout: TComboBox;
+    comboShowX: TComboBox;
     comboThemes: TComboBox;
     comboTruncate: TComboBox;
-    comboLayout: TComboBox;
-    comboIconPos: TComboBox;
-    comboShowX: TComboBox;
+    comboWheelMode: TComboBox;
     edBetween: TSpinEdit;
+    edInitial: TSpinEdit;
     EditInfo: TEdit;
-    chkShowPlus: TCheckBox;
-    GroupBox1: TGroupBox;
+    GroupBoxBtm: TGroupBox;
+    GroupBoxTop: TGroupBox;
     ImageList1: TImageList;
     Label1: TLabel;
     Label10: TLabel;
@@ -51,10 +55,6 @@ type
     LabelThemes: TLabel;
     labStatus: TLabel;
     btnModify: TButton;
-    Label2: TLabel;
-    chkShowFullColor: TCheckBox;
-    edInitial: TSpinEdit;
-    BarScale: TTrackBar;
     procedure BarScaleChange(Sender: TObject);
     procedure btnStressClick(Sender: TObject);
     procedure btnThemeBlack1Click(Sender: TObject);
