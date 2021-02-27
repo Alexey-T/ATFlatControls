@@ -83,6 +83,9 @@ function CanvasCollapseStringByDots(C: TCanvas;
   Width: integer;
   DotsString: string=''): string;
 
+function ColorBlend(c1, c2: Longint; A: Longint): Longint;
+function ColorBlendHalf(c1, c2: Longint): Longint;
+
 
 implementation
 
@@ -539,6 +542,41 @@ begin
     (SizeY>b.Height) then
     BitmapResize(b, SizeX, SizeY);
 end;
+
+
+function ColorBlend(c1, c2: Longint; A: Longint): Longint;
+//blend level: 0..255
+var
+  r, g, b, v1, v2: byte;
+begin
+  v1:= Byte(c1);
+  v2:= Byte(c2);
+  r:= A * (v1 - v2) shr 8 + v2;
+  v1:= Byte(c1 shr 8);
+  v2:= Byte(c2 shr 8);
+  g:= A * (v1 - v2) shr 8 + v2;
+  v1:= Byte(c1 shr 16);
+  v2:= Byte(c2 shr 16);
+  b:= A * (v1 - v2) shr 8 + v2;
+  Result := (b shl 16) + (g shl 8) + r;
+end;
+
+function ColorBlendHalf(c1, c2: Longint): Longint;
+var
+  r, g, b, v1, v2: byte;
+begin
+  v1:= Byte(c1);
+  v2:= Byte(c2);
+  r:= (v1+v2) shr 1;
+  v1:= Byte(c1 shr 8);
+  v2:= Byte(c2 shr 8);
+  g:= (v1+v2) shr 1;
+  v1:= Byte(c1 shr 16);
+  v2:= Byte(c2 shr 16);
+  b:= (v1+v2) shr 1;
+  Result := (b shl 16) + (g shl 8) + r;
+end;
+
 
 initialization
   _Pen:= TPen.Create;

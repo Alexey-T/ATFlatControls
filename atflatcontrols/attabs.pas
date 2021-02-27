@@ -1646,6 +1646,7 @@ procedure TATTabs.DoPaintTabShape(C: TCanvas; const ATabRect: TRect;
   ATabActive: boolean; ATabIndex: integer);
 var
   NColorBg, NColorEmpty, NColorBorder: TColor;
+  NColorMixEmpty, NColorMixBg: TColor;
   PL1, PL2, PR1, PR2: TPoint;
   R: TRect;
 begin
@@ -1689,19 +1690,34 @@ begin
     else
       NColorBorder:= ColorBorderPassive;
 
+    NColorMixEmpty:= ColorBlendHalf(NColorBorder, NColorEmpty);
+    NColorMixBg:= ColorBlendHalf(NColorBorder, NColorBg);
+
+    //left corner
     C.Pixels[R.Left, R.Top]:= NColorEmpty;
-    C.Pixels[R.Left+1, R.Top]:= NColorEmpty;
-    C.Pixels[R.Left, R.Top+1]:= NColorEmpty;
+    //
+    C.Pixels[R.Left+1, R.Top]:= NColorMixEmpty;
+    C.Pixels[R.Left, R.Top+1]:= NColorMixEmpty;
+    //
     C.Pixels[R.Left+2, R.Top]:= NColorBorder;
     C.Pixels[R.Left+1, R.Top+1]:= NColorBorder;
     C.Pixels[R.Left, R.Top+2]:= NColorBorder;
+    //
+    C.Pixels[R.Left+2, R.Top+1]:= NColorMixBg;
+    C.Pixels[R.Left+1, R.Top+2]:= NColorMixBg;
 
+    //right corner
     C.Pixels[R.Right-1, R.Top]:= NColorEmpty;
-    C.Pixels[R.Right-2, R.Top]:= NColorEmpty;
-    C.Pixels[R.Right-1, R.Top+1]:= NColorEmpty;
+    //
+    C.Pixels[R.Right-2, R.Top]:= NColorMixEmpty;
+    C.Pixels[R.Right-1, R.Top+1]:= NColorMixEmpty;
+    //
     C.Pixels[R.Right-3, R.Top]:= NColorBorder;
     C.Pixels[R.Right-2, R.Top+1]:= NColorBorder;
     C.Pixels[R.Right-1, R.Top+2]:= NColorBorder;
+    //
+    C.Pixels[R.Right-3, R.Top+1]:= NColorMixBg;
+    C.Pixels[R.Right-2, R.Top+2]:= NColorMixBg;
   end;
 end;
 
