@@ -1682,7 +1682,7 @@ begin
     DoPaintTabShape_R(C, R, ATabActive, ATabIndex);
   end
   else
-  if FOptTabRounded then
+  if FOptTabRounded and not FOptShowFlat then
   begin
     NColorEmpty:= ColorBg;
     if ATabActive then
