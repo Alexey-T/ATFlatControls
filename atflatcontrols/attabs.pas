@@ -4305,6 +4305,8 @@ begin
         R.Right:= ARect.Right-1;
         R.Top:= ARect.Top+1-Ord(FOptShowFlat);
         R.Bottom:= R.Top+DoScale(FOptColoredBandSize);
+        if FOptShowFlat then
+          Inc(R.Right);
       end;
     atpBottom:
       begin
@@ -4312,6 +4314,8 @@ begin
         R.Right:= ARect.Right-1;
         R.Bottom:= ARect.Bottom;
         R.Top:= R.Bottom-DoScale(FOptColoredBandSize);
+        if FOptShowFlat then
+          Inc(R.Right);
       end;
     atpLeft:
       begin
