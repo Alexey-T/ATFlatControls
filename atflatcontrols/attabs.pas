@@ -299,6 +299,7 @@ const
   _InitOptTabWidthMaximal = 300;
   _InitOptTabWidthNormal = 130;
   _InitOptTabWidthMinimalHidesX = 55;
+  _InitOptTabRounded = true;
   _InitOptMinimalWidthForSides = 140;
   _InitOptSpaceSide = 10;
   _InitOptSpaceInitial = 5;
@@ -408,6 +409,7 @@ type
     FOptTabWidthMaximal: integer;
     FOptTabWidthNormal: integer; //tab maximal width (used when only few tabs)
     FOptTabWidthMinimalHidesX: integer; //tab minimal width, after which "x" mark hides for inactive tabs
+    FOptTabRounded: boolean;
     FOptSpaceBetweenTabs: integer; //space between nearest tabs
     FOptSpaceBetweenLines: integer;
     FOptSpaceBetweenIconCaption: integer;
@@ -784,6 +786,7 @@ type
     property OptTabWidthMinimal: integer read FOptTabWidthMinimal write FOptTabWidthMinimal default _InitOptTabWidthMinimal;
     property OptTabWidthMaximal: integer read FOptTabWidthMaximal write FOptTabWidthMaximal default _InitOptTabWidthMaximal;
     property OptTabWidthMinimalHidesX: integer read FOptTabWidthMinimalHidesX write FOptTabWidthMinimalHidesX default _InitOptTabWidthMinimalHidesX;
+    property OptTabRounded: boolean read FOptTabRounded write FOptTabRounded default _InitOptTabRounded;
     property OptFontScale: integer read FOptFontScale write FOptFontScale default 100;
     property OptMinimalWidthForSides: integer read FOptMinimalWidthForSides write FOptMinimalWidthForSides default _InitOptMinimalWidthForSides;
     property OptSpaceSide: integer read FOptSpaceSide write FOptSpaceSide default _InitOptSpaceSide;
@@ -1224,6 +1227,7 @@ begin
   FOptTabWidthMaximal:= _InitOptTabWidthMaximal;
   FOptTabWidthNormal:= _InitOptTabWidthNormal;
   FOptTabWidthMinimalHidesX:= _InitOptTabWidthMinimalHidesX;
+  FOptTabRounded:= _InitOptTabRounded;
   FOptFontScale:= 100;
   FOptMinimalWidthForSides:= _InitOptMinimalWidthForSides;
   FOptSpaceSide:= _InitOptSpaceSide;
@@ -1641,7 +1645,7 @@ end;
 procedure TATTabs.DoPaintTabShape(C: TCanvas; const ATabRect: TRect;
   ATabActive: boolean; ATabIndex: integer);
 var
-  AColorBg: TColor;
+  NColorBg, NColorEmpty, NColorBorder: TColor;
   PL1, PL2, PR1, PR2: TPoint;
   R: TRect;
 begin
@@ -1653,12 +1657,12 @@ begin
   if not FThemed then
   begin
     if ATabActive then
-      AColorBg:= GetTabBgColor_Active(ATabIndex)
+      NColorBg:= GetTabBgColor_Active(ATabIndex)
     else
-      AColorBg:= GetTabBgColor_Passive(ATabIndex);
+      NColorBg:= GetTabBgColor_Passive(ATabIndex);
 
-    C.Pen.Color:= AColorBg;
-    C.Brush.Color:= AColorBg;
+    C.Pen.Color:= NColorBg;
+    C.Brush.Color:= NColorBg;
     C.FillRect(R);
   end;
 
@@ -1675,6 +1679,29 @@ begin
   begin
     DoPaintTabShape_L(C, R, ATabActive, ATabIndex);
     DoPaintTabShape_R(C, R, ATabActive, ATabIndex);
+  end
+  else
+  if FOptTabRounded then
+  begin
+    NColorEmpty:= ColorBg;
+    if ATabActive then
+      NColorBorder:= ColorBorderActive
+    else
+      NColorBorder:= ColorBorderPassive;
+
+    C.Pixels[R.Left, R.Top]:= NColorEmpty;
+    C.Pixels[R.Left+1, R.Top]:= NColorEmpty;
+    C.Pixels[R.Left, R.Top+1]:= NColorEmpty;
+    C.Pixels[R.Left+2, R.Top]:= NColorBorder;
+    C.Pixels[R.Left+1, R.Top+1]:= NColorBorder;
+    C.Pixels[R.Left, R.Top+2]:= NColorBorder;
+
+    C.Pixels[R.Right-1, R.Top]:= NColorEmpty;
+    C.Pixels[R.Right-2, R.Top]:= NColorEmpty;
+    C.Pixels[R.Right-1, R.Top+1]:= NColorEmpty;
+    C.Pixels[R.Right-3, R.Top]:= NColorBorder;
+    C.Pixels[R.Right-2, R.Top+1]:= NColorBorder;
+    C.Pixels[R.Right-1, R.Top+2]:= NColorBorder;
   end;
 end;
 

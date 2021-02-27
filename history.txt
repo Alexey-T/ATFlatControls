@@ -1,4 +1,7 @@
 
+2021.02.27
++ ATTabs: added OptTabRounded (=true)
+
 2021.02.18
 + ATTabs: in OptMultiline view, tabs can scroll vertically if too many tabs
 + ATButton, ATStatusbar: allow to paint colored lines (on top and bottom)
