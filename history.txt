@@ -1,6 +1,7 @@
 
 2021.02.27
-+ ATTabs: added OptTabRounded (=true)
++ ATTabs: prop OptTabRounded
++ ATTabs: global vars: ATTabsStretchDrawEnabled, ATTabsCircleDrawEnabled
 
 2021.02.18
 + ATTabs: in OptMultiline view, tabs can scroll vertically if too many tabs
