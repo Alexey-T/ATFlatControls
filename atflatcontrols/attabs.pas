@@ -1700,9 +1700,7 @@ begin
     C.Pixels[R.Left+1, R.Top]:= NColorMixEmpty;
     C.Pixels[R.Left, R.Top+1]:= NColorMixEmpty;
     //
-    C.Pixels[R.Left+2, R.Top]:= NColorBorder;
     C.Pixels[R.Left+1, R.Top+1]:= NColorBorder;
-    C.Pixels[R.Left, R.Top+2]:= NColorBorder;
     //
     C.Pixels[R.Left+2, R.Top+1]:= NColorMixBg;
     C.Pixels[R.Left+1, R.Top+2]:= NColorMixBg;
@@ -1713,9 +1711,7 @@ begin
     C.Pixels[R.Right-2, R.Top]:= NColorMixEmpty;
     C.Pixels[R.Right-1, R.Top+1]:= NColorMixEmpty;
     //
-    C.Pixels[R.Right-3, R.Top]:= NColorBorder;
     C.Pixels[R.Right-2, R.Top+1]:= NColorBorder;
-    C.Pixels[R.Right-1, R.Top+2]:= NColorBorder;
     //
     C.Pixels[R.Right-3, R.Top+1]:= NColorMixBg;
     C.Pixels[R.Right-2, R.Top+2]:= NColorMixBg;
