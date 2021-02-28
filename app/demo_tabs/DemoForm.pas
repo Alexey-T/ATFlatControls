@@ -19,6 +19,7 @@ type
     btnRight: TButton;
     btnStress: TButton;
     btnToggleSpecial: TButton;
+    chkRounded: TCheckBox;
     chkAngled: TCheckBox;
     chkCenterCaption: TCheckBox;
     chkFill: TCheckBox;
@@ -67,6 +68,7 @@ type
     procedure chkMultiline_BottomChange(Sender: TObject);
     procedure chkMultilineChange(Sender: TObject);
     procedure chkNums_BottomChange(Sender: TObject);
+    procedure chkRoundedChange(Sender: TObject);
     procedure chkShowFlatChange(Sender: TObject);
     procedure chkShowFullColorChange(Sender: TObject);
     procedure chkShowPlusChange(Sender: TObject);
@@ -379,6 +381,12 @@ procedure TForm1.chkNums_BottomChange(Sender: TObject);
 begin
   t_cust.OptShowNumberPrefix:= IfThen(chkNums_Bottom.Checked, '%d. ', '');
   t_cust.Invalidate;
+end;
+
+procedure TForm1.chkRoundedChange(Sender: TObject);
+begin
+  t_top.OptTabRounded:= chkRounded.Checked;
+  t_top.Invalidate;
 end;
 
 procedure TForm1.chkShowFlatChange(Sender: TObject);
