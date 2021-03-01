@@ -95,6 +95,7 @@ type
     BorderSize: integer;
     TimerInterval: integer;
     DirectJumpOnClickPageUpDown: boolean;
+    ClickFocusesParentControl: boolean;
 
     MinSizeToShowThumb: integer;
     ThumbMinSize: integer;
@@ -626,8 +627,18 @@ end;
 {$endif}
 
 procedure TATScrollbar.Click;
+var
+  Ctl: TWinControl;
 begin
   inherited;
+
+  if Theme^.ClickFocusesParentControl then
+    if Parent is TWinControl then
+    begin
+      Ctl:= TWinControl(Parent);
+      if Ctl.Visible and Ctl.Enabled and Ctl.CanFocus then
+        Ctl.SetFocus;
+    end;
 end;
 
 function TATScrollbar.DoDrawEvent(AType: TATScrollbarElemType;
@@ -1112,6 +1123,7 @@ initialization
     BorderSize:= 0;
     TimerInterval:= 200;
     DirectJumpOnClickPageUpDown:= false;
+    ClickFocusesParentControl:= true;
 
     MinSizeToShowThumb:= 10;
     ThumbMinSize:= 8;
