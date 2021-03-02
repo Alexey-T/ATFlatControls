@@ -1694,27 +1694,8 @@ begin
     NColorMixEmpty:= ColorBlendHalf(NColorBorder, NColorEmpty);
     NColorMixBg:= ColorBlendHalf(NColorBorder, NColorBg);
 
-    //left corner
-    C.Pixels[R.Left, R.Top]:= NColorEmpty;
-    //
-    C.Pixels[R.Left+1, R.Top]:= NColorMixEmpty;
-    C.Pixels[R.Left, R.Top+1]:= NColorMixEmpty;
-    //
-    C.Pixels[R.Left+1, R.Top+1]:= NColorBorder;
-    //
-    C.Pixels[R.Left+2, R.Top+1]:= NColorMixBg;
-    C.Pixels[R.Left+1, R.Top+2]:= NColorMixBg;
-
-    //right corner
-    C.Pixels[R.Right-1, R.Top]:= NColorEmpty;
-    //
-    C.Pixels[R.Right-2, R.Top]:= NColorMixEmpty;
-    C.Pixels[R.Right-1, R.Top+1]:= NColorMixEmpty;
-    //
-    C.Pixels[R.Right-2, R.Top+1]:= NColorBorder;
-    //
-    C.Pixels[R.Right-3, R.Top+1]:= NColorMixBg;
-    C.Pixels[R.Right-2, R.Top+2]:= NColorMixBg;
+    CanvasPaintRoundedCorner(C, R, acckLeftTop, NColorEmpty, NColorBorder, NColorBg);
+    CanvasPaintRoundedCorner(C, R, acckRightTop, NColorEmpty, NColorBorder, NColorBg);
   end;
 end;
 

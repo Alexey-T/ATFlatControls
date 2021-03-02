@@ -33,6 +33,17 @@ procedure CanvasPaintTriangleDown(C: TCanvas; AColor: TColor; ACoord: TPoint; AS
 procedure CanvasPaintTriangleRight(C: TCanvas; AColor: TColor; ACoord: TPoint; ASize: integer); inline;
 procedure CanvasPaintTriangleLeft(C: TCanvas; AColor: TColor; ACoord: TPoint; ASize: integer); inline;
 
+type
+  TATCanvasCornerKind = (
+    acckLeftTop,
+    acckRightTop,
+    acckLeftBottom,
+    acckRightBottom
+    );
+
+procedure CanvasPaintRoundedCorner(C: TCanvas; const R: TRect;
+  Kind: TATCanvasCornerKind; ColorEmpty, ColorBorder, ColorBg: TColor);
+
 procedure CanvasArrowHorz(C: TCanvas;
   const ARect: TRect;
   AColorFont: TColor;
@@ -278,7 +289,6 @@ begin
     Point(ACoord.X + ASize, ACoord.Y + ASize*2)
     ]);
 end;
-
 
 procedure CanvasArrowHorz(C: TCanvas;
   const ARect: TRect;
@@ -575,6 +585,44 @@ begin
   v2:= Byte(c2 shr 16);
   b:= (v1+v2) shr 1;
   Result := (b shl 16) + (g shl 8) + r;
+end;
+
+
+procedure CanvasPaintRoundedCorner(C: TCanvas; const R: TRect;
+  Kind: TATCanvasCornerKind; ColorEmpty, ColorBorder, ColorBg: TColor);
+var
+  ColorMixEmpty, ColorMixBg: TColor;
+begin
+  ColorMixEmpty:= ColorBlendHalf(ColorBorder, ColorEmpty);
+  ColorMixBg:= ColorBlendHalf(ColorBorder, ColorBg);
+
+  case Kind of
+    acckLeftTop:
+      begin
+        C.Pixels[R.Left, R.Top]:= ColorEmpty;
+        //
+        C.Pixels[R.Left+1, R.Top]:= ColorMixEmpty;
+        C.Pixels[R.Left, R.Top+1]:= ColorMixEmpty;
+        //
+        C.Pixels[R.Left+1, R.Top+1]:= ColorBorder;
+        //
+        C.Pixels[R.Left+2, R.Top+1]:= ColorMixBg;
+        C.Pixels[R.Left+1, R.Top+2]:= ColorMixBg;
+      end;
+    acckRightTop:
+      begin
+        C.Pixels[R.Right-1, R.Top]:= ColorEmpty;
+        //
+        C.Pixels[R.Right-2, R.Top]:= ColorMixEmpty;
+        C.Pixels[R.Right-1, R.Top+1]:= ColorMixEmpty;
+        //
+        C.Pixels[R.Right-2, R.Top+1]:= ColorBorder;
+        //
+        C.Pixels[R.Right-3, R.Top+1]:= ColorMixBg;
+        C.Pixels[R.Right-2, R.Top+2]:= ColorMixBg;
+      end;
+
+  end;
 end;
 
 
