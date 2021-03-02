@@ -3864,8 +3864,10 @@ end;
 procedure TATTabs.DragOver(Source: TObject; X, Y: integer; State: TDragState;
   var Accept: Boolean);
 var
-  IsX: Boolean;
   Limit: integer;
+  {$ifndef FPC}
+  IsX: Boolean;
+  {$endif}
 begin
   //this is workaround for too early painted drop-mark (vertical red line)
   if not FMouseDragBegins then

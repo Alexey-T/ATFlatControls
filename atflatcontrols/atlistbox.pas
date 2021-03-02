@@ -1068,8 +1068,10 @@ begin
 end;
 
 procedure TATListbox.Invalidate;
+{$ifndef FPC}
 var
   R: TRect;
+{$endif}
 begin
   {$ifdef FPC}
   inherited Invalidate;
