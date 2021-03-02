@@ -1647,7 +1647,6 @@ procedure TATTabs.DoPaintTabShape(C: TCanvas; const ATabRect: TRect;
   ATabActive: boolean; ATabIndex: integer);
 var
   NColorBg, NColorEmpty, NColorBorder: TColor;
-  NColorMixEmpty, NColorMixBg: TColor;
   PL1, PL2, PR1, PR2: TPoint;
   R: TRect;
 begin
@@ -1691,11 +1690,30 @@ begin
     else
       NColorBorder:= ColorBorderPassive;
 
-    NColorMixEmpty:= ColorBlendHalf(NColorBorder, NColorEmpty);
-    NColorMixBg:= ColorBlendHalf(NColorBorder, NColorBg);
-
-    CanvasPaintRoundedCorner(C, R, acckLeftTop, NColorEmpty, NColorBorder, NColorBg);
-    CanvasPaintRoundedCorner(C, R, acckRightTop, NColorEmpty, NColorBorder, NColorBg);
+    //paint rounded corners
+    case FOptPosition of
+      atpTop:
+        begin
+          CanvasPaintRoundedCorner(C, R, acckLeftTop, NColorEmpty, NColorBorder, NColorBg);
+          CanvasPaintRoundedCorner(C, R, acckRightTop, NColorEmpty, NColorBorder, NColorBg);
+        end;
+      atpBottom:
+        begin
+          Inc(R.Bottom, 1);
+          CanvasPaintRoundedCorner(C, R, acckLeftBottom, NColorEmpty, NColorBorder, NColorBg);
+          CanvasPaintRoundedCorner(C, R, acckRightBottom, NColorEmpty, NColorBorder, NColorBg);
+        end;
+      atpLeft:
+        begin
+          CanvasPaintRoundedCorner(C, R, acckLeftTop, NColorEmpty, NColorBorder, NColorBg);
+          CanvasPaintRoundedCorner(C, R, acckLeftBottom, NColorEmpty, NColorBorder, NColorBg);
+        end;
+      atpRight:
+        begin
+          CanvasPaintRoundedCorner(C, R, acckRightTop, NColorEmpty, NColorBorder, NColorBg);
+          CanvasPaintRoundedCorner(C, R, acckRightBottom, NColorEmpty, NColorBorder, NColorBg);
+        end;
+    end;
   end;
 end;
 

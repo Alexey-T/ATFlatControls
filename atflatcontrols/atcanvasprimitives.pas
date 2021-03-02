@@ -621,7 +621,30 @@ begin
         C.Pixels[R.Right-3, R.Top+1]:= ColorMixBg;
         C.Pixels[R.Right-2, R.Top+2]:= ColorMixBg;
       end;
-
+    acckLeftBottom:
+      begin
+        C.Pixels[R.Left, R.Bottom-1]:= ColorEmpty;
+        //
+        C.Pixels[R.Left+1, R.Bottom-1]:= ColorMixEmpty;
+        C.Pixels[R.Left, R.Bottom-2]:= ColorMixEmpty;
+        //
+        C.Pixels[R.Left+1, R.Bottom-2]:= ColorBorder;
+        //
+        C.Pixels[R.Left+2, R.Bottom-2]:= ColorMixBg;
+        C.Pixels[R.Left+1, R.Bottom-3]:= ColorMixBg;
+      end;
+    acckRightBottom:
+      begin
+        C.Pixels[R.Right-1, R.Bottom-1]:= ColorEmpty;
+        //
+        C.Pixels[R.Right-2, R.Bottom-1]:= ColorMixEmpty;
+        C.Pixels[R.Right-1, R.Bottom-2]:= ColorMixEmpty;
+        //
+        C.Pixels[R.Right-2, R.Bottom-2]:= ColorBorder;
+        //
+        C.Pixels[R.Right-3, R.Bottom-2]:= ColorMixBg;
+        C.Pixels[R.Right-2, R.Bottom-3]:= ColorMixBg;
+      end;
   end;
 end;
 
