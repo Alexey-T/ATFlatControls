@@ -2049,6 +2049,7 @@ var
   R: TRect;
   Extent: TSize;
   NWidthPlus, NIndexLineStart, NLineHeight, NWidthSaved: integer;
+  NWidthMin, NWidthMax: integer;
   NSelfHeight, NFormHeight: integer;
   bFitLastRow: boolean;
   i: integer;
@@ -2091,6 +2092,8 @@ begin
 
   //top/bottom tabs
   FMultilineActive:= false;
+  NWidthMin:= DoScale(FOptTabWidthMinimal);
+  NWidthMax:= DoScale(FOptTabWidthMaximal);
   NWidthPlus:= 0;
   if FOptShowPlusTab then
     NWidthPlus:= GetTabRectWidth(true);
@@ -2145,10 +2148,10 @@ begin
         if not Data.TabHideXButton then
           Inc(FTabWidth, DoScale(FOptSpaceXSize));
 
-      if FTabWidth<DoScale(FOptTabWidthMinimal) then
-        FTabWidth:= DoScale(FOptTabWidthMinimal);
-      if FTabWidth>DoScale(FOptTabWidthMaximal) then
-        FTabWidth:= DoScale(FOptTabWidthMaximal);
+      if FTabWidth<NWidthMin then
+        FTabWidth:= NWidthMin;
+      if FTabWidth>NWidthMax then
+        FTabWidth:= NWidthMax;
     end;
 
     if FOptMultiline and (i>0) then
