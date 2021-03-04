@@ -1186,6 +1186,7 @@ begin
   FLastOverIndex:= -100;
   FLastOverX:= false;
 
+  ParentColor:= false;
   FColorBg:= _InitTabColorBg;
   FColorSeparator:= _InitTabColorArrow;
   FColorTabActive:= _InitTabColorTabActive;
