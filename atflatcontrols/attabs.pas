@@ -1167,13 +1167,7 @@ begin
   ControlStyle:= ControlStyle+[csOpaque];
   DoubleBuffered:= IsDoubleBufferedNeeded;
   DragMode:= dmManual; //required Manual
-
-  //http://delphidabbler.com/tips/76
-  if (csDesigning in ComponentState) and not
-    (csReading in AOwner.ComponentState) then
-    {this is true if the component is dropped on the form}
-      ParentColor:= false; //defaults to false only at first creation
-
+  ParentColor:= false;
   Width:= 400;
   Height:= 35;
 
@@ -1186,7 +1180,6 @@ begin
   FLastOverIndex:= -100;
   FLastOverX:= false;
 
-  ParentColor:= false;
   FColorBg:= _InitTabColorBg;
   FColorSeparator:= _InitTabColorArrow;
   FColorTabActive:= _InitTabColorTabActive;
