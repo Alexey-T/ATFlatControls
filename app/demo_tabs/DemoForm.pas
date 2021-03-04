@@ -144,7 +144,6 @@ begin
   t_top:= TATTabs.Create(Self);
   t_top.Constraints.MaxHeight:= 200;
   t_top.Parent:= Self;
-  t_top.ParentColor:= false;
   t_top.Align:= alTop;
   t_top.ColorBg:= $a0e0a0;
   t_top.ColorFont:= $E0E0E0;

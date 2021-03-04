@@ -1167,7 +1167,7 @@ begin
   ControlStyle:= ControlStyle+[csOpaque];
   DoubleBuffered:= IsDoubleBufferedNeeded;
   DragMode:= dmManual; //required Manual
-  ParentColor:= false;
+  ParentColor:= false; //better don't support ParentColor, it's mess in code
   Width:= 400;
   Height:= 35;
 
@@ -2351,17 +2351,7 @@ end;
 
 procedure TATTabs.DoPaintBgTo(C: TCanvas; const ARect: TRect);
 begin
-  if ParentColor and Assigned(Parent) then
-  begin
-    if C.Brush.Color <> Parent.Brush.Color then
-      C.Brush.Color:= Parent.Brush.Color;
-  end
-  else
-  begin
-    if C.Brush.Color <> FColorBg then
-      C.Brush.Color:= FColorBg;
-  end;
-
+  C.Brush.Color:= FColorBg;
   C.FillRect(ARect);
 end;
 
