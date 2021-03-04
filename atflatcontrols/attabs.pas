@@ -2139,7 +2139,7 @@ begin
 
       if Data.TabImageIndex>=0 then
         if FOptIconPosition in [aipIconLefterThanText, aipIconRighterThanText] then
-          Inc(FTabWidth, FImages.Width);
+          Inc(FTabWidth, FImages.Width+FOptSpaceBetweenIconCaption);
 
       if FOptShowXButtons<>atbxShowNone then
         if not Data.TabHideXButton then
