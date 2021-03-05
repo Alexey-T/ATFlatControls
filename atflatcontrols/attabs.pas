@@ -489,6 +489,7 @@ type
     FActualMultiline: boolean;
     FTabsChanged: boolean;
     FTabsResized: boolean;
+    FScrollingNeeded: boolean;
 
     FScrollPos: integer;
     FImages: TImageList;
@@ -604,7 +605,7 @@ type
     function GetTabFlatEffective(AIndex: integer): boolean; inline;
     procedure GetTabXColors(AIndex: integer; AMouseOverX: boolean; out AColorXBg,
       AColorXBorder, AColorXMark: TColor);
-    function IsScrollMarkNeeded: boolean;
+    function GetScrollMarkNeeded: boolean;
     function GetMaxEdgePos: integer;
     function GetRectOfButton(AButton: TATTabButton): TRect;
     function GetRectOfButtonIndex(AIndex: integer; AtLeft: boolean): TRect;
@@ -2361,7 +2362,7 @@ var
   RBottom: TRect;
   NLineX1, NLineY1, NLineX2, NLineY2: integer;
 begin
-  if IsScrollMarkNeeded then exit;
+  if FScrollingNeeded then exit;
 
   case FOptPosition of
     atpTop:
@@ -2471,6 +2472,7 @@ begin
   UpdateTabRects(C);
   UpdateTabRectsSpecial;
   UpdateTabPropsX;
+  FScrollingNeeded:= GetScrollMarkNeeded;
 
   //paint spacer rect
   if not FOptShowFlat then
@@ -2667,7 +2669,7 @@ begin
 end;
 
 
-function TATTabs.IsScrollMarkNeeded: boolean;
+function TATTabs.GetScrollMarkNeeded: boolean;
 begin
   if TabCount=0 then
     Result:= false
@@ -2696,7 +2698,7 @@ var
   NPos, NSize, NIndent: integer;
   R: TRect;
 begin
-  if not IsScrollMarkNeeded then exit;
+  if not FScrollingNeeded then exit;
 
   if not FActualMultiline then
   begin
@@ -4079,7 +4081,7 @@ begin
         R.Left:= R.Left * 2 div 3 + R.Right div 3;
 
       DoPaintBgTo(C, FRectArrowLeft);
-      DoPaintArrowTo(C, atriLeft, R, bOver, IsScrollMarkNeeded);
+      DoPaintArrowTo(C, atriLeft, R, bOver, FScrollingNeeded);
       DoPaintAfter(ElemType, -1, C, FRectArrowLeft);
     end;
 end;
@@ -4103,7 +4105,7 @@ begin
         R.Right:= R.Left div 3 + R.Right * 2 div 3;
 
       DoPaintBgTo(C, FRectArrowRight);
-      DoPaintArrowTo(C, atriRight, R, bOver, IsScrollMarkNeeded);
+      DoPaintArrowTo(C, atriRight, R, bOver, FScrollingNeeded);
       DoPaintAfter(ElemType, -1, C, FRectArrowRight);
     end;
 end;
@@ -4454,7 +4456,7 @@ begin
     exit
   end;
 
-  if not IsScrollMarkNeeded then
+  if not FScrollingNeeded then
   begin
     Result:= true;
     exit
@@ -4485,7 +4487,7 @@ begin
       UpdateTabRects(FBitmap.Canvas);
   end;
 
-  if not IsScrollMarkNeeded then exit;
+  if not FScrollingNeeded then exit;
 
   if IsTabVisible(AIndex) then exit;
 
