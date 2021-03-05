@@ -589,7 +589,7 @@ type
     procedure DoPaintTabTo(C: TCanvas; const AInfo: TATTabPaintInfo);
     procedure DoPaintX(C: TCanvas; const AInfo: TATTabPaintInfo);
     procedure DoPaintXTo(C: TCanvas; const AInfo: TATTabPaintInfo);
-    procedure DoPaintArrowTo(C: TCanvas; ATyp: TATTabTriangle; ARect: TRect; AActive: boolean);
+    procedure DoPaintArrowTo(C: TCanvas; ATyp: TATTabTriangle; ARect: TRect; AActive, AEnabled: boolean);
     procedure DoPaintUserButtons(C: TCanvas; const AButtons: TATTabButtons; AtLeft: boolean);
     procedure DoPaintDropMark(C: TCanvas);
     procedure DoPaintScrollMark(C: TCanvas);
@@ -3454,7 +3454,7 @@ end;
 {$endif}
 
 procedure TATTabs.DoPaintArrowTo(C: TCanvas; ATyp: TATTabTriangle; ARect: TRect;
-  AActive: boolean);
+  AActive, AEnabled: boolean);
 var
   Pic: TATTabsPicture;
   NColor: TColor;
@@ -3482,6 +3482,9 @@ begin
     exit;
   end;
 
+  if not AEnabled then
+    NColor:= ColorBlendHalf(FColorArrow, FColorBg)
+  else
   if AActive and not _IsDrag then
     NColor:= FColorArrowOver
   else
@@ -4052,7 +4055,7 @@ begin
   if IsPaintNeeded(ElemType, -1, C, FRectArrowDown) then
     begin
       DoPaintBgTo(C, FRectArrowDown);
-      DoPaintArrowTo(C, atriDown, FRectArrowDown, bOver);
+      DoPaintArrowTo(C, atriDown, FRectArrowDown, bOver, true);
       DoPaintAfter(ElemType, -1, C, FRectArrowDown);
     end;
 end;
@@ -4076,7 +4079,7 @@ begin
         R.Left:= R.Left * 2 div 3 + R.Right div 3;
 
       DoPaintBgTo(C, FRectArrowLeft);
-      DoPaintArrowTo(C, atriLeft, R, bOver);
+      DoPaintArrowTo(C, atriLeft, R, bOver, IsScrollMarkNeeded);
       DoPaintAfter(ElemType, -1, C, FRectArrowLeft);
     end;
 end;
@@ -4100,7 +4103,7 @@ begin
         R.Right:= R.Left div 3 + R.Right * 2 div 3;
 
       DoPaintBgTo(C, FRectArrowRight);
-      DoPaintArrowTo(C, atriRight, R, bOver);
+      DoPaintArrowTo(C, atriRight, R, bOver, IsScrollMarkNeeded);
       DoPaintAfter(ElemType, -1, C, FRectArrowRight);
     end;
 end;
