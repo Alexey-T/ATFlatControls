@@ -24,6 +24,7 @@ uses
   {$endif}
   Classes, Types, Graphics,
   Controls, ExtCtrls,
+  ATCanvasPrimitives,
   ATFlatThemes;
 
 type
@@ -36,12 +37,15 @@ type
     FAlign: TAlignment;
     FCaption: TCaption;
     FHint: string;
+    FOverlayText: string;
     FImageIndex: integer;
     FAutoSize: boolean;
     FAutoStretch: boolean;
     FColorFont: TColor;
     FColorBack: TColor;
     FColorBackOver: TColor;
+    FColorLine: TColor;
+    FColorLine2: TColor;
     FFontName: string;
     FFontSize: integer;
     FTag: Int64;
@@ -50,6 +54,7 @@ type
   public
     constructor Create(ACollection: TCollection); override;
     property Callback: string read FCallback write FCallback;
+    property OverlayText: string read FOverlayText write FOverlayText;
   published
     property Width: integer read FWidth write FWidth;
     property Align: TAlignment read FAlign write FAlign default taLeftJustify;
@@ -61,6 +66,8 @@ type
     property ColorFont: TColor read FColorFont write FColorFont default clNone;
     property ColorBack: TColor read FColorBack write FColorBack default clNone;
     property ColorBackOver: TColor read FColorBackOver write FColorBackOver default clNone;
+    property ColorLine: TColor read FColorLine write FColorLine default clNone;
+    property ColorLine2: TColor read FColorLine2 write FColorLine2 default clNone;
     property FontName: string read FFontName write FFontName;
     property FontSize: integer read FFontSize write FFontSize default 0;
     property Tag: Int64 read FTag write FTag default 0;
@@ -214,6 +221,8 @@ begin
   FColorFont:= clNone;
   FColorBack:= clNone;
   FColorBackOver:= clNone;
+  FColorLine:= clNone;
+  FColorLine2:= clNone;
   FFontName:= '';
   FFontSize:= 0;
   FTag:= 0;
@@ -260,8 +269,7 @@ begin
 
   FBitmap:= TBitmap.Create;
   FBitmap.PixelFormat:= pf24bit;
-  FBitmap.Width:= 1600;
-  FBitmap.Height:= 60;
+  BitmapResize(FBitmap, 1600, 50);
 
   FItems:= TCollection.Create(TATStatusData);
   FPrevPanelMouseOver:= -1;
@@ -409,6 +417,63 @@ begin
     C.MoveTo(ARect.Left, ARect.Bottom-1);
     C.LineTo(ARect.Right, ARect.Bottom-1);
   end;  
+
+  if AData.ColorLine<>clNone then
+  begin
+    C.Brush.Color:= AData.ColorLine;
+    C.FillRect(Rect(
+      ARect.Left,
+      ARect.Top,
+      ARect.Right,
+      ARect.Top+FTheme^.DoScale(FTheme^.ColoredLineWidth)
+      ));
+  end;
+
+  if AData.ColorLine2<>clNone then
+  begin
+    C.Brush.Color:= AData.ColorLine2;
+    C.FillRect(Rect(
+      ARect.Left,
+      ARect.Bottom-FTheme^.DoScale(FTheme^.ColoredLineWidth),
+      ARect.Right,
+      ARect.Bottom
+      ));
+  end;
+
+  if AData.OverlayText<>'' then
+  begin
+    TextSize:= C.TextExtent(AData.OverlayText);
+    C.Brush.Color:= Theme^.ColorBgOverlay;
+    C.Font.Color:= Theme^.ColorFontOverlay;
+
+    case Theme^.TextOverlayPosition of
+      bopLeftTop:
+        begin
+          PosIcon.x:= 0;
+          PosIcon.y:= 0;
+        end;
+      bopRightTop:
+        begin
+          PosIcon.x:= ARect.Width-TextSize.cx;
+          PosIcon.y:= 0;
+        end;
+      bopLeftBottom:
+        begin
+          PosIcon.x:= 0;
+          PosIcon.y:= ARect.Height-TextSize.cy;
+        end;
+      bopRightBottom:
+        begin
+          PosIcon.x:= ARect.Width-TextSize.cx;
+          PosIcon.y:= ARect.Height-TextSize.cy;
+        end;
+    end;
+
+    C.TextOut(
+      ARect.Left+PosIcon.x,
+      ARect.Top+PosIcon.y,
+      AData.OverlayText);
+  end;
 end;
 
 function TATStatus.GetPanelRect(AIndex: integer): TRect;
@@ -419,7 +484,7 @@ begin
   Result.Left:= 0;
   Result.Right:= -1;
   Result.Top:= 1;
-  Result.Bottom:= ClientHeight;
+  Result.Bottom:= Height;
 
   if IsIndexOk(AIndex) then
     for i:= 0 to PanelCount-1 do
@@ -487,7 +552,7 @@ begin
 
   C.Pen.Color:= ColorToRGB(FColorBorderTop);
   C.MoveTo(0, 0);
-  C.LineTo(ClientWidth, 0);
+  C.LineTo(Width, 0);
 end;
 
 
@@ -526,11 +591,10 @@ end;
 procedure TATStatus.Resize;
 begin
   inherited;
+
   if Assigned(FBitmap) then
-  begin
-    FBitmap.Width:= Max(FBitmap.Width, Width);
-    FBitmap.Height:= Max(FBitmap.Height, Height);
-  end;
+    BitmapResizeBySteps(FBitmap, Width, Height);
+
   Invalidate;
 end;
 
@@ -762,7 +826,8 @@ end;
 
 procedure TATStatus.Invalidate;
 begin
-  if FHeightInitial>0 then
+  if Align in [alNone, alTop, alBottom] then
+   if FHeightInitial>0 then
     if FScaleFromFont then
       Height:= Theme^.DoScaleFont(FHeightInitial)
     else

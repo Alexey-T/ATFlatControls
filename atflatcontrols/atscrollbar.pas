@@ -95,6 +95,7 @@ type
     BorderSize: integer;
     TimerInterval: integer;
     DirectJumpOnClickPageUpDown: boolean;
+    ClickFocusesParentControl: boolean;
 
     MinSizeToShowThumb: integer;
     ThumbMinSize: integer;
@@ -332,8 +333,7 @@ begin
 
   FBitmap:= TBitmap.Create;
   FBitmap.PixelFormat:= pf24bit;
-  FBitmap.Width:= 600;
-  FBitmap.Height:= 50;
+  BitmapResize(FBitmap, 600, 50);
 
   FTimer:= TTimer.Create(Self);
   FTimer.Enabled:= false;
@@ -584,33 +584,12 @@ begin
   Invalidate;
 end;
 
-procedure _BitmapResize(b: TBitmap; X, Y: integer); inline;
-begin
-  {$ifdef fpc}
-  b.SetSize(X, Y);
-  b.FreeImage; //recommended, else seen black bitmap on bigsize
-  {$else}
-  b.Width:= X;
-  b.Height:= Y;
-  {$endif}
-end;
-
 procedure TATScrollbar.Resize;
-const
-  cStep = 50; //resize bitmap by N pixels step
-var
-  SizeX, SizeY: integer;
 begin
   inherited;
 
-  //ATSynEdit has the same code
   if Assigned(FBitmap) then
-  begin
-    SizeX:= (Width div cStep + 1)*cStep;
-    SizeY:= (Height div cStep + 1)*cStep;
-    if (SizeX>FBitmap.Width) or (SizeY>FBitmap.Height) then
-      _BitmapResize(FBitmap, SizeX, SizeY);
-  end;
+    BitmapResizeBySteps(FBitmap, Width, Height);
 
   Invalidate;
 end;
@@ -648,8 +627,18 @@ end;
 {$endif}
 
 procedure TATScrollbar.Click;
+var
+  Ctl: TWinControl;
 begin
   inherited;
+
+  if Theme^.ClickFocusesParentControl then
+    if Parent is TWinControl then
+    begin
+      Ctl:= TWinControl(Parent);
+      if Ctl.Visible and Ctl.Enabled and Ctl.CanFocus then
+        Ctl.SetFocus;
+    end;
 end;
 
 function TATScrollbar.DoDrawEvent(AType: TATScrollbarElemType;
@@ -1134,6 +1123,7 @@ initialization
     BorderSize:= 0;
     TimerInterval:= 200;
     DirectJumpOnClickPageUpDown:= false;
+    ClickFocusesParentControl:= true;
 
     MinSizeToShowThumb:= 10;
     ThumbMinSize:= 8;

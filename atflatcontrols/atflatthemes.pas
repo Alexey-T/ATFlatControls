@@ -1,3 +1,8 @@
+{
+Copyright (C) Alexey Torgashin, uvviewsoft.com
+License: MPL 2.0 or LGPL
+}
+
 unit ATFlatThemes;
 
 {$ifdef FPC}
@@ -47,6 +52,7 @@ type
     ColorBorderFocused: TColor;
     EnableColorBgOver: boolean;
 
+    ColoredLineWidth: integer;
     MouseoverBorderWidth: integer;
     PressedBorderWidth: integer;
     PressedCaptionShiftY: integer;
@@ -117,6 +123,7 @@ initialization
     ColorBorderFocused:= clNavy;
     EnableColorBgOver:= true;
 
+    ColoredLineWidth:= 4;
     MouseoverBorderWidth:= 1;
     PressedBorderWidth:= 3;
     PressedCaptionShiftX:= 0;

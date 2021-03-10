@@ -719,34 +719,14 @@ begin
   inherited; //OnClick must be after ItemIndex set
 end;
 
-procedure _BitmapResize(b: Graphics.TBitmap; X, Y: integer); inline;
-begin
-  {$ifdef fpc}
-  b.SetSize(X, Y);
-  b.FreeImage; //recommended, else seen black bitmap on bigsize
-  {$else}
-  b.Width:= X;
-  b.Height:= Y;
-  {$endif}
-end;
-
 procedure TATListbox.Resize;
-const
-  cStep = 200; //resize bitmap by N pixels step
-var
-  SizeX, SizeY: integer;
 begin
   inherited;
 
   //ATSynEdit has the same code
   if DoubleBuffered then
     if Assigned(FBitmap) then
-    begin
-      SizeX:= (Width div cStep + 1)*cStep;
-      SizeY:= (Height div cStep + 1)*cStep;
-      if (SizeX>FBitmap.Width) or (SizeY>FBitmap.Height) then
-        _BitmapResize(FBitmap, SizeX, SizeY);
-    end;
+      BitmapResizeBySteps(FBitmap, Width, Height);
 
   Invalidate;
 end;
@@ -897,7 +877,7 @@ begin
   FShowX:= albsxNone;
 
   FBitmap:= Graphics.TBitmap.Create;
-  FBitmap.SetSize(800, 600);
+  BitmapResize(FBitmap, 800, 600);
 
   FTheme:= @ATFlatTheme;
   FThemedScrollbar:= true;
@@ -1088,8 +1068,10 @@ begin
 end;
 
 procedure TATListbox.Invalidate;
+{$ifndef FPC}
 var
   R: TRect;
+{$endif}
 begin
   {$ifdef FPC}
   inherited Invalidate;

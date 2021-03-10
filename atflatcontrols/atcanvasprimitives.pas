@@ -17,6 +17,9 @@ uses
   Types,
   Math;
 
+procedure BitmapResize(b: TBitmap; W, H: integer);
+procedure BitmapResizeBySteps(b: TBitmap; W, H: integer);
+
 procedure CanvasInvertRect(C: TCanvas; const R: TRect; AColor: TColor);
 
 procedure CanvasLine(C: TCanvas; P1, P2: TPoint; AColor: TColor); inline;
@@ -29,6 +32,17 @@ procedure CanvasPaintTriangleUp(C: TCanvas; AColor: TColor; ACoord: TPoint; ASiz
 procedure CanvasPaintTriangleDown(C: TCanvas; AColor: TColor; ACoord: TPoint; ASize: integer); inline;
 procedure CanvasPaintTriangleRight(C: TCanvas; AColor: TColor; ACoord: TPoint; ASize: integer); inline;
 procedure CanvasPaintTriangleLeft(C: TCanvas; AColor: TColor; ACoord: TPoint; ASize: integer); inline;
+
+type
+  TATCanvasCornerKind = (
+    acckLeftTop,
+    acckRightTop,
+    acckLeftBottom,
+    acckRightBottom
+    );
+
+procedure CanvasPaintRoundedCorner(C: TCanvas; const R: TRect;
+  Kind: TATCanvasCornerKind; ColorEmpty, ColorBorder, ColorBg: TColor);
 
 procedure CanvasArrowHorz(C: TCanvas;
   const ARect: TRect;
@@ -78,7 +92,10 @@ function CanvasCollapseStringByDots(C: TCanvas;
   const Text: string;
   Mode: TATCollapseStringMode;
   Width: integer;
-  DotsString: string='…'): string;
+  DotsString: string=''): string;
+
+function ColorBlend(c1, c2: Longint; A: Longint): Longint;
+function ColorBlendHalf(c1, c2: Longint): Longint;
 
 
 implementation
@@ -273,7 +290,6 @@ begin
     ]);
 end;
 
-
 procedure CanvasArrowHorz(C: TCanvas;
   const ARect: TRect;
   AColorFont: TColor;
@@ -460,7 +476,7 @@ function CanvasCollapseStringByDots(C: TCanvas;
   const Text: string;
   Mode: TATCollapseStringMode;
   Width: integer;
-  DotsString: string='…'): string;
+  DotsString: string=''): string;
 const
   cMinLen = 3;
 var
@@ -509,6 +525,127 @@ begin
   end;
 
   Result:= S;
+end;
+
+
+procedure BitmapResize(b: TBitmap; W, H: integer);
+begin
+  {$ifdef fpc}
+  b.SetSize(W, H);
+  b.FreeImage; //recommended, otherwise black bitmap on big size
+  {$else}
+  b.Width:= W;
+  b.Height:= H;
+  {$endif}
+end;
+
+procedure BitmapResizeBySteps(b: TBitmap; W, H: integer);
+const
+  StepW = 60;
+  StepH = 40;
+var
+  SizeX, SizeY: integer;
+begin
+  SizeX:= (W div StepW + 1)*StepW;
+  SizeY:= (H div StepH + 1)*StepH;
+  if (SizeX>b.Width) or
+    (SizeY>b.Height) then
+    BitmapResize(b, SizeX, SizeY);
+end;
+
+
+function ColorBlend(c1, c2: Longint; A: Longint): Longint;
+//blend level: 0..255
+var
+  r, g, b, v1, v2: byte;
+begin
+  v1:= Byte(c1);
+  v2:= Byte(c2);
+  r:= A * (v1 - v2) shr 8 + v2;
+  v1:= Byte(c1 shr 8);
+  v2:= Byte(c2 shr 8);
+  g:= A * (v1 - v2) shr 8 + v2;
+  v1:= Byte(c1 shr 16);
+  v2:= Byte(c2 shr 16);
+  b:= A * (v1 - v2) shr 8 + v2;
+  Result := (b shl 16) + (g shl 8) + r;
+end;
+
+function ColorBlendHalf(c1, c2: Longint): Longint;
+var
+  r, g, b, v1, v2: byte;
+begin
+  v1:= Byte(c1);
+  v2:= Byte(c2);
+  r:= (v1+v2) shr 1;
+  v1:= Byte(c1 shr 8);
+  v2:= Byte(c2 shr 8);
+  g:= (v1+v2) shr 1;
+  v1:= Byte(c1 shr 16);
+  v2:= Byte(c2 shr 16);
+  b:= (v1+v2) shr 1;
+  Result := (b shl 16) + (g shl 8) + r;
+end;
+
+
+procedure CanvasPaintRoundedCorner(C: TCanvas; const R: TRect;
+  Kind: TATCanvasCornerKind; ColorEmpty, ColorBorder, ColorBg: TColor);
+var
+  ColorMixEmpty, ColorMixBg: TColor;
+begin
+  ColorMixEmpty:= ColorBlendHalf(ColorBorder, ColorEmpty);
+  ColorMixBg:= ColorBlendHalf(ColorBorder, ColorBg);
+
+  case Kind of
+    acckLeftTop:
+      begin
+        C.Pixels[R.Left, R.Top]:= ColorEmpty;
+        //
+        C.Pixels[R.Left+1, R.Top]:= ColorMixEmpty;
+        C.Pixels[R.Left, R.Top+1]:= ColorMixEmpty;
+        //
+        C.Pixels[R.Left+1, R.Top+1]:= ColorBorder;
+        //
+        C.Pixels[R.Left+2, R.Top+1]:= ColorMixBg;
+        C.Pixels[R.Left+1, R.Top+2]:= ColorMixBg;
+      end;
+    acckRightTop:
+      begin
+        C.Pixels[R.Right-1, R.Top]:= ColorEmpty;
+        //
+        C.Pixels[R.Right-2, R.Top]:= ColorMixEmpty;
+        C.Pixels[R.Right-1, R.Top+1]:= ColorMixEmpty;
+        //
+        C.Pixels[R.Right-2, R.Top+1]:= ColorBorder;
+        //
+        C.Pixels[R.Right-3, R.Top+1]:= ColorMixBg;
+        C.Pixels[R.Right-2, R.Top+2]:= ColorMixBg;
+      end;
+    acckLeftBottom:
+      begin
+        C.Pixels[R.Left, R.Bottom-1]:= ColorEmpty;
+        //
+        C.Pixels[R.Left+1, R.Bottom-1]:= ColorMixEmpty;
+        C.Pixels[R.Left, R.Bottom-2]:= ColorMixEmpty;
+        //
+        C.Pixels[R.Left+1, R.Bottom-2]:= ColorBorder;
+        //
+        C.Pixels[R.Left+2, R.Bottom-2]:= ColorMixBg;
+        C.Pixels[R.Left+1, R.Bottom-3]:= ColorMixBg;
+      end;
+    acckRightBottom:
+      begin
+        C.Pixels[R.Right-1, R.Bottom-1]:= ColorEmpty;
+        //
+        C.Pixels[R.Right-2, R.Bottom-1]:= ColorMixEmpty;
+        C.Pixels[R.Right-1, R.Bottom-2]:= ColorMixEmpty;
+        //
+        C.Pixels[R.Right-2, R.Bottom-2]:= ColorBorder;
+        //
+        C.Pixels[R.Right-3, R.Bottom-2]:= ColorMixBg;
+        C.Pixels[R.Right-2, R.Bottom-3]:= ColorMixBg;
+      end;
+  end;
 end;
 
 

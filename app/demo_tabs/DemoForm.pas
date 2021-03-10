@@ -11,6 +11,7 @@ uses
 type
   { TForm1 }
   TForm1 = class(TForm)
+    BarScale: TTrackBar;
     btnAdd: TButton;
     btnDel: TButton;
     btnColor: TButton;
@@ -18,25 +19,30 @@ type
     btnRight: TButton;
     btnStress: TButton;
     btnToggleSpecial: TButton;
+    chkRounded: TCheckBox;
     chkAngled: TCheckBox;
-    chkMultiline_Bottom: TCheckBox;
-    chkNewNearCurrent: TCheckBox;
+    chkCenterCaption: TCheckBox;
     chkFill: TCheckBox;
     chkMultiline: TCheckBox;
+    chkMultiline_Bottom: TCheckBox;
+    chkNewNearCurrent: TCheckBox;
     chkNums_Bottom: TCheckBox;
-    chkVarSize: TCheckBox;
-    chkCenterCaption: TCheckBox;
     chkShowFlat: TCheckBox;
+    chkShowFullColor: TCheckBox;
+    chkShowPlus: TCheckBox;
+    chkVarSize: TCheckBox;
     chkVarSize_Bottom: TCheckBox;
-    comboWheelMode: TComboBox;
+    comboIconPos: TComboBox;
+    comboLayout: TComboBox;
+    comboShowX: TComboBox;
     comboThemes: TComboBox;
     comboTruncate: TComboBox;
-    comboLayout: TComboBox;
-    comboIconPos: TComboBox;
-    comboShowX: TComboBox;
+    comboWheelMode: TComboBox;
+    edBetween: TSpinEdit;
+    edInitial: TSpinEdit;
     EditInfo: TEdit;
-    chkShowPlus: TCheckBox;
-    GroupBox1: TGroupBox;
+    GroupBoxBtm: TGroupBox;
+    GroupBoxTop: TGroupBox;
     ImageList1: TImageList;
     Label1: TLabel;
     Label10: TLabel;
@@ -46,13 +52,10 @@ type
     Label6: TLabel;
     Label7: TLabel;
     Label8: TLabel;
+    Label9: TLabel;
     LabelThemes: TLabel;
     labStatus: TLabel;
     btnModify: TButton;
-    Label2: TLabel;
-    chkShowFullColor: TCheckBox;
-    edInitial: TSpinEdit;
-    BarScale: TTrackBar;
     procedure BarScaleChange(Sender: TObject);
     procedure btnStressClick(Sender: TObject);
     procedure btnThemeBlack1Click(Sender: TObject);
@@ -65,6 +68,7 @@ type
     procedure chkMultiline_BottomChange(Sender: TObject);
     procedure chkMultilineChange(Sender: TObject);
     procedure chkNums_BottomChange(Sender: TObject);
+    procedure chkRoundedChange(Sender: TObject);
     procedure chkShowFlatChange(Sender: TObject);
     procedure chkShowFullColorChange(Sender: TObject);
     procedure chkShowPlusChange(Sender: TObject);
@@ -76,6 +80,7 @@ type
     procedure comboShowXChange(Sender: TObject);
     procedure comboTruncateChange(Sender: TObject);
     procedure comboWheelModeChange(Sender: TObject);
+    procedure edBetweenChange(Sender: TObject);
     procedure edInitialChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnAddClick(Sender: TObject);
@@ -137,8 +142,8 @@ begin
   Mouse.DragThreshold:= 20;
 
   t_top:= TATTabs.Create(Self);
+  t_top.Constraints.MaxHeight:= 200;
   t_top.Parent:= Self;
-  t_top.ParentColor:= false;
   t_top.Align:= alTop;
   t_top.ColorBg:= $a0e0a0;
   t_top.ColorFont:= $E0E0E0;
@@ -244,6 +249,9 @@ begin
   end
   else
     LabelThemes.Caption:= 'no folder: '+DirThemes;
+
+  edInitial.Value:= t_top.OptSpaceInitial;
+  edBetween.Value:= t_top.OptSpaceBetweenTabs;
 end;
 
 procedure TForm1.btnStressClick(Sender: TObject);
@@ -252,13 +260,13 @@ var
 begin
   for i:= t_top.TabCount-1 downto 1 do
     t_top.DeleteTab(i, false, false);
-  for i:= 1 to 1000 do
+  for i:= 1 to 200 do
   begin
     t_top.AddTab(-1, IntToStr(i)+'_'+StringOfChar('a', 3+Random(i mod 15)) );
-    t_top.TabIndex:= t_top.TabCount-1;
-    if i mod 20 = 0 then
+    if i mod 100 = 0 then
       Application.ProcessMessages;
   end;
+  t_top.TabIndex:= t_top.TabCount-1;
 end;
 
 procedure TForm1.BarScaleChange(Sender: TObject);
@@ -374,6 +382,12 @@ begin
   t_cust.Invalidate;
 end;
 
+procedure TForm1.chkRoundedChange(Sender: TObject);
+begin
+  t_top.OptTabRounded:= chkRounded.Checked;
+  t_top.Invalidate;
+end;
+
 procedure TForm1.chkShowFlatChange(Sender: TObject);
 begin
   t_top.OptShowFlat:= chkShowFlat.Checked;
@@ -441,6 +455,12 @@ end;
 procedure TForm1.comboWheelModeChange(Sender: TObject);
 begin
   t_top.OptMouseWheelMode:= TATTabMouseWheelMode(comboWheelMode.ItemIndex);
+end;
+
+procedure TForm1.edBetweenChange(Sender: TObject);
+begin
+  t_top.OptSpaceBetweenTabs:= edBetween.Value;
+  t_top.Invalidate;
 end;
 
 procedure TForm1.edInitialChange(Sender: TObject);

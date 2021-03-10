@@ -216,6 +216,7 @@ type
     FPrevWidth,
     FPrevHeight: Integer;
     FSplitPopup: TMyPopupMenu;
+    FSplitW: integer;
     FMode: TATGroupsMode;
     FOnChangeMode: TNotifyEvent;
     FOnTabPopup: TATGroupsPopupEvent;
@@ -230,6 +231,10 @@ type
     FPopupTabIndex: Integer;
     function GetImages: TImageList;
     procedure SetImages(AValue: TImageList);
+    procedure SetSplitterMinSize(AValue: integer);
+    procedure SetSplitterResizeStyle(AValue: TResizeStyle);
+    procedure SetSplitterColor(AValue: TColor);
+    procedure SplitterOnPaint(Sender: TObject);
     procedure TabFocus(Sender: TObject);
     procedure TabEmpty(Sender: TObject);
     procedure TabPopup(Sender: TObject; MousePos: TPoint; var Handled: Boolean);
@@ -240,8 +245,8 @@ type
     procedure TabMove(Sender: TObject; NFrom, NTo: Integer);
     function TabGetTick(Sender: TObject; ATabObject: TObject): Int64;
     procedure SetMode(Value: TATGroupsMode);
-    function GetSplitPos: Integer;
-    procedure SetSplitPos(N: Integer);
+    function GetMainPos: Integer;
+    procedure SetMainPos(N: Integer);
     procedure Split1Moved(Sender: TObject);
     procedure Split2Moved(Sender: TObject);
     procedure Split3Moved(Sender: TObject);
@@ -269,6 +274,9 @@ type
     property Splitter3: TMySplitter read FSplit3;
     property Splitter4: TMySplitter read FSplit4;
     property Splitter5: TMySplitter read FSplit5;
+    property SplitterResizeStyle: TResizeStyle write SetSplitterResizeStyle;
+    property SplitterMinSize: integer write SetSplitterMinSize;
+    property SplitterColor: TColor write SetSplitterColor;
     //
     constructor Create(AOwner: TComponent); override;
     //
@@ -306,9 +314,9 @@ type
     procedure MoveCurrentTabToNext(ANext: boolean);
     procedure MoveCurrentTabToOpposite;
     //
-    property SplitPos: Integer read GetSplitPos write SetSplitPos;
-    procedure SplitPosIncrease;
-    procedure SplitPosDecrease;
+    property MainPos: Integer read GetMainPos write SetMainPos;
+    procedure MainPosIncrease;
+    procedure MainPosDecrease;
     procedure SaveSplitPos;
     procedure RestoreSplitPos;
     //
@@ -539,8 +547,6 @@ end;
 { TATGroups }
 
 constructor TATGroups.Create(AOwner: TComponent);
-const
-  cMinSize = 60;
 var
   i: Integer;
 begin
@@ -588,37 +594,38 @@ begin
       OnTabGetTick:= Self.TabGetTick;
     end;
 
+  FSplitW:= 5;
+
   FSplit1:= TMySplitter.Create(Self);
   FSplit1.Parent:= Self;
   FSplit1.OnMoved:= Split1Moved;
-  FSplit1.MinSize:= cMinSize;
 
   FSplit2:= TMySplitter.Create(Self);
   FSplit2.Parent:= Self;
   FSplit2.OnMoved:= Split2Moved;
-  FSplit2.MinSize:= cMinSize;
 
   FSplit3:= TMySplitter.Create(Self);
   FSplit3.Parent:= Self;
   FSplit3.OnMoved:= Split3Moved;
-  FSplit3.MinSize:= cMinSize;
 
   FSplit4:= TMySplitter.Create(Self);
   FSplit4.Parent:= Self;
   FSplit4.OnMoved:= Split4Moved;
-  FSplit4.MinSize:= cMinSize;
 
   FSplit5:= TMySplitter.Create(Self);
   FSplit5.Parent:= Self;
   FSplit5.OnMoved:= Split5Moved;
-  FSplit5.MinSize:= cMinSize;
 
-  FSplit1.ResizeStyle:= rsPattern;
-  FSplit2.ResizeStyle:= rsPattern;
-  FSplit3.ResizeStyle:= rsPattern;
-  FSplit4.ResizeStyle:= rsPattern;
-  FSplit5.ResizeStyle:= rsPattern;
-  
+  SplitterResizeStyle:= rsPattern;
+  SplitterMinSize:= 10;
+  SplitterColor:= clMoneyGreen;
+
+  FSplit1.Width:= FSplitW;
+  FSplit2.Width:= FSplitW;
+  FSplit3.Width:= FSplitW;
+  FSplit4.Width:= FSplitW;
+  FSplit5.Width:= FSplitW;
+
   {$ifdef fpc}
   FSplit1.AutoSnap:= false;
   FSplit2.AutoSnap:= false;
@@ -711,8 +718,8 @@ begin
     Value:= gmOne;
   if (Value<>gmOne) and (Value=FMode) then Exit;
 
-  w:= ClientWidth;
-  h:= ClientHeight;
+  w:= Width;
+  h:= Height;
   if w<2 then exit;
   if h<2 then exit;
 
@@ -1178,21 +1185,77 @@ begin
 end;
 
 procedure TATGroups.Split1Moved(Sender: TObject);
+var
+  R: double;
 begin
-  if FMode=gm4grid then
-    UpdW(Pages3, Pages1.Width);
-  if FMode=gm6grid then
-    UpdW(Pages4, Pages1.Width);
+  case FMode of
+    gm3v:
+      begin
+        R:= FPos2/(1-FPos1);
+        UpdW(Pages2, Trunc(R*(Width-Pages1.Width-2*FSplitW)));
+      end;
+    gm3h:
+      begin
+        R:= FPos2/(1-FPos1);
+        UpdH(Pages2, Trunc(R*(Height-Pages1.Height-2*FSplitW)));
+      end;
+    gm4grid:
+      begin
+        UpdW(Pages3, Pages1.Width);
+      end;
+    gm6grid:
+      begin
+        R:= FPos2/(1-FPos1);
+        UpdW(Pages2, Trunc(R*(Width-Pages1.Width-2*FSplitW)));
+        UpdW(Pages4, Pages1.Width);
+        UpdW(Pages5, Pages2.Width);
+      end;
+  end;
 
   SaveSplitPos;
 end;
 
 procedure TATGroups.Split2Moved(Sender: TObject);
+{
+var
+  R: double;
+  Size3: integer;
+  }
 begin
-  if FMode=gm4grid then
-    UpdW(Pages1, Pages3.Width);
-  if FMode=gm6grid then
-    UpdW(Pages5, Pages2.Width);
+  case FMode of
+    {
+    //disabled due to https://github.com/Alexey-T/CudaText/issues/3199
+    gm3v:
+      begin
+        Size3:= Pages3.Width;
+        R:= FPos1/(FPos1+FPos2);
+        UpdW(Pages1, Trunc(R*(Width-Size3)));
+        UpdW(Pages2, Width-Pages1.Width-Size3-2*FSplitW);
+      end;
+    gm3h:
+      begin
+        Size3:= Pages3.Height;
+        R:= FPos1/(FPos1+FPos2);
+        UpdH(Pages1, Trunc(R*(Height-Size3)));
+        UpdH(Pages2, Height-Pages1.Height-Size3-2*FSplitW);
+      end;
+      }
+    gm6grid:
+      begin
+        {
+        Size3:= Pages3.Width;
+        R:= FPos1/(FPos1+FPos2);
+        UpdW(Pages1, Trunc(R*(Width-Size3)));
+        UpdW(Pages2, Width-Pages1.Width-Size3-2*FSplitW);
+        }
+        UpdW(Pages4, Pages1.Width);
+        UpdW(Pages5, Pages2.Width);
+      end;
+    gm4grid:
+      begin
+        UpdW(Pages1, Pages3.Width);
+      end;
+  end;
 
   SaveSplitPos;
 end;
@@ -1203,17 +1266,43 @@ begin
 end;
 
 procedure TATGroups.Split4Moved(Sender: TObject);
+var
+  R: double;
 begin
-  if FMode=gm6grid then
-    UpdW(Pages1, Pages4.Width);
+  case FMode of
+    gm6grid:
+      begin
+        R:= FPos2/(1-FPos1);
+        UpdW(Pages5, Trunc(R*(Width-Pages4.Width-2*FSplitW)));
+        UpdW(Pages1, Pages4.Width);
+        UpdW(Pages2, Pages5.Width);
+      end;
+  end;
 
   SaveSplitPos;
 end;
 
 procedure TATGroups.Split5Moved(Sender: TObject);
+{
+var
+  R: double;
+  Size6: integer;
+  }
 begin
-  if FMode=gm6grid then
-    UpdW(Pages2, Pages5.Width);
+  case FMode of
+    gm6grid:
+      begin
+        {
+        //disabled due to https://github.com/Alexey-T/CudaText/issues/3199
+        Size6:= Pages6.Width;
+        R:= FPos1/(FPos1+FPos2);
+        UpdW(Pages4, Trunc(R*(Width-Size6)));
+        UpdW(Pages5, Width-Pages4.Width-Size6-2*FSplitW);
+        }
+        UpdW(Pages1, Pages4.Width);
+        UpdW(Pages2, Pages5.Width);
+      end;
+  end;
 
   SaveSplitPos;
 end;
@@ -1291,8 +1380,8 @@ procedure TATGroups.SaveSplitPos;
 var
   w, h: integer;
 begin
-  w:= ClientWidth;
-  h:= ClientHeight;
+  w:= Width;
+  h:= Height;
   if w<2 then Exit;
   if h<2 then Exit;
 
@@ -1346,8 +1435,8 @@ begin
         FPos1:= Pages1.Width / w;
         FPos2:= Pages2.Width / w;
         FPos3:= FPanel1.Height / h;
-        FPos4:= Pages4.Width / w;
-        FPos5:= Pages5.Width / w;
+        FPos4:= FPos1;
+        FPos5:= FPos2;
       end;
   end;
 end;
@@ -1356,8 +1445,8 @@ procedure TATGroups.RestoreSplitPos;
 var
   w, h: integer;
 begin
-  w:= ClientWidth;
-  h:= ClientHeight;
+  w:= Width;
+  h:= Height;
   if w<2 then Exit;
   if h<2 then Exit;
 
@@ -1405,8 +1494,8 @@ begin
         UpdW(Pages1, Trunc(FPos1 * w));
         UpdW(Pages2, Trunc(FPos2 * w));
         UpdH(FPanel1, Trunc(FPos3 * h));
-        UpdW(Pages4, Trunc(FPos4 * w));
-        UpdW(Pages5, Trunc(FPos5 * w));
+        UpdW(Pages4, Pages1.Width);
+        UpdW(Pages5, Pages2.Width);
       end;
   end;
 end;
@@ -1448,54 +1537,56 @@ end;
 
 procedure TATGroups.SplitClick(Sender: TObject);
 begin
-  SetSplitPos((Sender as TComponent).Tag);
+  SetMainPos((Sender as TComponent).Tag);
 end;
 
-function TATGroups.GetSplitPos: Integer;
+function TATGroups.GetMainPos: Integer;
+//this is used when we have 2 cols or 2 rows, by context menu over single splitter
 begin
   case FMode of
     gm2v:
       begin
-        Result:= Pages1.Width * 100 div ClientWidth;
+        Result:= Pages1.Width * 100 div Width;
       end;
     gm2h:
       begin
-        Result:= Pages1.Height * 100 div ClientHeight;
+        Result:= Pages1.Height * 100 div Height;
       end;
     gm1plus2v:
       begin
-        Result:= FPanel1.Width * 100 div ClientWidth;
+        Result:= FPanel1.Width * 100 div Width;
       end;
     gm1plus2h:
       begin
-        Result:= FPanel1.Height * 100 div ClientHeight;
+        Result:= FPanel1.Height * 100 div Height;
       end;
     else
       Result:= 50;
   end;
 end;
 
-procedure TATGroups.SetSplitPos(N: Integer);
+procedure TATGroups.SetMainPos(N: Integer);
+//this is used when we have 2 cols or 2 rows, by context menu over single splitter
 begin
   case FMode of
     gm2v:
       begin
-        UpdW(Pages1, ClientWidth * N div 100);
+        UpdW(Pages1, Width * N div 100);
         SaveSplitPos;
       end;
     gm2h:
       begin
-        UpdH(Pages1, ClientHeight * N div 100);
+        UpdH(Pages1, Height * N div 100);
         SaveSplitPos;
       end;
     gm1plus2v:
       begin
-        UpdW(FPanel1, ClientWidth * N div 100);
+        UpdW(FPanel1, Width * N div 100);
         SaveSplitPos;
       end;
     gm1plus2h:
       begin
-        UpdH(FPanel1, ClientHeight * N div 100);
+        UpdH(FPanel1, Height * N div 100);
         SaveSplitPos;
       end;
   end;
@@ -1930,14 +2021,14 @@ const
   cMinSplitter = 10;
   cDeltaSplitter = 5;
 
-procedure TATGroups.SplitPosIncrease;
+procedure TATGroups.MainPosIncrease;
 begin
-  SplitPos:= Min(SplitPos + cDeltaSplitter, 100-cMinSplitter);
+  MainPos:= Min(MainPos + cDeltaSplitter, 100-cMinSplitter);
 end;
 
-procedure TATGroups.SplitPosDecrease;
+procedure TATGroups.MainPosDecrease;
 begin
-  SplitPos:= Max(SplitPos - cDeltaSplitter, cMinSplitter);
+  MainPos:= Max(MainPos - cDeltaSplitter, cMinSplitter);
 end;
 
 function TATGroups.PagesVisibleCount: Integer;
@@ -2004,6 +2095,57 @@ var
 begin
   for i:= Low(TATGroupsNums) to High(TATGroupsNums) do
     Pages[i].Tabs.Images:= AValue;
+end;
+
+procedure TATGroups.SetSplitterMinSize(AValue: integer);
+begin
+  FSplit1.MinSize:= AValue;
+  FSplit2.MinSize:= AValue;
+  FSplit3.MinSize:= AValue;
+  FSplit4.MinSize:= AValue;
+  FSplit5.MinSize:= AValue;
+end;
+
+procedure TATGroups.SetSplitterResizeStyle(AValue: TResizeStyle);
+begin
+  FSplit1.ResizeStyle:= AValue;
+  FSplit2.ResizeStyle:= AValue;
+  FSplit3.ResizeStyle:= AValue;
+  FSplit4.ResizeStyle:= AValue;
+  FSplit5.ResizeStyle:= AValue;
+end;
+
+procedure TATGroups.SetSplitterColor(AValue: TColor);
+var
+  Event: TNotifyEvent;
+begin
+  if AValue=clNone then
+    Event:= nil
+  else
+    Event:= SplitterOnPaint;
+
+  FSplit1.OnPaint:= Event;
+  FSplit2.OnPaint:= Event;
+  FSplit3.OnPaint:= Event;
+  FSplit4.OnPaint:= Event;
+  FSplit5.OnPaint:= Event;
+
+  FSplit1.Color:= AValue;
+  FSplit2.Color:= AValue;
+  FSplit3.Color:= AValue;
+  FSplit4.Color:= AValue;
+  FSplit5.Color:= AValue;
+
+  FSplit1.Invalidate;
+  FSplit2.Invalidate;
+  FSplit3.Invalidate;
+  FSplit4.Invalidate;
+  FSplit5.Invalidate;
+end;
+
+procedure TATGroups.SplitterOnPaint(Sender: TObject);
+begin
+  //empty to disable themed paint
 end;
 
 function _FixOdd(N: integer): integer; inline;

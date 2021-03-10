@@ -15,12 +15,14 @@ type
   TForm1 = class(TForm)
     bAdd: TButton;
     bDel: TButton;
+    btnColor: TColorButton;
     Edit1: TEdit;
     ImageList1: TImageList;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     TrackScale: TTrackBar;
+    procedure btnColorColorChanged(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bAddClick(Sender: TObject);
     procedure bDelClick(Sender: TObject);
@@ -105,6 +107,23 @@ begin
   D.FontSize:= 14;
   D:= t1.GetPanelData(1);
   D.FontSize:= 19;
+end;
+
+const
+  NShowCount: integer = 0;
+
+procedure TForm1.btnColorColorChanged(Sender: TObject);
+var
+  D: TATStatusData;
+begin
+  if t.PanelCount=0 then exit;
+  D:= t.GetPanelData(t.PanelCount-1);
+  if D=nil then exit;
+  D.ColorLine:= btnColor.ButtonColor;
+  D.ColorLine2:= btnColor.ButtonColor;
+  Inc(NShowCount);
+  D.OverlayText:= IntToStr(NShowCount);
+  t.Invalidate;
 end;
 
 procedure TForm1.bAddClick(Sender: TObject);
