@@ -305,6 +305,7 @@ const
   _InitOptSpaceInitial = 5;
   _InitOptSpaceBeforeText = 6;
   _InitOptSpaceBeforeTextForMinWidth = 30;
+  _InitOptSpaceAfterText = 6;
   _InitOptSpaceBetweenTabs = 0;
   _InitOptSpaceBetweenLines = 4;
   _InitOptSpaceBetweenIconCaption = 0;
@@ -416,6 +417,7 @@ type
     FOptSpaceInitial: integer; //space between first tab and left control edge
     FOptSpaceBeforeText: integer; //space between text and tab left edge
     FOptSpaceBeforeTextForMinWidth: integer;
+    FOptSpaceAfterText: integer; //space between text and [x] icon righter than text
     FOptSpaceSeparator: integer;
     FOptSpacer: integer; //height of top empty space (colored with bg)
     FOptSpacer2: integer;
@@ -797,6 +799,7 @@ type
     property OptSpaceInitial: integer read FOptSpaceInitial write FOptSpaceInitial default _InitOptSpaceInitial;
     property OptSpaceBeforeText: integer read FOptSpaceBeforeText write FOptSpaceBeforeText default _InitOptSpaceBeforeText;
     property OptSpaceBeforeTextForMinWidth: integer read FOptSpaceBeforeTextForMinWidth write FOptSpaceBeforeTextForMinWidth default _InitOptSpaceBeforeTextForMinWidth;
+    property OptSpaceAfterText: integer read FOptSpaceAfterText write FOptSpaceAfterText default _InitOptSpaceAfterText;
     property OptSpaceSeparator: integer read FOptSpaceSeparator write FOptSpaceSeparator default _InitOptSpaceSeparator;
     property OptSpacer: integer read FOptSpacer write FOptSpacer default _InitOptSpacer;
     property OptSpacer2: integer read FOptSpacer2 write FOptSpacer2 default _InitOptSpacer2;
@@ -1229,6 +1232,7 @@ begin
   FOptSpaceInitial:= _InitOptSpaceInitial;
   FOptSpaceBeforeText:= _InitOptSpaceBeforeText;
   FOptSpaceBeforeTextForMinWidth:= _InitOptSpaceBeforeTextForMinWidth;
+  FOptSpaceAfterText:= _InitOptSpaceAfterText;
   FOptSpaceBetweenTabs:= _InitOptSpaceBetweenTabs;
   FOptSpaceBetweenLines:= _InitOptSpaceBetweenLines;
   FOptSpaceBetweenIconCaption:= _InitOptSpaceBetweenIconCaption;
@@ -1434,7 +1438,7 @@ begin
   RectText:= AInfo.Rect;
   bNeedMoreSpace:= (RectText.Right-RectText.Left<=DoScale(FOptSpaceBeforeTextForMinWidth)) and (AInfo.Caption<>'');
   NIndentL:= IfThen(not bNeedMoreSpace, DoScale(FOptSpaceBeforeText), 2);
-  NIndentR:= NIndentL+IfThen(Assigned(Data) and Data.TabVisibleX, DoScale(FOptSpaceXRight));
+  NIndentR:= IfThen(not bNeedMoreSpace, DoScale(FOptSpaceAfterText), 2) + IfThen(Assigned(Data) and Data.TabVisibleX, DoScale(FOptSpaceXRight));
   RectText:= Rect(AInfo.Rect.Left+NIndentL, AInfo.Rect.Top, AInfo.Rect.Right-NIndentR, AInfo.Rect.Bottom);
 
   if not FThemed then
@@ -2015,7 +2019,7 @@ begin
           Result:= GetTabWidth_Plus_Raw
         else
           Result:= DoScale(FOptTabWidthNormal);
-        Inc(Result, 2*DoScale(FOptSpaceBeforeText));
+        Inc(Result, FOptSpaceBeforeText+FOptSpaceAfterText);
       end;
   end;
 end;
@@ -2073,7 +2077,7 @@ begin
       if FOptVarWidth then
       begin
         UpdateCaptionProps(C, Data.TabCaption, NLineHeight, Extent);
-        NLineHeight:= 2*DoScale(FOptSpaceBeforeText) + Extent.CY;
+        NLineHeight:= DoScale(FOptSpaceBeforeText+FOptSpaceAfterText) + Extent.CY;
       end
       else
         NLineHeight:= DoScale(FOptTabHeight);
@@ -2130,7 +2134,7 @@ begin
         Data.TabCaption;
 
       UpdateCaptionProps(C, TempCaption, NLineHeight, Extent);
-      FTabWidth:= Extent.CX + 2*DoScale(FOptSpaceBeforeText);
+      FTabWidth:= Extent.CX + DoScale(FOptSpaceBeforeText+FOptSpaceAfterText);
 
       if not Assigned(FImages) then //no imagelist
         Data.TabImageIndex:= -1;
@@ -3651,7 +3655,7 @@ begin
 
   //tricky formula: calculate auto-width
   NValue:= (Width
-    - IfThen(FOptShowPlusTab, GetTabWidth_Plus_Raw + 2*DoScale(FOptSpaceBeforeText))
+    - IfThen(FOptShowPlusTab, GetTabWidth_Plus_Raw + DoScale(FOptSpaceBeforeText+FOptSpaceAfterText))
     - FRealIndentLeft
     - FRealIndentRight
     - FOptSpaceSide
