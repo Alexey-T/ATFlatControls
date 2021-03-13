@@ -38,14 +38,18 @@ type
     comboThemes: TComboBox;
     comboTruncate: TComboBox;
     comboWheelMode: TComboBox;
-    edBetween: TSpinEdit;
-    edInitial: TSpinEdit;
+    edBetweenTabs: TSpinEdit;
+    edInitialSpace: TSpinEdit;
+    edBeforeText: TSpinEdit;
+    edAfterText: TSpinEdit;
     EditInfo: TEdit;
     GroupBoxBtm: TGroupBox;
     GroupBoxTop: TGroupBox;
     ImageList1: TImageList;
     Label1: TLabel;
     Label10: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
@@ -80,8 +84,10 @@ type
     procedure comboShowXChange(Sender: TObject);
     procedure comboTruncateChange(Sender: TObject);
     procedure comboWheelModeChange(Sender: TObject);
-    procedure edBetweenChange(Sender: TObject);
-    procedure edInitialChange(Sender: TObject);
+    procedure edAfterTextChange(Sender: TObject);
+    procedure edBeforeTextChange(Sender: TObject);
+    procedure edBetweenTabsChange(Sender: TObject);
+    procedure edInitialSpaceChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnAddClick(Sender: TObject);
     procedure btnDelClick(Sender: TObject);
@@ -250,8 +256,10 @@ begin
   else
     LabelThemes.Caption:= 'no folder: '+DirThemes;
 
-  edInitial.Value:= t_top.OptSpaceInitial;
-  edBetween.Value:= t_top.OptSpaceBetweenTabs;
+  edInitialSpace.Value:= t_top.OptSpaceInitial;
+  edBetweenTabs.Value:= t_top.OptSpaceBetweenTabs;
+  edBeforeText.Value:= t_top.OptSpaceBeforeText;
+  edAfterText.Value:= t_top.OptSpaceAfterText;
 end;
 
 procedure TForm1.btnStressClick(Sender: TObject);
@@ -457,15 +465,27 @@ begin
   t_top.OptMouseWheelMode:= TATTabMouseWheelMode(comboWheelMode.ItemIndex);
 end;
 
-procedure TForm1.edBetweenChange(Sender: TObject);
+procedure TForm1.edAfterTextChange(Sender: TObject);
 begin
-  t_top.OptSpaceBetweenTabs:= edBetween.Value;
+  t_top.OptSpaceAfterText:= edAfterText.Value;
   t_top.Invalidate;
 end;
 
-procedure TForm1.edInitialChange(Sender: TObject);
+procedure TForm1.edBeforeTextChange(Sender: TObject);
 begin
-  t_top.OptSpaceInitial:= edInitial.Value;
+  t_top.OptSpaceBeforeText:= edBeforeText.Value;
+  t_top.Invalidate;
+end;
+
+procedure TForm1.edBetweenTabsChange(Sender: TObject);
+begin
+  t_top.OptSpaceBetweenTabs:= edBetweenTabs.Value;
+  t_top.Invalidate;
+end;
+
+procedure TForm1.edInitialSpaceChange(Sender: TObject);
+begin
+  t_top.OptSpaceInitial:= edInitialSpace.Value;
   t_top.Invalidate;
 end;
 
