@@ -385,11 +385,12 @@ var
   TextSize: TSize;
   pnt1, pnt2: TPoint;
   RectAll, RectText: TRect;
-  S: string;
+  CurCaption, S: string;
 begin
   NWidth:= ClientWidth;
   NHeight:= ClientHeight;
   RectAll:= ClientRect;
+  CurCaption:= Caption;
 
   if FArrow then
     NSizeArrow:= Theme^.DoScale(4*Theme^.ArrowSize)
@@ -509,17 +510,17 @@ begin
 
     abuTextOnly:
       begin
-        TextSize:= GetTextSize(C, Caption);
+        TextSize:= GetTextSize(C, CurCaption);
         pnt1.x:= (NWidth-TextSize.cx-NSizeArrow) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftX);
         pnt1.y:= (NHeight-TextSize.cy) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftY);
-        C.TextOut(pnt1.x, pnt1.y, Caption);
+        C.TextOut(pnt1.x, pnt1.y, CurCaption);
       end;
 
     abuTextIconHorz:
       begin
-        TextSize:= GetTextSize(C, Caption);
+        TextSize:= GetTextSize(C, CurCaption);
         pnt1.x:= FPadding +
           IfThen(IsPressed, Theme^.PressedCaptionShiftX);
         pnt1.y:= (NHeight-GetIconHeight) div 2 +
@@ -529,12 +530,12 @@ begin
         Inc(pnt1.x, GetIconWidth+FPadding);
         pnt1.y:= (NHeight-TextSize.cy) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftY);
-        C.TextOut(pnt1.x, pnt1.y, Caption);
+        C.TextOut(pnt1.x, pnt1.y, CurCaption);
       end;
 
     abuTextIconVert:
       begin
-        TextSize:= GetTextSize(C, Caption);
+        TextSize:= GetTextSize(C, CurCaption);
         pnt1.x:= (NWidth-GetIconWidth-NSizeArrow) div 2+
           IfThen(IsPressed, Theme^.PressedCaptionShiftX);
         pnt1.y:= FPadding +
@@ -544,7 +545,7 @@ begin
         Inc(pnt1.y, GetIconHeight+FPadding);
         pnt1.x:= (NWidth-TextSize.cx-NSizeArrow) div 2 +
           IfThen(IsPressed, Theme^.PressedCaptionShiftX);
-        C.TextOut(pnt1.x, pnt1.y, Caption);
+        C.TextOut(pnt1.x, pnt1.y, CurCaption);
       end;
 
     abuTextChoice:
