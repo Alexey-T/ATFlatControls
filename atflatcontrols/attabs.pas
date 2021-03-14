@@ -2019,7 +2019,7 @@ begin
           Result:= GetTabWidth_Plus_Raw
         else
           Result:= DoScale(FOptTabWidthNormal);
-        Inc(Result, FOptSpaceBeforeText+FOptSpaceAfterText);
+        Inc(Result, DoScale(FOptSpaceBeforeText+FOptSpaceAfterText));
       end;
   end;
 end;
