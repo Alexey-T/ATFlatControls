@@ -912,11 +912,8 @@ end;
 { TATTabListCollection }
 
 destructor TATTabListCollection.Destroy;
-var
-  i: integer;
 begin
-  for i:= Count-1 downto 0 do
-    Items[i].Free;
+  Clear;
   inherited Destroy;
 end;
 
