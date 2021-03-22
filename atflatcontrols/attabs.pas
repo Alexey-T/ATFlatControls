@@ -55,9 +55,13 @@ type
     );
 
 type
+
+  { TATTabListCollection }
+
   TATTabListCollection = class(TCollection)
   public
     AOwner: TCustomControl;
+    destructor Destroy; override;
   end;
 
 type
@@ -94,6 +98,7 @@ type
     procedure SetTabVisible(const Value: boolean);
   public
     constructor Create(ACollection: TCollection); override;
+    destructor Destroy; override;
     property TabObject: TObject read FTabObject write FTabObject;
     property TabRect: TRect read FTabRect write FTabRect;
     property TabRectX: TRect read FTabRectX write FTabRectX;
@@ -904,6 +909,17 @@ begin
   Buttons[Length(Buttons)-1].Size:= Size;
 end;
 
+{ TATTabListCollection }
+
+destructor TATTabListCollection.Destroy;
+var
+  i: integer;
+begin
+  for i:= Count-1 downto 0 do
+    Items[i].Free;
+  inherited Destroy;
+end;
+
 procedure TATTabData.UpdateTabSet;
 begin
   if Collection is TATTabListCollection then
@@ -1119,6 +1135,13 @@ begin
   TabColorOver:= clNone;
   TabImageIndex:= -1;
   TabFontStyle:= [];
+end;
+
+destructor TATTabData.Destroy;
+begin
+  FTabCaption:= '';
+  FTabHint:= '';
+  inherited Destroy;
 end;
 
 procedure TATTabData.Assign(Source: TPersistent);
