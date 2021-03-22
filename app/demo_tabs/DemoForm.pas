@@ -248,10 +248,14 @@ begin
   if comboThemes.Enabled then
   begin
     List:= TStringList.Create;
-    FindAllDirectories(List, DirThemes);
-    List.Sort;
-    for S in List do
-      comboThemes.Items.Add(ExtractFileName(S));
+    try
+      FindAllDirectories(List, DirThemes);
+      List.Sort;
+      for S in List do
+        comboThemes.Items.Add(ExtractFileName(S));
+    finally
+      FreeAndNil(List);
+    end;
   end
   else
     LabelThemes.Caption:= 'no folder: '+DirThemes;
