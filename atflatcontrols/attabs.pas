@@ -45,6 +45,7 @@ type
 var
   ATTabsStretchDrawEnabled: boolean = true;
   ATTabsCircleDrawEnabled: boolean = true;
+  ATTabsAddonSeparator: string = ' • ';
 
 type
   TATTabPosition = (
@@ -929,12 +930,10 @@ begin
 end;
 
 function TATTabData.GetTabCaptionFull: TATTabString;
-const
-  cSep = ' • ';
 begin
   Result:= FTabCaption;
   if FTabCaptionAddon<>'' then
-    Result:= Result+cSep+FTabCaptionAddon;
+    Result:= Result+ATTabsAddonSeparator+FTabCaptionAddon;
 end;
 
 procedure TATTabData.SetTabImageIndex(const Value: TImageIndex);
