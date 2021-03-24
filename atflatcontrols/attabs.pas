@@ -70,6 +70,7 @@ type
   TATTabData = class(TCollectionItem)
   private
     FTabCaption: TATTabString;
+    FTabCaptionAddon: TATTabString;
     FTabHint: TATTabString;
     FTabObject: TObject;
     FTabColor: TColor;
@@ -88,6 +89,7 @@ type
     FTabHideXButton: boolean;
     FTabVisible: boolean;
     FTabVisibleX: boolean;
+    function GetTabCaptionFull: TATTabString;
     procedure UpdateTabSet;
     procedure SetTabImageIndex(const Value: TImageIndex);
     procedure SetTabCaption(const Value: TATTabString);
@@ -99,6 +101,7 @@ type
   public
     constructor Create(ACollection: TCollection); override;
     destructor Destroy; override;
+    property TabCaptionFull: TATTabString read GetTabCaptionFull;
     property TabObject: TObject read FTabObject write FTabObject;
     property TabRect: TRect read FTabRect write FTabRect;
     property TabRectX: TRect read FTabRectX write FTabRectX;
@@ -108,6 +111,7 @@ type
     procedure Assign(Source: TPersistent); override;
   published
     property TabCaption: TATTabString read FTabCaption write SetTabCaption;
+    property TabCaptionAddon: TATTabString read FTabCaptionAddon write FTabCaptionAddon;
     property TabHint: TATTabString read FTabHint write FTabHint;
     property TabColor: TColor read FTabColor write SetTabColor default clNone;
     property TabColorActive: TColor read FTabColorActive write SetTabColorActive default clNone;
@@ -924,6 +928,15 @@ begin
       TATTabListCollection(Collection).AOwner.Invalidate;
 end;
 
+function TATTabData.GetTabCaptionFull: TATTabString;
+const
+  cSep = ' • ';
+begin
+  Result:= FTabCaption;
+  if FTabCaptionAddon<>'' then
+    Result:= Result+cSep+FTabCaptionAddon;
+end;
+
 procedure TATTabData.SetTabImageIndex(const Value: TImageIndex);
 begin
   if FTabImageIndex<>Value then
@@ -1149,6 +1162,7 @@ begin
   begin
     D:= TATTabData(Source);
     TabCaption:= D.TabCaption;
+    TabCaptionAddon:= D.TabCaptionAddon;
     TabObject:= D.TabObject;
     TabHint:= D.TabHint;
     TabColor:= D.TabColor;
@@ -2096,7 +2110,7 @@ begin
       else
       if FOptVarWidth then
       begin
-        UpdateCaptionProps(C, Data.TabCaption, NLineHeight, Extent);
+        UpdateCaptionProps(C, Data.TabCaptionFull, NLineHeight, Extent);
         NLineHeight:= DoScale(FOptSpaceBeforeText+FOptSpaceAfterText) + Extent.CY;
       end
       else
@@ -2151,7 +2165,7 @@ begin
       TempCaption:=
         Format(FOptShowNumberPrefix, [i+1]) +
         IfThen(Data.TabModified, FOptShowModifiedText) +
-        Data.TabCaption;
+        Data.TabCaptionFull;
 
       UpdateCaptionProps(C, TempCaption, NLineHeight, Extent);
       FTabWidth:= Extent.CX + DoScale(FOptSpaceBeforeText+FOptSpaceAfterText);
@@ -2545,7 +2559,7 @@ begin
 
         FillChar(Info, SizeOf(Info), 0);
         Info.Rect:= RRect;
-        Info.Caption:= Format(FOptShowNumberPrefix, [i+1]) + Data.TabCaption;
+        Info.Caption:= Format(FOptShowNumberPrefix, [i+1]) + Data.TabCaptionFull;
         Info.TabIndex:= i;
         Info.ColorFont:= NColorFont;
         Info.TabMouseOver:= bMouseOver;
@@ -2595,7 +2609,7 @@ begin
 
       FillChar(Info, SizeOf(Info), 0);
       Info.Rect:= RRect;
-      Info.Caption:= Format(FOptShowNumberPrefix, [i+1]) + Data.TabCaption;
+      Info.Caption:= Format(FOptShowNumberPrefix, [i+1]) + Data.TabCaptionFull;
       Info.TabIndex:= i;
       Info.ColorFont:= NColorFont;
       Info.TabActive:= true;
@@ -3641,7 +3655,7 @@ begin
     begin
       mi:= TMenuItem.Create(Self);
       mi.Tag:= i;
-      mi.Caption:= GetTabData(i).TabCaption;
+      mi.Caption:= GetTabData(i).TabCaptionFull;
       mi.OnClick:= TabMenuClick;
       mi.RadioItem:= true;
       mi.Checked:= i=FTabIndex;
