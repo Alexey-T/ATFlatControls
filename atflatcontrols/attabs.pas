@@ -192,6 +192,7 @@ type
   TATTabPaintInfo = record
     Rect: TRect;
     Caption: TATTabString;
+    Modified: boolean;
     TabIndex: integer;
     ColorFont: TColor;
     TabActive,
@@ -2559,6 +2560,7 @@ begin
         FillChar(Info, SizeOf(Info), 0);
         Info.Rect:= RRect;
         Info.Caption:= Format(FOptShowNumberPrefix, [i+1]) + Data.TabCaptionFull;
+        Info.Modified:= Data.TabModified;
         Info.TabIndex:= i;
         Info.ColorFont:= NColorFont;
         Info.TabMouseOver:= bMouseOver;
@@ -2609,6 +2611,7 @@ begin
       FillChar(Info, SizeOf(Info), 0);
       Info.Rect:= RRect;
       Info.Caption:= Format(FOptShowNumberPrefix, [i+1]) + Data.TabCaptionFull;
+      Info.Modified:= Data.TabModified;
       Info.TabIndex:= i;
       Info.ColorFont:= NColorFont;
       Info.TabActive:= true;
