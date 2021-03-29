@@ -652,7 +652,7 @@ end;
 procedure TATButton.PaintIcon(C: TCanvas; AX, AY: integer);
 begin
   if Assigned(FImages) and (FImageIndex>=0) and (FImageIndex<FImages.Count) then
-    FImages.Draw(C, AX, AY, FImageIndex)
+    FImages.Draw(C, AX, AY, FImageIndex, Enabled)
   else
   if Assigned(FPicture) then
     C.Draw(AX, AY, FPicture.Graphic);
