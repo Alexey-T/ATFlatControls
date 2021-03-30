@@ -195,6 +195,7 @@ type
     Rect: TRect;
     Caption: TATTabString;
     Modified: boolean;
+    Pinned: boolean;
     TabIndex: integer;
     ColorFont: TColor;
     TabActive,
@@ -356,6 +357,7 @@ const
   _InitOptShowXButtons = atbxShowAll;
   _InitOptShowPlusTab = true;
   _InitOptShowModifiedText = '*';
+  _InitOptShowPinnedText = '#';
   _InitOptShowEntireColor = false;
   _InitOptShowActiveMarkInverted = true;
   _InitRoundedBitmapSize = 60;
@@ -463,6 +465,7 @@ type
     FOptShowArrowsNear: boolean;
     FOptShowPlusTab: boolean; //show "plus" tab
     FOptShowModifiedText: TATTabString;
+    FOptShowPinnedText: TATTabString;
     FOptShowEntireColor: boolean;
     FOptShowNumberPrefix: TATTabString;
     FOptShowScrollMark: boolean;
@@ -847,6 +850,7 @@ type
     property OptShowPlusTab: boolean read FOptShowPlusTab write SetOptShowPlusTab default _InitOptShowPlusTab;
     property OptShowArrowsNear: boolean read FOptShowArrowsNear write FOptShowArrowsNear default _InitOptShowArrowsNear;
     property OptShowModifiedText: TATTabString read FOptShowModifiedText write FOptShowModifiedText;
+    property OptShowPinnedText: TATTabString read FOptShowPinnedText write FOptShowPinnedText;
     property OptShowEntireColor: boolean read FOptShowEntireColor write FOptShowEntireColor default _InitOptShowEntireColor;
     property OptShowNumberPrefix: TATTabString read FOptShowNumberPrefix write FOptShowNumberPrefix;
     property OptShowActiveMarkInverted: boolean read FOptShowActiveMarkInverted write FOptShowActiveMarkInverted default _InitOptShowActiveMarkInverted;
@@ -1309,6 +1313,7 @@ begin
   FOptShowPlusTab:= _InitOptShowPlusTab;
   FOptShowArrowsNear:= _InitOptShowArrowsNear;
   FOptShowModifiedText:= _InitOptShowModifiedText;
+  FOptShowPinnedText:= _InitOptShowPinnedText;
   FOptShowEntireColor:= _InitOptShowEntireColor;
   FOptShowActiveMarkInverted:= _InitOptShowActiveMarkInverted;
 
@@ -1543,9 +1548,12 @@ begin
     C.Font.Color:= AInfo.ColorFont;
     C.Font.Size:= DoScaleFont(C.Font.Size);
 
-    TempCaption:= AInfo.Caption;
+    TempCaption:= '';
+    if AInfo.Pinned then
+      TempCaption:= TempCaption+FOptShowPinnedText;
     if ATabModified then
-      TempCaption:= FOptShowModifiedText+TempCaption;
+      TempCaption:= TempCaption+FOptShowModifiedText;
+    TempCaption:= TempCaption+AInfo.Caption;
 
     UpdateCaptionProps(C, TempCaption, NLineHeight, Extent);
 
@@ -2167,6 +2175,7 @@ begin
 
       TempCaption:=
         Format(FOptShowNumberPrefix, [i+1]) +
+        IfThen(Data.TabPinned, FOptShowPinnedText) +
         IfThen(Data.TabModified, FOptShowModifiedText) +
         Data.TabCaptionFull;
 
@@ -2564,6 +2573,7 @@ begin
         Info.Rect:= RRect;
         Info.Caption:= Format(FOptShowNumberPrefix, [i+1]) + Data.TabCaptionFull;
         Info.Modified:= Data.TabModified;
+        Info.Pinned:= Data.TabPinned;
         Info.TabIndex:= i;
         Info.ColorFont:= NColorFont;
         Info.TabMouseOver:= bMouseOver;
@@ -2615,6 +2625,7 @@ begin
       Info.Rect:= RRect;
       Info.Caption:= Format(FOptShowNumberPrefix, [i+1]) + Data.TabCaptionFull;
       Info.Modified:= Data.TabModified;
+      Info.Pinned:= Data.TabPinned;
       Info.TabIndex:= i;
       Info.ColorFont:= NColorFont;
       Info.TabActive:= true;
