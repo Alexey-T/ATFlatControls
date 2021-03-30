@@ -899,6 +899,7 @@ type
 var
   cTabsMouseMinDistanceToDrag: integer = 10; //mouse must move >=N pixels to start drag-drop
   cTabsMouseMaxDistanceToClick: integer = 4; //if mouse moves during mouse-down >=N pixels, dont click
+  cTabsMinWidthForCaption: integer = 8; //don't draw caption if width of tab is less
 
 implementation
 
@@ -1541,7 +1542,7 @@ begin
 
   //caption
   C.Brush.Style:= bsClear;
-  if RectText.Right-RectText.Left>=8 then
+  if RectText.Right-RectText.Left>=cTabsMinWidthForCaption then
   begin
     C.Font.Assign(Self.Font);
     C.Font.Style:= AInfo.FontStyle;
