@@ -90,6 +90,7 @@ type
     FTabHideXButton: boolean;
     FTabVisible: boolean;
     FTabVisibleX: boolean;
+    FTabPinned: boolean;
     function GetTabCaptionFull: TATTabString;
     procedure UpdateTabSet;
     procedure SetTabImageIndex(const Value: TImageIndex);
@@ -125,6 +126,7 @@ type
     property TabSpecialHeight: integer read FTabSpecialHeight write FTabSpecialHeight default 0;
     property TabHideXButton: boolean read FTabHideXButton write SetTabHideXButton default false;
     property TabVisible: boolean read FTabVisible write SetTabVisible default true;
+    property TabPinned: boolean read FTabPinned write FTabPinned default false;
   end;
 
 type
@@ -1177,6 +1179,7 @@ begin
     TabHideXButton:= D.TabHideXButton;
     TabVisible:= D.TabVisible;
     TabSpecial:= D.TabSpecial;
+    TabPinned:= D.TabPinned;
   end
   else
     inherited Assign(Source);
