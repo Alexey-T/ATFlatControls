@@ -612,6 +612,7 @@ type
     procedure DoPaintUserButtons(C: TCanvas; const AButtons: TATTabButtons; AtLeft: boolean);
     procedure DoPaintDropMark(C: TCanvas);
     procedure DoPaintScrollMark(C: TCanvas);
+    function GetTabCaptionFinal(AData: TATTabData; ATabIndex: integer): TATTabString;
     function GetButtonsEdgeCoord(AtLeft: boolean): integer;
     function GetButtonsWidth(const B: TATTabButtons): integer;
     function GetPositionInverted(APos: TATTabPosition): TATTabPosition; inline;
@@ -1549,13 +1550,7 @@ begin
     C.Font.Color:= AInfo.ColorFont;
     C.Font.Size:= DoScaleFont(C.Font.Size);
 
-    TempCaption:= '';
-    if AInfo.Pinned then
-      TempCaption:= TempCaption+FOptShowPinnedText;
-    if ATabModified then
-      TempCaption:= TempCaption+FOptShowModifiedText;
-    TempCaption:= TempCaption+AInfo.Caption;
-
+    TempCaption:= AInfo.Caption;
     UpdateCaptionProps(C, TempCaption, NLineHeight, Extent);
 
     NIndentTop:= (RectText.Bottom-RectText.Top-Extent.cy) div 2 + 1;
@@ -2122,7 +2117,7 @@ begin
       else
       if FOptVarWidth then
       begin
-        UpdateCaptionProps(C, Data.TabCaptionFull, NLineHeight, Extent);
+        UpdateCaptionProps(C, GetTabCaptionFinal(Data, i), NLineHeight, Extent);
         NLineHeight:= DoScale(FOptSpaceBeforeText+FOptSpaceAfterText) + Extent.CY;
       end
       else
@@ -2174,11 +2169,7 @@ begin
         if i=FTabIndex then
           C.Font.Style:= FOptActiveFontStyle;
 
-      TempCaption:=
-        Format(FOptShowNumberPrefix, [i+1]) +
-        IfThen(Data.TabPinned, FOptShowPinnedText) +
-        IfThen(Data.TabModified, FOptShowModifiedText) +
-        Data.TabCaptionFull;
+      TempCaption:= GetTabCaptionFinal(Data, i);
 
       UpdateCaptionProps(C, TempCaption, NLineHeight, Extent);
       FTabWidth:= Extent.CX + DoScale(FOptSpaceBeforeText+FOptSpaceAfterText);
@@ -2572,7 +2563,7 @@ begin
 
         FillChar(Info, SizeOf(Info), 0);
         Info.Rect:= RRect;
-        Info.Caption:= Format(FOptShowNumberPrefix, [i+1]) + Data.TabCaptionFull;
+        Info.Caption:= GetTabCaptionFinal(Data, i);
         Info.Modified:= Data.TabModified;
         Info.Pinned:= Data.TabPinned;
         Info.TabIndex:= i;
@@ -2624,7 +2615,7 @@ begin
 
       FillChar(Info, SizeOf(Info), 0);
       Info.Rect:= RRect;
-      Info.Caption:= Format(FOptShowNumberPrefix, [i+1]) + Data.TabCaptionFull;
+      Info.Caption:= GetTabCaptionFinal(Data, i);
       Info.Modified:= Data.TabModified;
       Info.Pinned:= Data.TabPinned;
       Info.TabIndex:= i;
@@ -4711,6 +4702,18 @@ begin
   FOptSpaceXRight:= FOptSpaceSide div 2 + Data.IndentOfX;
   FOptShowArrowsNear:= false;
   Height:= FOptTabHeight+FOptSpacer;
+end;
+
+function TATTabs.GetTabCaptionFinal(AData: TATTabData; ATabIndex: integer): TATTabString;
+begin
+  Result:= '';
+  if AData.TabPinned then
+    Result:= Result+FOptShowPinnedText;
+  if AData.TabModified then
+    Result:= Result+FOptShowModifiedText;
+  if FOptShowNumberPrefix<>'' then
+    Result:= Result+Format(FOptShowNumberPrefix, [ATabIndex+1]);
+  Result:= Result+AData.TabCaptionFull;
 end;
 
 
