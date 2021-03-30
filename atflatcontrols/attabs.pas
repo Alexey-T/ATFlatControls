@@ -3932,7 +3932,7 @@ begin
       Invalidate;
   end
   else
-    inherited;
+    Accept:= false;
 end;
 
 procedure TATTabs.DragDrop(Source: TObject; X, Y: integer);
