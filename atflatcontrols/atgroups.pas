@@ -54,6 +54,8 @@ type
     function TabGetTick(Sender: TObject; ATabObject: TObject): Int64;
   protected
     procedure Resize; override;
+    procedure DragOver(Source: TObject; X, Y: Integer; State: TDragState;
+      var Accept: Boolean); override;
   public
     constructor Create(AOwner: TComponent); override;
     function AddTab(AIndex: integer; AData: TATTabData; AndActivate: boolean=true): integer;
@@ -542,6 +544,12 @@ begin
         Height div 4 * 3, // max height is 3/4 of form height
         FTabs.OptTabHeight
         );
+end;
+
+procedure TATPages.DragOver(Source: TObject; X, Y: Integer; State: TDragState;
+  var Accept: Boolean);
+begin
+  Accept:= false;
 end;
 
 { TATGroups }
