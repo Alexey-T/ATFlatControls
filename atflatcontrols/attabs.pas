@@ -654,7 +654,6 @@ type
     procedure UpdateCaptionProps(C: TCanvas; const ACaption: TATTabString;
       out ALineHeight: integer; out ATextSize: TSize);
     procedure DoTabDrop;
-    procedure DoTabDropToOtherControl(ATarget: TControl; const APnt: TPoint);
     function GetTabTick(AIndex: integer): Int64;
     function _IsDrag: boolean; inline;
     procedure SetOptShowPlusTab(const Value: boolean);
@@ -702,6 +701,7 @@ type
     property IsThemed: boolean read FThemed write FThemed;
     function DoScale(AValue: integer): integer;
     function DoScaleFont(AValue: integer): integer;
+    procedure DoTabDropToOtherControl(ATarget: TControl; const APnt: TPoint);
 
   protected
     procedure Paint; override;

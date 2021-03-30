@@ -56,6 +56,7 @@ type
     procedure Resize; override;
     procedure DragOver(Source: TObject; X, Y: Integer; State: TDragState;
       var Accept: Boolean); override;
+    procedure DragDrop(Source: TObject; X, Y: Integer); override;
   public
     constructor Create(AOwner: TComponent); override;
     function AddTab(AIndex: integer; AData: TATTabData; AndActivate: boolean=true): integer;
@@ -410,6 +411,7 @@ begin
   BorderStyle:= bsNone;
   BevelInner:= bvNone;
   BevelOuter:= bvNone;
+  DragMode:= dmAutomatic;
   FEnabledEmpty:= true;
 
   Width:= 600;
@@ -549,7 +551,13 @@ end;
 procedure TATPages.DragOver(Source: TObject; X, Y: Integer; State: TDragState;
   var Accept: Boolean);
 begin
-  Accept:= false;
+  Accept:= Source is TATTabs;
+end;
+
+procedure TATPages.DragDrop(Source: TObject; X, Y: Integer);
+begin
+  if Source is TATTabs then
+    TATTabs(Source).DoTabDropToOtherControl(Self.Tabs, Point(2, 2));
 end;
 
 { TATGroups }
