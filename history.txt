@@ -1,4 +1,7 @@
 
+2021.03.30
++ ATTabs: support 'pinned tabs', show pinned tabs with prefix: prop OptShowPinnedText='#'
+
 2021.03.14
 + ATTabs: prop OptSpaceAfterText
 
