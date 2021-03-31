@@ -4707,13 +4707,21 @@ end;
 function TATTabs.GetTabCaptionFinal(AData: TATTabData; ATabIndex: integer): TATTabString;
 begin
   Result:= '';
-  if AData.TabPinned then
-    Result:= Result+FOptShowPinnedText;
-  if AData.TabModified then
-    Result:= Result+FOptShowModifiedText;
-  if FOptShowNumberPrefix<>'' then
-    Result:= Result+Format(FOptShowNumberPrefix, [ATabIndex+1]);
-  Result:= Result+AData.TabCaptionFull;
+  if AData.TabCaption<>'' then
+  begin
+    if AData.TabPinned then
+      Result:= Result+FOptShowPinnedText;
+    if AData.TabModified then
+      Result:= Result+FOptShowModifiedText;
+    if FOptShowNumberPrefix<>'' then
+      Result:= Result+Format(FOptShowNumberPrefix, [ATabIndex+1]);
+    Result:= Result+AData.TabCaptionFull;
+  end
+  else
+  begin
+    if AData.TabModified then
+      Result:= Result+FOptShowModifiedText;
+  end;
 end;
 
 
