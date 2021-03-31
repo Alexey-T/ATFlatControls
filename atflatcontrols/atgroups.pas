@@ -557,7 +557,7 @@ end;
 procedure TATPages.DragDrop(Source: TObject; X, Y: Integer);
 begin
   if Source is TATTabs then
-    TATTabs(Source).DoTabDropToOtherControl(Self.Tabs, Point(2, 2));
+    TATTabs(Source).DoTabDropToOtherControl(Self.Tabs, Types.Point(2, 2));
 end;
 
 { TATGroups }
