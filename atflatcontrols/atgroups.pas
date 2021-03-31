@@ -1937,6 +1937,7 @@ end;
 function TATGroups.CloseTabsOther(APages: TATPages; ATabIndex: Integer;
   ADoRighter, ADoLefter: boolean): boolean;
 var
+  Data: TATTabData;
   j: Integer;
 begin
   Result:= false;
@@ -1944,16 +1945,25 @@ begin
   begin
     if ADoRighter then
       for j:= Tabs.TabCount-1 downto ATabIndex+1 do
+      begin
+        Data:= Tabs.GetTabData(j);
+        if Assigned(Data) and Data.TabPinned then Continue;
         if not Tabs.DeleteTab(j, true, true) then Exit;
+      end;
     if ADoLefter then
       for j:= ATabIndex-1 downto 0 do
+      begin
+        Data:= Tabs.GetTabData(j);
+        if Assigned(Data) and Data.TabPinned then Continue;
         if not Tabs.DeleteTab(j, true, true) then Exit;
+      end;
   end;
   Result:= true;
 end;
 
 function TATGroups.CloseTabsAll(APages: TATPages): boolean;
 var
+  Data: TATTabData;
   j: Integer;
 begin
   Result:= false;
@@ -1961,7 +1971,11 @@ begin
   begin
     Tabs.TabIndex:= 0; //activate 1st tab to remove TabIndex change on closing
     for j:= Tabs.TabCount-1 downto 0 do
+    begin
+      Data:= Tabs.GetTabData(j);
+      if Assigned(Data) and Data.TabPinned then Continue;
       if not Tabs.DeleteTab(j, true, true) then Exit;
+    end;
   end;
   Result:= true;
 end;
