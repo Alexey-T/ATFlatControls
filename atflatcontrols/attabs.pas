@@ -357,7 +357,7 @@ const
   _InitOptShowXButtons = atbxShowAll;
   _InitOptShowPlusTab = true;
   _InitOptShowModifiedText = '*';
-  _InitOptShowPinnedText = '#';
+  _InitOptShowPinnedText = '!';
   _InitOptShowEntireColor = false;
   _InitOptShowActiveMarkInverted = true;
   _InitRoundedBitmapSize = 60;
