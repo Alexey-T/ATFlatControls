@@ -45,6 +45,7 @@ type
 var
   ATTabsStretchDrawEnabled: boolean = true;
   ATTabsCircleDrawEnabled: boolean = true;
+  ATTabsPixelsDrawEnabled: boolean = true;
   ATTabsAddonSeparator: string = ' • ';
 
 type
@@ -1722,7 +1723,7 @@ begin
     DoPaintTabShape_R(C, R, ATabActive, ATabIndex);
   end
   else
-  if FOptTabRounded and not FOptShowFlat then
+  if FOptTabRounded and not FOptShowFlat and ATTabsPixelsDrawEnabled then
   begin
     NColorEmpty:= ColorBg;
     if ATabActive then
