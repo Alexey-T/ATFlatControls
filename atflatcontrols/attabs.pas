@@ -4729,4 +4729,10 @@ end;
 initialization
   cRect0:= Rect(0, 0, 0, 0);
 
+  {$if defined(LCLQT5) or defined(darwin)}
+  ATTabsStretchDrawEnabled:= false;
+  ATTabsCircleDrawEnabled:= false;
+  ATTabsPixelsDrawEnabled:= false;
+  {$endif};
+
 end.
