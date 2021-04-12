@@ -80,6 +80,11 @@ procedure CanvasPaintXMark(C: TCanvas;
   AColor: TColor;
   AIndentLeft, AIndentRight, ALineWidth: integer);
 
+procedure CanvasPaintRoundMark(C: TCanvas;
+  const R: TRect;
+  AColor: TColor;
+  AIndentLeft, AIndentRight, ALineWidth: integer);
+
 type
   TATCollapseStringMode = (
     acsmNone,
@@ -175,6 +180,20 @@ begin
     ]);
 end;
 
+procedure CanvasPaintRoundMark(C: TCanvas; const R: TRect; AColor: TColor;
+  AIndentLeft, AIndentRight, ALineWidth: integer);
+var
+  X1, Y1, X2, Y2: integer;
+  NColor: TColor;
+  R2: TRect;
+begin
+  _CalcMarkRect(R, AIndentLeft, AIndentRight, X1, Y1, X2, Y2);
+
+  NColor:= ColorToRGB(AColor);
+  C.Brush.Color:= NColor;
+  R2:= Rect(X1, Y1, X2, Y2);
+  C.FillRect(R2);
+end;
 
 {$ifdef invert_pixels}
 procedure CanvasInvertRect(C: TCanvas; const R: TRect; AColor: TColor);

@@ -45,6 +45,8 @@ type
 var
   ATTabsStretchDrawEnabled: boolean = true;
   ATTabsCircleDrawEnabled: boolean = true;
+  ATTabsPixelsDrawEnabled: boolean = true;
+  ATTabsAddonSeparator: string = ' • ';
 
 type
   TATTabPosition = (
@@ -55,9 +57,13 @@ type
     );
 
 type
+
+  { TATTabListCollection }
+
   TATTabListCollection = class(TCollection)
   public
     AOwner: TCustomControl;
+    destructor Destroy; override;
   end;
 
 type
@@ -66,6 +72,7 @@ type
   TATTabData = class(TCollectionItem)
   private
     FTabCaption: TATTabString;
+    FTabCaptionAddon: TATTabString;
     FTabHint: TATTabString;
     FTabObject: TObject;
     FTabColor: TColor;
@@ -84,6 +91,8 @@ type
     FTabHideXButton: boolean;
     FTabVisible: boolean;
     FTabVisibleX: boolean;
+    FTabPinned: boolean;
+    function GetTabCaptionFull: TATTabString;
     procedure UpdateTabSet;
     procedure SetTabImageIndex(const Value: TImageIndex);
     procedure SetTabCaption(const Value: TATTabString);
@@ -94,6 +103,8 @@ type
     procedure SetTabVisible(const Value: boolean);
   public
     constructor Create(ACollection: TCollection); override;
+    destructor Destroy; override;
+    property TabCaptionFull: TATTabString read GetTabCaptionFull;
     property TabObject: TObject read FTabObject write FTabObject;
     property TabRect: TRect read FTabRect write FTabRect;
     property TabRectX: TRect read FTabRectX write FTabRectX;
@@ -103,6 +114,7 @@ type
     procedure Assign(Source: TPersistent); override;
   published
     property TabCaption: TATTabString read FTabCaption write SetTabCaption;
+    property TabCaptionAddon: TATTabString read FTabCaptionAddon write FTabCaptionAddon;
     property TabHint: TATTabString read FTabHint write FTabHint;
     property TabColor: TColor read FTabColor write SetTabColor default clNone;
     property TabColorActive: TColor read FTabColorActive write SetTabColorActive default clNone;
@@ -115,6 +127,7 @@ type
     property TabSpecialHeight: integer read FTabSpecialHeight write FTabSpecialHeight default 0;
     property TabHideXButton: boolean read FTabHideXButton write SetTabHideXButton default false;
     property TabVisible: boolean read FTabVisible write SetTabVisible default true;
+    property TabPinned: boolean read FTabPinned write FTabPinned default false;
   end;
 
 type
@@ -182,6 +195,8 @@ type
   TATTabPaintInfo = record
     Rect: TRect;
     Caption: TATTabString;
+    Modified: boolean;
+    Pinned: boolean;
     TabIndex: integer;
     ColorFont: TColor;
     TabActive,
@@ -305,6 +320,7 @@ const
   _InitOptSpaceInitial = 5;
   _InitOptSpaceBeforeText = 6;
   _InitOptSpaceBeforeTextForMinWidth = 30;
+  _InitOptSpaceAfterText = 6;
   _InitOptSpaceBetweenTabs = 0;
   _InitOptSpaceBetweenLines = 4;
   _InitOptSpaceBetweenIconCaption = 0;
@@ -342,6 +358,7 @@ const
   _InitOptShowXButtons = atbxShowAll;
   _InitOptShowPlusTab = true;
   _InitOptShowModifiedText = '*';
+  _InitOptShowPinnedText = '!';
   _InitOptShowEntireColor = false;
   _InitOptShowActiveMarkInverted = true;
   _InitRoundedBitmapSize = 60;
@@ -416,6 +433,7 @@ type
     FOptSpaceInitial: integer; //space between first tab and left control edge
     FOptSpaceBeforeText: integer; //space between text and tab left edge
     FOptSpaceBeforeTextForMinWidth: integer;
+    FOptSpaceAfterText: integer; //space between text and [x] icon righter than text
     FOptSpaceSeparator: integer;
     FOptSpacer: integer; //height of top empty space (colored with bg)
     FOptSpacer2: integer;
@@ -448,6 +466,7 @@ type
     FOptShowArrowsNear: boolean;
     FOptShowPlusTab: boolean; //show "plus" tab
     FOptShowModifiedText: TATTabString;
+    FOptShowPinnedText: TATTabString;
     FOptShowEntireColor: boolean;
     FOptShowNumberPrefix: TATTabString;
     FOptShowScrollMark: boolean;
@@ -594,6 +613,7 @@ type
     procedure DoPaintUserButtons(C: TCanvas; const AButtons: TATTabButtons; AtLeft: boolean);
     procedure DoPaintDropMark(C: TCanvas);
     procedure DoPaintScrollMark(C: TCanvas);
+    function GetTabCaptionFinal(AData: TATTabData; ATabIndex: integer): TATTabString;
     function GetButtonsEdgeCoord(AtLeft: boolean): integer;
     function GetButtonsWidth(const B: TATTabButtons): integer;
     function GetPositionInverted(APos: TATTabPosition): TATTabPosition; inline;
@@ -635,7 +655,6 @@ type
     procedure UpdateCaptionProps(C: TCanvas; const ACaption: TATTabString;
       out ALineHeight: integer; out ATextSize: TSize);
     procedure DoTabDrop;
-    procedure DoTabDropToOtherControl(ATarget: TControl; const APnt: TPoint);
     function GetTabTick(AIndex: integer): Int64;
     function _IsDrag: boolean; inline;
     procedure SetOptShowPlusTab(const Value: boolean);
@@ -683,6 +702,7 @@ type
     property IsThemed: boolean read FThemed write FThemed;
     function DoScale(AValue: integer): integer;
     function DoScaleFont(AValue: integer): integer;
+    procedure DoTabDropToOtherControl(ATarget: TControl; const APnt: TPoint);
 
   protected
     procedure Paint; override;
@@ -797,6 +817,7 @@ type
     property OptSpaceInitial: integer read FOptSpaceInitial write FOptSpaceInitial default _InitOptSpaceInitial;
     property OptSpaceBeforeText: integer read FOptSpaceBeforeText write FOptSpaceBeforeText default _InitOptSpaceBeforeText;
     property OptSpaceBeforeTextForMinWidth: integer read FOptSpaceBeforeTextForMinWidth write FOptSpaceBeforeTextForMinWidth default _InitOptSpaceBeforeTextForMinWidth;
+    property OptSpaceAfterText: integer read FOptSpaceAfterText write FOptSpaceAfterText default _InitOptSpaceAfterText;
     property OptSpaceSeparator: integer read FOptSpaceSeparator write FOptSpaceSeparator default _InitOptSpaceSeparator;
     property OptSpacer: integer read FOptSpacer write FOptSpacer default _InitOptSpacer;
     property OptSpacer2: integer read FOptSpacer2 write FOptSpacer2 default _InitOptSpacer2;
@@ -831,6 +852,7 @@ type
     property OptShowPlusTab: boolean read FOptShowPlusTab write SetOptShowPlusTab default _InitOptShowPlusTab;
     property OptShowArrowsNear: boolean read FOptShowArrowsNear write FOptShowArrowsNear default _InitOptShowArrowsNear;
     property OptShowModifiedText: TATTabString read FOptShowModifiedText write FOptShowModifiedText;
+    property OptShowPinnedText: TATTabString read FOptShowPinnedText write FOptShowPinnedText;
     property OptShowEntireColor: boolean read FOptShowEntireColor write FOptShowEntireColor default _InitOptShowEntireColor;
     property OptShowNumberPrefix: TATTabString read FOptShowNumberPrefix write FOptShowNumberPrefix;
     property OptShowActiveMarkInverted: boolean read FOptShowActiveMarkInverted write FOptShowActiveMarkInverted default _InitOptShowActiveMarkInverted;
@@ -879,6 +901,7 @@ type
 var
   cTabsMouseMinDistanceToDrag: integer = 10; //mouse must move >=N pixels to start drag-drop
   cTabsMouseMaxDistanceToClick: integer = 4; //if mouse moves during mouse-down >=N pixels, dont click
+  cTabsMinWidthForCaption: integer = 8; //don't draw caption if width of tab is less
 
 implementation
 
@@ -901,11 +924,26 @@ begin
   Buttons[Length(Buttons)-1].Size:= Size;
 end;
 
+{ TATTabListCollection }
+
+destructor TATTabListCollection.Destroy;
+begin
+  Clear;
+  inherited Destroy;
+end;
+
 procedure TATTabData.UpdateTabSet;
 begin
   if Collection is TATTabListCollection then
     if TATTabListCollection(Collection).AOwner is TATTabs then
       TATTabListCollection(Collection).AOwner.Invalidate;
+end;
+
+function TATTabData.GetTabCaptionFull: TATTabString;
+begin
+  Result:= FTabCaption;
+  if FTabCaptionAddon<>'' then
+    Result:= Result+ATTabsAddonSeparator+FTabCaptionAddon;
 end;
 
 procedure TATTabData.SetTabImageIndex(const Value: TImageIndex);
@@ -1118,6 +1156,13 @@ begin
   TabFontStyle:= [];
 end;
 
+destructor TATTabData.Destroy;
+begin
+  FTabCaption:= '';
+  FTabHint:= '';
+  inherited Destroy;
+end;
+
 procedure TATTabData.Assign(Source: TPersistent);
 var
   D: TATTabData;
@@ -1126,6 +1171,7 @@ begin
   begin
     D:= TATTabData(Source);
     TabCaption:= D.TabCaption;
+    TabCaptionAddon:= D.TabCaptionAddon;
     TabObject:= D.TabObject;
     TabHint:= D.TabHint;
     TabColor:= D.TabColor;
@@ -1140,6 +1186,7 @@ begin
     TabHideXButton:= D.TabHideXButton;
     TabVisible:= D.TabVisible;
     TabSpecial:= D.TabSpecial;
+    TabPinned:= D.TabPinned;
   end
   else
     inherited Assign(Source);
@@ -1229,6 +1276,7 @@ begin
   FOptSpaceInitial:= _InitOptSpaceInitial;
   FOptSpaceBeforeText:= _InitOptSpaceBeforeText;
   FOptSpaceBeforeTextForMinWidth:= _InitOptSpaceBeforeTextForMinWidth;
+  FOptSpaceAfterText:= _InitOptSpaceAfterText;
   FOptSpaceBetweenTabs:= _InitOptSpaceBetweenTabs;
   FOptSpaceBetweenLines:= _InitOptSpaceBetweenLines;
   FOptSpaceBetweenIconCaption:= _InitOptSpaceBetweenIconCaption;
@@ -1268,6 +1316,7 @@ begin
   FOptShowPlusTab:= _InitOptShowPlusTab;
   FOptShowArrowsNear:= _InitOptShowArrowsNear;
   FOptShowModifiedText:= _InitOptShowModifiedText;
+  FOptShowPinnedText:= _InitOptShowPinnedText;
   FOptShowEntireColor:= _InitOptShowEntireColor;
   FOptShowActiveMarkInverted:= _InitOptShowActiveMarkInverted;
 
@@ -1434,7 +1483,7 @@ begin
   RectText:= AInfo.Rect;
   bNeedMoreSpace:= (RectText.Right-RectText.Left<=DoScale(FOptSpaceBeforeTextForMinWidth)) and (AInfo.Caption<>'');
   NIndentL:= IfThen(not bNeedMoreSpace, DoScale(FOptSpaceBeforeText), 2);
-  NIndentR:= NIndentL+IfThen(Assigned(Data) and Data.TabVisibleX, DoScale(FOptSpaceXRight));
+  NIndentR:= IfThen(not bNeedMoreSpace, DoScale(FOptSpaceAfterText), 2) + IfThen(Assigned(Data) and Data.TabVisibleX, DoScale(FOptSpaceXRight));
   RectText:= Rect(AInfo.Rect.Left+NIndentL, AInfo.Rect.Top, AInfo.Rect.Right-NIndentR, AInfo.Rect.Bottom);
 
   if not FThemed then
@@ -1495,7 +1544,7 @@ begin
 
   //caption
   C.Brush.Style:= bsClear;
-  if RectText.Right-RectText.Left>=8 then
+  if RectText.Right-RectText.Left>=cTabsMinWidthForCaption then
   begin
     C.Font.Assign(Self.Font);
     C.Font.Style:= AInfo.FontStyle;
@@ -1503,9 +1552,6 @@ begin
     C.Font.Size:= DoScaleFont(C.Font.Size);
 
     TempCaption:= AInfo.Caption;
-    if ATabModified then
-      TempCaption:= FOptShowModifiedText+TempCaption;
-
     UpdateCaptionProps(C, TempCaption, NLineHeight, Extent);
 
     NIndentTop:= (RectText.Bottom-RectText.Top-Extent.cy) div 2 + 1;
@@ -1677,7 +1723,7 @@ begin
     DoPaintTabShape_R(C, R, ATabActive, ATabIndex);
   end
   else
-  if FOptTabRounded and not FOptShowFlat then
+  if FOptTabRounded and not FOptShowFlat and ATTabsPixelsDrawEnabled then
   begin
     NColorEmpty:= ColorBg;
     if ATabActive then
@@ -2015,7 +2061,7 @@ begin
           Result:= GetTabWidth_Plus_Raw
         else
           Result:= DoScale(FOptTabWidthNormal);
-        Inc(Result, 2*DoScale(FOptSpaceBeforeText));
+        Inc(Result, DoScale(FOptSpaceBeforeText+FOptSpaceAfterText));
       end;
   end;
 end;
@@ -2072,8 +2118,8 @@ begin
       else
       if FOptVarWidth then
       begin
-        UpdateCaptionProps(C, Data.TabCaption, NLineHeight, Extent);
-        NLineHeight:= 2*DoScale(FOptSpaceBeforeText) + Extent.CY;
+        UpdateCaptionProps(C, GetTabCaptionFinal(Data, i), NLineHeight, Extent);
+        NLineHeight:= DoScale(FOptSpaceBeforeText+FOptSpaceAfterText) + Extent.CY;
       end
       else
         NLineHeight:= DoScale(FOptTabHeight);
@@ -2124,13 +2170,10 @@ begin
         if i=FTabIndex then
           C.Font.Style:= FOptActiveFontStyle;
 
-      TempCaption:=
-        Format(FOptShowNumberPrefix, [i+1]) +
-        IfThen(Data.TabModified, FOptShowModifiedText) +
-        Data.TabCaption;
+      TempCaption:= GetTabCaptionFinal(Data, i);
 
       UpdateCaptionProps(C, TempCaption, NLineHeight, Extent);
-      FTabWidth:= Extent.CX + 2*DoScale(FOptSpaceBeforeText);
+      FTabWidth:= Extent.CX + DoScale(FOptSpaceBeforeText+FOptSpaceAfterText);
 
       if not Assigned(FImages) then //no imagelist
         Data.TabImageIndex:= -1;
@@ -2521,7 +2564,9 @@ begin
 
         FillChar(Info, SizeOf(Info), 0);
         Info.Rect:= RRect;
-        Info.Caption:= Format(FOptShowNumberPrefix, [i+1]) + Data.TabCaption;
+        Info.Caption:= GetTabCaptionFinal(Data, i);
+        Info.Modified:= Data.TabModified;
+        Info.Pinned:= Data.TabPinned;
         Info.TabIndex:= i;
         Info.ColorFont:= NColorFont;
         Info.TabMouseOver:= bMouseOver;
@@ -2571,7 +2616,9 @@ begin
 
       FillChar(Info, SizeOf(Info), 0);
       Info.Rect:= RRect;
-      Info.Caption:= Format(FOptShowNumberPrefix, [i+1]) + Data.TabCaption;
+      Info.Caption:= GetTabCaptionFinal(Data, i);
+      Info.Modified:= Data.TabModified;
+      Info.Pinned:= Data.TabPinned;
       Info.TabIndex:= i;
       Info.ColorFont:= NColorFont;
       Info.TabActive:= true;
@@ -3617,7 +3664,7 @@ begin
     begin
       mi:= TMenuItem.Create(Self);
       mi.Tag:= i;
-      mi.Caption:= GetTabData(i).TabCaption;
+      mi.Caption:= GetTabData(i).TabCaptionFull;
       mi.OnClick:= TabMenuClick;
       mi.RadioItem:= true;
       mi.Checked:= i=FTabIndex;
@@ -3651,7 +3698,7 @@ begin
 
   //tricky formula: calculate auto-width
   NValue:= (Width
-    - IfThen(FOptShowPlusTab, GetTabWidth_Plus_Raw + 2*DoScale(FOptSpaceBeforeText))
+    - IfThen(FOptShowPlusTab, GetTabWidth_Plus_Raw + DoScale(FOptSpaceBeforeText+FOptSpaceAfterText))
     - FRealIndentLeft
     - FRealIndentRight
     - FOptSpaceSide
@@ -3886,7 +3933,7 @@ begin
       Invalidate;
   end
   else
-    inherited;
+    Accept:= false;
 end;
 
 procedure TATTabs.DragDrop(Source: TObject; X, Y: integer);
@@ -4658,8 +4705,34 @@ begin
   Height:= FOptTabHeight+FOptSpacer;
 end;
 
+function TATTabs.GetTabCaptionFinal(AData: TATTabData; ATabIndex: integer): TATTabString;
+begin
+  Result:= '';
+  if AData.TabCaption<>'' then
+  begin
+    if AData.TabPinned then
+      Result:= Result+FOptShowPinnedText;
+    if AData.TabModified then
+      Result:= Result+FOptShowModifiedText;
+    if FOptShowNumberPrefix<>'' then
+      Result:= Result+Format(FOptShowNumberPrefix, [ATabIndex+1]);
+    Result:= Result+AData.TabCaptionFull;
+  end
+  else
+  begin
+    if AData.TabModified then
+      Result:= Result+FOptShowModifiedText;
+  end;
+end;
+
 
 initialization
   cRect0:= Rect(0, 0, 0, 0);
+
+  {$if defined(LCLQT5) or defined(darwin)}
+  ATTabsStretchDrawEnabled:= false;
+  ATTabsCircleDrawEnabled:= false;
+  ATTabsPixelsDrawEnabled:= false;
+  {$endif};
 
 end.

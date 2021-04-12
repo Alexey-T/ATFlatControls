@@ -54,6 +54,9 @@ type
     function TabGetTick(Sender: TObject; ATabObject: TObject): Int64;
   protected
     procedure Resize; override;
+    procedure DragOver(Source: TObject; X, Y: Integer; State: TDragState;
+      var Accept: Boolean); override;
+    procedure DragDrop(Source: TObject; X, Y: Integer); override;
   public
     constructor Create(AOwner: TComponent); override;
     function AddTab(AIndex: integer; AData: TATTabData; AndActivate: boolean=true): integer;
@@ -408,6 +411,7 @@ begin
   BorderStyle:= bsNone;
   BevelInner:= bvNone;
   BevelOuter:= bvNone;
+  DragMode:= dmAutomatic;
   FEnabledEmpty:= true;
 
   Width:= 600;
@@ -542,6 +546,18 @@ begin
         Height div 4 * 3, // max height is 3/4 of form height
         FTabs.OptTabHeight
         );
+end;
+
+procedure TATPages.DragOver(Source: TObject; X, Y: Integer; State: TDragState;
+  var Accept: Boolean);
+begin
+  Accept:= Source is TATTabs;
+end;
+
+procedure TATPages.DragDrop(Source: TObject; X, Y: Integer);
+begin
+  if Source is TATTabs then
+    TATTabs(Source).DoTabDropToOtherControl(Self.Tabs, Types.Point(2, 2));
 end;
 
 { TATGroups }
@@ -1921,6 +1937,7 @@ end;
 function TATGroups.CloseTabsOther(APages: TATPages; ATabIndex: Integer;
   ADoRighter, ADoLefter: boolean): boolean;
 var
+  Data: TATTabData;
   j: Integer;
 begin
   Result:= false;
@@ -1928,16 +1945,25 @@ begin
   begin
     if ADoRighter then
       for j:= Tabs.TabCount-1 downto ATabIndex+1 do
+      begin
+        Data:= Tabs.GetTabData(j);
+        if Assigned(Data) and Data.TabPinned then Continue;
         if not Tabs.DeleteTab(j, true, true) then Exit;
+      end;
     if ADoLefter then
       for j:= ATabIndex-1 downto 0 do
+      begin
+        Data:= Tabs.GetTabData(j);
+        if Assigned(Data) and Data.TabPinned then Continue;
         if not Tabs.DeleteTab(j, true, true) then Exit;
+      end;
   end;
   Result:= true;
 end;
 
 function TATGroups.CloseTabsAll(APages: TATPages): boolean;
 var
+  Data: TATTabData;
   j: Integer;
 begin
   Result:= false;
@@ -1945,7 +1971,11 @@ begin
   begin
     Tabs.TabIndex:= 0; //activate 1st tab to remove TabIndex change on closing
     for j:= Tabs.TabCount-1 downto 0 do
+    begin
+      Data:= Tabs.GetTabData(j);
+      if Assigned(Data) and Data.TabPinned then Continue;
       if not Tabs.DeleteTab(j, true, true) then Exit;
+    end;
   end;
   Result:= true;
 end;

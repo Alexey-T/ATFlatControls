@@ -1,6 +1,12 @@
 
+2021.03.30
++ ATTabs: support 'pinned tabs', show pinned tabs with prefix: prop OptShowPinnedText='#'
+
+2021.03.14
++ ATTabs: prop OptSpaceAfterText
+
 2021.03.05
-+ ATTabs: paint scroll < > arrows dimmed, when no scrolling is needed
++ ATTabs: paint scroll-arrows dimmed, when no scrolling is needed
 
 2021.02.27
 + ATTabs: prop OptTabRounded
