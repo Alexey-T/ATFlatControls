@@ -612,9 +612,8 @@ procedure TATListbox.DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
 var
   Sep: TATStringSeparator;
   SLine, SItem: string;
-  NIndentLeft, NIndentTop,
+  NIndentLeft, NIndentTop, NLineHeight,
   NColOffset, NColWidth, NAllWidth, i: integer;
-  LineExtent: Types.TSize;
 begin
   if AIndex=FItemIndex then
   begin
@@ -640,8 +639,8 @@ begin
     SLine:= '('+IntToStr(AIndex)+')';
 
   NIndentLeft:= FIndentLeft+FIndentForX;
-  LineExtent:= C.TextExtent(SLine);
-  NIndentTop:= (FItemHeight-LineExtent.cy) div 2;
+  NLineHeight:= C.TextHeight(SLine);
+  NIndentTop:= (FItemHeight-NLineHeight) div 2;
 
   if not ShowColumns then
   begin
