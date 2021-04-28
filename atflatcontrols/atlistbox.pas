@@ -99,6 +99,7 @@ type
     procedure SetShowOsBarHorz(AValue: boolean);
     property ShowOsBarVert: boolean read FShowOsBarVert write SetShowOsBarVert;
     property ShowOsBarHorz: boolean read FShowOsBarHorz write SetShowOsBarHorz;
+    function ShowColumns: boolean;
     procedure DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
     procedure DoPaintTo(C: TCanvas; r: TRect);
     procedure DoPaintX(C: TCanvas; const R: TRect; ACircle: boolean);
@@ -351,12 +352,19 @@ begin
   begin
     if Assigned(FOnCalcScrollWidth) then
       Result:= FOnCalcScrollWidth(Self, C);
-    exit;
+  end
+  else
+  if ShowColumns then
+  begin
+    for i:= 0 to High(FColumnWidths) do
+      Inc(Result, FColumnWidths[i]);
+  end
+  else
+  begin
+    for i:= 0 to ItemCount-1 do
+      Result:= Max(Result, C.TextWidth(Items[i]));
+    Inc(Result, FIndentLeft+2);
   end;
-
-  for i:= 0 to ItemCount-1 do
-    Result:= Max(Result, C.TextWidth(Items[i]));
-  Inc(Result, FIndentLeft+2);
 end;
 
 procedure TATListbox.UpdateScrollbars(C: TCanvas);
@@ -595,6 +603,11 @@ begin
   ShowScrollBar(Handle, SB_Horz, AValue);
 end;
 
+function TATListbox.ShowColumns: boolean;
+begin
+  Result:= Length(FColumnSizes)>0;
+end;
+
 procedure TATListbox.DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
 var
   Sep: TATStringSeparator;
@@ -627,7 +640,7 @@ begin
 
   NIndentLeft:= FIndentLeft+FIndentForX;
 
-  if Length(FColumnSizes)=0 then
+  if not ShowColumns then
   begin
     C.TextOut(
       R.Left+NIndentLeft-ScrollHorz,
@@ -682,8 +695,8 @@ begin
     C:= Canvas;
 
   UpdateItemHeight;
-  UpdateScrollbars(C);
   UpdateColumnWidths;
+  UpdateScrollbars(C);
 
   R:= Rect(0, 0, ClientWidth, ClientHeight);
   if DoubleBuffered then
