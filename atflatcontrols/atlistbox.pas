@@ -785,18 +785,21 @@ begin
   if NItem>=0 then
     if FShowX<>albsxNone then
       if Pnt.X<FIndentForX then
+      begin
         if Assigned(FOnClickX) then
-        begin
           FOnClickX(Self);
-          exit;
-        end;
+        exit;
+      end;
 
   if NItem=-2 then
+  begin
     if Assigned(FOnClickHeader) then
     begin
       NColumn:= GetColumnIndexAt(Pnt);
       FOnClickHeader(Self, NColumn);
     end;
+    exit;
+  end;
 
   inherited; //OnClick must be after ItemIndex set
 end;
