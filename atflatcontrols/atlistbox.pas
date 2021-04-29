@@ -88,8 +88,8 @@ type
     FColumnSep: char;
     FColumnSizes: TATIntArray;
     FColumnWidths: TATIntArray;
-    FColumnImageIndexes: TATIntArray;
-    FColumnHeader: string;
+    FHeaderImageIndexes: TATIntArray;
+    FHeaderText: string;
     FClientOriginY: integer;
     ClientWidth: integer;
     ClientHeight: integer;
@@ -186,10 +186,10 @@ type
     property ScrollbarHorz: TATScrollbar read FScrollbarHorz;
     property ColumnSeparator: char read FColumnSep write FColumnSep;
     property ColumnSizes: TATIntArray read FColumnSizes write FColumnSizes;
-    property ColumnImageIndexes: TATIntArray read FColumnImageIndexes write FColumnImageIndexes;
     property ColumnWidth[AIndex: integer]: integer read GetColumnWidth;
-    property ColumnHeader: string read FColumnHeader write FColumnHeader;
+    property HeaderText: string read FHeaderText write FHeaderText;
     property HeaderImages: TImageList read FHeaderImages write FHeaderImages;
+    property HeaderImageIndexes: TATIntArray read FHeaderImageIndexes write FHeaderImageIndexes;
     {$ifdef FPC}
     function CanFocus: boolean; override;
     function CanSetFocus: boolean; override;
@@ -482,7 +482,7 @@ begin
   C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListbox);
   C.FillRect(0, 0, ClientWidth, ClientHeight);
 
-  if FColumnHeader<>'' then
+  if FHeaderText<>'' then
     FClientOriginY:= FItemHeight
   else
     FClientOriginY:= 0;
@@ -491,7 +491,7 @@ begin
   if FShowX<>albsxNone then
     Inc(FIndentForX, FTheme^.DoScale(FTheme^.XMarkWidth));
 
-  if FColumnHeader<>'' then
+  if FHeaderText<>'' then
   begin
     r.Top:= 0;
     r.Bottom:= FItemHeight;
@@ -670,7 +670,7 @@ begin
   C.FillRect(R);
 
   if AIndex=-1 then
-    SLine:= FColumnHeader
+    SLine:= FHeaderText
   else
   if (AIndex>=0) and (AIndex<FList.Count) then
     SLine:= FList[AIndex]
@@ -711,13 +711,13 @@ begin
 
       if AIndex=-1 then
         if Assigned(FHeaderImages) and
-          (i<=High(FColumnImageIndexes)) and
-          (FColumnImageIndexes[i]>=0) then
+          (i<=High(FHeaderImageIndexes)) and
+          (FHeaderImageIndexes[i]>=0) then
         begin
           FHeaderImages.Draw(C,
             NIndentText,
             R.Top+(R.Height-FHeaderImages.Height) div 2,
-            FColumnImageIndexes[i]);
+            FHeaderImageIndexes[i]);
           Inc(NIndentText, FHeaderImages.Width);
         end;
 
@@ -853,7 +853,7 @@ end;
 
 function TATListbox.GetItemIndexAt(Pnt: TPoint): integer;
 begin
-  if FColumnHeader<>'' then
+  if FHeaderText<>'' then
     if (Pnt.Y>=0) and (Pnt.Y<FItemHeight) then
     begin
       Result:= -2;
