@@ -1054,16 +1054,16 @@ end;
 
 function TATListbox.ClientHeight: integer;
 begin
-  Result:= inherited ClientHeight;
+  Result:= Height;
   if FScrollbarHorz.Visible then
-    Dec(Result, FScrollbarHorz.Height);
+    Result:= Max(0, Result-FScrollbarHorz.Height);
 end;
 
 function TATListbox.ClientWidth: integer;
 begin
-  Result:= inherited ClientWidth;
+  Result:= Width;
   if FScrollbar.Visible then
-    Dec(Result, FScrollbar.Width);
+    Result:= Max(0, Result-FScrollbar.Width);
 end;
 
 function TATListbox.CurrentFontName: string;
