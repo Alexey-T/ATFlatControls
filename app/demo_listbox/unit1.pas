@@ -16,6 +16,7 @@ type
 
   TfmMain = class(TForm)
     ButtonGoto: TButton;
+    chkColumns: TCheckBox;
     chkDoubleSize: TCheckBox;
     chkHotTrack: TCheckBox;
     chkVirtual: TCheckBox;
@@ -33,6 +34,7 @@ type
     PopupMenu1: TPopupMenu;
     TrackScale: TTrackBar;
     procedure ButtonGotoClick(Sender: TObject);
+    procedure chkColumnsChange(Sender: TObject);
     procedure chkDoubleSizeChange(Sender: TObject);
     procedure chkHotTrackChange(Sender: TObject);
     procedure chkOwnerDrawnChange(Sender: TObject);
@@ -51,6 +53,7 @@ type
     { private declarations }
     procedure ListDraw(Sender: TObject; C: TCanvas; AIndex: integer; const ARect: TRect);
     procedure ListClick(Sender: TObject);
+    procedure ListClickHeader(Sender: TObject; AColumn: integer);
     procedure ListDblClick(Sender: TObject);
     procedure ListChSel(Sender: TObject);
   public
@@ -80,6 +83,7 @@ begin
   list.OnDrawItem:= @ListDraw;
   list.OnClick:= @ListClick;
   list.OnClickXMark:=@ListClickX;
+  list.OnClickHeader:= @ListClickHeader;
   list.OnDblClick:= @ListDblClick;
   list.OnChangedSel:= @ListChSel;
   list.OnCalcScrollWidth:=@ListCalcScrollWidth;
@@ -181,6 +185,16 @@ begin
     List.ItemIndex:= N;
 end;
 
+procedure TfmMain.chkColumnsChange(Sender: TObject);
+begin
+  if chkColumns.Checked then
+    list.ColumnSizes:= [-50,-20,0]
+  else
+    list.ColumnSizes:= [];
+  list.ColumnSeparator:= '|';
+  list.Invalidate;
+end;
+
 procedure TfmMain.ListDraw(Sender: TObject; C: TCanvas; AIndex: integer;
   const ARect: TRect);
 var
@@ -210,8 +224,19 @@ begin
 end;
 
 procedure TfmMain.ListClick(Sender: TObject);
+var
+  Pnt: TPoint;
+  N: integer;
 begin
-  Caption:= 'Clicked item: '+IntToStr(list.ItemIndex);
+  Pnt:= list.ScreenToClient(Mouse.CursorPos);
+  N:= list.GetItemIndexAt(Pnt);
+  if N>=0 then
+    Caption:= 'Clicked item: '+IntToStr(N);
+end;
+
+procedure TfmMain.ListClickHeader(Sender: TObject; AColumn: integer);
+begin
+  Caption:= 'Clicked header column: '+IntToStr(AColumn);
 end;
 
 procedure TfmMain.ListClickX(Sender: TObject);

@@ -170,6 +170,15 @@ object fmMain: TfmMain
       TabOrder = 10
       TextHint = 'Header text'
     end
+    object chkColumns: TCheckBox
+      Left = 144
+      Height = 24
+      Top = 24
+      Width = 82
+      Caption = 'columns'
+      OnChange = chkColumnsChange
+      TabOrder = 11
+    end
   end
   object PopupMenu1: TPopupMenu
     Left = 152

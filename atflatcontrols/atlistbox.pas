@@ -26,6 +26,7 @@ uses
 type
   TATListboxDrawItemEvent = procedure(Sender: TObject; C: TCanvas; AIndex: integer; const ARect: TRect) of object;
   TATListboxCalcWidth = function (Sender: TObject; C: TCanvas): integer of object;
+  TATListboxClickHeaderEvent = procedure(Sender: TObject; AColumn: integer) of object;
 
 type
   TATIntArray = array of integer;
@@ -95,6 +96,7 @@ type
     FOnDrawItem: TATListboxDrawItemEvent;
     FOnCalcScrollWidth: TATListboxCalcWidth;
     FOnClickX: TNotifyEvent;
+    FOnClickHeader: TATListboxClickHeaderEvent;
     FOnChangeSel: TNotifyEvent;
     FOnScroll: TNotifyEvent;
     FShowOsBarVert: boolean;
@@ -174,6 +176,7 @@ type
     property VirtualItemCount: integer read FVirtualItemCount write SetVirtualItemCount;
     property VisibleItems: integer read GetVisibleItems;
     function GetItemIndexAt(Pnt: TPoint): integer;
+    function GetColumnIndexAt(Pnt: TPoint): integer;
     property Theme: PATFlatTheme read FTheme write FTheme;
     property ThemedScrollbar: boolean read FThemedScrollbar write SetThemedScrollbar;
     property ThemedFont: boolean read FThemedFont write FThemedFont;
@@ -216,6 +219,7 @@ type
     property Visible;
     property OnClick;
     property OnClickXMark: TNotifyEvent read FOnClickX write FOnClickX;
+    property OnClickHeader: TATListboxClickHeaderEvent read FOnClickHeader write FOnClickHeader;
     property OnDblClick;
     property OnContextPopup;
     property OnChangedSel: TNotifyEvent read FOnChangeSel write FOnChangeSel;
@@ -750,6 +754,7 @@ end;
 procedure TATListbox.Click;
 var
   Pnt: TPoint;
+  NItem, NColumn: integer;
 begin
   if FCanGetFocus then
     {$ifdef FPC}
@@ -759,14 +764,23 @@ begin
     {$endif}
 
   Pnt:= ScreenToClient(Mouse.CursorPos);
+  NItem:= GetItemIndexAt(Pnt);
 
-  if FShowX<>albsxNone then
-    if Pnt.X<=FIndentForX then
-      if Assigned(FOnClickX) then
-      begin
-        FOnClickX(Self);
-        exit;
-      end;
+  if NItem>=0 then
+    if FShowX<>albsxNone then
+      if Pnt.X<FIndentForX then
+        if Assigned(FOnClickX) then
+        begin
+          FOnClickX(Self);
+          exit;
+        end;
+
+  if NItem=-2 then
+    if Assigned(FOnClickHeader) then
+    begin
+      NColumn:= GetColumnIndexAt(Pnt);
+      FOnClickHeader(Self, NColumn);
+    end;
 
   inherited; //OnClick must be after ItemIndex set
 end;
@@ -781,6 +795,37 @@ begin
       BitmapResizeBySteps(FBitmap, Width, Height);
 
   Invalidate;
+end;
+
+function TATListbox.GetColumnIndexAt(Pnt: TPoint): integer;
+var
+  NSize, i: integer;
+begin
+  Result:= -1;
+  NSize:= 0;
+
+  if ShowXMark<>albsxNone then
+  begin
+    NSize:= FIndentForX;
+    if Pnt.X<FIndentForX then
+    begin
+      Result:= -2;
+      exit;
+    end;
+  end;
+
+  if not ShowColumns then
+    exit;
+
+  for i:= 0 to High(FColumnWidths) do
+  begin
+    if Pnt.X<NSize+FColumnWidths[i] then
+    begin
+      Result:= i;
+      exit;
+    end;
+    Inc(NSize, FColumnWidths[i]);
+  end;
 end;
 
 function TATListbox.GetItemIndexAt(Pnt: TPoint): integer;
