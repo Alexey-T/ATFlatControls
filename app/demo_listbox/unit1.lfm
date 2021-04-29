@@ -33,7 +33,7 @@ object fmMain: TfmMain
       Left = 8
       Height = 24
       Top = 24
-      Width = 114
+      Width = 111
       Caption = 'owner-drawn'
       Checked = True
       OnChange = chkOwnerDrawnChange
@@ -44,7 +44,7 @@ object fmMain: TfmMain
       Left = 8
       Height = 24
       Top = 49
-      Width = 262
+      Width = 261
       Caption = 'virtual items (don''t use Items prop)'
       Checked = True
       OnChange = chkVirtualChange
@@ -161,10 +161,19 @@ object fmMain: TfmMain
       Style = csDropDownList
       TabOrder = 9
     end
+    object edHeader: TEdit
+      Left = 311
+      Height = 26
+      Top = 137
+      Width = 169
+      OnChange = edHeaderChange
+      TabOrder = 10
+      TextHint = 'Header text'
+    end
   end
   object PopupMenu1: TPopupMenu
-    Left = 288
-    Top = 377
+    Left = 152
+    Top = 112
     object MenuItem1: TMenuItem
       Caption = 'Test item'
       OnClick = MenuItem1Click

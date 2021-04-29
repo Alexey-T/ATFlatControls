@@ -86,6 +86,10 @@ type
     FColumnSep: char;
     FColumnSizes: TATIntArray;
     FColumnWidths: TATIntArray;
+    FColumnHeader: string;
+    FClientOriginY: integer;
+    ClientWidth: integer;
+    ClientHeight: integer;
     FShowX: TATListboxShowX;
     FMaxWidth: integer;
     FOnDrawItem: TATListboxDrawItemEvent;
@@ -101,7 +105,7 @@ type
     property ShowOsBarHorz: boolean read FShowOsBarHorz write SetShowOsBarHorz;
     function ShowColumns: boolean;
     procedure DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
-    procedure DoPaintTo(C: TCanvas; r: TRect);
+    procedure DoPaintTo(C: TCanvas);
     procedure DoPaintX(C: TCanvas; const R: TRect; ACircle: boolean);
     function GetMaxWidth(C: TCanvas): integer;
     function GetOnDrawScrollbar: TATScrollbarDrawEvent;
@@ -178,12 +182,11 @@ type
     property ColumnSeparator: char read FColumnSep write FColumnSep;
     property ColumnSizes: TATIntArray read FColumnSizes write FColumnSizes;
     property ColumnWidth[AIndex: integer]: integer read GetColumnWidth;
+    property ColumnHeader: string read FColumnHeader write FColumnHeader;
     {$ifdef FPC}
     function CanFocus: boolean; override;
     function CanSetFocus: boolean; override;
     {$endif}
-    function ClientHeight: integer;
-    function ClientWidth: integer;
     procedure Invalidate; override;
     procedure UpdateItemHeight;
   published
@@ -459,25 +462,39 @@ begin
 end;
 
 
-procedure TATListbox.DoPaintTo(C: TCanvas; r: TRect);
+procedure TATListbox.DoPaintTo(C: TCanvas);
 var
   Index: integer;
   bPaintX, bCircle: boolean;
-  RectX: TRect;
+  R, RectX: TRect;
 begin
   C.Font.Name:= CurrentFontName;
   C.Font.Size:= FTheme^.DoScaleFont(CurrentFontSize);
 
   C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListbox);
-  C.FillRect(r);
+  C.FillRect(0, 0, ClientWidth, ClientHeight);
+
+  if FColumnHeader<>'' then
+    FClientOriginY:= FItemHeight
+  else
+    FClientOriginY:= 0;
 
   FIndentForX:= 0;
   if FShowX<>albsxNone then
     Inc(FIndentForX, FTheme^.DoScale(FTheme^.XMarkWidth));
 
+  if FColumnHeader<>'' then
+  begin
+    r.Top:= 0;
+    r.Bottom:= FItemHeight;
+    r.Left:= 0;
+    r.Right:= ClientWidth;
+    DoDefaultDrawItem(C, -1, r);
+  end;
+
   for Index:= FItemTop to ItemCount-1 do
   begin
-    r.Top:= (Index-FItemTop)*FItemHeight;
+    r.Top:= (Index-FItemTop)*FItemHeight + FClientOriginY;
     r.Bottom:= r.Top+FItemHeight;
     r.Left:= 0;
     r.Right:= ClientWidth;
@@ -615,6 +632,12 @@ var
   NIndentLeft, NIndentTop, NLineHeight,
   NColOffset, NColWidth, NAllWidth, i: integer;
 begin
+  if AIndex=-1 then
+  begin
+    C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListboxHeader);
+    C.Font.Color:= ColorToRGB(FTheme^.ColorFontListbox);
+  end
+  else
   if AIndex=FItemIndex then
   begin
     C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListboxSel);
@@ -633,6 +656,9 @@ begin
   end;
   C.FillRect(R);
 
+  if AIndex=-1 then
+    SLine:= FColumnHeader
+  else
   if (AIndex>=0) and (AIndex<FList.Count) then
     SLine:= FList[AIndex]
   else
@@ -700,14 +726,21 @@ begin
   UpdateColumnWidths;
   UpdateScrollbars(C);
 
+  ClientWidth:= Width;
+  ClientHeight:= Height;
+  if FScrollbar.Visible then
+    ClientWidth:= Max(0, ClientWidth-FScrollbar.Width);
+  if FScrollbarHorz.Visible then
+    ClientHeight:= Max(0, ClientHeight-FScrollbarHorz.Height);
+
   R:= Rect(0, 0, ClientWidth, ClientHeight);
   if DoubleBuffered then
   begin
-    DoPaintTo(C, R);
+    DoPaintTo(C);
     Canvas.CopyRect(R, C, R);
   end
   else
-    DoPaintTo(C, R);
+    DoPaintTo(C);
 end;
 
 procedure TATListbox.Click;
@@ -750,6 +783,9 @@ function TATListbox.GetItemIndexAt(Pnt: TPoint): integer;
 begin
   Result:= -1;
   if ItemCount=0 then exit;
+
+  Dec(Pnt.Y, FClientOriginY);
+  if Pnt.Y<0 then exit; //for click on header
 
   if (Pnt.X>=0) and (Pnt.X<ClientWidth) then
   begin
@@ -1051,20 +1087,6 @@ begin
   Result:= FCanGetFocus;
 end;
 {$endif}
-
-function TATListbox.ClientHeight: integer;
-begin
-  Result:= Height;
-  if FScrollbarHorz.Visible then
-    Result:= Max(0, Result-FScrollbarHorz.Height);
-end;
-
-function TATListbox.ClientWidth: integer;
-begin
-  Result:= Width;
-  if FScrollbar.Visible then
-    Result:= Max(0, Result-FScrollbar.Width);
-end;
 
 function TATListbox.CurrentFontName: string;
 begin

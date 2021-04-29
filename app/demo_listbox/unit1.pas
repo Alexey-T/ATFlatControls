@@ -24,6 +24,7 @@ type
     comboScrollHorz: TComboBox;
     comboScrollVert: TComboBox;
     ComboShowX: TComboBox;
+    edHeader: TEdit;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
@@ -40,6 +41,7 @@ type
     procedure comboScrollVertChange(Sender: TObject);
     procedure comboScrollHorzChange(Sender: TObject);
     procedure ComboShowXChange(Sender: TObject);
+    procedure edHeaderChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MenuItem1Click(Sender: TObject);
     procedure TrackScaleChange(Sender: TObject);
@@ -137,6 +139,12 @@ end;
 procedure TfmMain.ComboShowXChange(Sender: TObject);
 begin
   List.ShowXMark:= TATListboxShowX(ComboShowX.ItemIndex);
+  List.Invalidate;
+end;
+
+procedure TfmMain.edHeaderChange(Sender: TObject);
+begin
+  List.ColumnHeader:= edHeader.Text;
   List.Invalidate;
 end;
 
