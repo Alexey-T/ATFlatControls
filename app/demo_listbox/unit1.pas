@@ -26,6 +26,7 @@ type
     comboScrollVert: TComboBox;
     ComboShowX: TComboBox;
     edHeader: TEdit;
+    ImageList1: TImageList;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
@@ -79,6 +80,7 @@ begin
   list.Align:= alClient;
   list.CanGetFocus:= true;
   list.PopupMenu:= PopupMenu1;
+  list.HeaderImages:= ImageList1;
 
   list.OnDrawItem:= @ListDraw;
   list.OnClick:= @ListClick;

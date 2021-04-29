@@ -75,6 +75,7 @@ type
     FItemHeight: integer;
     FItemHeightIsFixed: boolean;
     FItemTop: integer;
+    FHeaderImages: TImageList;
     FScrollHorz: integer;
     FBitmap: Graphics.TBitmap;
     FCanGetFocus: boolean;
@@ -186,6 +187,7 @@ type
     property ColumnSizes: TATIntArray read FColumnSizes write FColumnSizes;
     property ColumnWidth[AIndex: integer]: integer read GetColumnWidth;
     property ColumnHeader: string read FColumnHeader write FColumnHeader;
+    property HeaderImages: TImageList read FHeaderImages write FHeaderImages;
     {$ifdef FPC}
     function CanFocus: boolean; override;
     function CanSetFocus: boolean; override;
@@ -634,10 +636,11 @@ begin
 end;
 
 procedure TATListbox.DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
+//AIndex=-1 means 'paint header'
 var
   Sep: TATStringSeparator;
   SLine, SItem: string;
-  NIndentLeft, NIndentTop, NLineHeight,
+  NIndentLeft, NIndentTop, NLineHeight, NIndentText,
   NColOffset, NColWidth, NAllWidth, i: integer;
 begin
   if AIndex=-1 then
@@ -695,14 +698,27 @@ begin
       NColWidth:= FColumnWidths[i];
       Sep.GetItemStr(SItem);
 
+      NIndentText:= NColOffset+1+IfThen(i=0, NIndentLeft);
+
       C.FillRect(
         Rect(NColOffset,
         R.Top,
         NAllWidth,
         R.Bottom)
         );
+
+      if AIndex=-1 then
+        if Assigned(FHeaderImages) and (i<FHeaderImages.Count) then
+        begin
+          FHeaderImages.Draw(C,
+            NIndentText,
+            R.Top+(R.Height-FHeaderImages.Height) div 2,
+            i);
+          Inc(NIndentText, FHeaderImages.Width);
+        end;
+
       C.TextOut(
-        NColOffset+1+IfThen(i=0, NIndentLeft),
+        NIndentText,
         R.Top+NIndentTop,
         SItem
         );
