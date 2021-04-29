@@ -116,7 +116,7 @@ end;
 
 function TfmMain.ListCalcScrollWidth(Sender: TObject; C: TCanvas): integer;
 begin
-  Result:= 300;
+  Result:= list.Width-1;
 end;
 
 procedure TfmMain.chkThemedScrollChange(Sender: TObject);
@@ -150,7 +150,7 @@ end;
 
 procedure TfmMain.edHeaderChange(Sender: TObject);
 begin
-  List.ColumnHeader:= edHeader.Text;
+  List.HeaderText:= edHeader.Text;
   List.Invalidate;
 end;
 
@@ -192,12 +192,12 @@ begin
   if chkColumns.Checked then
   begin
     list.ColumnSizes:= [-50,-20,0];
-    list.ColumnImageIndexes:= [-1,0,1];
+    list.HeaderImageIndexes:= [-1,0,1];
   end
   else
   begin
     list.ColumnSizes:= [];
-    list.ColumnImageIndexes:= [];
+    list.HeaderImageIndexes:= [];
   end;
   list.ColumnSeparator:= '|';
   list.Invalidate;
