@@ -490,6 +490,10 @@ begin
     r.Left:= 0;
     r.Right:= ClientWidth;
     DoDefaultDrawItem(C, -1, r);
+
+    C.Pen.Color:= FTheme^.ColorBorderPassive;
+    C.MoveTo(0, FItemHeight-1);
+    C.LineTo(ClientWidth, FItemHeight-1);
   end;
 
   for Index:= FItemTop to ItemCount-1 do
