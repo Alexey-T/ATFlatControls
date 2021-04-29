@@ -190,9 +190,15 @@ end;
 procedure TfmMain.chkColumnsChange(Sender: TObject);
 begin
   if chkColumns.Checked then
-    list.ColumnSizes:= [-50,-20,0]
+  begin
+    list.ColumnSizes:= [-50,-20,0];
+    list.ColumnImageIndexes:= [-1,0,1];
+  end
   else
+  begin
     list.ColumnSizes:= [];
+    list.ColumnImageIndexes:= [];
+  end;
   list.ColumnSeparator:= '|';
   list.Invalidate;
 end;

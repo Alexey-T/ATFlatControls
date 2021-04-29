@@ -88,6 +88,7 @@ type
     FColumnSep: char;
     FColumnSizes: TATIntArray;
     FColumnWidths: TATIntArray;
+    FColumnImageIndexes: TATIntArray;
     FColumnHeader: string;
     FClientOriginY: integer;
     ClientWidth: integer;
@@ -185,6 +186,7 @@ type
     property ScrollbarHorz: TATScrollbar read FScrollbarHorz;
     property ColumnSeparator: char read FColumnSep write FColumnSep;
     property ColumnSizes: TATIntArray read FColumnSizes write FColumnSizes;
+    property ColumnImageIndexes: TATIntArray read FColumnImageIndexes write FColumnImageIndexes;
     property ColumnWidth[AIndex: integer]: integer read GetColumnWidth;
     property ColumnHeader: string read FColumnHeader write FColumnHeader;
     property HeaderImages: TImageList read FHeaderImages write FHeaderImages;
@@ -708,12 +710,14 @@ begin
         );
 
       if AIndex=-1 then
-        if Assigned(FHeaderImages) and (i<FHeaderImages.Count) then
+        if Assigned(FHeaderImages) and
+          (i<=High(FColumnImageIndexes)) and
+          (FColumnImageIndexes[i]>=0) then
         begin
           FHeaderImages.Draw(C,
             NIndentText,
             R.Top+(R.Height-FHeaderImages.Height) div 2,
-            i);
+            FColumnImageIndexes[i]);
           Inc(NIndentText, FHeaderImages.Width);
         end;
 
