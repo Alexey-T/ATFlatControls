@@ -1,4 +1,11 @@
 
+2021.04.29
++ ATListbox: prop ColumnHeader
++ ATListbox: prop HeaderImages
++ ATListbox: event OnClickHeader
++ ATListbox: method GetColumnIndexAt(), returns -2 for "x mark area"
++ ATListbox: GetItemIndexAt() returns -1 for header, -2 for nothing
+
 2021.03.30
 + ATTabs: support 'pinned tabs', show pinned tabs with prefix: prop OptShowPinnedText='#'
 
