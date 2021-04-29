@@ -305,7 +305,7 @@ end;
 
 function TATListbox.GetVisibleItems: integer;
 begin
-  Result:= ClientHeight div FItemHeight;
+  Result:= (ClientHeight-FClientOriginY) div FItemHeight;
 end;
 
 function TATListbox.IsIndexValid(AValue: integer): boolean;
