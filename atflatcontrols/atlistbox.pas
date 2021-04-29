@@ -785,11 +785,17 @@ end;
 
 function TATListbox.GetItemIndexAt(Pnt: TPoint): integer;
 begin
+  if FColumnHeader<>'' then
+    if (Pnt.Y>=0) and (Pnt.Y<FItemHeight) then
+    begin
+      Result:= -2;
+      exit
+    end;
+
   Result:= -1;
   if ItemCount=0 then exit;
 
   Dec(Pnt.Y, FClientOriginY);
-  if Pnt.Y<0 then exit; //for click on header
 
   if (Pnt.X>=0) and (Pnt.X<ClientWidth) then
   begin
