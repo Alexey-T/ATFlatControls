@@ -499,7 +499,7 @@ begin
     r.Right:= ClientWidth;
     DoDefaultDrawItem(C, -1, r);
 
-    C.Pen.Color:= FTheme^.ColorBorderPassive;
+    C.Pen.Color:= FTheme^.ColorSeparators;
     C.MoveTo(0, FItemHeight-1);
     C.LineTo(ClientWidth, FItemHeight-1);
   end;

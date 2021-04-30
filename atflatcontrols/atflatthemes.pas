@@ -115,7 +115,7 @@ initialization
     ColorBgListbox:= ColorBgPassive;
     ColorBgListboxSel:= clMedGray;
     ColorBgListboxHottrack:= clMoneyGreen;
-    ColorBgListboxHeader:= $00aa00;
+    ColorBgListboxHeader:= $80aa80;
     ColorBgOverlay:= clRed;
     ColorArrows:= clGray;
     ColorArrowsOver:= clBlue;
