@@ -91,8 +91,8 @@ type
     FHeaderImageIndexes: TATIntArray;
     FHeaderText: string;
     FClientOriginY: integer;
-    ClientWidth: integer;
-    ClientHeight: integer;
+    FClientWidth: integer;
+    FClientHeight: integer;
     FShowX: TATListboxShowX;
     FMaxWidth: integer;
     FOnDrawItem: TATListboxDrawItemEvent;
@@ -173,6 +173,8 @@ type
     property ItemHeightDefault: integer read GetItemHeightDefault;
     function ItemCount: integer;
     function IsIndexValid(AValue: integer): boolean;
+    property ClientWidth: integer read FClientWidth write FClientWidth;
+    property ClientHeight: integer read FClientHeight write FClientHeight;
     property ScrollHorz: integer read FScrollHorz write SetScrollHorz;
     property HotTrackIndex: integer read FHotTrackIndex;
     property VirtualItemCount: integer read FVirtualItemCount write SetVirtualItemCount;
