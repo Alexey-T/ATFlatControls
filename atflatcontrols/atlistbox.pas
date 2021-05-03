@@ -125,6 +125,7 @@ type
     procedure SetItemTop(AValue: integer);
     procedure SetItemHeight(AValue: integer);
     procedure SetThemedScrollbar(AValue: boolean);
+    procedure UpdateClientSizes;
     procedure UpdateColumnWidths;
     procedure UpdateFromScrollbarMsg(const Msg: {$ifdef FPC}TLMScroll{$else}TWMVScroll{$endif});
     procedure UpdateFromScrollbarHorzMsg(const Msg: {$ifdef FPC}TLMScroll{$else}TWMHScroll{$endif});
@@ -740,6 +741,17 @@ begin
   end;
 end;
 
+procedure TATListbox.UpdateClientSizes;
+begin
+  FClientWidth:= Width;
+  if FScrollbar.Visible then
+    FClientWidth:= Max(0, FClientWidth-FScrollbar.Width);
+
+  FClientHeight:= Height;
+  if FScrollbarHorz.Visible then
+    FClientHeight:= Max(0, FClientHeight-FScrollbarHorz.Height);
+end;
+
 procedure TATListbox.Paint;
 var
   R: TRect;
@@ -755,13 +767,7 @@ begin
   UpdateItemHeight;
   UpdateColumnWidths;
   UpdateScrollbars(C);
-
-  ClientWidth:= Width;
-  ClientHeight:= Height;
-  if FScrollbar.Visible then
-    ClientWidth:= Max(0, ClientWidth-FScrollbar.Width);
-  if FScrollbarHorz.Visible then
-    ClientHeight:= Max(0, ClientHeight-FScrollbarHorz.Height);
+  UpdateClientSizes;
 
   R:= Rect(0, 0, ClientWidth, ClientHeight);
   if DoubleBuffered then
@@ -937,7 +943,8 @@ begin
   if not IsIndexValid(AValue) then Exit;
   FItemIndex:= AValue;
 
-  UpdateItemHeight; //needed, ItemHeight may be not calculated yet
+  UpdateItemHeight; //ItemHeight may be not inited
+  UpdateClientSizes; //ClientHeight may be not inited
 
   //scroll if needed
   if FItemIndex=0 then

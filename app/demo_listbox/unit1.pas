@@ -93,6 +93,7 @@ begin
   list.OwnerDrawn:= true;
   list.Color:= $e0e0e0;
   list.VirtualItemCount:= 21;
+  list.ItemIndex:= 20;
 
   list.Items.AddObject('real item first', TATListboxItemProp.Create(0, true, ''));
   list.Items.Add('real item 1');
