@@ -500,6 +500,8 @@ begin
     r.Bottom:= FItemHeight;
     r.Left:= 0;
     r.Right:= ClientWidth;
+
+    C.Font.Style:= [];
     DoDefaultDrawItem(C, -1, r);
 
     C.Pen.Color:= FTheme^.ColorSeparators;
