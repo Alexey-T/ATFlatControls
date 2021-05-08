@@ -624,7 +624,7 @@ begin
   //set width of auto-sized columns
   for i:= 0 to High(FColumnSizes) do
     if FColumnSizes[i]=0 then
-      FColumnWidths[i]:= Max(0, NTotalWidthEx-NFixedSize) div NAutoSized;
+      FColumnWidths[i]:= Max(0, NTotalWidth-NFixedSize) div NAutoSized;
 end;
 
 procedure TATListbox.SetShowOsBarVert(AValue: boolean);
