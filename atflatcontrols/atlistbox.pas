@@ -588,16 +588,24 @@ end;
 
 procedure TATListbox.UpdateColumnWidths;
 var
-  NTotalWidth, NAutoSized, NSize, NFixedSize, i: integer;
+  NTotalWidth, NTotalWidthEx,
+  NAutoSized,
+  NSize, NFixedSize, i: integer;
 begin
   NTotalWidth:= ClientWidth;
+  NTotalWidthEx:= NTotalWidth;
   NAutoSized:= 0;
   NFixedSize:= 0;
 
   SetLength(FColumnWidths, Length(FColumnSizes));
 
+  for i:= 0 to High(FColumnSizes) do
+    if FColumnSizes[i]>0 then
+      Dec(NTotalWidthEx, FColumnSizes[i]);
+  NTotalWidthEx:= Max(0, NTotalWidthEx);
+
   //set width of fixed columns
-  for i:= 0 to Length(FColumnSizes)-1 do
+  for i:= 0 to High(FColumnSizes) do
   begin
     NSize:= FColumnSizes[i];
 
@@ -607,18 +615,16 @@ begin
     else
     //in percents?
     if NSize<0 then
-      NSize:= NTotalWidth * -NSize div 100;
+      NSize:= NTotalWidthEx * -NSize div 100;
 
     Inc(NFixedSize, NSize);
     FColumnWidths[i]:= NSize;
   end;
 
   //set width of auto-sized columns
-  for i:= 0 to Length(FColumnSizes)-1 do
-  begin
+  for i:= 0 to High(FColumnSizes) do
     if FColumnSizes[i]=0 then
-      FColumnWidths[i]:= Max(0, NTotalWidth-NFixedSize) div NAutoSized;
-  end;
+      FColumnWidths[i]:= Max(0, NTotalWidthEx-NFixedSize) div NAutoSized;
 end;
 
 procedure TATListbox.SetShowOsBarVert(AValue: boolean);
