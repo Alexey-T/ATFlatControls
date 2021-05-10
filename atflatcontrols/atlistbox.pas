@@ -78,6 +78,7 @@ type
     FHeaderImages: TImageList;
     FScrollHorz: integer;
     FBitmap: Graphics.TBitmap;
+    FBorderStyle: TBorderStyle;
     FCanGetFocus: boolean;
     FList: TStringList;
     FHotTrack: boolean;
@@ -203,7 +204,7 @@ type
     property Align;
     property Anchors;
     {$ifdef FPC}
-    property BorderStyle;
+    property BorderStyle read FBorderStyle write FBorderStyle default bsNone;
     property BorderSpacing;
     {$endif}
     property CanGetFocus: boolean read FCanGetFocus write SetCanBeFocused default false;
@@ -546,6 +547,15 @@ begin
       RectX:= Rect(r.Left, r.Top, r.Left+FIndentForX, r.Bottom);
       DoPaintX(C, RectX, bCircle and (Index<>FHotTrackIndex));
     end;
+  end;
+
+  if FBorderStyle=bsSingle then
+  begin
+    if Focused then
+      C.Pen.Color:= FTheme^.ColorBorderFocused
+    else
+      C.Pen.Color:= FTheme^.ColorBorderPassive;
+    C.Rectangle(0, 0, ClientWidth, ClientHeight);
   end;
 end;
 
@@ -1003,6 +1013,7 @@ begin
   Font.Size:= 9;
 
   CanGetFocus:= false;
+  FBorderStyle:= bsNone;
   FList:= TStringList.Create;
   FVirtualItemCount:= 0;
   FItemIndex:= 0;
