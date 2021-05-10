@@ -16,6 +16,7 @@ type
 
   TfmMain = class(TForm)
     ButtonGoto: TButton;
+    chkColumns: TCheckBox;
     chkDoubleSize: TCheckBox;
     chkHotTrack: TCheckBox;
     chkVirtual: TCheckBox;
@@ -24,6 +25,8 @@ type
     comboScrollHorz: TComboBox;
     comboScrollVert: TComboBox;
     ComboShowX: TComboBox;
+    edHeader: TEdit;
+    ImageList1: TImageList;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
@@ -32,6 +35,7 @@ type
     PopupMenu1: TPopupMenu;
     TrackScale: TTrackBar;
     procedure ButtonGotoClick(Sender: TObject);
+    procedure chkColumnsChange(Sender: TObject);
     procedure chkDoubleSizeChange(Sender: TObject);
     procedure chkHotTrackChange(Sender: TObject);
     procedure chkOwnerDrawnChange(Sender: TObject);
@@ -40,6 +44,7 @@ type
     procedure comboScrollVertChange(Sender: TObject);
     procedure comboScrollHorzChange(Sender: TObject);
     procedure ComboShowXChange(Sender: TObject);
+    procedure edHeaderChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MenuItem1Click(Sender: TObject);
     procedure TrackScaleChange(Sender: TObject);
@@ -49,6 +54,7 @@ type
     { private declarations }
     procedure ListDraw(Sender: TObject; C: TCanvas; AIndex: integer; const ARect: TRect);
     procedure ListClick(Sender: TObject);
+    procedure ListClickHeader(Sender: TObject; AColumn: integer);
     procedure ListDblClick(Sender: TObject);
     procedure ListChSel(Sender: TObject);
   public
@@ -74,10 +80,12 @@ begin
   list.Align:= alClient;
   list.CanGetFocus:= true;
   list.PopupMenu:= PopupMenu1;
+  list.HeaderImages:= ImageList1;
 
   list.OnDrawItem:= @ListDraw;
   list.OnClick:= @ListClick;
   list.OnClickXMark:=@ListClickX;
+  list.OnClickHeader:= @ListClickHeader;
   list.OnDblClick:= @ListDblClick;
   list.OnChangedSel:= @ListChSel;
   list.OnCalcScrollWidth:=@ListCalcScrollWidth;
@@ -85,6 +93,7 @@ begin
   list.OwnerDrawn:= true;
   list.Color:= $e0e0e0;
   list.VirtualItemCount:= 21;
+  list.ItemIndex:= 20;
 
   list.Items.AddObject('real item first', TATListboxItemProp.Create(0, true, ''));
   list.Items.Add('real item 1');
@@ -108,7 +117,7 @@ end;
 
 function TfmMain.ListCalcScrollWidth(Sender: TObject; C: TCanvas): integer;
 begin
-  Result:= 300;
+  Result:= list.Width-1;
 end;
 
 procedure TfmMain.chkThemedScrollChange(Sender: TObject);
@@ -137,6 +146,12 @@ end;
 procedure TfmMain.ComboShowXChange(Sender: TObject);
 begin
   List.ShowXMark:= TATListboxShowX(ComboShowX.ItemIndex);
+  List.Invalidate;
+end;
+
+procedure TfmMain.edHeaderChange(Sender: TObject);
+begin
+  List.HeaderText:= edHeader.Text;
   List.Invalidate;
 end;
 
@@ -173,6 +188,22 @@ begin
     List.ItemIndex:= N;
 end;
 
+procedure TfmMain.chkColumnsChange(Sender: TObject);
+begin
+  if chkColumns.Checked then
+  begin
+    list.ColumnSizes:= [-50,-20,0];
+    list.HeaderImageIndexes:= [-1,0,1];
+  end
+  else
+  begin
+    list.ColumnSizes:= [];
+    list.HeaderImageIndexes:= [];
+  end;
+  list.ColumnSeparator:= '|';
+  list.Invalidate;
+end;
+
 procedure TfmMain.ListDraw(Sender: TObject; C: TCanvas; AIndex: integer;
   const ARect: TRect);
 var
@@ -202,8 +233,19 @@ begin
 end;
 
 procedure TfmMain.ListClick(Sender: TObject);
+var
+  Pnt: TPoint;
+  N: integer;
 begin
-  Caption:= 'Clicked item: '+IntToStr(list.ItemIndex);
+  Pnt:= list.ScreenToClient(Mouse.CursorPos);
+  N:= list.GetItemIndexAt(Pnt);
+  if N>=0 then
+    Caption:= 'Clicked item: '+IntToStr(N);
+end;
+
+procedure TfmMain.ListClickHeader(Sender: TObject; AColumn: integer);
+begin
+  Caption:= 'Clicked header column: '+IntToStr(AColumn);
 end;
 
 procedure TfmMain.ListClickX(Sender: TObject);

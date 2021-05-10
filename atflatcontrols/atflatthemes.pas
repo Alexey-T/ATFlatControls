@@ -43,6 +43,7 @@ type
     ColorBgListbox: TColor;
     ColorBgListboxSel: TColor;
     ColorBgListboxHottrack: TColor;
+    ColorBgListboxHeader: TColor;
     ColorBgOverlay: TColor;
     ColorArrows: TColor;
     ColorArrowsOver: TColor;
@@ -114,6 +115,7 @@ initialization
     ColorBgListbox:= ColorBgPassive;
     ColorBgListboxSel:= clMedGray;
     ColorBgListboxHottrack:= clMoneyGreen;
+    ColorBgListboxHeader:= $80aa80;
     ColorBgOverlay:= clRed;
     ColorArrows:= clGray;
     ColorArrowsOver:= clBlue;

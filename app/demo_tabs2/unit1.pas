@@ -66,6 +66,8 @@ begin
   t.Parent:= Self;
   t.Align:= alTop;
 
+  t.ColorBg:= clSkyBlue;
+  t.ColorBorderActive:= clYellow;
   t.OptSpaceSide:= 0;
   t.OptMouseDragEnabled:= true;
   t.DragMode:= dmAutomatic;

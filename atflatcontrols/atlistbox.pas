@@ -26,6 +26,7 @@ uses
 type
   TATListboxDrawItemEvent = procedure(Sender: TObject; C: TCanvas; AIndex: integer; const ARect: TRect) of object;
   TATListboxCalcWidth = function (Sender: TObject; C: TCanvas): integer of object;
+  TATListboxClickHeaderEvent = procedure(Sender: TObject; AColumn: integer) of object;
 
 type
   TATIntArray = array of integer;
@@ -74,6 +75,7 @@ type
     FItemHeight: integer;
     FItemHeightIsFixed: boolean;
     FItemTop: integer;
+    FHeaderImages: TImageList;
     FScrollHorz: integer;
     FBitmap: Graphics.TBitmap;
     FCanGetFocus: boolean;
@@ -86,11 +88,17 @@ type
     FColumnSep: char;
     FColumnSizes: TATIntArray;
     FColumnWidths: TATIntArray;
+    FHeaderImageIndexes: TATIntArray;
+    FHeaderText: string;
+    FClientOriginY: integer;
+    FClientWidth: integer;
+    FClientHeight: integer;
     FShowX: TATListboxShowX;
     FMaxWidth: integer;
     FOnDrawItem: TATListboxDrawItemEvent;
     FOnCalcScrollWidth: TATListboxCalcWidth;
     FOnClickX: TNotifyEvent;
+    FOnClickHeader: TATListboxClickHeaderEvent;
     FOnChangeSel: TNotifyEvent;
     FOnScroll: TNotifyEvent;
     FShowOsBarVert: boolean;
@@ -99,8 +107,9 @@ type
     procedure SetShowOsBarHorz(AValue: boolean);
     property ShowOsBarVert: boolean read FShowOsBarVert write SetShowOsBarVert;
     property ShowOsBarHorz: boolean read FShowOsBarHorz write SetShowOsBarHorz;
+    function ShowColumns: boolean;
     procedure DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
-    procedure DoPaintTo(C: TCanvas; r: TRect);
+    procedure DoPaintTo(C: TCanvas);
     procedure DoPaintX(C: TCanvas; const R: TRect; ACircle: boolean);
     function GetMaxWidth(C: TCanvas): integer;
     function GetOnDrawScrollbar: TATScrollbarDrawEvent;
@@ -116,6 +125,7 @@ type
     procedure SetItemTop(AValue: integer);
     procedure SetItemHeight(AValue: integer);
     procedure SetThemedScrollbar(AValue: boolean);
+    procedure UpdateClientSizes;
     procedure UpdateColumnWidths;
     procedure UpdateFromScrollbarMsg(const Msg: {$ifdef FPC}TLMScroll{$else}TWMVScroll{$endif});
     procedure UpdateFromScrollbarHorzMsg(const Msg: {$ifdef FPC}TLMScroll{$else}TWMHScroll{$endif});
@@ -164,11 +174,14 @@ type
     property ItemHeightDefault: integer read GetItemHeightDefault;
     function ItemCount: integer;
     function IsIndexValid(AValue: integer): boolean;
+    property ClientWidth: integer read FClientWidth write FClientWidth;
+    property ClientHeight: integer read FClientHeight write FClientHeight;
     property ScrollHorz: integer read FScrollHorz write SetScrollHorz;
     property HotTrackIndex: integer read FHotTrackIndex;
     property VirtualItemCount: integer read FVirtualItemCount write SetVirtualItemCount;
     property VisibleItems: integer read GetVisibleItems;
     function GetItemIndexAt(Pnt: TPoint): integer;
+    function GetColumnIndexAt(Pnt: TPoint): integer;
     property Theme: PATFlatTheme read FTheme write FTheme;
     property ThemedScrollbar: boolean read FThemedScrollbar write SetThemedScrollbar;
     property ThemedFont: boolean read FThemedFont write FThemedFont;
@@ -177,12 +190,13 @@ type
     property ColumnSeparator: char read FColumnSep write FColumnSep;
     property ColumnSizes: TATIntArray read FColumnSizes write FColumnSizes;
     property ColumnWidth[AIndex: integer]: integer read GetColumnWidth;
+    property HeaderText: string read FHeaderText write FHeaderText;
+    property HeaderImages: TImageList read FHeaderImages write FHeaderImages;
+    property HeaderImageIndexes: TATIntArray read FHeaderImageIndexes write FHeaderImageIndexes;
     {$ifdef FPC}
     function CanFocus: boolean; override;
     function CanSetFocus: boolean; override;
     {$endif}
-    function ClientHeight: integer;
-    function ClientWidth: integer;
     procedure Invalidate; override;
     procedure UpdateItemHeight;
   published
@@ -212,6 +226,7 @@ type
     property Visible;
     property OnClick;
     property OnClickXMark: TNotifyEvent read FOnClickX write FOnClickX;
+    property OnClickHeader: TATListboxClickHeaderEvent read FOnClickHeader write FOnClickHeader;
     property OnDblClick;
     property OnContextPopup;
     property OnChangedSel: TNotifyEvent read FOnChangeSel write FOnChangeSel;
@@ -301,7 +316,7 @@ end;
 
 function TATListbox.GetVisibleItems: integer;
 begin
-  Result:= ClientHeight div FItemHeight;
+  Result:= (ClientHeight-FClientOriginY) div FItemHeight;
 end;
 
 function TATListbox.IsIndexValid(AValue: integer): boolean;
@@ -351,12 +366,19 @@ begin
   begin
     if Assigned(FOnCalcScrollWidth) then
       Result:= FOnCalcScrollWidth(Self, C);
-    exit;
+  end
+  else
+  if ShowColumns then
+  begin
+    for i:= 0 to High(FColumnWidths) do
+      Inc(Result, FColumnWidths[i]);
+  end
+  else
+  begin
+    for i:= 0 to ItemCount-1 do
+      Result:= Max(Result, C.TextWidth(Items[i]));
+    Inc(Result, FIndentLeft+2);
   end;
-
-  for i:= 0 to ItemCount-1 do
-    Result:= Max(Result, C.TextWidth(Items[i]));
-  Inc(Result, FIndentLeft+2);
 end;
 
 procedure TATListbox.UpdateScrollbars(C: TCanvas);
@@ -451,25 +473,45 @@ begin
 end;
 
 
-procedure TATListbox.DoPaintTo(C: TCanvas; r: TRect);
+procedure TATListbox.DoPaintTo(C: TCanvas);
 var
   Index: integer;
   bPaintX, bCircle: boolean;
-  RectX: TRect;
+  R, RectX: TRect;
 begin
   C.Font.Name:= CurrentFontName;
   C.Font.Size:= FTheme^.DoScaleFont(CurrentFontSize);
 
   C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListbox);
-  C.FillRect(r);
+  C.FillRect(0, 0, ClientWidth, ClientHeight);
+
+  if FHeaderText<>'' then
+    FClientOriginY:= FItemHeight
+  else
+    FClientOriginY:= 0;
 
   FIndentForX:= 0;
   if FShowX<>albsxNone then
     Inc(FIndentForX, FTheme^.DoScale(FTheme^.XMarkWidth));
 
+  if FHeaderText<>'' then
+  begin
+    r.Top:= 0;
+    r.Bottom:= FItemHeight;
+    r.Left:= 0;
+    r.Right:= ClientWidth;
+
+    C.Font.Style:= [];
+    DoDefaultDrawItem(C, -1, r);
+
+    C.Pen.Color:= FTheme^.ColorSeparators;
+    C.MoveTo(0, FItemHeight-1);
+    C.LineTo(ClientWidth, FItemHeight-1);
+  end;
+
   for Index:= FItemTop to ItemCount-1 do
   begin
-    r.Top:= (Index-FItemTop)*FItemHeight;
+    r.Top:= (Index-FItemTop)*FItemHeight + FClientOriginY;
     r.Bottom:= r.Top+FItemHeight;
     r.Left:= 0;
     r.Right:= ClientWidth;
@@ -548,16 +590,24 @@ end;
 
 procedure TATListbox.UpdateColumnWidths;
 var
-  NTotalWidth, NAutoSized, NSize, NFixedSize, i: integer;
+  NTotalWidth, NTotalWidthEx,
+  NAutoSized,
+  NSize, NFixedSize, i: integer;
 begin
   NTotalWidth:= ClientWidth;
+  NTotalWidthEx:= NTotalWidth;
   NAutoSized:= 0;
   NFixedSize:= 0;
 
   SetLength(FColumnWidths, Length(FColumnSizes));
 
+  for i:= 0 to High(FColumnSizes) do
+    if FColumnSizes[i]>0 then
+      Dec(NTotalWidthEx, FColumnSizes[i]);
+  NTotalWidthEx:= Max(0, NTotalWidthEx);
+
   //set width of fixed columns
-  for i:= 0 to Length(FColumnSizes)-1 do
+  for i:= 0 to High(FColumnSizes) do
   begin
     NSize:= FColumnSizes[i];
 
@@ -567,18 +617,16 @@ begin
     else
     //in percents?
     if NSize<0 then
-      NSize:= NTotalWidth * -NSize div 100;
+      NSize:= NTotalWidthEx * -NSize div 100;
 
     Inc(NFixedSize, NSize);
     FColumnWidths[i]:= NSize;
   end;
 
   //set width of auto-sized columns
-  for i:= 0 to Length(FColumnSizes)-1 do
-  begin
+  for i:= 0 to High(FColumnSizes) do
     if FColumnSizes[i]=0 then
       FColumnWidths[i]:= Max(0, NTotalWidth-NFixedSize) div NAutoSized;
-  end;
 end;
 
 procedure TATListbox.SetShowOsBarVert(AValue: boolean);
@@ -595,13 +643,25 @@ begin
   ShowScrollBar(Handle, SB_Horz, AValue);
 end;
 
+function TATListbox.ShowColumns: boolean;
+begin
+  Result:= Length(FColumnSizes)>0;
+end;
+
 procedure TATListbox.DoDefaultDrawItem(C: TCanvas; AIndex: integer; R: TRect);
+//AIndex=-1 means 'paint header'
 var
   Sep: TATStringSeparator;
   SLine, SItem: string;
-  NIndentLeft,
+  NIndentLeft, NIndentTop, NLineHeight, NIndentText,
   NColOffset, NColWidth, NAllWidth, i: integer;
 begin
+  if AIndex=-1 then
+  begin
+    C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListboxHeader);
+    C.Font.Color:= ColorToRGB(FTheme^.ColorFontListbox);
+  end
+  else
   if AIndex=FItemIndex then
   begin
     C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListboxSel);
@@ -620,18 +680,23 @@ begin
   end;
   C.FillRect(R);
 
+  if AIndex=-1 then
+    SLine:= FHeaderText
+  else
   if (AIndex>=0) and (AIndex<FList.Count) then
     SLine:= FList[AIndex]
   else
     SLine:= '('+IntToStr(AIndex)+')';
 
   NIndentLeft:= FIndentLeft+FIndentForX;
+  NLineHeight:= C.TextHeight(SLine);
+  NIndentTop:= (FItemHeight-NLineHeight) div 2;
 
-  if Length(FColumnSizes)=0 then
+  if not ShowColumns then
   begin
     C.TextOut(
       R.Left+NIndentLeft-ScrollHorz,
-      R.Top+FIndentTop,
+      R.Top+NIndentTop,
       SLine);
   end
   else
@@ -646,15 +711,30 @@ begin
       NColWidth:= FColumnWidths[i];
       Sep.GetItemStr(SItem);
 
+      NIndentText:= NColOffset+1+IfThen(i=0, NIndentLeft);
+
       C.FillRect(
         Rect(NColOffset,
         R.Top,
         NAllWidth,
         R.Bottom)
         );
+
+      if AIndex=-1 then
+        if Assigned(FHeaderImages) and
+          (i<=High(FHeaderImageIndexes)) and
+          (FHeaderImageIndexes[i]>=0) then
+        begin
+          FHeaderImages.Draw(C,
+            NIndentText,
+            R.Top+(R.Height-FHeaderImages.Height) div 2,
+            FHeaderImageIndexes[i]);
+          Inc(NIndentText, FHeaderImages.Width);
+        end;
+
       C.TextOut(
-        NColOffset+1+IfThen(i=0, NIndentLeft),
-        R.Top+FIndentTop,
+        NIndentText,
+        R.Top+NIndentTop,
         SItem
         );
 
@@ -667,6 +747,17 @@ begin
       {$endif}
     end;
   end;
+end;
+
+procedure TATListbox.UpdateClientSizes;
+begin
+  FClientWidth:= Width;
+  if FScrollbar.Visible then
+    FClientWidth:= Max(0, FClientWidth-FScrollbar.Width);
+
+  FClientHeight:= Height;
+  if FScrollbarHorz.Visible then
+    FClientHeight:= Max(0, FClientHeight-FScrollbarHorz.Height);
 end;
 
 procedure TATListbox.Paint;
@@ -682,22 +773,24 @@ begin
     C:= Canvas;
 
   UpdateItemHeight;
-  UpdateScrollbars(C);
   UpdateColumnWidths;
+  UpdateScrollbars(C);
+  UpdateClientSizes;
 
   R:= Rect(0, 0, ClientWidth, ClientHeight);
   if DoubleBuffered then
   begin
-    DoPaintTo(C, R);
+    DoPaintTo(C);
     Canvas.CopyRect(R, C, R);
   end
   else
-    DoPaintTo(C, R);
+    DoPaintTo(C);
 end;
 
 procedure TATListbox.Click;
 var
   Pnt: TPoint;
+  NItem, NColumn: integer;
 begin
   if FCanGetFocus then
     {$ifdef FPC}
@@ -707,14 +800,26 @@ begin
     {$endif}
 
   Pnt:= ScreenToClient(Mouse.CursorPos);
+  NItem:= GetItemIndexAt(Pnt);
 
-  if FShowX<>albsxNone then
-    if Pnt.X<=FIndentForX then
-      if Assigned(FOnClickX) then
+  if NItem>=0 then
+    if FShowX<>albsxNone then
+      if Pnt.X<FIndentForX then
       begin
-        FOnClickX(Self);
+        if Assigned(FOnClickX) then
+          FOnClickX(Self);
         exit;
       end;
+
+  if NItem=-2 then
+  begin
+    if Assigned(FOnClickHeader) then
+    begin
+      NColumn:= GetColumnIndexAt(Pnt);
+      FOnClickHeader(Self, NColumn);
+    end;
+    exit;
+  end;
 
   inherited; //OnClick must be after ItemIndex set
 end;
@@ -731,10 +836,50 @@ begin
   Invalidate;
 end;
 
-function TATListbox.GetItemIndexAt(Pnt: TPoint): integer;
+function TATListbox.GetColumnIndexAt(Pnt: TPoint): integer;
+var
+  NSize, i: integer;
 begin
   Result:= -1;
+  NSize:= 0;
+
+  if ShowXMark<>albsxNone then
+  begin
+    NSize:= FIndentForX;
+    if Pnt.X<FIndentForX then
+    begin
+      Result:= -2;
+      exit;
+    end;
+  end;
+
+  if not ShowColumns then
+    exit;
+
+  for i:= 0 to High(FColumnWidths) do
+  begin
+    if Pnt.X<NSize+FColumnWidths[i] then
+    begin
+      Result:= i;
+      exit;
+    end;
+    Inc(NSize, FColumnWidths[i]);
+  end;
+end;
+
+function TATListbox.GetItemIndexAt(Pnt: TPoint): integer;
+begin
+  if FHeaderText<>'' then
+    if (Pnt.Y>=0) and (Pnt.Y<FItemHeight) then
+    begin
+      Result:= -2;
+      exit
+    end;
+
+  Result:= -1;
   if ItemCount=0 then exit;
+
+  Dec(Pnt.Y, FClientOriginY);
 
   if (Pnt.X>=0) and (Pnt.X<ClientWidth) then
   begin
@@ -806,7 +951,8 @@ begin
   if not IsIndexValid(AValue) then Exit;
   FItemIndex:= AValue;
 
-  UpdateItemHeight; //needed, ItemHeight may be not calculated yet
+  UpdateItemHeight; //ItemHeight may be not inited
+  UpdateClientSizes; //ClientHeight may be not inited
 
   //scroll if needed
   if FItemIndex=0 then
@@ -1036,20 +1182,6 @@ begin
   Result:= FCanGetFocus;
 end;
 {$endif}
-
-function TATListbox.ClientHeight: integer;
-begin
-  Result:= inherited ClientHeight;
-  if FScrollbarHorz.Visible then
-    Dec(Result, FScrollbarHorz.Height);
-end;
-
-function TATListbox.ClientWidth: integer;
-begin
-  Result:= inherited ClientWidth;
-  if FScrollbar.Visible then
-    Dec(Result, FScrollbar.Width);
-end;
 
 function TATListbox.CurrentFontName: string;
 begin

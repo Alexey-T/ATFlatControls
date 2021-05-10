@@ -651,7 +651,7 @@ begin
   else
     Data:= FItems.Insert(APanelIndex) as TATStatusData;
 
-  Data.Width:= AWidth;;
+  Data.Width:= AWidth;
   Data.Align:= AAlign;
   Data.Caption:= ACaption;
   Data.ColorFont:= AFontColor;
