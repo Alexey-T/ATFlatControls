@@ -552,10 +552,10 @@ begin
   if FBorderStyle=bsSingle then
   begin
     if Focused then
-      C.Pen.Color:= FTheme^.ColorBorderFocused
+      C.Brush.Color:= FTheme^.ColorBorderFocused
     else
-      C.Pen.Color:= FTheme^.ColorBorderPassive;
-    C.Rectangle(0, 0, ClientWidth, ClientHeight);
+      C.Brush.Color:= FTheme^.ColorBorderPassive;
+    C.FrameRect(0, 0, ClientWidth, ClientHeight);
   end;
 end;
 
