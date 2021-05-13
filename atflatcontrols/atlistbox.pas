@@ -78,7 +78,7 @@ type
     FHeaderImages: TImageList;
     FScrollHorz: integer;
     FBitmap: Graphics.TBitmap;
-    FBorderStyle: TBorderStyle;
+    FBorderVisible: boolean;
     FCanGetFocus: boolean;
     FList: TStringList;
     FHotTrack: boolean;
@@ -203,8 +203,9 @@ type
   published
     property Align;
     property Anchors;
+    property BorderVisible: boolean read FBorderVisible write FBorderVisible default false;
     {$ifdef FPC}
-    property BorderStyle read FBorderStyle write FBorderStyle default bsNone;
+    property BorderStyle;
     property BorderSpacing;
     {$endif}
     property CanGetFocus: boolean read FCanGetFocus write SetCanBeFocused default false;
@@ -549,12 +550,12 @@ begin
     end;
   end;
 
-  if FBorderStyle=bsSingle then
+  if FBorderVisible then
   begin
     if Focused then
-      C.Brush.Color:= FTheme^.ColorBorderFocused
+      C.Brush.Color:= FTheme^.ColorListboxBorderFocused
     else
-      C.Brush.Color:= FTheme^.ColorBorderPassive;
+      C.Brush.Color:= FTheme^.ColorListboxBorderPassive;
     C.FrameRect(0, 0, ClientWidth, ClientHeight);
   end;
 end;
@@ -1013,7 +1014,7 @@ begin
   Font.Size:= 9;
 
   CanGetFocus:= false;
-  FBorderStyle:= bsNone;
+  FBorderVisible:= false;
   FList:= TStringList.Create;
   FVirtualItemCount:= 0;
   FItemIndex:= 0;
