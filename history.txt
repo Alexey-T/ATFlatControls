@@ -1,4 +1,7 @@
 
+2021.05.13
++ ATListbox: prop BorderVisible (border inside the control; note that BorderStyle is border outside)
+
 2021.04.29
 + ATListbox: prop ColumnHeader
 + ATListbox: prop ColumnImageIndexes
