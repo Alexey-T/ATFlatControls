@@ -35,6 +35,7 @@ type
     ColorFontDisabled: TColor;
     ColorFontListbox: TColor;
     ColorFontListboxSel: TColor;
+    ColorFontListboxHeader: TColor;
     ColorFontOverlay: TColor;
     ColorBgPassive: TColor;
     ColorBgOver: TColor;
@@ -109,6 +110,7 @@ initialization
     ColorFontDisabled:= $808088;
     ColorFontListbox:= ColorFont;
     ColorFontListboxSel:= clWhite;
+    ColorFontListboxHeader:= ColorFont;
     ColorFontOverlay:= clWhite;
     ColorBgPassive:= $e0e0e0;
     ColorBgOver:= $90a080;

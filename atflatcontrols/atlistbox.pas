@@ -670,7 +670,7 @@ begin
   if AIndex=-1 then
   begin
     C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListboxHeader);
-    C.Font.Color:= ColorToRGB(FTheme^.ColorFontListbox);
+    C.Font.Color:= ColorToRGB(FTheme^.ColorFontListboxHeader);
   end
   else
   if AIndex=FItemIndex then
