@@ -187,6 +187,7 @@ type
 
 type
   TATTabActionOnClose = (
+    aocNone,
     aocDefault,
     aocRight,
     aocRecent
@@ -3391,6 +3392,8 @@ begin
       AAction:= FOptWhichActivateOnClose;
 
     case AAction of
+      aocNone:
+        begin end;
       aocRight:
         _ActivateRightTab;
       aocRecent:
