@@ -73,6 +73,7 @@ type
   private
     FTabCaption: TATTabString;
     FTabCaptionAddon: TATTabString;
+    FTabCaptionRect: TRect;
     FTabHint: TATTabString;
     FTabObject: TObject;
     FTabColor: TColor;
@@ -105,6 +106,7 @@ type
     constructor Create(ACollection: TCollection); override;
     destructor Destroy; override;
     property TabCaptionFull: TATTabString read GetTabCaptionFull;
+    property TabCaptionRect: TRect read FTabCaptionRect write FTabCaptionRect;
     property TabObject: TObject read FTabObject write FTabObject;
     property TabRect: TRect read FTabRect write FTabRect;
     property TabRectX: TRect read FTabRectX write FTabRectX;
@@ -1486,6 +1488,8 @@ begin
   NIndentL:= IfThen(not bNeedMoreSpace, DoScale(FOptSpaceBeforeText), 2);
   NIndentR:= IfThen(not bNeedMoreSpace, DoScale(FOptSpaceAfterText), 2) + IfThen(Assigned(Data) and Data.TabVisibleX, DoScale(FOptSpaceXRight));
   RectText:= Rect(AInfo.Rect.Left+NIndentL, AInfo.Rect.Top, AInfo.Rect.Right-NIndentR, AInfo.Rect.Bottom);
+  if Assigned(Data) then
+    Data.TabCaptionRect:= RectText;
 
   if not FThemed then
   if FOptShowFlat and FOptShowFlatSepar then
