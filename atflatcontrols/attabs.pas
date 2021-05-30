@@ -2410,7 +2410,7 @@ var
   RBottom: TRect;
   NLineX1, NLineY1, NLineX2, NLineY2: integer;
 begin
-  if FScrollingNeeded then exit;
+  if FOptMultiline and FScrollingNeeded then exit;
 
   case FOptPosition of
     atpTop:
