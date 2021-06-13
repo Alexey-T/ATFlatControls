@@ -485,7 +485,7 @@ begin
   C.Font.Size:= FTheme^.DoScaleFont(CurrentFontSize);
 
   C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListbox);
-  C.FillRect(0, 0, ClientWidth, ClientHeight);
+  C.FillRect(Rect(0, 0, ClientWidth, ClientHeight));
 
   if FHeaderText<>'' then
     FClientOriginY:= FItemHeight
@@ -556,7 +556,7 @@ begin
       C.Brush.Color:= FTheme^.ColorListboxBorderFocused
     else
       C.Brush.Color:= FTheme^.ColorListboxBorderPassive;
-    C.FrameRect(0, 0, ClientWidth, ClientHeight);
+    C.FrameRect(Rect(0, 0, ClientWidth, ClientHeight));
   end;
 end;
 
