@@ -129,7 +129,10 @@ initialization
     ColorBorderPassive:= $a0a0a0;
     ColorBorderOver:= $d0d0d0;
     ColorBorderFocused:= clNavy;
-    EnableColorBgOver:= true;
+
+    //LCL gives incorrect mouse-hover highlight for buttons,
+    //for CudaText Find dialog, on gtk2 and windows too
+    EnableColorBgOver:= false;
 
     ColoredLineWidth:= 4;
     MouseoverBorderWidth:= 1;
