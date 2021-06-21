@@ -125,13 +125,13 @@ type
     FIndentCorner: Integer;
     FTheme: PATScrollbarTheme;
 
-    FPos: Integer;
-    FMin: Integer;
-    FMax: Integer;
-    FSmallChange: Integer;
-    FLargeChange: Integer;
-    FPageSize: Integer;
-    FDeltaOfThumb: Integer;
+    FPos: Int64;
+    FMin: Int64;
+    FMax: Int64;
+    FSmallChange: Int64;
+    FLargeChange: Int64;
+    FPageSize: Int64;
+    FDeltaOfThumb: Int64;
 
     //internal
     FRectMain: TRect; //area for scrolling
@@ -189,10 +189,10 @@ type
 
     procedure TimerTimer(Sender: TObject);
     procedure SetKind(AValue: TScrollBarKind);
-    procedure SetPos(AValue: Integer);
-    procedure SetMin(Value: Integer);
-    procedure SetMax(Value: Integer);
-    procedure SetPageSize(Value: Integer);
+    procedure SetPos(AValue: Int64);
+    procedure SetMin(Value: Int64);
+    procedure SetMax(Value: Int64);
+    procedure SetPageSize(Value: Int64);
     function DoDrawEvent(AType: TATScrollbarElemType;
       ACanvas: TCanvas; const ARect: TRect): boolean;
   public
@@ -239,12 +239,12 @@ type
     property ShowHint;
     property Visible;
 
-    property Position: Integer read FPos write SetPos default 0;
-    property Min: Integer read FMin write SetMin default 0;
-    property Max: Integer read FMax write SetMax default 100;
-    property SmallChange: Integer read FSmallChange write FSmallChange default 1;
-    property LargeChange: Integer read FLargeChange write FLargeChange default 0;
-    property PageSize: Integer read FPageSize write SetPageSize default 20;
+    property Position: Int64 read FPos write SetPos default 0;
+    property Min: Int64 read FMin write SetMin default 0;
+    property Max: Int64 read FMax write SetMax default 100;
+    property SmallChange: Int64 read FSmallChange write FSmallChange default 1;
+    property LargeChange: Int64 read FLargeChange write FLargeChange default 0;
+    property PageSize: Int64 read FPageSize write SetPageSize default 20;
     property Kind: TScrollBarKind read FKind write SetKind default sbHorizontal;
     property IndentCorner: Integer read FIndentCorner write FIndentCorner default 0;
 
@@ -916,7 +916,7 @@ begin
 end;
 
 
-procedure TATScrollbar.SetMax(Value: Integer);
+procedure TATScrollbar.SetMax(Value: Int64);
 begin
   if FMax<>Value then
   begin
@@ -926,7 +926,7 @@ begin
   end;
 end;
 
-procedure TATScrollbar.SetMin(Value: Integer);
+procedure TATScrollbar.SetMin(Value: Int64);
 begin
   if FMin<>Value then
   begin
@@ -936,7 +936,7 @@ begin
   end;
 end;
 
-procedure TATScrollbar.SetPageSize(Value: Integer);
+procedure TATScrollbar.SetPageSize(Value: Int64);
 begin
   if FPageSize<>Value then
   begin
@@ -945,7 +945,7 @@ begin
   end;
 end;
 
-procedure TATScrollbar.SetPos(AValue: Integer);
+procedure TATScrollbar.SetPos(AValue: Int64);
 begin
   if AValue>FMax then
     AValue:= FMax;
