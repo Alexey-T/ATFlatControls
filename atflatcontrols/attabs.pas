@@ -2244,7 +2244,7 @@ var
   NLastIndex: integer;
   Data: TATTabData;
 begin
-  //if some last tabs are hidden, '+' tab mist consider that
+  //if some last tabs are hidden, '+' tab must consider that
   NLastIndex:= TabCount;
   repeat
     Dec(NLastIndex);
