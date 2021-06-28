@@ -541,7 +541,7 @@ procedure TATPages.Resize;
 begin
   inherited;
   if Assigned(FTabs) then
-    if FTabs.OptMultiline then
+    if (FTabs.OptPosition in [atpTop, atpBottom]) and FTabs.OptMultiline then
       FTabs.Constraints.MaxHeight:= Max(
         Height div 4 * 3, // max height is 3/4 of form height
         FTabs.OptTabHeight
