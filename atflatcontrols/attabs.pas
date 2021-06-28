@@ -2241,9 +2241,19 @@ end;
 
 procedure TATTabs.UpdateTabRectsSpecial;
 var
+  NLastIndex: integer;
   Data: TATTabData;
 begin
-  Data:= GetTabData(TabCount-1);
+  //if some last tabs are hidden, '+' tab mist consider that
+  NLastIndex:= TabCount;
+  repeat
+    Dec(NLastIndex);
+    if NLastIndex<0 then Break;
+    Data:= GetTabData(NLastIndex);
+    if Assigned(Data) and Data.TabVisible then Break;
+  until false;
+
+  Data:= GetTabData(NLastIndex);
   if Assigned(Data) then
   begin
     FRectTabLast_NotScrolled:= Data.TabRect;
