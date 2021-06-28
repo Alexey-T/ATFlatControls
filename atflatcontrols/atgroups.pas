@@ -297,6 +297,7 @@ type
     property SplitterPopupMenu: TMyPopupMenu read FSplitPopup;
     //
     property Mode: TATGroupsMode read FMode write SetMode;
+
     function GetTabTotalCount: Integer;
     function GetTabDataOfTotalIndex(N: Integer): TATTabData;
     function SetPagesAndTabIndex(APageIndex, ATabIndex: Integer): boolean;
@@ -339,6 +340,9 @@ function PtInControl(Control: TControl; const ScreenPnt: TPoint): boolean;
 procedure DoControlLock(Ctl: TWinControl);
 procedure DoControlUnlock(Ctl: TWinControl);
 }
+
+var
+  MaxTabsHeightPercentsForMultiline: Integer = 70;
 
 implementation
 
@@ -540,10 +544,11 @@ end;
 procedure TATPages.Resize;
 begin
   inherited;
+
   if Assigned(FTabs) then
     if (FTabs.OptPosition in [atpTop, atpBottom]) and FTabs.OptMultiline then
       FTabs.Constraints.MaxHeight:= Max(
-        Height div 4 * 3, // max height is 3/4 of form height
+        Height * MaxTabsHeightPercentsForMultiline div 100,
         FTabs.OptTabHeight
         );
 end;
