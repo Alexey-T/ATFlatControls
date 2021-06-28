@@ -2311,12 +2311,15 @@ begin
 end;
 
 procedure TATTabs.UpdateRectPlus(var R: TRect);
+var
+  bTabsVisible: boolean;
 begin
+  bTabsVisible:= GetTabLastVisibleIndex>=0;
   case FOptPosition of
     atpTop,
     atpBottom:
       begin
-        if TabCount>0 then
+        if bTabsVisible then
         begin
           R:= FRectTabLast_NotScrolled;
           if R=cRect0 then exit;
@@ -2333,7 +2336,7 @@ begin
       end;
     else
       begin
-        if TabCount>0 then
+        if bTabsVisible then
         begin
           R:= FRectTabLast_NotScrolled;
           if R=cRect0 then exit;
