@@ -2137,7 +2137,11 @@ begin
     begin
       Data:= GetTabData(i);
       if not Assigned(Data) then Continue;
-      if not Data.TabVisible then Continue;
+      if not Data.TabVisible then
+      begin
+        Data.TabRect:= cRect0;
+        Continue;
+      end;
 
       R.Top:= R.Bottom;
       if i>0 then
@@ -2276,8 +2280,10 @@ end;
 procedure TATTabs.UpdateTabRectsSpecial;
 var
   Data: TATTabData;
+  NIndex: integer;
 begin
-  Data:= GetTabData(GetTabLastVisibleIndex);
+  NIndex:= GetTabLastVisibleIndex;
+  Data:= GetTabData(NIndex);
   if Assigned(Data) then
   begin
     FRectTabLast_NotScrolled:= Data.TabRect;
