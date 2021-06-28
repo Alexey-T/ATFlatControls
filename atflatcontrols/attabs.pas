@@ -677,6 +677,7 @@ type
     function GetRectScrolled(const R: TRect): TRect;
     function GetTabAt(X, Y: integer; out APressedX: boolean): integer;
     function GetTabData(AIndex: integer): TATTabData;
+    function GetTabLastVisibleIndex: integer;
     function TabCount: integer;
     function AddTab(
       AIndex: integer;
@@ -2239,21 +2240,24 @@ begin
     FTabWidth:= NWidthSaved;
 end;
 
-procedure TATTabs.UpdateTabRectsSpecial;
+function TATTabs.GetTabLastVisibleIndex: integer;
 var
-  NLastIndex: integer;
   Data: TATTabData;
 begin
-  //if some last tabs are hidden, '+' tab must consider that
-  NLastIndex:= TabCount;
+  Result:= TabCount;
   repeat
-    Dec(NLastIndex);
-    if NLastIndex<0 then Break;
-    Data:= GetTabData(NLastIndex);
+    Dec(Result);
+    if Result<0 then Break;
+    Data:= GetTabData(Result);
     if Assigned(Data) and Data.TabVisible then Break;
   until false;
+end;
 
-  Data:= GetTabData(NLastIndex);
+procedure TATTabs.UpdateTabRectsSpecial;
+var
+  Data: TATTabData;
+begin
+  Data:= GetTabData(GetTabLastVisibleIndex);
   if Assigned(Data) then
   begin
     FRectTabLast_NotScrolled:= Data.TabRect;
