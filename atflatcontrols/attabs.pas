@@ -2907,6 +2907,7 @@ begin
   begin
     D:= GetTabData(i);
     if D=nil then Continue;
+    if not D.TabVisible then Continue;
 
     RectTab:= GetRectScrolled(D.TabRect);
     if RectTab=cRect0 then Continue;
