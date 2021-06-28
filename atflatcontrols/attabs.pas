@@ -616,6 +616,7 @@ type
     procedure DoPaintUserButtons(C: TCanvas; const AButtons: TATTabButtons; AtLeft: boolean);
     procedure DoPaintDropMark(C: TCanvas);
     procedure DoPaintScrollMark(C: TCanvas);
+    procedure GetTabFirstCoord(var R: TRect);
     function GetTabCaptionFinal(AData: TATTabData; ATabIndex: integer): TATTabString;
     function GetButtonsEdgeCoord(AtLeft: boolean): integer;
     function GetButtonsWidth(const B: TATTabButtons): integer;
@@ -2089,6 +2090,32 @@ begin
   end;
 end;
 
+procedure TATTabs.GetTabFirstCoord(var R: TRect);
+begin
+  if FOptPosition in [atpLeft, atpRight] then
+  begin
+    if FOptPosition=atpLeft then
+    begin
+      R.Left:= DoScale(FOptSpacer);
+      R.Right:= Width-DoScale(FOptSpacer2);
+    end
+    else
+    begin
+      R.Left:= DoScale(FOptSpacer2)+1;
+      R.Right:= Width-DoScale(FOptSpacer);
+    end;
+    R.Bottom:= GetInitialVerticalIndent;
+    R.Top:= R.Bottom;
+  end
+  else
+  begin
+    R.Left:= FRealIndentLeft+DoScale(FLastSpaceSide);
+    R.Right:= R.Left;
+    R.Top:= DoScale(FOptSpacer);
+    R.Bottom:= R.Top+DoScale(FOptTabHeight);
+  end;
+end;
+
 procedure TATTabs.UpdateTabRects(C: TCanvas);
 var
   TempCaption: TATTabString;
@@ -2101,14 +2128,11 @@ var
   bFitLastRow: boolean;
   i: integer;
 begin
+  GetTabFirstCoord(R);
+
   //left/right tabs
   if FOptPosition in [atpLeft, atpRight] then
   begin
-    R.Left:= IfThen(FOptPosition=atpLeft, DoScale(FOptSpacer), DoScale(FOptSpacer2)+1);
-    R.Right:= IfThen(FOptPosition=atpLeft, Width-DoScale(FOptSpacer2), Width-DoScale(FOptSpacer));
-    R.Bottom:= GetInitialVerticalIndent;
-    R.Top:= R.Bottom;
-
     for i:= 0 to TabCount-1 do
     begin
       Data:= GetTabData(i);
@@ -2148,10 +2172,6 @@ begin
     FTabWidth:= DoScale(FOptTabWidthNormal);
   NWidthSaved:= FTabWidth;
 
-  R.Left:= FRealIndentLeft+DoScale(FLastSpaceSide);
-  R.Right:= R.Left;
-  R.Top:= DoScale(FOptSpacer);
-  R.Bottom:= R.Top+DoScale(FOptTabHeight);
   NIndexLineStart:= 0;
 
   for i:= 0 to TabCount-1 do
