@@ -146,6 +146,7 @@ type
     procedure Paint; override;
     procedure Click; override;
     procedure Resize; override;
+    procedure DoExit; override;
     {$ifdef FPC}
     procedure LMVScroll(var Msg: TLMVScroll); message LM_VSCROLL;
     procedure LMHScroll(var Msg: TLMHScroll); message LM_HSCROLL;
@@ -845,6 +846,13 @@ begin
       BitmapResizeBySteps(FBitmap, Width, Height);
 
   Invalidate;
+end;
+
+procedure TATListbox.DoExit;
+begin
+  inherited;
+  if FBorderVisible then
+    Invalidate;
 end;
 
 function TATListbox.GetColumnIndexAt(Pnt: TPoint): integer;
