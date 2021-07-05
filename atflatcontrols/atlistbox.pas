@@ -785,9 +785,9 @@ begin
     C:= Canvas;
 
   UpdateItemHeight;
-  UpdateColumnWidths;
   UpdateScrollbars(C);
   UpdateClientSizes;
+  UpdateColumnWidths;
 
   R:= Rect(0, 0, ClientWidth, ClientHeight);
   if DoubleBuffered then
