@@ -53,6 +53,7 @@ uses StrUtils, Math;
 procedure TForm1.FormCreate(Sender: TObject);
 var
   D: TATStatusData;
+  i: integer;
 begin
   t:= TATStatus.Create(Self);
   t.Parent:= Self;
@@ -64,6 +65,7 @@ begin
   t.ColorBorderR:= clRed;
   t.ColorBorderU:= clYellow;
   t.ColorBorderD:= clRed;
+  t.Color:= clGreen;
 
   t.AddPanel(-1, 100, taLeftJustify, 'Left', 0);//, 0, true);
   t.AddPanel(-1, 100, taCenter, 'Center', 1);//, 0, true);
@@ -72,6 +74,9 @@ begin
   t.AddPanel(-1, 80, taLeftJustify, '', 0);
   t.AddPanel(-1, 80, taCenter, '', 0);
   t.AddPanel(-1, 80, taRightJustify, '', 0);
+
+  for i:= 0 to t.PanelCount-1 do
+    (t.Panels.Items[i] as TATStatusData).ColorBack:= clCream;
 
   //-----------------------------------
   t0:= TATStatus.Create(Self);

@@ -322,7 +322,7 @@ end;
 procedure TATStatus.DoPaintPanelTo(C: TCanvas; ARect: TRect;
   AData: TATStatusData; AMouseOver: boolean);
 var
-  RectText: TRect;
+  RectBg, RectText: TRect;
   PosIcon: TPoint;
   TextSize: TSize;
   NOffsetLeft, NPad: integer;
@@ -342,8 +342,11 @@ begin
     else
       NColor:= ColorToRGB(Color);
   end;
+
+  RectBg:= ARect;
+  Inc(RectBg.Right); //to fill the right border filled with Color
   C.Brush.Color:= NColor;
-  C.FillRect(ARect);
+  C.FillRect(RectBg);
 
   NPad:= Theme^.DoScale(FPadding);
   RectText:= Rect(ARect.Left+NPad, ARect.Top, ARect.Right-NPad, ARect.Bottom);
