@@ -1,4 +1,7 @@
 
+2021.07.05
++ ATStatus: prop SeparatorString (painted between cells)
+
 2021.06.28
 - ATTabs: fixed lot of issues for hidden tabs (Data.TabVisible=False)
 + ATGroups: added global var MaxTabsHeightPercentsForMultiline=70, fixed its work for left/right tabs

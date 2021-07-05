@@ -108,6 +108,7 @@ type
     FBitmap: TBitmap;
     FImages: TImageList;
     FTheme: PATFlatTheme;
+    FSeparatorString: string;
 
     FOnPanelClick: TATStatusClickEvent;
     FOnPanelDrawBefore: TATStatusDrawEvent;
@@ -152,6 +153,7 @@ type
     procedure DoPanelAutoWidth(C: TCanvas; AIndex: integer);
     function FindPanel(ATag: IntPtr): integer;
     property HeightInitial: integer read FHeightInitial write FHeightInitial;
+    property SeparatorString: string read FSeparatorString write FSeparatorString;
     procedure Invalidate; override;
   protected
     procedure Paint; override;
@@ -273,6 +275,7 @@ begin
 
   FItems:= TCollection.Create(TATStatusData);
   FPrevPanelMouseOver:= -1;
+  FSeparatorString:= '';
 end;
 
 destructor TATStatus.Destroy;
@@ -390,6 +393,8 @@ begin
       nil);
   end;
 
+ if FSeparatorString='' then
+ begin
   if FColorBorderR<>clNone then
   begin
     C.Pen.Color:= ColorToRGB(FColorBorderR);
@@ -417,6 +422,7 @@ begin
     C.MoveTo(ARect.Left, ARect.Bottom-1);
     C.LineTo(ARect.Right, ARect.Bottom-1);
   end;  
+ end;
 
   if AData.ColorLine<>clNone then
   begin
@@ -507,6 +513,7 @@ var
   D: TATStatusData;
   PntMouse: TPoint;
   bHottrackUsed, bHottrack: boolean;
+  Size: Types.TSize;
   i: integer;
 begin
   C.Brush.Color:= ColorToRGB(Color);
@@ -547,7 +554,18 @@ begin
       bHottrack:= bHottrackUsed and D.HotTrack and PtInRect(PanelRect, PntMouse);
       DoPaintPanelTo(C, PanelRect, D, bHottrack);
       DoDrawAfter(i, C, PanelRect);
-    end;  
+    end;
+
+    if FSeparatorString<>'' then
+      if i>0 then
+      begin
+        Size:= C.TextExtent(FSeparatorString);
+        C.Font.Color:= FTheme^.ColorFontDisabled;
+        C.TextOut(
+          PanelRect.Left-Size.cx div 2,
+          (PanelRect.Top+PanelRect.Bottom - Size.cy) div 2,
+          FSeparatorString);
+      end;
   end;
 
   C.Pen.Color:= ColorToRGB(FColorBorderTop);
