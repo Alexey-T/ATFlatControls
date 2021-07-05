@@ -561,10 +561,12 @@ begin
       begin
         Size:= C.TextExtent(FSeparatorString);
         C.Font.Color:= FTheme^.ColorFontDisabled;
+        C.Brush.Style:= bsClear;
         C.TextOut(
           PanelRect.Left-Size.cx div 2,
           (PanelRect.Top+PanelRect.Bottom - Size.cy) div 2,
           FSeparatorString);
+        C.Brush.Style:= bsSolid;
       end;
   end;
 

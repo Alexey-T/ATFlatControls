@@ -17,12 +17,15 @@ type
     bDel: TButton;
     btnColor: TColorButton;
     Edit1: TEdit;
+    edSep: TEdit;
     ImageList1: TImageList;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
+    Label4: TLabel;
     TrackScale: TTrackBar;
     procedure btnColorColorChanged(Sender: TObject);
+    procedure edSepChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bAddClick(Sender: TObject);
     procedure bDelClick(Sender: TObject);
@@ -123,6 +126,12 @@ begin
   D.ColorLine2:= btnColor.ButtonColor;
   Inc(NShowCount);
   D.OverlayText:= IntToStr(NShowCount);
+  t.Invalidate;
+end;
+
+procedure TForm1.edSepChange(Sender: TObject);
+begin
+  t.SeparatorString:= edSep.Text;
   t.Invalidate;
 end;
 
