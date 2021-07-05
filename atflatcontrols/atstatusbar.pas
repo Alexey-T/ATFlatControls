@@ -565,8 +565,8 @@ begin
         C.Font.Color:= FTheme^.ColorFontDisabled;
         C.Brush.Style:= bsClear;
         C.TextOut(
-          PanelRect.Left-Size.cx div 2,
-          (PanelRect.Top+PanelRect.Bottom - Size.cy) div 2,
+          PanelRect.Left - Size.cx div 2 - 1,
+          (PanelRect.Top + PanelRect.Bottom - Size.cy) div 2,
           FSeparatorString);
         C.Brush.Style:= bsSolid;
       end;
