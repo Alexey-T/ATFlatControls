@@ -60,6 +60,11 @@ begin
   t.OnPanelClick:= StatusClick;
   t.OnPanelDrawAfter:= StatusDraw;
 
+  t.ColorBorderL:= clYellow;
+  t.ColorBorderR:= clRed;
+  t.ColorBorderU:= clYellow;
+  t.ColorBorderD:= clRed;
+
   t.AddPanel(-1, 100, taLeftJustify, 'Left', 0);//, 0, true);
   t.AddPanel(-1, 100, taCenter, 'Center', 1);//, 0, true);
   t.AddPanel(-1, 150, taLeftJustify, 'Long wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww');//, -1, 0, true);

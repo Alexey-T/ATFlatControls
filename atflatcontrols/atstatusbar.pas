@@ -393,8 +393,7 @@ begin
       nil);
   end;
 
- if FSeparatorString='' then
- begin
+  if FSeparatorString='' then
   if FColorBorderR<>clNone then
   begin
     C.Pen.Color:= ColorToRGB(FColorBorderR);
@@ -402,6 +401,7 @@ begin
     C.LineTo(ARect.Right, ARect.Bottom);
   end;
 
+  if FSeparatorString='' then
   if FColorBorderL<>clNone then
   begin
     C.Pen.Color:= ColorToRGB(FColorBorderL);
@@ -422,7 +422,6 @@ begin
     C.MoveTo(ARect.Left, ARect.Bottom-1);
     C.LineTo(ARect.Right, ARect.Bottom-1);
   end;  
- end;
 
   if AData.ColorLine<>clNone then
   begin
