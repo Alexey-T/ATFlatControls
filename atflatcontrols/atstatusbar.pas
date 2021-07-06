@@ -110,7 +110,7 @@ type
     FImages: TImageList;
     FTheme: PATFlatTheme;
     FSeparatorString: string;
-    FAlignRight: boolean;
+    FOverflowLeft: boolean;
 
     FOnPanelClick: TATStatusClickEvent;
     FOnPanelDrawBefore: TATStatusDrawEvent;
@@ -157,7 +157,7 @@ type
     function FindPanel(ATag: IntPtr): integer;
     property HeightInitial: integer read FHeightInitial write FHeightInitial;
     property SeparatorString: string read FSeparatorString write FSeparatorString;
-    property AlignRight: boolean read FAlignRight write FAlignRight;
+    property OverflowLeft: boolean read FOverflowLeft write FOverflowLeft;
   protected
     procedure Paint; override;
     procedure Resize; override;
@@ -562,7 +562,7 @@ begin
     end;
   end;
 
-  if FAlignRight and not bHasAutoStretch then
+  if FOverflowLeft and not bHasAutoStretch then
   begin
     for i:= 0 to PanelCount-1 do
     begin
