@@ -94,6 +94,7 @@ type
   TATStatus = class(TCustomControl)
   private
     FColorBorderTop: TColor;
+    FColorBorderBottom: TColor;
     FColorBorderR: TColor;
     FColorBorderL: TColor;
     FColorBorderU: TColor;
@@ -177,6 +178,7 @@ type
     property Visible;
     property Color default cDefaultStatusbarColorBack;
     property ColorBorderTop: TColor read FColorBorderTop write FColorBorderTop default cDefaultStatusbarColorBorderTop;
+    property ColorBorderBottom: TColor read FColorBorderBottom write FColorBorderBottom default clNone;
     property ColorBorderR: TColor read FColorBorderR write FColorBorderR default cDefaultStatusbarColorBorderR;
     property ColorBorderL: TColor read FColorBorderL write FColorBorderL default cDefaultStatusbarColorBorderL;
     property ColorBorderU: TColor read FColorBorderU write FColorBorderU default cDefaultStatusbarColorBorderU;
@@ -264,6 +266,7 @@ begin
 
   Color:= cDefaultStatusbarColorBack;
   FColorBorderTop:= cDefaultStatusbarColorBorderTop;
+  FColorBorderBottom:= clNone;
   FColorBorderR:= cDefaultStatusbarColorBorderR;
   FColorBorderL:= cDefaultStatusbarColorBorderL;
   FColorBorderU:= cDefaultStatusbarColorBorderU;
@@ -575,6 +578,13 @@ begin
   C.Pen.Color:= ColorToRGB(FColorBorderTop);
   C.MoveTo(0, 0);
   C.LineTo(Width, 0);
+
+  if FColorBorderBottom<>clNone then
+  begin
+    C.Pen.Color:= ColorToRGB(FColorBorderBottom);
+    C.MoveTo(0, Height-1);
+    C.LineTo(Width, Height-1);
+  end;
 end;
 
 
