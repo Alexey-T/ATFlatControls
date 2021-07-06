@@ -111,7 +111,7 @@ type
     FTheme: PATFlatTheme;
     FSeparatorString: string;
     FOverflowLeft: boolean;
-    FOverflowDeltaX: integer;
+    FOverflowScrollX: integer;
 
     FOnPanelClick: TATStatusClickEvent;
     FOnPanelDrawBefore: TATStatusDrawEvent;
@@ -159,6 +159,7 @@ type
     property HeightInitial: integer read FHeightInitial write FHeightInitial;
     property SeparatorString: string read FSeparatorString write FSeparatorString;
     property OverflowLeft: boolean read FOverflowLeft write FOverflowLeft;
+    property OverflowScrollX: integer read FOverflowScrollX;
   protected
     procedure Paint; override;
     procedure Resize; override;
@@ -529,7 +530,7 @@ begin
   //bHasAutoSize:= false;
   bHasAutoStretch:= false;
   NTotalWidth:= 0;
-  FOverflowDeltaX:= 0;
+  FOverflowScrollX:= 0;
 
   C.Brush.Color:= ColorToRGB(Color);
   C.FillRect(ClientRect);
@@ -572,14 +573,14 @@ begin
         Inc(NTotalWidth, D.Width);
     end;
     if Width<NTotalWidth then
-      FOverflowDeltaX:= NTotalWidth-Width;
+      FOverflowScrollX:= NTotalWidth-Width;
   end;
 
   //paint panels
   for i:= 0 to PanelCount-1 do
   begin
     PanelRect:= GetPanelRect(i);
-    OffsetRect(PanelRect, -FOverflowDeltaX, 0);
+    OffsetRect(PanelRect, -FOverflowScrollX, 0);
 
     if DoDrawBefore(i, C, PanelRect) then
     begin
@@ -628,7 +629,7 @@ begin
   for i:= 0 to PanelCount-1 do
   begin
     R:= GetPanelRect(i);
-    OffsetRect(R, -FOverflowDeltaX, 0);
+    OffsetRect(R, -FOverflowScrollX, 0);
     if PtInRect(R, Pnt) then exit(i);
   end;
 end;
