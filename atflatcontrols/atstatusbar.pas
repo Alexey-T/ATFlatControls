@@ -512,7 +512,12 @@ begin
         NSize:= Theme^.DoScale(NSize);
 
       Result.Right:= Result.Left + NSize - 1;
-      if AIndex=i then Exit;
+      if AIndex=i then
+      begin
+        if FOverflowLeft then
+          OffsetRect(Result, -FOverflowScrollX, 0);
+        Break;
+      end;
     end;
 end;
 
@@ -580,7 +585,6 @@ begin
   for i:= 0 to PanelCount-1 do
   begin
     PanelRect:= GetPanelRect(i);
-    OffsetRect(PanelRect, -FOverflowScrollX, 0);
 
     if DoDrawBefore(i, C, PanelRect) then
     begin
@@ -629,7 +633,6 @@ begin
   for i:= 0 to PanelCount-1 do
   begin
     R:= GetPanelRect(i);
-    OffsetRect(R, -FOverflowScrollX, 0);
     if PtInRect(R, Pnt) then exit(i);
   end;
 end;
