@@ -111,6 +111,7 @@ type
     FTheme: PATFlatTheme;
     FSeparatorString: string;
     FOverflowLeft: boolean;
+    FOverflowDeltaX: integer;
 
     FOnPanelClick: TATStatusClickEvent;
     FOnPanelDrawBefore: TATStatusDrawEvent;
@@ -520,15 +521,15 @@ var
   D: TATStatusData;
   PntMouse: TPoint;
   bHottrackUsed, bHottrack: boolean;
-  bHasAutoSize, bHasAutoStretch: boolean;
+  {bHasAutoSize,} bHasAutoStretch: boolean;
   Size: Types.TSize;
-  NTotalWidth, NAlignDelta: integer;
+  NTotalWidth: integer;
   i: integer;
 begin
-  bHasAutoSize:= false;
+  //bHasAutoSize:= false;
   bHasAutoStretch:= false;
   NTotalWidth:= 0;
-  NAlignDelta:= 0;
+  FOverflowDeltaX:= 0;
 
   C.Brush.Color:= ColorToRGB(Color);
   C.FillRect(ClientRect);
@@ -545,7 +546,7 @@ begin
     D:= GetPanelData(i);
     if Assigned(D) and D.AutoSize then
     begin
-      bHasAutoSize:= true;
+      //bHasAutoSize:= true;
       DoPanelAutoWidth(C, i);
     end;
   end;
@@ -571,15 +572,14 @@ begin
         Inc(NTotalWidth, D.Width);
     end;
     if Width<NTotalWidth then
-      NAlignDelta:= NTotalWidth-Width;
+      FOverflowDeltaX:= NTotalWidth-Width;
   end;
 
   //paint panels
   for i:= 0 to PanelCount-1 do
   begin
     PanelRect:= GetPanelRect(i);
-    if NAlignDelta>0 then
-      OffsetRect(PanelRect, -NAlignDelta, 0);
+    OffsetRect(PanelRect, -FOverflowDeltaX, 0);
 
     if DoDrawBefore(i, C, PanelRect) then
     begin
@@ -620,12 +620,17 @@ function TATStatus.GetPanelAt(X, Y: integer): integer;
 var
   i: integer;
   Pnt: TPoint;
+  R: TRect;
 begin
   Result:= -1;
   Pnt:= Point(X, Y);
 
   for i:= 0 to PanelCount-1 do
-    if PtInRect(GetPanelRect(i), Pnt) then exit(i);
+  begin
+    R:= GetPanelRect(i);
+    OffsetRect(R, -FOverflowDeltaX, 0);
+    if PtInRect(R, Pnt) then exit(i);
+  end;
 end;
 
 procedure TATStatus.MouseDown(Button: TMouseButton; Shift: TShiftState;
