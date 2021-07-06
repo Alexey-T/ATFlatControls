@@ -1,5 +1,6 @@
 
-2021.07.05
+2021.07.07
++ ATStatus: prop AlignRight (works when all panels don't fit)
 + ATStatus: prop SeparatorString (painted between cells)
 
 2021.06.28

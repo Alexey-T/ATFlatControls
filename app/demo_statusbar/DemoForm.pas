@@ -60,6 +60,7 @@ begin
   t.Images:= ImageList1;
   t.OnPanelClick:= StatusClick;
   t.OnPanelDrawAfter:= StatusDraw;
+  t.AlignRight:= true;
 
   t.ColorBorderL:= clYellow;
   t.ColorBorderR:= clRed;

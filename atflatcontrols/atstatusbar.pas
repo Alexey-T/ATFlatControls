@@ -110,6 +110,7 @@ type
     FImages: TImageList;
     FTheme: PATFlatTheme;
     FSeparatorString: string;
+    FAlignRight: boolean;
 
     FOnPanelClick: TATStatusClickEvent;
     FOnPanelDrawBefore: TATStatusDrawEvent;
@@ -128,6 +129,7 @@ type
   public
     constructor Create(AOnwer: TComponent); override;
     destructor Destroy; override;
+    procedure Invalidate; override;
     function CanFocus: boolean; override;
     function GetPanelRect(AIndex: integer): TRect;
     function GetPanelAt(X, Y: integer): integer;
@@ -155,7 +157,7 @@ type
     function FindPanel(ATag: IntPtr): integer;
     property HeightInitial: integer read FHeightInitial write FHeightInitial;
     property SeparatorString: string read FSeparatorString write FSeparatorString;
-    procedure Invalidate; override;
+    property AlignRight: boolean read FAlignRight write FAlignRight;
   protected
     procedure Paint; override;
     procedure Resize; override;
@@ -518,9 +520,16 @@ var
   D: TATStatusData;
   PntMouse: TPoint;
   bHottrackUsed, bHottrack: boolean;
+  bHasAutoSize, bHasAutoStretch: boolean;
   Size: Types.TSize;
+  NTotalWidth, NAlignDelta: integer;
   i: integer;
 begin
+  bHasAutoSize:= false;
+  bHasAutoStretch:= false;
+  NTotalWidth:= 0;
+  NAlignDelta:= 0;
+
   C.Brush.Color:= ColorToRGB(Color);
   C.FillRect(ClientRect);
 
@@ -535,7 +544,10 @@ begin
   begin
     D:= GetPanelData(i);
     if Assigned(D) and D.AutoSize then
+    begin
+      bHasAutoSize:= true;
       DoPanelAutoWidth(C, i);
+    end;
   end;
 
   //consider AutoStretch
@@ -544,15 +556,31 @@ begin
     D:= GetPanelData(i);
     if Assigned(D) and not D.AutoSize and D.AutoStretch then
     begin
+      bHasAutoStretch:= true;
       DoPanelStretch(i);
       Break; //allowed for single panel
     end;
+  end;
+
+  if FAlignRight and not bHasAutoStretch then
+  begin
+    for i:= 0 to PanelCount-1 do
+    begin
+      D:= GetPanelData(i);
+      if Assigned(D) then
+        Inc(NTotalWidth, D.Width);
+    end;
+    if Width<NTotalWidth then
+      NAlignDelta:= NTotalWidth-Width;
   end;
 
   //paint panels
   for i:= 0 to PanelCount-1 do
   begin
     PanelRect:= GetPanelRect(i);
+    if NAlignDelta>0 then
+      OffsetRect(PanelRect, -NAlignDelta, 0);
+
     if DoDrawBefore(i, C, PanelRect) then
     begin
       D:= GetPanelData(i);
