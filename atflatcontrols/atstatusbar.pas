@@ -502,7 +502,8 @@ begin
   Result.Bottom:= Height;
 
   if IsIndexOk(AIndex) then
-    for i:= 0 to PanelCount-1 do
+  begin
+    for i:= 0 to AIndex do
     begin
       Data:= GetPanelData(i);
       Result.Left:= Result.Right + 1;
@@ -512,13 +513,10 @@ begin
         NSize:= Theme^.DoScale(NSize);
 
       Result.Right:= Result.Left + NSize - 1;
-      if AIndex=i then
-      begin
-        if FOverflowLeft then
-          OffsetRect(Result, -FOverflowScrollX, 0);
-        Break;
-      end;
     end;
+    if FOverflowLeft then
+      OffsetRect(Result, -FOverflowScrollX, 0);
+  end;
 end;
 
 procedure TATStatus.DoPaintTo(C: TCanvas);
