@@ -1193,10 +1193,13 @@ begin
     SaveSplitPos;
 
     //focus same group, if possible
-    NPagesAfter:= Min(NPagesBefore, cGroupsCount[FMode]);
+    NPagesAfter:= Min(NPagesBefore, cGroupsCount[FMode]-1);
     if (NPagesAfter>=0) and (NPagesAfter<=High(TATGroupsNums)) then
+    begin
+      PagesCurrent:= Pages[NPagesAfter];
       if Assigned(FOnTabFocus) then
-        FOnTabFocus(Pages[NPagesAfter].Tabs);
+        FOnTabFocus(PagesCurrent.Tabs);
+    end;
   finally
     DoControlUnlock(Self);
   end;
