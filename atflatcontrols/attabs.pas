@@ -64,6 +64,7 @@ type
   public
     AOwner: TCustomControl;
     destructor Destroy; override;
+    procedure Clear;
   end;
 
 type
@@ -105,6 +106,7 @@ type
   public
     constructor Create(ACollection: TCollection); override;
     destructor Destroy; override;
+    procedure Clear;
     property TabCaptionFull: TATTabString read GetTabCaptionFull;
     property TabCaptionRect: TRect read FTabCaptionRect write FTabCaptionRect;
     property TabObject: TObject read FTabObject write FTabObject;
@@ -937,6 +939,20 @@ begin
   inherited Destroy;
 end;
 
+procedure TATTabListCollection.Clear;
+var
+  Item: TObject;
+  i: integer;
+begin
+  for i:= Count-1 downto 0 do
+  begin
+    Item:= Items[i];
+    if Assigned(Item) then
+      Item.Free;
+  end;
+  inherited Clear;
+end;
+
 procedure TATTabData.UpdateTabSet;
 begin
   if Collection is TATTabListCollection then
@@ -1153,6 +1169,7 @@ end;
 constructor TATTabData.Create(ACollection: TCollection);
 begin
   inherited;
+  Clear;
   TabVisible:= true;
   TabColor:= clNone;
   TabColorActive:= clNone;
@@ -1163,9 +1180,15 @@ end;
 
 destructor TATTabData.Destroy;
 begin
-  FTabCaption:= '';
-  FTabHint:= '';
+  Clear;
   inherited Destroy;
+end;
+
+procedure TATTabData.Clear;
+begin
+  FTabCaption:= '';
+  FTabCaptionAddon:= '';
+  FTabHint:= '';
 end;
 
 procedure TATTabData.Assign(Source: TPersistent);
