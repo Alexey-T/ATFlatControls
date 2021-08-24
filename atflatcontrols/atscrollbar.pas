@@ -104,6 +104,7 @@ type
     ThumbMarkerDecorSize: integer;
     ThumbMarkerDecorSpace: integer;
     ThumbMarkerDecorDouble: boolean;
+    ThumbRoundedRect: boolean;
   end;
 
 var
@@ -821,22 +822,34 @@ end;
 procedure TATScrollbar.DoPaintStd_Thumb(C: TCanvas; const R: TRect);
 var
   P: TPoint;
+  NColorFill, NColorBorder, NColorBack: TColor;
   NOffset, i, DecorSpace: integer;
 begin
-  C.Brush.Color:= ColorToRGB(FTheme^.ColorThumbFill);
+  NColorFill:= ColorToRGB(FTheme^.ColorThumbFill);
+  NColorBorder:= ColorToRGB(FTheme^.ColorThumbBorder);
+  NColorBack:= FTheme^.ColorBG;
 
   if FMouseDownOnThumb then
-    C.Brush.Color:= ColorToRGB(FTheme^.ColorThumbFillPressed)
+    NColorFill:= ColorToRGB(FTheme^.ColorThumbFillPressed)
   else
   begin
     P := Mouse.CursorPos;
     P := ScreenToClient(P);
     if PtInRect(R,P) then
-      C.Brush.Color:= ColorToRGB(FTheme^.ColorThumbFillOver);
+      NColorFill:= ColorToRGB(FTheme^.ColorThumbFillOver);
   end;
 
-  C.Pen.Color:= ColorToRGB(FTheme^.ColorThumbBorder);
+  C.Brush.Color:= NColorFill;
+  C.Pen.Color:= NColorBorder;
   C.Rectangle(R);
+
+  if FTheme^.ThumbRoundedRect then
+  begin
+    CanvasPaintRoundedCorner(C, R, acckLeftTop, NColorBack, NColorBorder, NColorFill);
+    CanvasPaintRoundedCorner(C, R, acckRightTop, NColorBack, NColorBorder, NColorFill);
+    CanvasPaintRoundedCorner(C, R, acckLeftBottom, NColorBack, NColorBorder, NColorFill);
+    CanvasPaintRoundedCorner(C, R, acckRightBottom, NColorBack, NColorBorder, NColorFill);
+  end;
 
   NOffset:= FTheme^.ThumbMarkerOffset;
 
@@ -1132,6 +1145,7 @@ initialization
     ThumbMarkerDecorSize:= 2;
     ThumbMarkerDecorSpace:= 2;
     ThumbMarkerDecorDouble:= false;
+    ThumbRoundedRect:= true;
   end;
 
 end.
