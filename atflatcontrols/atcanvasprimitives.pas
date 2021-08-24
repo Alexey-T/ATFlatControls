@@ -42,7 +42,7 @@ type
     );
 
 procedure CanvasPaintRoundedCorner(C: TCanvas; const R: TRect;
-  Kind: TATCanvasCornerKind; ColorEmpty, ColorBorder, ColorBg: TColor);
+  Kind: TATCanvasCornerKind; ColorBackground, ColorBorder, ColorForeground: TColor);
 
 procedure CanvasArrowHorz(C: TCanvas;
   const ARect: TRect;
@@ -608,17 +608,17 @@ end;
 
 
 procedure CanvasPaintRoundedCorner(C: TCanvas; const R: TRect;
-  Kind: TATCanvasCornerKind; ColorEmpty, ColorBorder, ColorBg: TColor);
+  Kind: TATCanvasCornerKind; ColorBackground, ColorBorder, ColorForeground: TColor);
 var
   ColorMixEmpty, ColorMixBg: TColor;
 begin
-  ColorMixEmpty:= ColorBlendHalf(ColorBorder, ColorEmpty);
-  ColorMixBg:= ColorBlendHalf(ColorBorder, ColorBg);
+  ColorMixEmpty:= ColorBlendHalf(ColorBorder, ColorBackground);
+  ColorMixBg:= ColorBlendHalf(ColorBorder, ColorForeground);
 
   case Kind of
     acckLeftTop:
       begin
-        C.Pixels[R.Left, R.Top]:= ColorEmpty;
+        C.Pixels[R.Left, R.Top]:= ColorBackground;
         //
         C.Pixels[R.Left+1, R.Top]:= ColorMixEmpty;
         C.Pixels[R.Left, R.Top+1]:= ColorMixEmpty;
@@ -630,7 +630,7 @@ begin
       end;
     acckRightTop:
       begin
-        C.Pixels[R.Right-1, R.Top]:= ColorEmpty;
+        C.Pixels[R.Right-1, R.Top]:= ColorBackground;
         //
         C.Pixels[R.Right-2, R.Top]:= ColorMixEmpty;
         C.Pixels[R.Right-1, R.Top+1]:= ColorMixEmpty;
@@ -642,7 +642,7 @@ begin
       end;
     acckLeftBottom:
       begin
-        C.Pixels[R.Left, R.Bottom-1]:= ColorEmpty;
+        C.Pixels[R.Left, R.Bottom-1]:= ColorBackground;
         //
         C.Pixels[R.Left+1, R.Bottom-1]:= ColorMixEmpty;
         C.Pixels[R.Left, R.Bottom-2]:= ColorMixEmpty;
@@ -654,7 +654,7 @@ begin
       end;
     acckRightBottom:
       begin
-        C.Pixels[R.Right-1, R.Bottom-1]:= ColorEmpty;
+        C.Pixels[R.Right-1, R.Bottom-1]:= ColorBackground;
         //
         C.Pixels[R.Right-2, R.Bottom-1]:= ColorMixEmpty;
         C.Pixels[R.Right-1, R.Bottom-2]:= ColorMixEmpty;
