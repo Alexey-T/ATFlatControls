@@ -1145,7 +1145,7 @@ initialization
     ThumbMarkerDecorSize:= 2;
     ThumbMarkerDecorSpace:= 2;
     ThumbMarkerDecorDouble:= false;
-    ThumbRoundedRect:= true;
+    ThumbRoundedRect:= {$ifdef darwin} false {$else} true {$endif};
   end;
 
 end.
