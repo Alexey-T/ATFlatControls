@@ -618,56 +618,56 @@ begin
   ColorMixBg:= ColorBlendHalf(ColorBorder, ColorForeground);
 
   if acckLeftTop in Kinds then
-      begin
-        C.Pixels[R.Left, R.Top]:= ColorBackground;
-        //
-        C.Pixels[R.Left+1, R.Top]:= ColorMixEmpty;
-        C.Pixels[R.Left, R.Top+1]:= ColorMixEmpty;
-        //
-        C.Pixels[R.Left+1, R.Top+1]:= ColorBorder;
-        //
-        C.Pixels[R.Left+2, R.Top+1]:= ColorMixBg;
-        C.Pixels[R.Left+1, R.Top+2]:= ColorMixBg;
-      end;
+  begin
+    C.Pixels[R.Left, R.Top]:= ColorBackground;
+    //
+    C.Pixels[R.Left+1, R.Top]:= ColorMixEmpty;
+    C.Pixels[R.Left, R.Top+1]:= ColorMixEmpty;
+    //
+    C.Pixels[R.Left+1, R.Top+1]:= ColorBorder;
+    //
+    C.Pixels[R.Left+2, R.Top+1]:= ColorMixBg;
+    C.Pixels[R.Left+1, R.Top+2]:= ColorMixBg;
+  end;
 
   if acckRightTop in Kinds then
-      begin
-        C.Pixels[R.Right-1, R.Top]:= ColorBackground;
-        //
-        C.Pixels[R.Right-2, R.Top]:= ColorMixEmpty;
-        C.Pixels[R.Right-1, R.Top+1]:= ColorMixEmpty;
-        //
-        C.Pixels[R.Right-2, R.Top+1]:= ColorBorder;
-        //
-        C.Pixels[R.Right-3, R.Top+1]:= ColorMixBg;
-        C.Pixels[R.Right-2, R.Top+2]:= ColorMixBg;
-      end;
+  begin
+    C.Pixels[R.Right-1, R.Top]:= ColorBackground;
+    //
+    C.Pixels[R.Right-2, R.Top]:= ColorMixEmpty;
+    C.Pixels[R.Right-1, R.Top+1]:= ColorMixEmpty;
+    //
+    C.Pixels[R.Right-2, R.Top+1]:= ColorBorder;
+    //
+    C.Pixels[R.Right-3, R.Top+1]:= ColorMixBg;
+    C.Pixels[R.Right-2, R.Top+2]:= ColorMixBg;
+  end;
 
   if acckLeftBottom in Kinds then
-      begin
-        C.Pixels[R.Left, R.Bottom-1]:= ColorBackground;
-        //
-        C.Pixels[R.Left+1, R.Bottom-1]:= ColorMixEmpty;
-        C.Pixels[R.Left, R.Bottom-2]:= ColorMixEmpty;
-        //
-        C.Pixels[R.Left+1, R.Bottom-2]:= ColorBorder;
-        //
-        C.Pixels[R.Left+2, R.Bottom-2]:= ColorMixBg;
-        C.Pixels[R.Left+1, R.Bottom-3]:= ColorMixBg;
-      end;
+  begin
+    C.Pixels[R.Left, R.Bottom-1]:= ColorBackground;
+    //
+    C.Pixels[R.Left+1, R.Bottom-1]:= ColorMixEmpty;
+    C.Pixels[R.Left, R.Bottom-2]:= ColorMixEmpty;
+    //
+    C.Pixels[R.Left+1, R.Bottom-2]:= ColorBorder;
+    //
+    C.Pixels[R.Left+2, R.Bottom-2]:= ColorMixBg;
+    C.Pixels[R.Left+1, R.Bottom-3]:= ColorMixBg;
+  end;
 
   if acckRightBottom in Kinds then
-      begin
-        C.Pixels[R.Right-1, R.Bottom-1]:= ColorBackground;
-        //
-        C.Pixels[R.Right-2, R.Bottom-1]:= ColorMixEmpty;
-        C.Pixels[R.Right-1, R.Bottom-2]:= ColorMixEmpty;
-        //
-        C.Pixels[R.Right-2, R.Bottom-2]:= ColorBorder;
-        //
-        C.Pixels[R.Right-3, R.Bottom-2]:= ColorMixBg;
-        C.Pixels[R.Right-2, R.Bottom-3]:= ColorMixBg;
-      end;
+  begin
+    C.Pixels[R.Right-1, R.Bottom-1]:= ColorBackground;
+    //
+    C.Pixels[R.Right-2, R.Bottom-1]:= ColorMixEmpty;
+    C.Pixels[R.Right-1, R.Bottom-2]:= ColorMixEmpty;
+    //
+    C.Pixels[R.Right-2, R.Bottom-2]:= ColorBorder;
+    //
+    C.Pixels[R.Right-3, R.Bottom-2]:= ColorMixBg;
+    C.Pixels[R.Right-2, R.Bottom-3]:= ColorMixBg;
+  end;
 end;
 
 
