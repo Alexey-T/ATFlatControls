@@ -40,9 +40,10 @@ type
     acckLeftBottom,
     acckRightBottom
     );
+  TATCanvasCornerKinds = set of TATCanvasCornerKind;
 
-procedure CanvasPaintRoundedCorner(C: TCanvas; const R: TRect;
-  Kind: TATCanvasCornerKind; ColorBackground, ColorBorder, ColorForeground: TColor);
+procedure CanvasPaintRoundedCorners(C: TCanvas; const R: TRect;
+  Kinds: TATCanvasCornerKinds; ColorBackground, ColorBorder, ColorForeground: TColor);
 
 procedure CanvasArrowHorz(C: TCanvas;
   const ARect: TRect;
@@ -607,16 +608,16 @@ begin
 end;
 
 
-procedure CanvasPaintRoundedCorner(C: TCanvas; const R: TRect;
-  Kind: TATCanvasCornerKind; ColorBackground, ColorBorder, ColorForeground: TColor);
+procedure CanvasPaintRoundedCorners(C: TCanvas; const R: TRect;
+  Kinds: TATCanvasCornerKinds; ColorBackground, ColorBorder,
+  ColorForeground: TColor);
 var
   ColorMixEmpty, ColorMixBg: TColor;
 begin
   ColorMixEmpty:= ColorBlendHalf(ColorBorder, ColorBackground);
   ColorMixBg:= ColorBlendHalf(ColorBorder, ColorForeground);
 
-  case Kind of
-    acckLeftTop:
+  if acckLeftTop in Kinds then
       begin
         C.Pixels[R.Left, R.Top]:= ColorBackground;
         //
@@ -628,7 +629,8 @@ begin
         C.Pixels[R.Left+2, R.Top+1]:= ColorMixBg;
         C.Pixels[R.Left+1, R.Top+2]:= ColorMixBg;
       end;
-    acckRightTop:
+
+  if acckRightTop in Kinds then
       begin
         C.Pixels[R.Right-1, R.Top]:= ColorBackground;
         //
@@ -640,7 +642,8 @@ begin
         C.Pixels[R.Right-3, R.Top+1]:= ColorMixBg;
         C.Pixels[R.Right-2, R.Top+2]:= ColorMixBg;
       end;
-    acckLeftBottom:
+
+  if acckLeftBottom in Kinds then
       begin
         C.Pixels[R.Left, R.Bottom-1]:= ColorBackground;
         //
@@ -652,7 +655,8 @@ begin
         C.Pixels[R.Left+2, R.Bottom-2]:= ColorMixBg;
         C.Pixels[R.Left+1, R.Bottom-3]:= ColorMixBg;
       end;
-    acckRightBottom:
+
+  if acckRightBottom in Kinds then
       begin
         C.Pixels[R.Right-1, R.Bottom-1]:= ColorBackground;
         //
@@ -664,7 +668,6 @@ begin
         C.Pixels[R.Right-3, R.Bottom-2]:= ColorMixBg;
         C.Pixels[R.Right-2, R.Bottom-3]:= ColorMixBg;
       end;
-  end;
 end;
 
 

@@ -1765,24 +1765,20 @@ begin
     case FOptPosition of
       atpTop:
         begin
-          CanvasPaintRoundedCorner(C, R, acckLeftTop, NColorEmpty, NColorBorder, NColorBg);
-          CanvasPaintRoundedCorner(C, R, acckRightTop, NColorEmpty, NColorBorder, NColorBg);
+          CanvasPaintRoundedCorners(C, R, [acckLeftTop, acckRightTop], NColorEmpty, NColorBorder, NColorBg);
         end;
       atpBottom:
         begin
           Inc(R.Bottom, 1);
-          CanvasPaintRoundedCorner(C, R, acckLeftBottom, NColorEmpty, NColorBorder, NColorBg);
-          CanvasPaintRoundedCorner(C, R, acckRightBottom, NColorEmpty, NColorBorder, NColorBg);
+          CanvasPaintRoundedCorners(C, R, [acckLeftBottom, acckRightBottom], NColorEmpty, NColorBorder, NColorBg);
         end;
       atpLeft:
         begin
-          CanvasPaintRoundedCorner(C, R, acckLeftTop, NColorEmpty, NColorBorder, NColorBg);
-          CanvasPaintRoundedCorner(C, R, acckLeftBottom, NColorEmpty, NColorBorder, NColorBg);
+          CanvasPaintRoundedCorners(C, R, [acckLeftTop, acckLeftBottom], NColorEmpty, NColorBorder, NColorBg);
         end;
       atpRight:
         begin
-          CanvasPaintRoundedCorner(C, R, acckRightTop, NColorEmpty, NColorBorder, NColorBg);
-          CanvasPaintRoundedCorner(C, R, acckRightBottom, NColorEmpty, NColorBorder, NColorBg);
+          CanvasPaintRoundedCorners(C, R, [acckRightTop, acckRightBottom], NColorEmpty, NColorBorder, NColorBg);
         end;
     end;
   end;

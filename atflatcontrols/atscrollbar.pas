@@ -844,12 +844,12 @@ begin
   C.Rectangle(R);
 
   if FTheme^.ThumbRoundedRect then
-  begin
-    CanvasPaintRoundedCorner(C, R, acckLeftTop, NColorBack, NColorBorder, NColorFill);
-    CanvasPaintRoundedCorner(C, R, acckRightTop, NColorBack, NColorBorder, NColorFill);
-    CanvasPaintRoundedCorner(C, R, acckLeftBottom, NColorBack, NColorBorder, NColorFill);
-    CanvasPaintRoundedCorner(C, R, acckRightBottom, NColorBack, NColorBorder, NColorFill);
-  end;
+    CanvasPaintRoundedCorners(
+      C, R,
+      [acckLeftTop, acckRightTop, acckLeftBottom, acckRightBottom],
+      NColorBack,
+      NColorBorder,
+      NColorFill);
 
   NOffset:= FTheme^.ThumbMarkerOffset;
 
