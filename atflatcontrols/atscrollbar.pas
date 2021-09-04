@@ -105,7 +105,6 @@ type
     ThumbMarkerDecorSpace: integer;
     ThumbMarkerDecorDouble: boolean;
     ThumbRoundedRect: boolean;
-    ThumbBorderSize: integer;
   end;
 
 var
@@ -870,7 +869,7 @@ begin
   NOffset:= DoScale(FTheme^.ThumbMarkerOffset);
   NDecorSize:= FTheme^.ThumbMarkerDecorSize;
   NDecorSpace:= DoScale(FTheme^.ThumbMarkerDecorSpace);
-  NBorderSize:= DoScale(FTheme^.ThumbBorderSize);
+  NBorderSize:= 0;
 
   if NBorderSize>0 then
   begin
@@ -1164,7 +1163,6 @@ initialization
     ThumbMarkerDecorSpace:= 2;
     ThumbMarkerDecorDouble:= false;
     ThumbRoundedRect:= {$ifdef darwin} false {$else} true {$endif};
-    ThumbBorderSize:= 1;
   end;
 
 end.
