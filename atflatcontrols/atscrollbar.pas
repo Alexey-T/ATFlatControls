@@ -908,19 +908,14 @@ begin
       NColorBorder,
       NColorFill);
 
-  P:= CenterPoint(R);
-  if FTheme^.ThumbMarkerDecorDouble then
-  begin
-    if IsHorz then
-      Inc(P.X)
-    else
-      Inc(P.Y);
-  end;
-
   if IsHorz then
   begin
     if R.Width>FTheme^.ThumbMarkerMinimalSize then
     begin
+      P:= CenterPoint(R);
+      if FTheme^.ThumbMarkerDecorDouble then
+        Inc(P.X);
+
       C.Pen.Color:= NColorThumbDecor1;
       PaintMarkerHorz(P.X, NDecorSize, NDecorSpace, NOffset, 0);
 
@@ -935,6 +930,10 @@ begin
   begin
     if R.Height>FTheme^.ThumbMarkerMinimalSize then
     begin
+      P:= CenterPoint(R);
+      if FTheme^.ThumbMarkerDecorDouble then
+        Inc(P.Y);
+
       C.Pen.Color:= NColorThumbDecor1;
       PaintMarkerVert(P.Y, NDecorSize, NDecorSpace, NOffset, 0);
 
