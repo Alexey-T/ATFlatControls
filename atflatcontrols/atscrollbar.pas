@@ -849,7 +849,7 @@ begin
   begin
     P := Mouse.CursorPos;
     P := ScreenToClient(P);
-    if PtInRect(R,P) then
+    if PtInRect(R, P) then
       NColorFill:= ColorToRGB(FTheme^.ColorThumbFillOver);
   end;
 
@@ -870,11 +870,14 @@ begin
   P:= CenterPoint(R);
   if FTheme^.ThumbMarkerDecorDouble then
   begin
-    if IsHorz then Inc(P.X) else Inc(P.Y);
+    if IsHorz then
+      Inc(P.X)
+    else
+      Inc(P.Y);
   end;
 
   C.Pen.Color:= ColorToRGB(FTheme^.ColorThumbDecor);
-  DecorSpace := FTheme^.ThumbMarkerDecorSPace;
+  DecorSpace := FTheme^.ThumbMarkerDecorSpace;
 
   if IsHorz then
   begin
@@ -1154,7 +1157,7 @@ initialization
 
     MinSizeToShowThumb:= 10;
     ThumbMinSize:= 8;
-    ThumbMarkerOffset:= 4;
+    ThumbMarkerOffset:= 3;
     ThumbMarkerMinimalSize:= 20;
     ThumbMarkerDecorSize:= 2;
     ThumbMarkerDecorSpace:= 2;
