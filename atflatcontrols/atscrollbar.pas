@@ -821,11 +821,44 @@ begin
 end;
 
 procedure TATScrollbar.DoPaintStd_Thumb(C: TCanvas; R: TRect);
+  //
+  procedure PaintMarkerHorz(X: integer; NDecorSize, NDecorSpace, NOffset, NInc: integer);
+  var
+    i: integer;
+  begin
+    for i:= 0 to NDecorSize-1 do
+    begin
+      C.MoveTo(X-NDecorSpace*i + NInc, R.Top+NOffset);
+      C.LineTo(X-NDecorSpace*i + NInc, R.Bottom-NOffset);
+      if i>0 then
+      begin
+        C.MoveTo(X+NDecorSpace*i + NInc, R.Top+NOffset);
+        C.LineTo(X+NDecorSpace*i + NInc, R.Bottom-NOffset);
+      end;
+    end;
+  end;
+  //
+  procedure PaintMarkerVert(Y: integer; NDecorSize, NDecorSpace, NOffset, NInc: integer);
+  var
+    i: integer;
+  begin
+    for i:= 0 to NDecorSize-1 do
+    begin
+      C.MoveTo(R.Left+NOffset, Y-NDecorSpace*i + NInc);
+      C.LineTo(R.Right-NOffset, Y-NDecorSpace*i + NInc);
+      if i>0 then
+      begin
+        C.MoveTo(R.Left+NOffset, Y+NDecorSpace*i + NInc);
+        C.LineTo(R.Right-NOffset, Y+NDecorSpace*i + NInc);
+      end;
+    end;
+  end;
+  //
 var
   P: TPoint;
   NColorFill, NColorBorder, NColorBack: TColor;
   NColorThumbDecor1, NColorThumbDecor2: TColor;
-  NOffset, NDecorSize, NDecorSpace, NNarrowDec, i: integer;
+  NOffset, NDecorSize, NDecorSpace, NNarrowDec: integer;
 begin
   NColorFill:= ColorToRGB(FTheme^.ColorThumbFill);
   NColorBorder:= ColorToRGB(FTheme^.ColorThumbBorder);
@@ -886,68 +919,30 @@ begin
 
   if IsHorz then
   begin
-    C.Pen.Color:= NColorThumbDecor1;
     if R.Width>FTheme^.ThumbMarkerMinimalSize then
     begin
-      for i:= 0 to NDecorSize-1 do
-      begin
-        C.MoveTo(P.X-NDecorSpace*i, R.Top+NOffset);
-        C.LineTo(P.X-NDecorSpace*i, R.Bottom-NOffset);
-        if i>0 then
-        begin
-          C.MoveTo(P.X+NDecorSpace*i, R.Top+NOffset);
-          C.LineTo(P.X+NDecorSpace*i, R.Bottom-NOffset);
-        end;
-      end;
-    end;
-
-    if FTheme^.ThumbMarkerDecorDouble then
-    begin
-      C.Pen.Color:= NColorThumbDecor2;
-      for i:= 0 to NDecorSize-1 do
-      begin
-        C.MoveTo((P.X-NDecorSpace*i) -1, R.Top+NOffset);
-        C.LineTo((P.X-NDecorSpace*i) -1, R.Bottom-NOffset);
-        if i>0 then
-        begin
-          C.MoveTo((P.X+NDecorSpace*i) -1, R.Top+NOffset);
-          C.LineTo((P.X+NDecorSpace*i) -1, R.Bottom-NOffset);
-        end;
-      end;
-    end;
-
-  end
-  else
-  begin
-    C.Pen.Color:= NColorThumbDecor1;
-    if R.Height>FTheme^.ThumbMarkerMinimalSize then
-    begin
-      for i:= 0 to NDecorSize-1 do
-      begin
-        C.MoveTo(R.Left+NOffset, P.Y-NDecorSpace*i);
-        C.LineTo(R.Right-NOffset, P.Y-NDecorSpace*i);
-        if i>0 then
-        begin
-          C.MoveTo(R.Left+NOffset, P.Y+NDecorSpace*i);
-          C.LineTo(R.Right-NOffset, P.Y+NDecorSpace*i);
-        end;
-      end;
+      C.Pen.Color:= NColorThumbDecor1;
+      PaintMarkerHorz(P.X, NDecorSize, NDecorSpace, NOffset, 0);
 
       if FTheme^.ThumbMarkerDecorDouble then
       begin
         C.Pen.Color:= NColorThumbDecor2;
-        for i:= 0 to NDecorSize-1 do
-        begin
-          C.MoveTo(R.Left+NOffset, (P.Y-NDecorSpace*i) -1);
-          C.LineTo(R.Right-NOffset, (P.Y-NDecorSpace*i) -1);
-          if i>0 then
-          begin
-            C.MoveTo(R.Left+NOffset, (P.Y+NDecorSpace*i) -1);
-            C.LineTo(R.Right-NOffset, (P.Y+NDecorSpace*i) -1);
-          end;
-        end;
+        PaintMarkerHorz(P.X, NDecorSize, NDecorSpace, NOffset, -1);
       end;
+    end;
+  end
+  else
+  begin
+    if R.Height>FTheme^.ThumbMarkerMinimalSize then
+    begin
+      C.Pen.Color:= NColorThumbDecor1;
+      PaintMarkerVert(P.Y, NDecorSize, NDecorSpace, NOffset, 0);
 
+      if FTheme^.ThumbMarkerDecorDouble then
+      begin
+        C.Pen.Color:= NColorThumbDecor2;
+        PaintMarkerVert(P.Y, NDecorSize, NDecorSpace, NOffset, -1);
+      end;
     end;
   end;
 end;
