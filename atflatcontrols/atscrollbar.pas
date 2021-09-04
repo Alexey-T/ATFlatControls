@@ -105,7 +105,7 @@ type
     ThumbMarkerDecorSpace: integer;
     ThumbMarkerDecorDouble: boolean;
     ThumbRoundedRect: boolean;
-    ThumbNarrowDecrement: integer;
+    ThumbBorderSize: integer;
   end;
 
 var
@@ -858,7 +858,7 @@ var
   P: TPoint;
   NColorFill, NColorBorder, NColorBack: TColor;
   NColorThumbDecor1, NColorThumbDecor2: TColor;
-  NOffset, NDecorSize, NDecorSpace, NNarrowDec: integer;
+  NOffset, NDecorSize, NDecorSpace, NBorderSize: integer;
 begin
   NColorFill:= ColorToRGB(FTheme^.ColorThumbFill);
   NColorBorder:= ColorToRGB(FTheme^.ColorThumbBorder);
@@ -870,19 +870,19 @@ begin
   NOffset:= DoScale(FTheme^.ThumbMarkerOffset);
   NDecorSize:= FTheme^.ThumbMarkerDecorSize;
   NDecorSpace:= DoScale(FTheme^.ThumbMarkerDecorSpace);
-  NNarrowDec:= DoScale(FTheme^.ThumbNarrowDecrement);
+  NBorderSize:= DoScale(FTheme^.ThumbBorderSize);
 
-  if NNarrowDec>0 then
+  if NBorderSize>0 then
   begin
     if IsHorz then
     begin
-      Inc(R.Top, NNarrowDec);
-      Dec(R.Bottom, NNarrowDec);
+      Inc(R.Top, NBorderSize);
+      Dec(R.Bottom, NBorderSize);
     end
     else
     begin
-      Inc(R.Left, NNarrowDec);
-      Dec(R.Right, NNarrowDec);
+      Inc(R.Left, NBorderSize);
+      Dec(R.Right, NBorderSize);
     end;
   end;
 
@@ -1164,7 +1164,7 @@ initialization
     ThumbMarkerDecorSpace:= 2;
     ThumbMarkerDecorDouble:= false;
     ThumbRoundedRect:= {$ifdef darwin} false {$else} true {$endif};
-    ThumbNarrowDecrement:= 1;
+    ThumbBorderSize:= 1;
   end;
 
 end.
