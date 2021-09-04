@@ -824,31 +824,37 @@ procedure TATScrollbar.DoPaintStd_Thumb(C: TCanvas; R: TRect);
 var
   P: TPoint;
   NColorFill, NColorBorder, NColorBack: TColor;
-  NOffset, DecorSize, DecorSpace, i: integer;
+  NOffset, NDecorSize, NDecorSpace, NNarrowDec, i: integer;
 begin
   NColorFill:= ColorToRGB(FTheme^.ColorThumbFill);
   NColorBorder:= ColorToRGB(FTheme^.ColorThumbBorder);
   NColorBack:= FTheme^.ColorBG;
 
-  i:= DoScale(FTheme^.ThumbNarrowDecrement);
-  if i>0 then
+  NOffset:= DoScale(FTheme^.ThumbMarkerOffset);
+  NDecorSize:= FTheme^.ThumbMarkerDecorSize;
+  NDecorSpace:= DoScale(FTheme^.ThumbMarkerDecorSpace);
+  NNarrowDec:= DoScale(FTheme^.ThumbNarrowDecrement);
+
+  if NNarrowDec>0 then
+  begin
     if IsHorz then
     begin
-      Inc(R.Top, i);
-      Dec(R.Bottom, i);
+      Inc(R.Top, NNarrowDec);
+      Dec(R.Bottom, NNarrowDec);
     end
     else
     begin
-      Inc(R.Left, i);
-      Dec(R.Right, i);
+      Inc(R.Left, NNarrowDec);
+      Dec(R.Right, NNarrowDec);
     end;
+  end;
 
   if FMouseDownOnThumb then
     NColorFill:= ColorToRGB(FTheme^.ColorThumbFillPressed)
   else
   begin
-    P := Mouse.CursorPos;
-    P := ScreenToClient(P);
+    P:= Mouse.CursorPos;
+    P:= ScreenToClient(P);
     if PtInRect(R, P) then
       NColorFill:= ColorToRGB(FTheme^.ColorThumbFillOver);
   end;
@@ -865,8 +871,6 @@ begin
       NColorBorder,
       NColorFill);
 
-  NOffset:= DoScale(FTheme^.ThumbMarkerOffset);
-
   P:= CenterPoint(R);
   if FTheme^.ThumbMarkerDecorDouble then
   begin
@@ -877,21 +881,19 @@ begin
   end;
 
   C.Pen.Color:= ColorToRGB(FTheme^.ColorThumbDecor);
-  DecorSize:= FTheme^.ThumbMarkerDecorSize;
-  DecorSpace:= DoScale(FTheme^.ThumbMarkerDecorSpace);
 
   if IsHorz then
   begin
     if R.Width>FTheme^.ThumbMarkerMinimalSize then
     begin
-      for i:= 0 to DecorSize-1 do
+      for i:= 0 to NDecorSize-1 do
       begin
-        C.MoveTo(P.X-DecorSpace*i, R.Top+NOffset);
-        C.LineTo(P.X-DecorSpace*i, R.Bottom-NOffset);
+        C.MoveTo(P.X-NDecorSpace*i, R.Top+NOffset);
+        C.LineTo(P.X-NDecorSpace*i, R.Bottom-NOffset);
         if i>0 then
         begin
-          C.MoveTo(P.X+DecorSpace*i, R.Top+NOffset);
-          C.LineTo(P.X+DecorSpace*i, R.Bottom-NOffset);
+          C.MoveTo(P.X+NDecorSpace*i, R.Top+NOffset);
+          C.LineTo(P.X+NDecorSpace*i, R.Bottom-NOffset);
         end;
       end;
     end;
@@ -899,14 +901,14 @@ begin
     if FTheme^.ThumbMarkerDecorDouble then
     begin
       C.Pen.Color:= ColorToRGB(FTheme^.ColorThumbDecor2);
-      for i:= 0 to DecorSize-1 do
+      for i:= 0 to NDecorSize-1 do
       begin
-        C.MoveTo((P.X-DecorSpace*i) -1, R.Top+NOffset);
-        C.LineTo((P.X-DecorSpace*i) -1, R.Bottom-NOffset);
+        C.MoveTo((P.X-NDecorSpace*i) -1, R.Top+NOffset);
+        C.LineTo((P.X-NDecorSpace*i) -1, R.Bottom-NOffset);
         if i>0 then
         begin
-          C.MoveTo((P.X+DecorSpace*i) -1, R.Top+NOffset);
-          C.LineTo((P.X+DecorSpace*i) -1, R.Bottom-NOffset);
+          C.MoveTo((P.X+NDecorSpace*i) -1, R.Top+NOffset);
+          C.LineTo((P.X+NDecorSpace*i) -1, R.Bottom-NOffset);
         end;
       end;
     end;
@@ -916,28 +918,28 @@ begin
   begin
     if R.Height>FTheme^.ThumbMarkerMinimalSize then
     begin
-      for i:= 0 to DecorSize-1 do
+      for i:= 0 to NDecorSize-1 do
       begin
-        C.MoveTo(R.Left+NOffset, P.Y-DecorSpace*i);
-        C.LineTo(R.Right-NOffset, P.Y-DecorSpace*i);
+        C.MoveTo(R.Left+NOffset, P.Y-NDecorSpace*i);
+        C.LineTo(R.Right-NOffset, P.Y-NDecorSpace*i);
         if i>0 then
         begin
-          C.MoveTo(R.Left+NOffset, P.Y+DecorSpace*i);
-          C.LineTo(R.Right-NOffset, P.Y+DecorSpace*i);
+          C.MoveTo(R.Left+NOffset, P.Y+NDecorSpace*i);
+          C.LineTo(R.Right-NOffset, P.Y+NDecorSpace*i);
         end;
       end;
 
       if FTheme^.ThumbMarkerDecorDouble then
       begin
         C.Pen.Color:= ColorToRGB(FTheme^.ColorThumbDecor2);
-        for i:= 0 to DecorSize-1 do
+        for i:= 0 to NDecorSize-1 do
         begin
-          C.MoveTo(R.Left+NOffset, (P.Y-DecorSpace*i) -1);
-          C.LineTo(R.Right-NOffset, (P.Y-DecorSpace*i) -1);
+          C.MoveTo(R.Left+NOffset, (P.Y-NDecorSpace*i) -1);
+          C.LineTo(R.Right-NOffset, (P.Y-NDecorSpace*i) -1);
           if i>0 then
           begin
-            C.MoveTo(R.Left+NOffset, (P.Y+DecorSpace*i) -1);
-            C.LineTo(R.Right-NOffset, (P.Y+DecorSpace*i) -1);
+            C.MoveTo(R.Left+NOffset, (P.Y+NDecorSpace*i) -1);
+            C.LineTo(R.Right-NOffset, (P.Y+NDecorSpace*i) -1);
           end;
         end;
       end;
