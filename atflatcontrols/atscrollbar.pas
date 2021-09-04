@@ -824,11 +824,15 @@ procedure TATScrollbar.DoPaintStd_Thumb(C: TCanvas; R: TRect);
 var
   P: TPoint;
   NColorFill, NColorBorder, NColorBack: TColor;
+  NColorThumbDecor1, NColorThumbDecor2: TColor;
   NOffset, NDecorSize, NDecorSpace, NNarrowDec, i: integer;
 begin
   NColorFill:= ColorToRGB(FTheme^.ColorThumbFill);
   NColorBorder:= ColorToRGB(FTheme^.ColorThumbBorder);
   NColorBack:= FTheme^.ColorBG;
+
+  NColorThumbDecor1:= ColorToRGB(FTheme^.ColorThumbDecor);
+  NColorThumbDecor2:= ColorToRGB(FTheme^.ColorThumbDecor2);
 
   NOffset:= DoScale(FTheme^.ThumbMarkerOffset);
   NDecorSize:= FTheme^.ThumbMarkerDecorSize;
@@ -880,10 +884,9 @@ begin
       Inc(P.Y);
   end;
 
-  C.Pen.Color:= ColorToRGB(FTheme^.ColorThumbDecor);
-
   if IsHorz then
   begin
+    C.Pen.Color:= NColorThumbDecor1;
     if R.Width>FTheme^.ThumbMarkerMinimalSize then
     begin
       for i:= 0 to NDecorSize-1 do
@@ -900,7 +903,7 @@ begin
 
     if FTheme^.ThumbMarkerDecorDouble then
     begin
-      C.Pen.Color:= ColorToRGB(FTheme^.ColorThumbDecor2);
+      C.Pen.Color:= NColorThumbDecor2;
       for i:= 0 to NDecorSize-1 do
       begin
         C.MoveTo((P.X-NDecorSpace*i) -1, R.Top+NOffset);
@@ -916,6 +919,7 @@ begin
   end
   else
   begin
+    C.Pen.Color:= NColorThumbDecor1;
     if R.Height>FTheme^.ThumbMarkerMinimalSize then
     begin
       for i:= 0 to NDecorSize-1 do
@@ -931,7 +935,7 @@ begin
 
       if FTheme^.ThumbMarkerDecorDouble then
       begin
-        C.Pen.Color:= ColorToRGB(FTheme^.ColorThumbDecor2);
+        C.Pen.Color:= NColorThumbDecor2;
         for i:= 0 to NDecorSize-1 do
         begin
           C.MoveTo(R.Left+NOffset, (P.Y-NDecorSpace*i) -1);
