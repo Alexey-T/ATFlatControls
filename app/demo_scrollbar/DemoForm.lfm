@@ -6,11 +6,10 @@ object FormDemo: TFormDemo
   Caption = 'ATScrollBar demo'
   ClientHeight = 421
   ClientWidth = 729
-  Font.Height = -13
-  Font.Name = 'Default'
+  Font.Height = -14
   OnCreate = FormCreate
   Position = poScreenCenter
-  LCLVersion = '2.1.0.0'
+  LCLVersion = '2.3.0.0'
   object Splitter1: TSplitter
     Left = 257
     Height = 421
@@ -31,67 +30,60 @@ object FormDemo: TFormDemo
     TabOrder = 0
     object Label1: TLabel
       Left = 8
-      Height = 16
+      Height = 17
       Top = 160
-      Width = 66
+      Width = 70
       Caption = 'Border size'
-      ParentColor = False
     end
     object labv: TLabel
       Left = 24
-      Height = 16
+      Height = 17
       Top = 8
       Width = 9
       Caption = 'V'
-      ParentColor = False
     end
     object labh: TLabel
       Left = 25
-      Height = 16
+      Height = 17
       Top = 30
-      Width = 9
+      Width = 10
       Caption = 'H'
-      ParentColor = False
     end
     object Label2: TLabel
       Left = 8
-      Height = 16
+      Height = 17
       Top = 120
-      Width = 55
+      Width = 58
       Caption = 'Page size'
-      ParentColor = False
     end
     object Label3: TLabel
       Left = 8
-      Height = 16
+      Height = 17
       Top = 72
-      Width = 48
+      Width = 51
       Caption = 'Scale, %'
-      ParentColor = False
     end
     object Label4: TLabel
       Left = 8
-      Height = 16
+      Height = 17
       Top = 200
-      Width = 75
+      Width = 79
       Caption = 'Arrow len, %'
-      ParentColor = False
     end
     object Label5: TLabel
       Left = 8
-      Height = 16
+      Height = 17
       Top = 240
-      Width = 82
+      Width = 87
       Caption = 'Corner size, %'
-      ParentColor = False
     end
     object chkDraw: TCheckBox
       Left = 8
-      Height = 23
+      Height = 24
       Top = 296
-      Width = 99
+      Width = 104
       Caption = 'Owner-draw'
-      OnClick = chkDrawClick
+      OnChange = chkDrawChange
       TabOrder = 6
     end
     object trackBor: TTrackBar
@@ -182,16 +174,16 @@ object FormDemo: TFormDemo
         'hidden'
         'in corner'
       )
-      ItemHeight = 22
+      ItemHeight = 23
       OnClick = ListArrowsClick
       ScrollWidth = 150
       TabOrder = 7
     end
     object chkInstant: TCheckBox
       Left = 8
-      Height = 23
+      Height = 24
       Top = 320
-      Width = 147
+      Width = 160
       Caption = 'Instant move on click'
       OnChange = chkInstantChange
       TabOrder = 8
@@ -211,11 +203,10 @@ object FormDemo: TFormDemo
     end
     object Label6: TLabel
       Left = 230
-      Height = 16
+      Height = 17
       Top = 168
-      Width = 87
+      Width = 96
       Caption = 'Min thumb size'
-      ParentColor = False
     end
     object trackMax: TTrackBar
       Left = 328
@@ -232,11 +223,21 @@ object FormDemo: TFormDemo
     end
     object Label7: TLabel
       Left = 230
-      Height = 16
+      Height = 17
       Top = 120
-      Width = 60
+      Width = 63
       Caption = 'Max value'
-      ParentColor = False
+    end
+    object chkRoundedThumb: TCheckBox
+      Left = 8
+      Height = 24
+      Top = 344
+      Width = 128
+      Caption = 'Rounded thumb'
+      Checked = True
+      OnChange = chkRoundedThumbChange
+      State = cbChecked
+      TabOrder = 11
     end
   end
   object Panel2: TPanel

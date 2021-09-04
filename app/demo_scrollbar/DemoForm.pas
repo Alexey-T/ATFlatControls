@@ -14,6 +14,7 @@ type
   { TFormDemo }
 
   TFormDemo = class(TForm)
+    chkRoundedThumb: TCheckBox;
     chkInstant: TCheckBox;
     Label6: TLabel;
     Label7: TLabel;
@@ -37,9 +38,10 @@ type
     trackCornerH: TTrackBar;
     trackThumbSize: TTrackBar;
     trackMax: TTrackBar;
+    procedure chkDrawChange(Sender: TObject);
     procedure chkInstantChange(Sender: TObject);
+    procedure chkRoundedThumbChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure chkDrawClick(Sender: TObject);
     procedure ListArrowsClick(Sender: TObject);
     procedure trackBorChange(Sender: TObject);
     procedure trackMaxChange(Sender: TObject);
@@ -118,6 +120,31 @@ begin
   ATScrollbarTheme.DirectJumpOnClickPageUpDown:= chkInstant.Checked;
 end;
 
+procedure TFormDemo.chkDrawChange(Sender: TObject);
+begin
+  if chkDraw.Checked then
+  begin
+    bar_h.OnOwnerDraw:= DrawEvent;
+    bar_v.OnOwnerDraw:= DrawEvent;
+  end
+  else
+  begin
+    bar_h.OnOwnerDraw:= nil;
+    bar_v.OnOwnerDraw:= nil;
+  end;
+  bar_h.Invalidate;
+  bar_v.Invalidate;
+end;
+
+procedure TFormDemo.chkRoundedThumbChange(Sender: TObject);
+begin
+  ATScrollbarTheme.ThumbRoundedRect:= chkRoundedThumb.Checked;
+  bar_v.Invalidate;
+  bar_h.Invalidate;
+  bar_v1.Invalidate;
+  bar_h1.Invalidate;
+end;
+
 procedure TFormDemo.DrawEvent(S: TObject; AType: TATScrollbarElemType;
   ACanvas: TCanvas; const ARect: TRect; var ACanDo: boolean);
 const
@@ -152,22 +179,6 @@ begin
     p.y:= (ARect.Top+ARect.Bottom-ACanvas.TextHeight(str)) div 2;
     ACanvas.TextOut(p.x, p.y, str);
   end;
-end;
-
-procedure TFormDemo.chkDrawClick(Sender: TObject);
-begin
-  if chkDraw.Checked then
-  begin
-    bar_h.OnOwnerDraw:= DrawEvent;
-    bar_v.OnOwnerDraw:= DrawEvent;
-  end
-  else
-  begin
-    bar_h.OnOwnerDraw:= nil;
-    bar_v.OnOwnerDraw:= nil;
-  end;
-  bar_h.Invalidate;
-  bar_v.Invalidate;
 end;
 
 procedure TFormDemo.ListArrowsClick(Sender: TObject);
