@@ -105,6 +105,7 @@ type
     ThumbMarkerDecorSpace: integer;
     ThumbMarkerDecorDouble: boolean;
     ThumbRoundedRect: boolean;
+    ThumbNarrowDecrement: integer;
   end;
 
 var
@@ -177,7 +178,7 @@ type
     procedure DoPaintStd_Back(C: TCanvas; const R: TRect);
     procedure DoPaintStd_BackScrolled(C: TCanvas; const R: TRect);
     procedure DoPaintStd_Arrow(C: TCanvas; R: TRect; AType: TATScrollbarElemType);
-    procedure DoPaintStd_Thumb(C: TCanvas; const R: TRect);
+    procedure DoPaintStd_Thumb(C: TCanvas; R: TRect);
 
     function IsHorz: boolean; inline;
     function CoordToPos(X, Y: Integer): Integer;
@@ -819,7 +820,7 @@ begin
     DoPaintStd_Thumb(C, FRectThumb);
 end;
 
-procedure TATScrollbar.DoPaintStd_Thumb(C: TCanvas; const R: TRect);
+procedure TATScrollbar.DoPaintStd_Thumb(C: TCanvas; R: TRect);
 var
   P: TPoint;
   NColorFill, NColorBorder, NColorBack: TColor;
@@ -828,6 +829,19 @@ begin
   NColorFill:= ColorToRGB(FTheme^.ColorThumbFill);
   NColorBorder:= ColorToRGB(FTheme^.ColorThumbBorder);
   NColorBack:= FTheme^.ColorBG;
+
+  i:= FTheme^.ThumbNarrowDecrement;
+  if i>0 then
+    if IsHorz then
+    begin
+      Inc(R.Top, i);
+      Dec(R.Bottom, i);
+    end
+    else
+    begin
+      Inc(R.Left, i);
+      Dec(R.Right, i);
+    end;
 
   if FMouseDownOnThumb then
     NColorFill:= ColorToRGB(FTheme^.ColorThumbFillPressed)
@@ -1146,6 +1160,7 @@ initialization
     ThumbMarkerDecorSpace:= 2;
     ThumbMarkerDecorDouble:= false;
     ThumbRoundedRect:= {$ifdef darwin} false {$else} true {$endif};
+    ThumbNarrowDecrement:= 1;
   end;
 
 end.
