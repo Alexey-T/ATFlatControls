@@ -824,13 +824,13 @@ procedure TATScrollbar.DoPaintStd_Thumb(C: TCanvas; R: TRect);
 var
   P: TPoint;
   NColorFill, NColorBorder, NColorBack: TColor;
-  NOffset, i, DecorSpace: integer;
+  NOffset, DecorSize, DecorSpace, i: integer;
 begin
   NColorFill:= ColorToRGB(FTheme^.ColorThumbFill);
   NColorBorder:= ColorToRGB(FTheme^.ColorThumbBorder);
   NColorBack:= FTheme^.ColorBG;
 
-  i:= FTheme^.ThumbNarrowDecrement;
+  i:= DoScale(FTheme^.ThumbNarrowDecrement);
   if i>0 then
     if IsHorz then
     begin
@@ -865,7 +865,7 @@ begin
       NColorBorder,
       NColorFill);
 
-  NOffset:= FTheme^.ThumbMarkerOffset;
+  NOffset:= DoScale(FTheme^.ThumbMarkerOffset);
 
   P:= CenterPoint(R);
   if FTheme^.ThumbMarkerDecorDouble then
@@ -877,13 +877,14 @@ begin
   end;
 
   C.Pen.Color:= ColorToRGB(FTheme^.ColorThumbDecor);
-  DecorSpace := FTheme^.ThumbMarkerDecorSpace;
+  DecorSize:= FTheme^.ThumbMarkerDecorSize;
+  DecorSpace:= DoScale(FTheme^.ThumbMarkerDecorSpace);
 
   if IsHorz then
   begin
     if R.Width>FTheme^.ThumbMarkerMinimalSize then
     begin
-      for i:= 0 to FTheme^.ThumbMarkerDecorSize-1 do
+      for i:= 0 to DecorSize-1 do
       begin
         C.MoveTo(P.X-DecorSpace*i, R.Top+NOffset);
         C.LineTo(P.X-DecorSpace*i, R.Bottom-NOffset);
@@ -898,7 +899,7 @@ begin
     if FTheme^.ThumbMarkerDecorDouble then
     begin
       C.Pen.Color:= ColorToRGB(FTheme^.ColorThumbDecor2);
-      for i:= 0 to FTheme^.ThumbMarkerDecorSize-1 do
+      for i:= 0 to DecorSize-1 do
       begin
         C.MoveTo((P.X-DecorSpace*i) -1, R.Top+NOffset);
         C.LineTo((P.X-DecorSpace*i) -1, R.Bottom-NOffset);
@@ -915,7 +916,7 @@ begin
   begin
     if R.Height>FTheme^.ThumbMarkerMinimalSize then
     begin
-      for i:= 0 to FTheme^.ThumbMarkerDecorSize-1 do
+      for i:= 0 to DecorSize-1 do
       begin
         C.MoveTo(R.Left+NOffset, P.Y-DecorSpace*i);
         C.LineTo(R.Right-NOffset, P.Y-DecorSpace*i);
@@ -929,7 +930,7 @@ begin
       if FTheme^.ThumbMarkerDecorDouble then
       begin
         C.Pen.Color:= ColorToRGB(FTheme^.ColorThumbDecor2);
-        for i:= 0 to FTheme^.ThumbMarkerDecorSize-1 do
+        for i:= 0 to DecorSize-1 do
         begin
           C.MoveTo(R.Left+NOffset, (P.Y-DecorSpace*i) -1);
           C.LineTo(R.Right-NOffset, (P.Y-DecorSpace*i) -1);
