@@ -45,10 +45,8 @@ type
     aseArrowDown,
     aseArrowLeft,
     aseArrowRight,
-    aseScrollThumbV,
-    aseScrollThumbH,
-    aseScrollAreaH,
-    aseScrollAreaV,
+    aseBackAndThumbH,
+    aseBackAndThumbV,
     aseScrolledAreaH,
     aseScrolledAreaV,
     aseCorner
@@ -64,7 +62,7 @@ type
 
 type
   TATScrollbarDrawEvent = procedure (Sender: TObject; AType: TATScrollbarElemType;
-    ACanvas: TCanvas; const ARect: TRect; var ACanDraw: boolean) of object;
+    ACanvas: TCanvas; const ARect, ARect2: TRect; var ACanDraw: boolean) of object;
 
 type
   PATScrollbarTheme = ^TATScrollbarTheme;
@@ -168,8 +166,7 @@ type
     procedure TimerMouseoverTick(Sender: TObject);
 
     procedure DoPaintArrow(C: TCanvas; const R: TRect; AType: TATScrollbarElemType);
-    procedure DoPaintThumb(C: TCanvas);
-    procedure DoPaintBack(C: TCanvas);
+    procedure DoPaintBackAndThumb(C: TCanvas);
     procedure DoPaintBackScrolled(C: TCanvas);
     procedure DoPaintTo(C: TCanvas);
 
@@ -195,7 +192,7 @@ type
     procedure SetMax(Value: Int64);
     procedure SetPageSize(Value: Int64);
     function DoDrawEvent(AType: TATScrollbarElemType;
-      ACanvas: TCanvas; const ARect: TRect): boolean;
+      ACanvas: TCanvas; const ARect, ARect2: TRect): boolean;
   public
     constructor Create(AOnwer: TComponent); override;
     destructor Destroy; override;
@@ -402,7 +399,7 @@ begin
 
   DoUpdateCornerRect;
   if not IsRectEmpty(FRectCorner) then
-    if DoDrawEvent(aseCorner, C, FRectCorner) then
+    if DoDrawEvent(aseCorner, C, FRectCorner, FRectCorner) then
       DoPaintStd_Corner(C, FRectCorner);
 
   C.Brush.Color:= ColorToRGB(FTheme^.ColorBorder);
@@ -476,19 +473,26 @@ begin
     DoPaintArrow(C, FRectArrDown, aseArrowDown);
   end;
 
-  DoPaintBack(C);
   DoUpdateThumbRect;
+  DoPaintBackAndThumb(C);
   DoPaintBackScrolled(C);
-  DoPaintThumb(C);
 end;
 
-procedure TATScrollbar.DoPaintBack(C: TCanvas);
+procedure TATScrollbar.DoPaintBackAndThumb(C: TCanvas);
 var
   Typ: TATScrollbarElemType;
 begin
-  if IsHorz then Typ:= aseScrollAreaH else Typ:= aseScrollAreaV;
-  if DoDrawEvent(Typ, C, FRectMain) then
+  if IsHorz then
+    Typ:= aseBackAndThumbH
+  else
+    Typ:= aseBackAndThumbV;
+
+  if DoDrawEvent(Typ, C, FRectMain, FRectThumb) then
+  begin
     DoPaintStd_Back(C, FRectMain);
+    if not IsRectEmpty(FRectThumb) then
+      DoPaintStd_Thumb(C, FRectThumb);
+  end;
 end;
 
 procedure TATScrollbar.DoPaintBackScrolled(C: TCanvas);
@@ -498,11 +502,11 @@ begin
   if IsHorz then Typ:= aseScrolledAreaH else Typ:= aseScrolledAreaV;
 
   if FMouseDown and FMouseDownOnPageUp then
-    if DoDrawEvent(Typ, C, FRectPageUp) then
+    if DoDrawEvent(Typ, C, FRectPageUp, FRectPageUp) then
       DoPaintStd_BackScrolled(C, FRectPageUp);
 
   if FMouseDown and FMouseDownOnPageDown then
-    if DoDrawEvent(Typ, C, FRectPageDown) then
+    if DoDrawEvent(Typ, C, FRectPageDown, FRectPageDown) then
       DoPaintStd_BackScrolled(C, FRectPageDown);
 end;
 
@@ -643,11 +647,11 @@ begin
 end;
 
 function TATScrollbar.DoDrawEvent(AType: TATScrollbarElemType;
-  ACanvas: TCanvas; const ARect: TRect): boolean;
+  ACanvas: TCanvas; const ARect, ARect2: TRect): boolean;
 begin
   Result:= true;
   if Assigned(FOnOwnerDraw) then
-    FOnOwnerDraw(Self, AType, ACanvas, ARect, Result);
+    FOnOwnerDraw(Self, AType, ACanvas, ARect, ARect2, Result);
 end;
 
 procedure TATScrollbar.SetKind(AValue: TScrollBarKind);
@@ -671,7 +675,7 @@ procedure TATScrollbar.DoPaintArrow(C: TCanvas; const R: TRect;
   AType: TATScrollbarElemType);
 begin
   if IsRectEmpty(R) then exit;
-  if DoDrawEvent(AType, C, R) then
+  if DoDrawEvent(AType, C, R, R) then
     DoPaintStd_Arrow(C, R, AType);
 end;    
 
@@ -803,20 +807,6 @@ begin
     FRectPageUp:= Rect(FRectMain.Left, FRectMain.Top, FRectMain.Right, FRectThumb.Top);
     FRectPageDown:= Rect(FRectMain.Left, FRectThumb.Bottom, FRectMain.Right, FRectMain.Bottom);
   end;
-end;
-
-procedure TATScrollbar.DoPaintThumb(C: TCanvas);
-var
-  Typ: TATScrollbarElemType;
-begin
-  if IsRectEmpty(FRectThumb) then Exit;
-  if IsHorz then
-    Typ:= aseScrollThumbH
-  else
-    Typ:= aseScrollThumbV;
-
-  if DoDrawEvent(Typ, C, FRectThumb) then
-    DoPaintStd_Thumb(C, FRectThumb);
 end;
 
 procedure TATScrollbar.DoPaintStd_Thumb(C: TCanvas; const R: TRect);
