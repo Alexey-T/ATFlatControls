@@ -167,12 +167,12 @@ type
 
     procedure DoPaintArrow(C: TCanvas; const R: TRect; AType: TATScrollbarElemType);
     procedure DoPaintBackAndThumb(C: TCanvas);
-    procedure DoPaintBackScrolled(C: TCanvas);
+    procedure DoPaintBackScrolling(C: TCanvas);
     procedure DoPaintTo(C: TCanvas);
 
     procedure DoPaintStd_Corner(C: TCanvas; const R: TRect);
     procedure DoPaintStd_Back(C: TCanvas; const R: TRect);
-    procedure DoPaintStd_BackScrolled(C: TCanvas; const R: TRect);
+    procedure DoPaintStd_BackScrolling(C: TCanvas; const R: TRect);
     procedure DoPaintStd_Arrow(C: TCanvas; R: TRect; AType: TATScrollbarElemType);
     procedure DoPaintStd_Thumb(C: TCanvas; const R: TRect);
 
@@ -475,7 +475,7 @@ begin
 
   DoUpdateThumbRect;
   DoPaintBackAndThumb(C);
-  DoPaintBackScrolled(C);
+  DoPaintBackScrolling(C);
 end;
 
 procedure TATScrollbar.DoPaintBackAndThumb(C: TCanvas);
@@ -495,19 +495,22 @@ begin
   end;
 end;
 
-procedure TATScrollbar.DoPaintBackScrolled(C: TCanvas);
+procedure TATScrollbar.DoPaintBackScrolling(C: TCanvas);
 var
   Typ: TATScrollbarElemType;
 begin
-  if IsHorz then Typ:= aseScrollingAreaH else Typ:= aseScrollingAreaV;
+  if IsHorz then
+    Typ:= aseScrollingAreaH
+  else
+    Typ:= aseScrollingAreaV;
 
   if FMouseDown and FMouseDownOnPageUp then
     if DoDrawEvent(Typ, C, FRectPageUp, FRectPageUp) then
-      DoPaintStd_BackScrolled(C, FRectPageUp);
+      DoPaintStd_BackScrolling(C, FRectPageUp);
 
   if FMouseDown and FMouseDownOnPageDown then
     if DoDrawEvent(Typ, C, FRectPageDown, FRectPageDown) then
-      DoPaintStd_BackScrolled(C, FRectPageDown);
+      DoPaintStd_BackScrolling(C, FRectPageDown);
 end;
 
 
@@ -1064,7 +1067,7 @@ begin
   C.FillRect(R);
 end;
 
-procedure TATScrollbar.DoPaintStd_BackScrolled(C: TCanvas; const R: TRect);
+procedure TATScrollbar.DoPaintStd_BackScrolling(C: TCanvas; const R: TRect);
 begin
   if IsRectEmpty(R) then exit;
   C.Brush.Color:= ColorToRGB(FTheme^.ColorScrolled);
