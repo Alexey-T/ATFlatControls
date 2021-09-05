@@ -47,8 +47,8 @@ type
     aseArrowRight,
     aseBackAndThumbH,
     aseBackAndThumbV,
-    aseScrolledAreaH,
-    aseScrolledAreaV,
+    aseScrollingAreaH,
+    aseScrollingAreaV,
     aseCorner
     );
 
@@ -499,7 +499,7 @@ procedure TATScrollbar.DoPaintBackScrolled(C: TCanvas);
 var
   Typ: TATScrollbarElemType;
 begin
-  if IsHorz then Typ:= aseScrolledAreaH else Typ:= aseScrolledAreaV;
+  if IsHorz then Typ:= aseScrollingAreaH else Typ:= aseScrollingAreaV;
 
   if FMouseDown and FMouseDownOnPageUp then
     if DoDrawEvent(Typ, C, FRectPageUp, FRectPageUp) then
