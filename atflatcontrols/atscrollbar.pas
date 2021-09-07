@@ -499,6 +499,8 @@ procedure TATScrollbar.DoPaintBackScrolling(C: TCanvas);
 var
   Typ: TATScrollbarElemType;
 begin
+  if Theme^.DirectJumpOnClickPageUpDown then exit;
+
   if IsHorz then
     Typ:= aseScrollingAreaH
   else
