@@ -197,6 +197,8 @@ type
     aocRecent
     );
 
+  { TATTabPaintInfo }
+
   TATTabPaintInfo = record
     Rect: TRect;
     Caption: TATTabString;
@@ -208,6 +210,7 @@ type
     TabMouseOver,
     TabMouseOverX: boolean;
     FontStyle: TFontStyles;
+    procedure Clear;
   end;
 
 type
@@ -929,6 +932,14 @@ begin
   SetLength(Buttons, Length(Buttons)+1);
   Buttons[Length(Buttons)-1].Id:= Id;
   Buttons[Length(Buttons)-1].Size:= Size;
+end;
+
+{ TATTabPaintInfo }
+
+procedure TATTabPaintInfo.Clear;
+begin
+  Self.Caption:= '';
+  FillChar(Self, SizeOf(Self), 0);
 end;
 
 { TATTabListCollection }
@@ -1688,7 +1699,7 @@ begin
   begin
     NColorFont:= FColorFont;
 
-    FillChar(Info, SizeOf(Info), 0);
+    Info.Clear;
     Info.Rect:= ARect;
     Info.TabIndex:= cTabIndexPlus;
     Info.ColorFont:= NColorFont;
@@ -2629,7 +2640,7 @@ begin
         else
           NColorFont:= FColorFont;
 
-        FillChar(Info, SizeOf(Info), 0);
+        Info.Clear;
         Info.Rect:= RRect;
         Info.Caption:= GetTabCaptionFinal(Data, i);
         Info.Modified:= Data.TabModified;
@@ -2646,7 +2657,7 @@ begin
 
       if Data.TabVisibleX then
       begin
-        FillChar(Info, SizeOf(Info), 0);
+        Info.Clear;
         Info.Rect:= RectX;
         Info.TabIndex:= i;
         Info.TabMouseOverX:= bMouseOverX;
@@ -2681,7 +2692,7 @@ begin
       else
         NColorFont:= FColorFont;
 
-      FillChar(Info, SizeOf(Info), 0);
+      Info.Clear;
       Info.Rect:= RRect;
       Info.Caption:= GetTabCaptionFinal(Data, i);
       Info.Modified:= Data.TabModified;
@@ -2699,7 +2710,7 @@ begin
 
     if Data.TabVisibleX then
     begin
-      FillChar(Info, SizeOf(Info), 0);
+      Info.Clear;
       Info.Rect:= RectX;
       Info.TabIndex:= i;
       Info.TabActive:= true;
