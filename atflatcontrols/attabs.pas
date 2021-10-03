@@ -4472,7 +4472,10 @@ end;
 procedure TATTabs.UpdateCanvasAntialiasMode(C: TCanvas);
 {$ifdef fpc}
 begin
+  // https://gitlab.com/freepascal.org/lazarus/lazarus/-/issues/39416
+  {$ifndef LCLQt5}
   C.AntialiasingMode:= amOn;
+  {$endif}
 end;
 {$else}
 var
