@@ -4028,7 +4028,8 @@ begin
   if (Source=Self) then
   begin
     //drop to itself
-    if (FTabIndexDrop>=0) then
+    if (FTabIndexDrop>=0) or
+      (FTabIndexDrop=cTabIndexPlus) {allow drop on "+" pseudo tab} then
     begin
       DoTabDrop;
       Invalidate;
