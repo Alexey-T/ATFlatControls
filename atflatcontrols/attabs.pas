@@ -2987,11 +2987,11 @@ begin
 
     if FActualMultiline then
     begin
-      if RectTab.Top>Pnt.Y then exit;
+      if RectTab.Top>Pnt.Y then Break;
     end
     else
     begin
-      if RectTab.Left>Pnt.X then exit;
+      if RectTab.Left>Pnt.X then Break;
     end;
 
     if PtInRect(RectTab, Pnt) then
@@ -3024,7 +3024,7 @@ begin
           if FOptShowPlusTab then
             Result:= cTabIndexPlus
           else
-            Result:= TabIndex-1;
+            Result:= TabCount-1;
           Exit;
         end;
       end;
