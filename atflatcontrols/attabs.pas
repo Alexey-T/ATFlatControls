@@ -3013,20 +3013,16 @@ begin
   //empty area after last tab?
   if FOptPosition in [atpTop, atpBottom] then
   begin
-    D:= GetTabData(TabCount-1);
-    if Assigned(D) and D.TabVisible then
+    RectTab:= FRectTabLast_Scrolled;
+    if RectTab<>cRect0 then
     begin
-      RectTab:= GetRectScrolled(D.TabRect);
-      if RectTab<>cRect0 then
+      if (AX>=RectTab.Right) and (AY>=RectTab.Top) and (AY<RectTab.Bottom) then
       begin
-        if (AX>=RectTab.Right) and (AY>=RectTab.Top) and (AY<RectTab.Bottom) then
-        begin
-          if FOptShowPlusTab then
-            Result:= cTabIndexPlus
-          else
-            Result:= TabCount-1;
-          Exit;
-        end;
+        if FOptShowPlusTab then
+          Result:= cTabIndexPlus
+        else
+          Result:= TabCount-1;
+        Exit;
       end;
     end;
   end;
