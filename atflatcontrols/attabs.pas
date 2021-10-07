@@ -288,6 +288,7 @@ const
   cTabIndexUser2 = -12;
   cTabIndexUser3 = -13;
   cTabIndexUser4 = -14;
+  cTabIndexRightEmptyArea = -20;
 
 const
   _InitTabColorBg = $585858;
@@ -3018,10 +3019,7 @@ begin
     begin
       if (AX>=RectTab.Right) and (AY>=RectTab.Top) and (AY<RectTab.Bottom) then
       begin
-        if FOptShowPlusTab then
-          Result:= cTabIndexPlus
-        else
-          Result:= TabCount-1;
+        Result:= cTabIndexRightEmptyArea;
         Exit;
       end;
     end;
@@ -4046,7 +4044,8 @@ begin
   begin
     //drop to itself
     if (FTabIndexDrop>=0) or
-      (FTabIndexDrop=cTabIndexPlus) {allow drop on "+" pseudo tab} then
+      (FTabIndexDrop=cTabIndexPlus) or
+      (FTabIndexDrop=cTabIndexRightEmptyArea) then
     begin
       DoTabDrop;
       Invalidate;
