@@ -288,7 +288,7 @@ const
   cTabIndexUser2 = -12;
   cTabIndexUser3 = -13;
   cTabIndexUser4 = -14;
-  cTabIndexRightEmptyArea = -20;
+  cTabIndexEmptyArea = -20;
 
 const
   _InitTabColorBg = $585858;
@@ -3019,7 +3019,19 @@ begin
     begin
       if (AX>=RectTab.Right) and (AY>=RectTab.Top) and (AY<RectTab.Bottom) then
       begin
-        Result:= cTabIndexRightEmptyArea;
+        Result:= cTabIndexEmptyArea;
+        Exit;
+      end;
+    end;
+  end
+  else
+  begin
+    RectTab:= FRectTabLast_Scrolled;
+    if RectTab<>cRect0 then
+    begin
+      if (AY>=RectTab.Bottom) and (AX>=RectTab.Left) and (AX<RectTab.Right) then
+      begin
+        Result:= cTabIndexEmptyArea;
         Exit;
       end;
     end;
@@ -4045,7 +4057,7 @@ begin
     //drop to itself
     if (FTabIndexDrop>=0) or
       (FTabIndexDrop=cTabIndexPlus) or
-      (FTabIndexDrop=cTabIndexRightEmptyArea) then
+      (FTabIndexDrop=cTabIndexEmptyArea) then
     begin
       DoTabDrop;
       Invalidate;
