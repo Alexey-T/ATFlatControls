@@ -681,7 +681,7 @@ type
     procedure UpdateRectPlus(var R: TRect);
     function GetTabRect_X(const ARect: TRect): TRect;
     function GetRectScrolled(const R: TRect): TRect;
-    function GetTabAt(X, Y: integer; out APressedX: boolean): integer;
+    function GetTabAt(AX, AY: integer; out APressedX: boolean): integer;
     function GetTabData(AIndex: integer): TATTabData;
     function GetTabLastVisibleIndex: integer;
     function TabCount: integer;
@@ -2904,7 +2904,7 @@ begin
 end;
 
 
-function TATTabs.GetTabAt(X, Y: integer; out APressedX: boolean): integer;
+function TATTabs.GetTabAt(AX, AY: integer; out APressedX: boolean): integer;
 var
   Pnt: TPoint;
   RectTab: TRect;
@@ -2913,7 +2913,7 @@ var
 begin
   Result:= cTabIndexNone;
   APressedX:= false;
-  Pnt:= Point(X, Y);
+  Pnt:= Point(AX, AY);
 
   if PtInRect(FRectArrowLeft, Pnt) then
   begin
@@ -3009,6 +3009,27 @@ begin
       Result:= cTabIndexPlus;
       Exit
     end;
+
+  //empty area after last tab?
+  if FOptPosition in [atpTop, atpBottom] then
+  begin
+    D:= GetTabData(TabCount-1);
+    if Assigned(D) and D.TabVisible then
+    begin
+      RectTab:= GetRectScrolled(D.TabRect);
+      if RectTab<>cRect0 then
+      begin
+        if (AX>=RectTab.Right) and (AY>=RectTab.Top) and (AY<RectTab.Bottom) then
+        begin
+          if FOptShowPlusTab then
+            Result:= cTabIndexPlus
+          else
+            Result:= TabIndex-1;
+          Exit;
+        end;
+      end;
+    end;
+  end;
 end;
 
 procedure TATTabs.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: integer);
