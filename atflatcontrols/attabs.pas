@@ -2910,6 +2910,7 @@ var
   Pnt: TPoint;
   RectTab: TRect;
   D: TATTabData;
+  ok: boolean;
   i: integer;
 begin
   Result:= cTabIndexNone;
@@ -3012,28 +3013,17 @@ begin
     end;
 
   //empty area after last tab?
-  if FOptPosition in [atpTop, atpBottom] then
+  RectTab:= FRectTabLast_Scrolled;
+  if RectTab<>cRect0 then
   begin
-    RectTab:= FRectTabLast_Scrolled;
-    if RectTab<>cRect0 then
+    if FOptPosition in [atpTop, atpBottom] then
+      ok:= (AX>=RectTab.Right) and (AY>=RectTab.Top) and (AY<RectTab.Bottom)
+    else
+      ok:= (AY>=RectTab.Bottom) and (AX>=RectTab.Left) and (AX<RectTab.Right);
+    if ok then
     begin
-      if (AX>=RectTab.Right) and (AY>=RectTab.Top) and (AY<RectTab.Bottom) then
-      begin
-        Result:= cTabIndexEmptyArea;
-        Exit;
-      end;
-    end;
-  end
-  else
-  begin
-    RectTab:= FRectTabLast_Scrolled;
-    if RectTab<>cRect0 then
-    begin
-      if (AY>=RectTab.Bottom) and (AX>=RectTab.Left) and (AX<RectTab.Right) then
-      begin
-        Result:= cTabIndexEmptyArea;
-        Exit;
-      end;
+      Result:= cTabIndexEmptyArea;
+      Exit;
     end;
   end;
 end;
