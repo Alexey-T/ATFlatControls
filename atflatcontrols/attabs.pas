@@ -4035,7 +4035,12 @@ begin
       Invalidate;
   end
   else
-    Accept:= FOptMouseDragFromNotATTabs;
+  begin
+    if not FOptMouseDragFromNotATTabs then
+      Accept:= false
+    else
+      inherited;
+  end;
 end;
 
 procedure TATTabs.DragDrop(Source: TObject; X, Y: integer);
