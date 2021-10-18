@@ -131,6 +131,7 @@ type
     tabOptionDoubleClickClose,
     tabOptionMiddleClickClose,
     tabOptionDragDrop,
+    tabOptionDragFromNotATTabs,
     tabOptionHeightInner,
     tabOptionWidthNormal,
     tabOptionWidthMin,
@@ -1870,6 +1871,7 @@ begin
         tabOptionDoubleClickClose: OptMouseDoubleClickClose:= Boolean(N);
         tabOptionMiddleClickClose: OptMouseMiddleClickClose:= Boolean(N);
         tabOptionDragDrop:         OptMouseDragEnabled:= Boolean(N);
+        tabOptionDragFromNotATTabs:OptMouseDragFromNotATTabs:= Boolean(N);
         tabOptionHeightInner:      OptTabHeight:= N;
         tabOptionWidthMin:         OptTabWidthMinimal:= N;
         tabOptionWidthMax:         OptTabWidthMaximal:= N;

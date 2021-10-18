@@ -184,6 +184,7 @@ begin
   Groups.SetTabOption(tabColorBgPassiveOver, clMedGray);
   Groups.SetTabOption(tabColorBorderActive, clMedGray);
   Groups.SetTabOption(tabColorBorderPassive, clMedGray);
+  Groups.SetTabOption(tabOptionDragFromNotATTabs, 1);
 
   AddTab(Groups.Pages1);
   AddTab(Groups.Pages1);
