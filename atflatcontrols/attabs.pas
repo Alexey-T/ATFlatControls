@@ -3060,7 +3060,7 @@ begin
     if FOptMouseDoubleClickClose and (FTabIndexOver>=0) then
       DeleteTab(FTabIndexOver, true, true)
     else
-    if FOptMouseDoubleClickPlus and (FTabIndexOver=-1) then
+    if FOptMouseDoubleClickPlus and (FTabIndexOver=cTabIndexEmptyArea) then
       if Assigned(FOnTabPlusClick) then
         FOnTabPlusClick(Self);
     Exit
