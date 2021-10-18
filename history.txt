@@ -1,4 +1,7 @@
 
+2021.10.18
++ ATTabs: prop OptMouseDragFromNotATTabs
+
 2021.07.07
 + ATStatus: prop OverflowLeft (works when all panels don't fit)
 + ATStatus: prop SeparatorString (painted between cells)

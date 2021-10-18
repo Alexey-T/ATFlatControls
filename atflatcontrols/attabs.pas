@@ -378,6 +378,7 @@ const
   _InitOptMouseDoubleClickPlus = false;
   _InitOptMouseDragEnabled = true;
   _InitOptMouseDragOutEnabled = true;
+  _InitOptMouseDragFromNotATTabs = false;
 
 type
   { TATTabs }
@@ -492,6 +493,7 @@ type
     FOptMouseDoubleClickPlus: boolean; //enable call "+" tab with dbl-click on empty area
     FOptMouseDragEnabled: boolean; //enable drag-drop
     FOptMouseDragOutEnabled: boolean; //also enable drag-drop to another controls
+    FOptMouseDragFromNotATTabs: boolean;
 
     //others
     FTabWidth: integer;
@@ -878,6 +880,7 @@ type
     property OptMouseDoubleClickPlus: boolean read FOptMouseDoubleClickPlus write FOptMouseDoubleClickPlus default _InitOptMouseDoubleClickPlus;
     property OptMouseDragEnabled: boolean read FOptMouseDragEnabled write FOptMouseDragEnabled default _InitOptMouseDragEnabled;
     property OptMouseDragOutEnabled: boolean read FOptMouseDragOutEnabled write FOptMouseDragOutEnabled default _InitOptMouseDragOutEnabled;
+    property OptMouseDragFromNotATTabs: boolean read FOptMouseDragFromNotATTabs write FOptMouseDragFromNotATTabs default _InitOptMouseDragFromNotATTabs;
 
     property OptHintForX: string read FHintForX write FHintForX;
     property OptHintForPlus: string read FHintForPlus write FHintForPlus;
@@ -1366,6 +1369,7 @@ begin
   FOptMouseDoubleClickPlus:= _InitOptMouseDoubleClickPlus;
   FOptMouseDragEnabled:= _InitOptMouseDragEnabled;
   FOptMouseDragOutEnabled:= _InitOptMouseDragOutEnabled;
+  FOptMouseDragFromNotATTabs:= _InitOptMouseDragFromNotATTabs;
 
   FHintForX:= 'Close tab';
   FHintForPlus:= 'Add tab';
@@ -4031,7 +4035,7 @@ begin
       Invalidate;
   end
   else
-    Accept:= false;
+    Accept:= FOptMouseDragFromNotATTabs;
 end;
 
 procedure TATTabs.DragDrop(Source: TObject; X, Y: integer);
