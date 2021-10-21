@@ -54,6 +54,7 @@ type
     function TabGetTick(Sender: TObject; ATabObject: TObject): Int64;
   protected
     procedure Resize; override;
+    procedure Click; override;
     procedure DragOver(Source: TObject; X, Y: Integer; State: TDragState;
       var Accept: Boolean); override;
     procedure DragDrop(Source: TObject; X, Y: Integer); override;
@@ -552,6 +553,15 @@ begin
         Height * MaxTabsHeightPercentsForMultiline div 100,
         FTabs.OptTabHeight
         );
+end;
+
+procedure TATPages.Click;
+begin
+  inherited;
+  //click on empty area - add tab
+  if FTabs.TabCount=0 then
+    if Assigned(FOnTabAdd) then
+      FOnTabAdd(FTabs);
 end;
 
 procedure TATPages.DragOver(Source: TObject; X, Y: Integer; State: TDragState;
