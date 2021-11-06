@@ -1101,14 +1101,16 @@ end;
 
 procedure DrawPlusSign(C: TCanvas; const R: TRect; ASize, ALineWidth: integer; AColor: TColor);
 var
-  CX, CY: integer;
+  CX, CY, i: integer;
 begin
   CX:= (R.Left+R.Right) div 2;
   CY:= (R.Top+R.Bottom) div 2;
-  C.Pen.Width:= ALineWidth;
-  DrawLine(C, CX-ASize, CY, CX+ASize, CY, AColor);
-  DrawLine(C, CX, CY-ASize, CX, CY+ASize, AColor);
-  C.Pen.Width:= 1;
+  //don't set C.Pen.Width to ALineWidth, it paints buggy on Lazarus 2.2 gtk2
+  for i:= 0 to Max(0, ALineWidth-1) do
+  begin
+    DrawLine(C, CX-ASize, CY+i, CX+ASize, CY+i, AColor);
+    DrawLine(C, CX+i, CY-ASize, CX+i, CY+ASize, AColor);
+  end;
 end;
 
 
