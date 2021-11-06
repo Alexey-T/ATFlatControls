@@ -1109,6 +1109,7 @@ begin
   C.Pen.EndCap:= pecSquare;
   DrawLine(C, CX-ASize, CY, CX+ASize, CY, AColor);
   DrawLine(C, CX, CY-ASize, CX, CY+ASize, AColor);
+  C.Pen.Width:= 1;
 end;
 
 
