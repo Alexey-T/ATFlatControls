@@ -3276,7 +3276,10 @@ begin
       if Hint<>'' then
         Application.ActivateHint(Mouse.CursorPos)
       else
+      begin
         Application.HideHint;
+        FTabIndexHintedPrev:= cTabIndexNone;
+      end;
     end;
   end; //if ShowHint
 
