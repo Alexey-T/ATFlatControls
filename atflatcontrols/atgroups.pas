@@ -701,7 +701,8 @@ begin
   for i:= Low(TATGroupsNums) to High(TATGroupsNums) do
   begin
     FPage:= Pages[i];
-    FPage.Tabs.Invalidate;
+    if Assigned(FPage) then
+      FPage.Tabs.Invalidate;
   end;
 end;
 
