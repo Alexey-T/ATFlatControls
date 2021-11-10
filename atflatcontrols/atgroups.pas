@@ -284,6 +284,7 @@ type
     property SplitterColor: TColor write SetSplitterColor;
     //
     constructor Create(AOwner: TComponent); override;
+    procedure Invalidate; override;
     //
     function PagesVisibleCount: Integer;
     function PagesSetIndex(ANum: Integer): boolean;
@@ -688,6 +689,20 @@ begin
   FPopupPages:= nil;
   FPopupTabIndex:= -1;
   FMode:= gmOne;
+end;
+
+procedure TATGroups.Invalidate;
+var
+  FPage: TATPages;
+  i: integer;
+begin
+  inherited;
+
+  for i:= Low(TATGroupsNums) to High(TATGroupsNums) do
+  begin
+    FPage:= Pages[i];
+    FPage.Tabs.Invalidate;
+  end;
 end;
 
 procedure TATGroups.InitSplitterPopup;
