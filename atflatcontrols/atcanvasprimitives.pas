@@ -219,7 +219,9 @@ begin
   C.Pen.Style:= psSolid;
   C.Pen.Color:= AColor;
   C.AntialiasingMode:= amOff;
+  {$ifdef FPC}
   C.Pen.EndCap:= pecFlat;
+  {$endif}
   C.Pen.Width:= R.Width;
 
   C.MoveTo(X, R.Top);
