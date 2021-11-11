@@ -1106,7 +1106,9 @@ begin
   CX:= (R.Left+R.Right) div 2;
   CY:= (R.Top+R.Bottom) div 2;
   C.Pen.Width:= ALineWidth;
+  {$ifdef FPC}
   C.Pen.EndCap:= pecSquare;
+  {$endif}
   DrawLine(C, CX-ASize, CY, CX+ASize, CY, AColor);
   DrawLine(C, CX, CY-ASize, CX, CY+ASize, AColor);
   C.Pen.Width:= 1;
