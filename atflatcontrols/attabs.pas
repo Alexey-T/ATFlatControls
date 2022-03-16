@@ -682,6 +682,7 @@ type
     procedure ApplyButtonLayout;
     function GetTabRectWidth(APlusBtn: boolean): integer;
     procedure UpdateRectPlus(var R: TRect);
+    procedure UpdateTabTooltip;
     function GetTabRect_X(const ARect: TRect): TRect;
     function GetRectScrolled(const R: TRect): TRect;
     function GetTabAt(AX, AY: integer; out APressedX: boolean): integer;
@@ -4843,6 +4844,10 @@ begin
   end;
 end;
 
+procedure TATTabs.UpdateTabTooltip;
+begin
+  FTabIndexHintedPrev:= -1;
+end;
 
 initialization
   cRect0:= Rect(0, 0, 0, 0);
