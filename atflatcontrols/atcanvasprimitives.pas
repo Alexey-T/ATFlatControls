@@ -27,6 +27,7 @@ procedure CanvasLine_DottedVertAlt(C: TCanvas; Color: TColor; X1, Y1, Y2: intege
 procedure CanvasLine_Dotted(C: TCanvas; Color: TColor; X1, Y1, X2, Y2: integer);
 procedure CanvasLine_WavyHorz(C: TCanvas; Color: TColor; X1, Y1, X2, Y2: integer; AtDown: boolean);
 procedure CanvasLine_RoundedEdge(C: TCanvas; Color: TColor; X1, Y1, X2, Y2: integer; AtDown: boolean);
+procedure CanvasLineHorz_Dashed(C: TCanvas; Color: TColor; X1, Y1, X2: integer; ADashLen, AEmptyLen: integer);
 
 procedure CanvasPaintTriangleUp(C: TCanvas; AColor: TColor; ACoord: TPoint; ASize: integer); inline;
 procedure CanvasPaintTriangleDown(C: TCanvas; AColor: TColor; ACoord: TPoint; ASize: integer); inline;
@@ -266,6 +267,20 @@ begin
   for j:= Y1 to Y2 do
     if Odd(j) then
       C.Pixels[X1, j]:= Color;
+end;
+
+procedure CanvasLineHorz_Dashed(C: TCanvas; Color: TColor; X1, Y1, X2: integer; ADashLen, AEmptyLen: integer);
+var
+  X, XTo: integer;
+begin
+  C.Pen.Color:= Color;
+  X:= X1;
+  repeat
+    if X>X2 then exit;
+    XTo:= Min(X2, X+ADashLen);
+    C.Line(X, Y1, XTo, Y1);
+    X:= XTo+AEmptyLen;
+  until false;
 end;
 
 procedure CanvasPaintTriangleUp(C: TCanvas; AColor: TColor; ACoord: TPoint; ASize: integer); inline;
