@@ -339,10 +339,9 @@ type
   end;
 
 function PtInControl(Control: TControl; const ScreenPnt: TPoint): boolean;
-{
+
 procedure DoControlLock(Ctl: TWinControl);
 procedure DoControlUnlock(Ctl: TWinControl);
-}
 
 var
   MaxTabsHeightPercentsForMultiline: Integer = 70;
