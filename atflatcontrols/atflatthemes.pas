@@ -71,6 +71,9 @@ type
     XMarkOffsetLeft: integer;
     XMarkOffsetRight: integer;
     XMarkLineWidth: integer;
+    CrossLineForDisabled: boolean;
+    CrossLineWidth: integer;
+
     ScalePercents: integer;
     ScaleFontPercents: integer;
     function DoScale(AValue: integer): integer;
@@ -149,6 +152,8 @@ initialization
     XMarkOffsetLeft:= 1;
     XMarkOffsetRight:= 1;
     XMarkLineWidth:= 1;
+    CrossLineForDisabled:= true;
+    CrossLineWidth:= 2;
 
     ScalePercents:= 100;
     ScaleFontPercents:= 0;

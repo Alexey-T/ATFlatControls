@@ -378,7 +378,7 @@ type
 
 procedure TATButton.PaintTo(C: TCanvas);
 var
-  NWidth, NHeight: integer;
+  NWidth, NHeight, i: integer;
   NSize, NSizeArrow: integer;
   bUseBack, bUseBorder: boolean;
   NColorBg, NColor: TColor;
@@ -485,6 +485,22 @@ begin
       NSize:= Theme^.MouseoverBorderWidth;
 
     PaintBorder(C, RectAll, NColor, NSize);
+  end;
+
+  if not Enabled and Theme^.CrossLineForDisabled then
+  begin
+    pnt1.Y:= Height;
+    pnt1.X:= (Width-Height-Theme^.CrossLineWidth) div 2;
+    pnt2.Y:= 0;
+    pnt2.X:= pnt1.X+Height;
+    C.Pen.Color:= Theme^.ColorBorderPassive;
+    for i:= 1 to Theme^.CrossLineWidth do
+    begin
+      C.MoveTo(pnt1);
+      C.LineTo(pnt2);
+      Inc(pnt1.X);
+      Inc(pnt2.X);
+    end;
   end;
 
   C.Font.Name:= Theme^.FontName;
