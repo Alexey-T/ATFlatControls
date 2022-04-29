@@ -487,7 +487,9 @@ begin
     PaintBorder(C, RectAll, NColor, NSize);
   end;
 
-  if not Enabled and Theme^.CrossLineForDisabled then
+  if not Enabled and
+    not (Kind in [abuSeparatorHorz, abuSeparatorVert]) and
+    Theme^.CrossLineForDisabled then
   begin
     pnt1.Y:= Height;
     pnt1.X:= (Width-Height-Theme^.CrossLineWidth) div 2;
