@@ -381,6 +381,7 @@ var
   NWidth, NHeight, i: integer;
   NSize, NSizeArrow: integer;
   bUseBack, bUseBorder: boolean;
+  bKindSeparator: boolean;
   NColorBg, NColor: TColor;
   TextSize: TSize;
   pnt1, pnt2: TPoint;
@@ -400,10 +401,11 @@ begin
   if not Theme^.EnableColorBgOver then
     FOver:= false;
 
+  bKindSeparator:= FKind in [abuSeparatorHorz, abuSeparatorVert];
   bUseBack:=
     (not FFlat)
     or FChecked
-    or (FOver and not (FKind in [abuSeparatorHorz, abuSeparatorVert]));
+    or (FOver and not bKindSeparator);
 
   bUseBorder:= bUseBack
     or (FKind=abuTextChoice);
@@ -488,7 +490,7 @@ begin
   end;
 
   if not Enabled and
-    not (Kind in [abuSeparatorHorz, abuSeparatorVert]) and
+    not bKindSeparator and
     Theme^.CrossLineForDisabled then
   begin
     pnt1.Y:= Height;
