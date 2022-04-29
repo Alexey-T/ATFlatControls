@@ -493,10 +493,10 @@ begin
     not bKindSeparator and
     Theme^.CrossLineForDisabled then
   begin
-    pnt1.Y:= Height;
-    pnt1.X:= (Width-Height-Theme^.CrossLineWidth) div 2;
+    pnt1.Y:= NHeight;
+    pnt1.X:= (NWidth-NHeight-Theme^.CrossLineWidth) div 2;
     pnt2.Y:= 0;
-    pnt2.X:= pnt1.X+Height;
+    pnt2.X:= pnt1.X+NHeight;
     C.Pen.Color:= Theme^.ColorBorderPassive;
     for i:= 1 to Theme^.CrossLineWidth do
     begin
