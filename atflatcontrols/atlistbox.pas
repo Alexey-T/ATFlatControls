@@ -481,12 +481,16 @@ var
   Index: integer;
   bPaintX, bCircle: boolean;
   R, RectX: TRect;
+  W, H: integer;
 begin
+  W:= ClientWidth;
+  H:= ClientHeight;
+
   C.Font.Name:= CurrentFontName;
   C.Font.Size:= FTheme^.DoScaleFont(CurrentFontSize);
 
   C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListbox);
-  C.FillRect(Rect(0, 0, ClientWidth, ClientHeight));
+  C.FillRect(Rect(0, 0, W, H));
 
   if FHeaderText<>'' then
     FClientOriginY:= FItemHeight
@@ -502,14 +506,14 @@ begin
     r.Top:= 0;
     r.Bottom:= FItemHeight;
     r.Left:= 0;
-    r.Right:= ClientWidth;
+    r.Right:= W;
 
     C.Font.Style:= [];
     DoDefaultDrawItem(C, -1, r);
 
     C.Pen.Color:= FTheme^.ColorSeparators;
     C.MoveTo(0, FItemHeight-1);
-    C.LineTo(ClientWidth, FItemHeight-1);
+    C.LineTo(W, FItemHeight-1);
   end;
 
   for Index:= FItemTop to ItemCount-1 do
@@ -517,8 +521,8 @@ begin
     r.Top:= (Index-FItemTop)*FItemHeight + FClientOriginY;
     r.Bottom:= r.Top+FItemHeight;
     r.Left:= 0;
-    r.Right:= ClientWidth;
-    if r.Top>=ClientHeight then Break;
+    r.Right:= W;
+    if r.Top>=H then Break;
 
     if FOwnerDrawn then
     begin
@@ -557,7 +561,7 @@ begin
       C.Brush.Color:= FTheme^.ColorListboxBorderFocused
     else
       C.Brush.Color:= FTheme^.ColorListboxBorderPassive;
-    C.FrameRect(Rect(0, 0, ClientWidth, ClientHeight));
+    C.FrameRect(Rect(0, 0, W, H));
   end;
 end;
 
