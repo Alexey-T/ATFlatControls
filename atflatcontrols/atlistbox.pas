@@ -516,6 +516,10 @@ begin
     C.LineTo(W, FItemHeight-1);
   end;
 
+  //adjust index of top visible item, to not leave empty space on bottom
+  FItemTop:= Min(FItemTop,
+    Max(0, ItemCount - H div FItemHeight + 1));
+
   for Index:= FItemTop to ItemCount-1 do
   begin
     r.Top:= (Index-FItemTop)*FItemHeight + FClientOriginY;
