@@ -278,7 +278,8 @@ begin
   repeat
     if X>X2 then exit;
     XTo:= Min(X2, X+ADashLen);
-    C.Line(X, Y1, XTo, Y1);
+    C.MoveTo(X, Y1);
+    C.LineTo(XTo, Y1);
     X:= XTo+AEmptyLen;
   until false;
 end;
