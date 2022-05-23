@@ -500,8 +500,8 @@ begin
     C.Pen.Color:= Theme^.ColorBorderPassive;
     for i:= 1 to Theme^.CrossLineWidth do
     begin
-      C.MoveTo(pnt1);
-      C.LineTo(pnt2);
+      C.MoveTo(pnt1.X, pnt1.Y);
+      C.LineTo(pnt2.X, pnt2.Y);
       Inc(pnt1.X);
       Inc(pnt2.X);
     end;
