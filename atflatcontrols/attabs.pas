@@ -3197,6 +3197,9 @@ begin
     begin
       P:= ClientToScreen(FMouseDownPnt);
       D.TabPopupMenu.PopUp(P.X, P.Y);
+
+      //fixing ATFlatControls #80
+      FTabIndexDrop:= cTabIndexNone;
     end;
   end;
 end;
