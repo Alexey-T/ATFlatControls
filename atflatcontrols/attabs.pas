@@ -3000,7 +3000,9 @@ begin
 
     //support drag-drop into area between tabs
     if FOptPosition in [atpTop, atpBottom] then
-      Dec(RectTab.Left, DoScale(FOptSpaceBetweenTabs));
+      Dec(RectTab.Left, DoScale(FOptSpaceBetweenTabs))
+    else
+      Dec(RectTab.Top, DoScale(FOptSpaceBetweenTabs));
 
     if FActualMultiline then
     begin
