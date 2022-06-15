@@ -2999,6 +2999,7 @@ begin
     if RectTab=cRect0 then Continue;
 
     //support drag-drop into area between tabs
+    //we need to increase RectTab, because it doesn't contain inter-tab area
     if FOptPosition in [atpTop, atpBottom] then
       Dec(RectTab.Left, DoScale(FOptSpaceBetweenTabs))
     else
