@@ -275,7 +275,7 @@ var
 begin
   for i:= t_top.TabCount-1 downto 1 do
     t_top.DeleteTab(i, false, false);
-  for i:= 1 to 200 do
+  for i:= 1 to 1000 do
   begin
     t_top.AddTab(-1, IntToStr(i)+'_'+StringOfChar('a', 3+Random(i mod 15)) );
     if i mod 100 = 0 then
