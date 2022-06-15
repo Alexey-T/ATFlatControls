@@ -2998,6 +2998,10 @@ begin
     RectTab:= GetRectScrolled(D.TabRect);
     if RectTab=cRect0 then Continue;
 
+    //support drag-drop into area between tabs
+    if FOptPosition in [atpTop, atpBottom] then
+      Dec(RectTab.Left, DoScale(FOptSpaceBetweenTabs));
+
     if FActualMultiline then
     begin
       if RectTab.Top>Pnt.Y then Break;
@@ -3874,7 +3878,7 @@ begin
   NTo:= FTabIndexDrop;
   if not IsIndexOk(NTo) then
     NTo:= TabCount-1;
-  if NFrom=NTo then Exit;
+  //if NFrom=NTo then Exit;
 
   Result:= true;
   if Assigned(FOnTabDragging) then
