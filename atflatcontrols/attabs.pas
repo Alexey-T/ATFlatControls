@@ -503,6 +503,7 @@ type
     FTabIndexLoaded: integer;
     FTabIndexOver: integer;
     FTabIndexDrop: integer;
+    FTabIndexDropOld: integer;
     FTabIndexHinted: integer;
     FTabIndexHintedPrev: integer;
     FTabList: TATTabListCollection;
@@ -1408,7 +1409,9 @@ begin
   FTabIndexOver:= -1;
   FTabIndexHinted:= -1;
   FTabIndexHintedPrev:= -1;
-  //FTabList:= TCollection.Create(TATTabData);
+  FTabIndexDrop:= -1;
+  FTabIndexDropOld:= -1;
+
   FTabList:= TATTabListCollection.Create(TATTabData);
   FTabList.AOwner:= Self;
   FTabMenu:= nil;
@@ -3067,7 +3070,9 @@ begin
   FMouseDragBegins:= false;
   Cursor:= crDefault;
   Screen.Cursor:= crDefault;
-  
+  FTabIndexDrop:= -1;
+  FTabIndexDropOld:= -1;
+
   if IsDblClick then
   begin
     if Assigned(FOnTabDblClick) and (FTabIndexOver>=0) then
@@ -3886,8 +3891,12 @@ begin
   //if NFrom=NTo then Exit;
 
   Result:= true;
-  if Assigned(FOnTabDragging) then
-    FOnTabDragging(Self, NFrom, NTo, Result);
+  if NTo<>FTabIndexDropOld then
+  begin
+    FTabIndexDropOld:= NTo;
+    if Assigned(FOnTabDragging) then
+      FOnTabDragging(Self, NFrom, NTo, Result);
+  end;
 end;
 
 procedure TATTabs.DoTabDrop;
