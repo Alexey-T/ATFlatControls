@@ -589,6 +589,7 @@ type
     FOnTabGetCloseAction: TATTabGetCloseActionEvent;
     FOnTabDblClick: TATTabDblClickEvent;
     FOnTabDropQuery: TATTabDropQueryEvent;
+    FOnTabDragging: TATTabDropQueryEvent;
 
     function ConvertButtonIdToTabIndex(Id: TATTabButton): integer; inline;
     procedure DoClickUser(AIndex: integer);
@@ -642,6 +643,7 @@ type
     function GetRectOfButton(AButton: TATTabButton): TRect;
     function GetRectOfButtonIndex(AIndex: integer; AtLeft: boolean): TRect;
     function GetScrollPageSize: integer;
+    function IsDraggingAllowed: boolean;
     procedure SetOptButtonLayout(const AValue: string);
     procedure SetOptScalePercents(AValue: integer);
     procedure SetOptVarWidth(AValue: boolean);
@@ -911,6 +913,7 @@ type
     property OnTabGetCloseAction: TATTabGetCloseActionEvent read FOnTabGetCloseAction write FOnTabGetCloseAction;
     property OnTabDblClick: TATTabDblClickEvent read FOnTabDblClick write FOnTabDblClick;
     property OnTabDropQuery: TATTabDropQueryEvent read FOnTabDropQuery write FOnTabDropQuery;
+    property OnTabDragging: TATTabDropQueryEvent read FOnTabDragging write FOnTabDragging;
   end;
 
 var
@@ -3861,6 +3864,23 @@ begin
   end;
 end;
 
+function TATTabs.IsDraggingAllowed: boolean;
+var
+  NFrom, NTo: integer;
+begin
+  Result:= false;
+  NFrom:= FTabIndex;
+  if not IsIndexOk(NFrom) then Exit;
+  NTo:= FTabIndexDrop;
+  if not IsIndexOk(NTo) then
+    NTo:= TabCount-1;
+  if NFrom=NTo then Exit;
+
+  Result:= true;
+  if Assigned(FOnTabDragging) then
+    FOnTabDragging(Self, NFrom, NTo, Result);
+end;
+
 procedure TATTabs.DoTabDrop;
 var
   NFrom, NTo: integer;
@@ -4031,7 +4051,8 @@ begin
   begin
     Accept:=
       FOptMouseDragEnabled and
-      FOptMouseDragOutEnabled;
+      FOptMouseDragOutEnabled and
+      IsDraggingAllowed;
 
     // Delphi 7 don't call MouseMove during dragging
     {$ifndef fpc}
