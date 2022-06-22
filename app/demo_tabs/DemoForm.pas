@@ -718,8 +718,7 @@ end;
 procedure TForm1.TabDragging(Sender: TObject; AIndexFrom, AIndexTo: integer;
   var ACanDrop: boolean);
 begin
-  //debug
-  //ACanDrop:= AIndexTo>2;
+  labStatus.Caption:= Format('OnTabDragging: %d -> %d', [AIndexFrom, AIndexTo]);
 end;
 
 procedure TForm1.TabClickUserButton(Sender: TObject; AIndex: integer);
