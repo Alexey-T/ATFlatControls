@@ -43,6 +43,7 @@ type
     function AddButton(
       AImageIndex: integer;
       AOnClick: TNotifyEvent;
+      AOnRightClick: TContextPopupEvent;
       const ACaption, AHint, ADataString: string;
       AShowCaption: boolean): TATButton;
     function AddDropdown(
@@ -362,7 +363,9 @@ begin
   UpdateControls;
 end;
 
-function TATFlatToolbar.AddButton(AImageIndex: integer; AOnClick: TNotifyEvent;
+function TATFlatToolbar.AddButton(AImageIndex: integer;
+  AOnClick: TNotifyEvent;
+  AOnRightClick: TContextPopupEvent;
   const ACaption, AHint, ADataString: string; AShowCaption: boolean): TATButton;
 var
   b: TATButton;
@@ -379,6 +382,7 @@ begin
   b.ImageIndex:= AImageIndex;
   b.ShowHint:= true;
   b.OnClick:= AOnClick;
+  b.OnContextPopup:= AOnRightClick;
 
   if not AShowCaption then
     b.Kind:= abuIconOnly
