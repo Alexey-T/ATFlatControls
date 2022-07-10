@@ -224,7 +224,7 @@ begin
   t_fox.OptSpaceInitial:= 20;
   t_fox.OptSpacer:= 4;
   t_fox.OptSpaceXSize:= 13;
-  t_fox.OptMouseDragEnabled:= false;
+  t_fox.OptMouseDragEnabled:= true;
   t_fox.OptSpaceSide:= 10;
   t_fox.OnTabPlusClick:= Tab2PlusClick;
 
