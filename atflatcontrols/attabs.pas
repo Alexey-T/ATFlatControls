@@ -4070,7 +4070,7 @@ begin
     Accept:=
       FOptMouseDragEnabled and
       FOptMouseDragOutEnabled and
-      IsDraggingAllowed;
+      ((Source<>Self) or IsDraggingAllowed);
 
     // Delphi 7 don't call MouseMove during dragging
     {$ifndef fpc}
