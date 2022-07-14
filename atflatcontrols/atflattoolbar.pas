@@ -497,9 +497,7 @@ begin
   C:= Sender as TControl;
   P:= C.ClientToScreen(Point(0, C.Height));
   TControlHack(C).PopupMenu.PopUp(P.X, P.Y);
-
 end;
-
 
 end.
 
