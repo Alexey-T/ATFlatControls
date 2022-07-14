@@ -4454,6 +4454,8 @@ end;
 
 procedure TATTabs.DoContextPopup(MousePos: TPoint; var Handled: Boolean);
 begin
+  if not IsEnabled then exit; //prevent popup menu if form is disabled, needed for CudaText plugins dlg_proc API on Qt5
+
   inherited;
   if not Handled then
   begin

@@ -141,6 +141,7 @@ type
 
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure DoContextPopup(MousePos: TPoint; var Handled: Boolean); override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure DoEnter; override;
     procedure DoExit; override;
@@ -793,6 +794,13 @@ begin
   inherited;
   FPressed:= false;
   Invalidate;
+end;
+
+procedure TATButton.DoContextPopup(MousePos: TPoint; var Handled: Boolean);
+begin
+  if not IsEnabled then exit; //prevent popup menu if form is disabled, needed for CudaText plugins dlg_proc API on Qt5
+
+  inherited DoContextPopup(MousePos, Handled);
 end;
 
 procedure TATButton.KeyDown(var Key: Word; Shift: TShiftState);
