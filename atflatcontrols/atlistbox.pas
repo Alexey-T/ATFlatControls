@@ -78,6 +78,7 @@ type
     FHeaderImages: TImageList;
     FScrollHorz: integer;
     FBitmap: Graphics.TBitmap;
+    FBorderVisible: boolean;
     FCanGetFocus: boolean;
     FList: TStringList;
     FHotTrack: boolean;
@@ -145,6 +146,7 @@ type
     procedure Paint; override;
     procedure Click; override;
     procedure Resize; override;
+    procedure DoExit; override;
     {$ifdef FPC}
     procedure LMVScroll(var Msg: TLMVScroll); message LM_VSCROLL;
     procedure LMHScroll(var Msg: TLMHScroll); message LM_HSCROLL;
@@ -202,6 +204,7 @@ type
   published
     property Align;
     property Anchors;
+    property BorderVisible: boolean read FBorderVisible write FBorderVisible default false;
     {$ifdef FPC}
     property BorderStyle;
     property BorderSpacing;
@@ -350,6 +353,12 @@ end;
 
 procedure TATListbox.DoContextPopup(MousePos: TPoint; var Handled: Boolean);
 begin
+  if not IsEnabled then //prevent popup menu if form is disabled, needed for CudaText plugins dlg_proc API on Qt5
+  begin
+    Handled:= true;
+    exit;
+  end;
+
   //must select item under mouse cursor
   ItemIndex:= GetItemIndexAt(MousePos);
 
@@ -478,12 +487,16 @@ var
   Index: integer;
   bPaintX, bCircle: boolean;
   R, RectX: TRect;
+  W, H: integer;
 begin
+  W:= ClientWidth;
+  H:= ClientHeight;
+
   C.Font.Name:= CurrentFontName;
   C.Font.Size:= FTheme^.DoScaleFont(CurrentFontSize);
 
   C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListbox);
-  C.FillRect(0, 0, ClientWidth, ClientHeight);
+  C.FillRect(Rect(0, 0, W, H));
 
   if FHeaderText<>'' then
     FClientOriginY:= FItemHeight
@@ -499,23 +512,27 @@ begin
     r.Top:= 0;
     r.Bottom:= FItemHeight;
     r.Left:= 0;
-    r.Right:= ClientWidth;
+    r.Right:= W;
 
     C.Font.Style:= [];
     DoDefaultDrawItem(C, -1, r);
 
     C.Pen.Color:= FTheme^.ColorSeparators;
     C.MoveTo(0, FItemHeight-1);
-    C.LineTo(ClientWidth, FItemHeight-1);
+    C.LineTo(W, FItemHeight-1);
   end;
+
+  //adjust index of top visible item, to not leave empty space on bottom
+  FItemTop:= Min(FItemTop,
+    Max(0, ItemCount - H div FItemHeight + 1));
 
   for Index:= FItemTop to ItemCount-1 do
   begin
     r.Top:= (Index-FItemTop)*FItemHeight + FClientOriginY;
     r.Bottom:= r.Top+FItemHeight;
     r.Left:= 0;
-    r.Right:= ClientWidth;
-    if r.Top>=ClientHeight then Break;
+    r.Right:= W;
+    if r.Top>=H then Break;
 
     if FOwnerDrawn then
     begin
@@ -546,6 +563,15 @@ begin
       RectX:= Rect(r.Left, r.Top, r.Left+FIndentForX, r.Bottom);
       DoPaintX(C, RectX, bCircle and (Index<>FHotTrackIndex));
     end;
+  end;
+
+  if FBorderVisible then
+  begin
+    if Focused then
+      C.Brush.Color:= FTheme^.ColorListboxBorderFocused
+    else
+      C.Brush.Color:= FTheme^.ColorListboxBorderPassive;
+    C.FrameRect(Rect(0, 0, W, H));
   end;
 end;
 
@@ -659,7 +685,7 @@ begin
   if AIndex=-1 then
   begin
     C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListboxHeader);
-    C.Font.Color:= ColorToRGB(FTheme^.ColorFontListbox);
+    C.Font.Color:= ColorToRGB(FTheme^.ColorFontListboxHeader);
   end
   else
   if AIndex=FItemIndex then
@@ -773,9 +799,9 @@ begin
     C:= Canvas;
 
   UpdateItemHeight;
-  UpdateColumnWidths;
   UpdateScrollbars(C);
   UpdateClientSizes;
+  UpdateColumnWidths;
 
   R:= Rect(0, 0, ClientWidth, ClientHeight);
   if DoubleBuffered then
@@ -834,6 +860,13 @@ begin
       BitmapResizeBySteps(FBitmap, Width, Height);
 
   Invalidate;
+end;
+
+procedure TATListbox.DoExit;
+begin
+  inherited;
+  if FBorderVisible then
+    Invalidate;
 end;
 
 function TATListbox.GetColumnIndexAt(Pnt: TPoint): integer;
@@ -1003,6 +1036,7 @@ begin
   Font.Size:= 9;
 
   CanGetFocus:= false;
+  FBorderVisible:= false;
   FList:= TStringList.Create;
   FVirtualItemCount:= 0;
   FItemIndex:= 0;

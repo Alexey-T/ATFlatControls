@@ -14,6 +14,7 @@ type
   { TFormDemo }
 
   TFormDemo = class(TForm)
+    chkRoundedThumb: TCheckBox;
     chkInstant: TCheckBox;
     Label6: TLabel;
     Label7: TLabel;
@@ -37,9 +38,10 @@ type
     trackCornerH: TTrackBar;
     trackThumbSize: TTrackBar;
     trackMax: TTrackBar;
+    procedure chkDrawChange(Sender: TObject);
     procedure chkInstantChange(Sender: TObject);
+    procedure chkRoundedThumbChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure chkDrawClick(Sender: TObject);
     procedure ListArrowsClick(Sender: TObject);
     procedure trackBorChange(Sender: TObject);
     procedure trackMaxChange(Sender: TObject);
@@ -58,7 +60,7 @@ type
     procedure ChangeH(S: TObject);
     procedure ChangeV(S: TObject);
     procedure DrawEvent(S: TObject; AType: TATScrollbarElemType;
-      ACanvas: TCanvas; const ARect: TRect; var ACanDo: boolean);
+      ACanvas: TCanvas; const ARect, ARect2: TRect; var ACanDo: boolean);
   public
     { Public declarations }
     bar_h, bar_v, bar_h1, bar_v1: TATScrollbar;
@@ -118,43 +120,7 @@ begin
   ATScrollbarTheme.DirectJumpOnClickPageUpDown:= chkInstant.Checked;
 end;
 
-procedure TFormDemo.DrawEvent(S: TObject; AType: TATScrollbarElemType;
-  ACanvas: TCanvas; const ARect: TRect; var ACanDo: boolean);
-const
-  cc: array[TATScrollbarElemType] of TColor = (
-    clYellow, clYellow,
-    clCream, clCream,
-    $30a030, $00e000, 
-    $e0a0c0, clNavy,
-    clRed div 2, clRed,
-    $e05050);
-var
-  str: string;
-  p: TPoint;
-begin
-  ACanvas.Brush.Color:= cc[AType];
-  ACanvas.FillRect(ARect);
-  ACanDo:= false;
-
-  case AType of
-    aseArrowUp: str:= '^';
-    aseArrowDown: str:= 'v';
-    aseArrowLeft: str:= '<';
-    aseArrowRight: str:= '>';
-    aseScrollThumbH: str:= '==';
-    aseScrollThumbV: str:= '||';
-    else str:= '';
-  end;
-
-  if str<>'' then
-  begin
-    p.x:= (ARect.Left+ARect.Right-ACanvas.TextWidth(str)) div 2;
-    p.y:= (ARect.Top+ARect.Bottom-ACanvas.TextHeight(str)) div 2;
-    ACanvas.TextOut(p.x, p.y, str);
-  end;
-end;
-
-procedure TFormDemo.chkDrawClick(Sender: TObject);
+procedure TFormDemo.chkDrawChange(Sender: TObject);
 begin
   if chkDraw.Checked then
   begin
@@ -168,6 +134,62 @@ begin
   end;
   bar_h.Invalidate;
   bar_v.Invalidate;
+end;
+
+procedure TFormDemo.chkRoundedThumbChange(Sender: TObject);
+begin
+  ATScrollbarTheme.ThumbRoundedRect:= chkRoundedThumb.Checked;
+  bar_v.Invalidate;
+  bar_h.Invalidate;
+  bar_v1.Invalidate;
+  bar_h1.Invalidate;
+end;
+
+procedure TFormDemo.DrawEvent(S: TObject; AType: TATScrollbarElemType;
+  ACanvas: TCanvas; const ARect, ARect2: TRect; var ACanDo: boolean);
+const
+  cc: array[TATScrollbarElemType] of TColor = (
+    clYellow, clYellow,
+    clCream, clCream,
+    $30a030, $00e000, 
+    $e0a0c0, clNavy,
+    $e05050);
+var
+  str: string;
+  p: TPoint;
+begin
+  ACanDo:= false;
+
+  if AType in [aseBackAndThumbH, aseBackAndThumbV] then
+  begin
+    ACanvas.Brush.Color:= cc[AType];
+    ACanvas.FillRect(ARect);
+
+    ACanvas.Brush.Color:= $e080e0;
+    ACanvas.FillRect(ARect2);
+  end
+  else
+  begin
+    ACanvas.Brush.Color:= cc[AType];
+    ACanvas.FillRect(ARect);
+  end;
+
+  case AType of
+    aseArrowUp: str:= '^';
+    aseArrowDown: str:= 'v';
+    aseArrowLeft: str:= '<';
+    aseArrowRight: str:= '>';
+    aseBackAndThumbH: str:= '==';
+    aseBackAndThumbV: str:= '||';
+    else str:= '';
+  end;
+
+  if str<>'' then
+  begin
+    p.x:= (ARect2.Left+ARect2.Right-ACanvas.TextWidth(str)) div 2;
+    p.y:= (ARect2.Top+ARect2.Bottom-ACanvas.TextHeight(str)) div 2;
+    ACanvas.TextOut(p.x, p.y, str);
+  end;
 end;
 
 procedure TFormDemo.ListArrowsClick(Sender: TObject);

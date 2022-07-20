@@ -17,12 +17,15 @@ type
     bDel: TButton;
     btnColor: TColorButton;
     Edit1: TEdit;
+    edSep: TEdit;
     ImageList1: TImageList;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
+    Label4: TLabel;
     TrackScale: TTrackBar;
     procedure btnColorColorChanged(Sender: TObject);
+    procedure edSepChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bAddClick(Sender: TObject);
     procedure bDelClick(Sender: TObject);
@@ -50,12 +53,20 @@ uses StrUtils, Math;
 procedure TForm1.FormCreate(Sender: TObject);
 var
   D: TATStatusData;
+  i: integer;
 begin
   t:= TATStatus.Create(Self);
   t.Parent:= Self;
   t.Images:= ImageList1;
   t.OnPanelClick:= StatusClick;
   t.OnPanelDrawAfter:= StatusDraw;
+  t.OverflowLeft:= true;
+
+  t.ColorBorderL:= clYellow;
+  t.ColorBorderR:= clRed;
+  t.ColorBorderU:= clYellow;
+  t.ColorBorderD:= clRed;
+  t.Color:= clGreen;
 
   t.AddPanel(-1, 100, taLeftJustify, 'Left', 0);//, 0, true);
   t.AddPanel(-1, 100, taCenter, 'Center', 1);//, 0, true);
@@ -64,6 +75,9 @@ begin
   t.AddPanel(-1, 80, taLeftJustify, '', 0);
   t.AddPanel(-1, 80, taCenter, '', 0);
   t.AddPanel(-1, 80, taRightJustify, '', 0);
+
+  for i:= 0 to t.PanelCount-1 do
+    (t.Panels.Items[i] as TATStatusData).ColorBack:= clCream;
 
   //-----------------------------------
   t0:= TATStatus.Create(Self);
@@ -123,6 +137,12 @@ begin
   D.ColorLine2:= btnColor.ButtonColor;
   Inc(NShowCount);
   D.OverlayText:= IntToStr(NShowCount);
+  t.Invalidate;
+end;
+
+procedure TForm1.edSepChange(Sender: TObject);
+begin
+  t.SeparatorString:= edSep.Text;
   t.Invalidate;
 end;
 

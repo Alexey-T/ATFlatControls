@@ -107,6 +107,8 @@ type
     procedure TabClickUserButton(Sender: TObject; AIndex: integer);
     procedure TabCloseEvent(Sender: TObject; ATabIndex: Integer; var ACanClose,
       ACanContinue: boolean);
+    procedure TabDragging(Sender: TObject; AIndexFrom, AIndexTo: integer;
+      var ACanDrop: boolean);
     procedure TabMove(Sender: TObject; NFrom, NTo: Integer);
     procedure TabClick(Sender: TObject);
     procedure TabPlusClick(Sender: TObject);
@@ -160,6 +162,7 @@ begin
   t_top.OnTabClose:= TabCloseEvent;
   t_top.OnTabDrawAfter:= TabDrawAfter_Top;
   t_top.OnTabClickUserButton:=TabClickUserButton;
+  t_top.OnTabDragging:=TabDragging;
   t_top.OptMouseDoubleClickPlus:= true;
   t_top.OptShowXButtons:= atbxShowAll;
   t_top.OptSpaceBetweenTabs:= 10;
@@ -221,7 +224,7 @@ begin
   t_fox.OptSpaceInitial:= 20;
   t_fox.OptSpacer:= 4;
   t_fox.OptSpaceXSize:= 13;
-  t_fox.OptMouseDragEnabled:= false;
+  t_fox.OptMouseDragEnabled:= true;
   t_fox.OptSpaceSide:= 10;
   t_fox.OnTabPlusClick:= Tab2PlusClick;
 
@@ -272,7 +275,7 @@ var
 begin
   for i:= t_top.TabCount-1 downto 1 do
     t_top.DeleteTab(i, false, false);
-  for i:= 1 to 200 do
+  for i:= 1 to 1000 do
   begin
     t_top.AddTab(-1, IntToStr(i)+'_'+StringOfChar('a', 3+Random(i mod 15)) );
     if i mod 100 = 0 then
@@ -710,6 +713,12 @@ procedure TForm1.TabCloseEvent(Sender: TObject; ATabIndex: Integer;
 begin
   ACanClose:= Application.MessageBox('Close this tab?', 'Demo',
     MB_OKCANCEL+MB_ICONQUESTION) = ID_OK;
+end;
+
+procedure TForm1.TabDragging(Sender: TObject; AIndexFrom, AIndexTo: integer;
+  var ACanDrop: boolean);
+begin
+  labStatus.Caption:= Format('OnTabDragging: %d -> %d', [AIndexFrom, AIndexTo]);
 end;
 
 procedure TForm1.TabClickUserButton(Sender: TObject; AIndex: integer);

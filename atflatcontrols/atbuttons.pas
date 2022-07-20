@@ -141,6 +141,7 @@ type
 
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure DoContextPopup(MousePos: TPoint; var Handled: Boolean); override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure DoEnter; override;
     procedure DoExit; override;
@@ -378,9 +379,10 @@ type
 
 procedure TATButton.PaintTo(C: TCanvas);
 var
-  NWidth, NHeight: integer;
+  NWidth, NHeight, i: integer;
   NSize, NSizeArrow: integer;
   bUseBack, bUseBorder: boolean;
+  bKindSeparator: boolean;
   NColorBg, NColor: TColor;
   TextSize: TSize;
   pnt1, pnt2: TPoint;
@@ -400,10 +402,11 @@ begin
   if not Theme^.EnableColorBgOver then
     FOver:= false;
 
+  bKindSeparator:= FKind in [abuSeparatorHorz, abuSeparatorVert];
   bUseBack:=
     (not FFlat)
     or FChecked
-    or (FOver and not (FKind in [abuSeparatorHorz, abuSeparatorVert]));
+    or (FOver and not bKindSeparator);
 
   bUseBorder:= bUseBack
     or (FKind=abuTextChoice);
@@ -485,6 +488,24 @@ begin
       NSize:= Theme^.MouseoverBorderWidth;
 
     PaintBorder(C, RectAll, NColor, NSize);
+  end;
+
+  if not Enabled and
+    not bKindSeparator and
+    Theme^.CrossLineForDisabled then
+  begin
+    pnt1.Y:= NHeight;
+    pnt1.X:= (NWidth-NHeight-Theme^.CrossLineWidth) div 2;
+    pnt2.Y:= 0;
+    pnt2.X:= pnt1.X+NHeight;
+    C.Pen.Color:= Theme^.ColorBorderPassive;
+    for i:= 1 to Theme^.CrossLineWidth do
+    begin
+      C.MoveTo(pnt1.X, pnt1.Y);
+      C.LineTo(pnt2.X, pnt2.Y);
+      Inc(pnt1.X);
+      Inc(pnt2.X);
+    end;
   end;
 
   C.Font.Name:= Theme^.FontName;
@@ -773,6 +794,17 @@ begin
   inherited;
   FPressed:= false;
   Invalidate;
+end;
+
+procedure TATButton.DoContextPopup(MousePos: TPoint; var Handled: Boolean);
+begin
+  if not IsEnabled then //prevent popup menu if form is disabled, needed for CudaText plugins dlg_proc API on Qt5
+  begin
+    Handled:= true;
+    exit;
+  end;
+
+  inherited DoContextPopup(MousePos, Handled);
 end;
 
 procedure TATButton.KeyDown(var Key: Word; Shift: TShiftState);

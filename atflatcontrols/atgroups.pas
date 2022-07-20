@@ -54,6 +54,7 @@ type
     function TabGetTick(Sender: TObject; ATabObject: TObject): Int64;
   protected
     procedure Resize; override;
+    procedure Click; override;
     procedure DragOver(Source: TObject; X, Y: Integer; State: TDragState;
       var Accept: Boolean); override;
     procedure DragDrop(Source: TObject; X, Y: Integer); override;
@@ -131,6 +132,7 @@ type
     tabOptionDoubleClickClose,
     tabOptionMiddleClickClose,
     tabOptionDragDrop,
+    tabOptionDragFromNotATTabs,
     tabOptionHeightInner,
     tabOptionWidthNormal,
     tabOptionWidthMin,
@@ -282,6 +284,7 @@ type
     property SplitterColor: TColor write SetSplitterColor;
     //
     constructor Create(AOwner: TComponent); override;
+    procedure Invalidate; override;
     //
     function PagesVisibleCount: Integer;
     function PagesSetIndex(ANum: Integer): boolean;
@@ -297,6 +300,7 @@ type
     property SplitterPopupMenu: TMyPopupMenu read FSplitPopup;
     //
     property Mode: TATGroupsMode read FMode write SetMode;
+
     function GetTabTotalCount: Integer;
     function GetTabDataOfTotalIndex(N: Integer): TATTabData;
     function SetPagesAndTabIndex(APageIndex, ATabIndex: Integer): boolean;
@@ -335,10 +339,12 @@ type
   end;
 
 function PtInControl(Control: TControl; const ScreenPnt: TPoint): boolean;
-{
+
 procedure DoControlLock(Ctl: TWinControl);
 procedure DoControlUnlock(Ctl: TWinControl);
-}
+
+var
+  MaxTabsHeightPercentsForMultiline: Integer = 70;
 
 implementation
 
@@ -540,12 +546,22 @@ end;
 procedure TATPages.Resize;
 begin
   inherited;
+
   if Assigned(FTabs) then
-    if FTabs.OptMultiline then
+    if (FTabs.OptPosition in [atpTop, atpBottom]) and FTabs.OptMultiline then
       FTabs.Constraints.MaxHeight:= Max(
-        Height div 4 * 3, // max height is 3/4 of form height
+        Height * MaxTabsHeightPercentsForMultiline div 100,
         FTabs.OptTabHeight
         );
+end;
+
+procedure TATPages.Click;
+begin
+  inherited;
+  //click on empty area - add tab
+  if FTabs.TabCount=0 then
+    if Assigned(FOnTabAdd) then
+      FOnTabAdd(FTabs);
 end;
 
 procedure TATPages.DragOver(Source: TObject; X, Y: Integer; State: TDragState;
@@ -672,6 +688,21 @@ begin
   FPopupPages:= nil;
   FPopupTabIndex:= -1;
   FMode:= gmOne;
+end;
+
+procedure TATGroups.Invalidate;
+var
+  FPage: TATPages;
+  i: integer;
+begin
+  inherited;
+
+  for i:= Low(TATGroupsNums) to High(TATGroupsNums) do
+  begin
+    FPage:= Pages[i];
+    if Assigned(FPage) then
+      FPage.Tabs.Invalidate;
+  end;
 end;
 
 procedure TATGroups.InitSplitterPopup;
@@ -1188,10 +1219,13 @@ begin
     SaveSplitPos;
 
     //focus same group, if possible
-    NPagesAfter:= Min(NPagesBefore, cGroupsCount[FMode]);
+    NPagesAfter:= Min(NPagesBefore, cGroupsCount[FMode]-1);
     if (NPagesAfter>=0) and (NPagesAfter<=High(TATGroupsNums)) then
+    begin
+      PagesCurrent:= Pages[NPagesAfter];
       if Assigned(FOnTabFocus) then
-        FOnTabFocus(Pages[NPagesAfter].Tabs);
+        FOnTabFocus(PagesCurrent.Tabs);
+    end;
   finally
     DoControlUnlock(Self);
   end;
@@ -1862,6 +1896,7 @@ begin
         tabOptionDoubleClickClose: OptMouseDoubleClickClose:= Boolean(N);
         tabOptionMiddleClickClose: OptMouseMiddleClickClose:= Boolean(N);
         tabOptionDragDrop:         OptMouseDragEnabled:= Boolean(N);
+        tabOptionDragFromNotATTabs:OptMouseDragFromNotATTabs:= Boolean(N);
         tabOptionHeightInner:      OptTabHeight:= N;
         tabOptionWidthMin:         OptTabWidthMinimal:= N;
         tabOptionWidthMax:         OptTabWidthMaximal:= N;

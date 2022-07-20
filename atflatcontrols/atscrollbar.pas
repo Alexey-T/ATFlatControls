@@ -45,12 +45,10 @@ type
     aseArrowDown,
     aseArrowLeft,
     aseArrowRight,
-    aseScrollThumbV,
-    aseScrollThumbH,
-    aseScrollAreaH,
-    aseScrollAreaV,
-    aseScrolledAreaH,
-    aseScrolledAreaV,
+    aseBackAndThumbH,
+    aseBackAndThumbV,
+    aseScrollingAreaH,
+    aseScrollingAreaV,
     aseCorner
     );
 
@@ -64,7 +62,7 @@ type
 
 type
   TATScrollbarDrawEvent = procedure (Sender: TObject; AType: TATScrollbarElemType;
-    ACanvas: TCanvas; const ARect: TRect; var ACanDraw: boolean) of object;
+    ACanvas: TCanvas; const ARect, ARect2: TRect; var ACanDraw: boolean) of object;
 
 type
   PATScrollbarTheme = ^TATScrollbarTheme;
@@ -104,6 +102,7 @@ type
     ThumbMarkerDecorSize: integer;
     ThumbMarkerDecorSpace: integer;
     ThumbMarkerDecorDouble: boolean;
+    ThumbRoundedRect: boolean;
   end;
 
 var
@@ -125,13 +124,13 @@ type
     FIndentCorner: Integer;
     FTheme: PATScrollbarTheme;
 
-    FPos: Integer;
-    FMin: Integer;
-    FMax: Integer;
-    FSmallChange: Integer;
-    FLargeChange: Integer;
-    FPageSize: Integer;
-    FDeltaOfThumb: Integer;
+    FPos: Int64;
+    FMin: Int64;
+    FMax: Int64;
+    FSmallChange: Int64;
+    FLargeChange: Int64;
+    FPageSize: Int64;
+    FDeltaOfThumb: Int64;
 
     //internal
     FRectMain: TRect; //area for scrolling
@@ -167,14 +166,13 @@ type
     procedure TimerMouseoverTick(Sender: TObject);
 
     procedure DoPaintArrow(C: TCanvas; const R: TRect; AType: TATScrollbarElemType);
-    procedure DoPaintThumb(C: TCanvas);
-    procedure DoPaintBack(C: TCanvas);
-    procedure DoPaintBackScrolled(C: TCanvas);
+    procedure DoPaintBackAndThumb(C: TCanvas);
+    procedure DoPaintBackScrolling(C: TCanvas);
     procedure DoPaintTo(C: TCanvas);
 
     procedure DoPaintStd_Corner(C: TCanvas; const R: TRect);
     procedure DoPaintStd_Back(C: TCanvas; const R: TRect);
-    procedure DoPaintStd_BackScrolled(C: TCanvas; const R: TRect);
+    procedure DoPaintStd_BackScrolling(C: TCanvas; const R: TRect);
     procedure DoPaintStd_Arrow(C: TCanvas; R: TRect; AType: TATScrollbarElemType);
     procedure DoPaintStd_Thumb(C: TCanvas; const R: TRect);
 
@@ -189,12 +187,12 @@ type
 
     procedure TimerTimer(Sender: TObject);
     procedure SetKind(AValue: TScrollBarKind);
-    procedure SetPos(AValue: Integer);
-    procedure SetMin(Value: Integer);
-    procedure SetMax(Value: Integer);
-    procedure SetPageSize(Value: Integer);
+    procedure SetPos(AValue: Int64);
+    procedure SetMin(Value: Int64);
+    procedure SetMax(Value: Int64);
+    procedure SetPageSize(Value: Int64);
     function DoDrawEvent(AType: TATScrollbarElemType;
-      ACanvas: TCanvas; const ARect: TRect): boolean;
+      ACanvas: TCanvas; const ARect, ARect2: TRect): boolean;
   public
     constructor Create(AOnwer: TComponent); override;
     destructor Destroy; override;
@@ -239,12 +237,12 @@ type
     property ShowHint;
     property Visible;
 
-    property Position: Integer read FPos write SetPos default 0;
-    property Min: Integer read FMin write SetMin default 0;
-    property Max: Integer read FMax write SetMax default 100;
-    property SmallChange: Integer read FSmallChange write FSmallChange default 1;
-    property LargeChange: Integer read FLargeChange write FLargeChange default 0;
-    property PageSize: Integer read FPageSize write SetPageSize default 20;
+    property Position: Int64 read FPos write SetPos default 0;
+    property Min: Int64 read FMin write SetMin default 0;
+    property Max: Int64 read FMax write SetMax default 100;
+    property SmallChange: Int64 read FSmallChange write FSmallChange default 1;
+    property LargeChange: Int64 read FLargeChange write FLargeChange default 0;
+    property PageSize: Int64 read FPageSize write SetPageSize default 20;
     property Kind: TScrollBarKind read FKind write SetKind default sbHorizontal;
     property IndentCorner: Integer read FIndentCorner write FIndentCorner default 0;
 
@@ -401,7 +399,7 @@ begin
 
   DoUpdateCornerRect;
   if not IsRectEmpty(FRectCorner) then
-    if DoDrawEvent(aseCorner, C, FRectCorner) then
+    if DoDrawEvent(aseCorner, C, FRectCorner, FRectCorner) then
       DoPaintStd_Corner(C, FRectCorner);
 
   C.Brush.Color:= ColorToRGB(FTheme^.ColorBorder);
@@ -475,34 +473,46 @@ begin
     DoPaintArrow(C, FRectArrDown, aseArrowDown);
   end;
 
-  DoPaintBack(C);
   DoUpdateThumbRect;
-  DoPaintBackScrolled(C);
-  DoPaintThumb(C);
+  DoPaintBackAndThumb(C);
+  DoPaintBackScrolling(C);
 end;
 
-procedure TATScrollbar.DoPaintBack(C: TCanvas);
+procedure TATScrollbar.DoPaintBackAndThumb(C: TCanvas);
 var
   Typ: TATScrollbarElemType;
 begin
-  if IsHorz then Typ:= aseScrollAreaH else Typ:= aseScrollAreaV;
-  if DoDrawEvent(Typ, C, FRectMain) then
+  if IsHorz then
+    Typ:= aseBackAndThumbH
+  else
+    Typ:= aseBackAndThumbV;
+
+  if DoDrawEvent(Typ, C, FRectMain, FRectThumb) then
+  begin
     DoPaintStd_Back(C, FRectMain);
+    if not IsRectEmpty(FRectThumb) then
+      DoPaintStd_Thumb(C, FRectThumb);
+  end;
 end;
 
-procedure TATScrollbar.DoPaintBackScrolled(C: TCanvas);
+procedure TATScrollbar.DoPaintBackScrolling(C: TCanvas);
 var
   Typ: TATScrollbarElemType;
 begin
-  if IsHorz then Typ:= aseScrolledAreaH else Typ:= aseScrolledAreaV;
+  if Theme^.DirectJumpOnClickPageUpDown then exit;
+
+  if IsHorz then
+    Typ:= aseScrollingAreaH
+  else
+    Typ:= aseScrollingAreaV;
 
   if FMouseDown and FMouseDownOnPageUp then
-    if DoDrawEvent(Typ, C, FRectPageUp) then
-      DoPaintStd_BackScrolled(C, FRectPageUp);
+    if DoDrawEvent(Typ, C, FRectPageUp, FRectPageUp) then
+      DoPaintStd_BackScrolling(C, FRectPageUp);
 
   if FMouseDown and FMouseDownOnPageDown then
-    if DoDrawEvent(Typ, C, FRectPageDown) then
-      DoPaintStd_BackScrolled(C, FRectPageDown);
+    if DoDrawEvent(Typ, C, FRectPageDown, FRectPageDown) then
+      DoPaintStd_BackScrolling(C, FRectPageDown);
 end;
 
 
@@ -642,11 +652,11 @@ begin
 end;
 
 function TATScrollbar.DoDrawEvent(AType: TATScrollbarElemType;
-  ACanvas: TCanvas; const ARect: TRect): boolean;
+  ACanvas: TCanvas; const ARect, ARect2: TRect): boolean;
 begin
   Result:= true;
   if Assigned(FOnOwnerDraw) then
-    FOnOwnerDraw(Self, AType, ACanvas, ARect, Result);
+    FOnOwnerDraw(Self, AType, ACanvas, ARect, ARect2, Result);
 end;
 
 procedure TATScrollbar.SetKind(AValue: TScrollBarKind);
@@ -670,7 +680,7 @@ procedure TATScrollbar.DoPaintArrow(C: TCanvas; const R: TRect;
   AType: TATScrollbarElemType);
 begin
   if IsRectEmpty(R) then exit;
-  if DoDrawEvent(AType, C, R) then
+  if DoDrawEvent(AType, C, R, R) then
     DoPaintStd_Arrow(C, R, AType);
 end;    
 
@@ -804,119 +814,135 @@ begin
   end;
 end;
 
-procedure TATScrollbar.DoPaintThumb(C: TCanvas);
-var
-  Typ: TATScrollbarElemType;
-begin
-  if IsRectEmpty(FRectThumb) then Exit;
-  if IsHorz then
-    Typ:= aseScrollThumbH
-  else
-    Typ:= aseScrollThumbV;
-
-  if DoDrawEvent(Typ, C, FRectThumb) then
-    DoPaintStd_Thumb(C, FRectThumb);
-end;
-
 procedure TATScrollbar.DoPaintStd_Thumb(C: TCanvas; const R: TRect);
+  //
+  procedure PaintMarkerHorz(X: integer; NDecorSize, NDecorSpace, NOffset, NInc: integer);
+  var
+    i: integer;
+  begin
+    for i:= 0 to NDecorSize-1 do
+    begin
+      C.MoveTo(X-NDecorSpace*i + NInc, R.Top+NOffset);
+      C.LineTo(X-NDecorSpace*i + NInc, R.Bottom-NOffset);
+      if i>0 then
+      begin
+        C.MoveTo(X+NDecorSpace*i + NInc, R.Top+NOffset);
+        C.LineTo(X+NDecorSpace*i + NInc, R.Bottom-NOffset);
+      end;
+    end;
+  end;
+  //
+  procedure PaintMarkerVert(Y: integer; NDecorSize, NDecorSpace, NOffset, NInc: integer);
+  var
+    i: integer;
+  begin
+    for i:= 0 to NDecorSize-1 do
+    begin
+      C.MoveTo(R.Left+NOffset, Y-NDecorSpace*i + NInc);
+      C.LineTo(R.Right-NOffset, Y-NDecorSpace*i + NInc);
+      if i>0 then
+      begin
+        C.MoveTo(R.Left+NOffset, Y+NDecorSpace*i + NInc);
+        C.LineTo(R.Right-NOffset, Y+NDecorSpace*i + NInc);
+      end;
+    end;
+  end;
+  //
 var
   P: TPoint;
-  NOffset, i, DecorSpace: integer;
+  NColorFill, NColorBorder, NColorBack: TColor;
+  NColorThumbDecor1, NColorThumbDecor2: TColor;
+  NOffset, NDecorSize, NDecorSpace: integer;
 begin
-  C.Brush.Color:= ColorToRGB(FTheme^.ColorThumbFill);
+  NColorFill:= ColorToRGB(FTheme^.ColorThumbFill);
+  NColorBorder:= ColorToRGB(FTheme^.ColorThumbBorder);
+  NColorBack:= FTheme^.ColorBG;
+
+  NColorThumbDecor1:= ColorToRGB(FTheme^.ColorThumbDecor);
+  NColorThumbDecor2:= ColorToRGB(FTheme^.ColorThumbDecor2);
+
+  NOffset:= DoScale(FTheme^.ThumbMarkerOffset);
+  NDecorSize:= FTheme^.ThumbMarkerDecorSize;
+  NDecorSpace:= DoScale(FTheme^.ThumbMarkerDecorSpace);
+
+  {
+  if NBorderSize>0 then
+  begin
+    if IsHorz then
+    begin
+      Inc(R.Top, NBorderSize);
+      Dec(R.Bottom, NBorderSize);
+    end
+    else
+    begin
+      Inc(R.Left, NBorderSize);
+      Dec(R.Right, NBorderSize);
+    end;
+  end;
+  }
 
   if FMouseDownOnThumb then
-    C.Brush.Color:= ColorToRGB(FTheme^.ColorThumbFillPressed)
+    NColorFill:= ColorToRGB(FTheme^.ColorThumbFillPressed)
   else
   begin
-    P := Mouse.CursorPos;
-    P := ScreenToClient(P);
-    if PtInRect(R,P) then
-      C.Brush.Color:= ColorToRGB(FTheme^.ColorThumbFillOver);
+    P:= Mouse.CursorPos;
+    P:= ScreenToClient(P);
+    if PtInRect(R, P) then
+      NColorFill:= ColorToRGB(FTheme^.ColorThumbFillOver);
   end;
 
-  C.Pen.Color:= ColorToRGB(FTheme^.ColorThumbBorder);
+  C.Brush.Color:= NColorFill;
+  C.Pen.Color:= NColorBorder;
   C.Rectangle(R);
 
-  NOffset:= FTheme^.ThumbMarkerOffset;
-
-  P:= CenterPoint(R);
-  if FTheme^.ThumbMarkerDecorDouble then
-  begin
-    if IsHorz then Inc(P.X) else Inc(P.Y);
-  end;
-
-  C.Pen.Color:= ColorToRGB(FTheme^.ColorThumbDecor);
-  DecorSpace := FTheme^.ThumbMarkerDecorSPace;
+  if FTheme^.ThumbRoundedRect then
+    CanvasPaintRoundedCorners(
+      C, R,
+      [acckLeftTop, acckRightTop, acckLeftBottom, acckRightBottom],
+      NColorBack,
+      NColorBorder,
+      NColorFill);
 
   if IsHorz then
   begin
     if R.Width>FTheme^.ThumbMarkerMinimalSize then
     begin
-      for i:= 0 to FTheme^.ThumbMarkerDecorSize-1 do
+      P:= CenterPoint(R);
+      if FTheme^.ThumbMarkerDecorDouble then
+        Inc(P.X);
+
+      C.Pen.Color:= NColorThumbDecor1;
+      PaintMarkerHorz(P.X, NDecorSize, NDecorSpace, NOffset, 0);
+
+      if FTheme^.ThumbMarkerDecorDouble then
       begin
-        C.MoveTo(P.X-DecorSpace*i, R.Top+NOffset);
-        C.LineTo(P.X-DecorSpace*i, R.Bottom-NOffset);
-        if i>0 then
-        begin
-          C.MoveTo(P.X+DecorSpace*i, R.Top+NOffset);
-          C.LineTo(P.X+DecorSpace*i, R.Bottom-NOffset);
-        end;
+        C.Pen.Color:= NColorThumbDecor2;
+        PaintMarkerHorz(P.X, NDecorSize, NDecorSpace, NOffset, -1);
       end;
     end;
-
-    if FTheme^.ThumbMarkerDecorDouble then
-    begin
-      C.Pen.Color:= ColorToRGB(FTheme^.ColorThumbDecor2);
-      for i:= 0 to FTheme^.ThumbMarkerDecorSize-1 do
-      begin
-        C.MoveTo((P.X-DecorSpace*i) -1, R.Top+NOffset);
-        C.LineTo((P.X-DecorSpace*i) -1, R.Bottom-NOffset);
-        if i>0 then
-        begin
-          C.MoveTo((P.X+DecorSpace*i) -1, R.Top+NOffset);
-          C.LineTo((P.X+DecorSpace*i) -1, R.Bottom-NOffset);
-        end;
-      end;
-    end;
-
   end
   else
   begin
     if R.Height>FTheme^.ThumbMarkerMinimalSize then
     begin
-      for i:= 0 to FTheme^.ThumbMarkerDecorSize-1 do
-      begin
-        C.MoveTo(R.Left+NOffset, P.Y-DecorSpace*i);
-        C.LineTo(R.Right-NOffset, P.Y-DecorSpace*i);
-        if i>0 then
-        begin
-          C.MoveTo(R.Left+NOffset, P.Y+DecorSpace*i);
-          C.LineTo(R.Right-NOffset, P.Y+DecorSpace*i);
-        end;
-      end;
+      P:= CenterPoint(R);
+      if FTheme^.ThumbMarkerDecorDouble then
+        Inc(P.Y);
+
+      C.Pen.Color:= NColorThumbDecor1;
+      PaintMarkerVert(P.Y, NDecorSize, NDecorSpace, NOffset, 0);
 
       if FTheme^.ThumbMarkerDecorDouble then
       begin
-        C.Pen.Color:= ColorToRGB(FTheme^.ColorThumbDecor2);
-        for i:= 0 to FTheme^.ThumbMarkerDecorSize-1 do
-        begin
-          C.MoveTo(R.Left+NOffset, (P.Y-DecorSpace*i) -1);
-          C.LineTo(R.Right-NOffset, (P.Y-DecorSpace*i) -1);
-          if i>0 then
-          begin
-            C.MoveTo(R.Left+NOffset, (P.Y+DecorSpace*i) -1);
-            C.LineTo(R.Right-NOffset, (P.Y+DecorSpace*i) -1);
-          end;
-        end;
+        C.Pen.Color:= NColorThumbDecor2;
+        PaintMarkerVert(P.Y, NDecorSize, NDecorSpace, NOffset, -1);
       end;
-
     end;
   end;
 end;
 
 
-procedure TATScrollbar.SetMax(Value: Integer);
+procedure TATScrollbar.SetMax(Value: Int64);
 begin
   if FMax<>Value then
   begin
@@ -926,7 +952,7 @@ begin
   end;
 end;
 
-procedure TATScrollbar.SetMin(Value: Integer);
+procedure TATScrollbar.SetMin(Value: Int64);
 begin
   if FMin<>Value then
   begin
@@ -936,7 +962,7 @@ begin
   end;
 end;
 
-procedure TATScrollbar.SetPageSize(Value: Integer);
+procedure TATScrollbar.SetPageSize(Value: Int64);
 begin
   if FPageSize<>Value then
   begin
@@ -945,7 +971,7 @@ begin
   end;
 end;
 
-procedure TATScrollbar.SetPos(AValue: Integer);
+procedure TATScrollbar.SetPos(AValue: Int64);
 begin
   if AValue>FMax then
     AValue:= FMax;
@@ -1043,7 +1069,7 @@ begin
   C.FillRect(R);
 end;
 
-procedure TATScrollbar.DoPaintStd_BackScrolled(C: TCanvas; const R: TRect);
+procedure TATScrollbar.DoPaintStd_BackScrolling(C: TCanvas; const R: TRect);
 begin
   if IsRectEmpty(R) then exit;
   C.Brush.Color:= ColorToRGB(FTheme^.ColorScrolled);
@@ -1127,11 +1153,12 @@ initialization
 
     MinSizeToShowThumb:= 10;
     ThumbMinSize:= 8;
-    ThumbMarkerOffset:= 4;
+    ThumbMarkerOffset:= 3;
     ThumbMarkerMinimalSize:= 20;
     ThumbMarkerDecorSize:= 2;
     ThumbMarkerDecorSpace:= 2;
     ThumbMarkerDecorDouble:= false;
+    ThumbRoundedRect:= {$ifdef darwin} false {$else} true {$endif};
   end;
 
 end.

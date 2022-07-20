@@ -8,12 +8,12 @@ object Form1: TForm1
   ClientWidth = 734
   OnCreate = FormCreate
   Position = poScreenCenter
-  LCLVersion = '2.1.0.0'
+  LCLVersion = '2.3.0.0'
   object chkPosTop: TRadioButton
     Left = 208
-    Height = 23
+    Height = 21
     Top = 112
-    Width = 50
+    Width = 41
     Caption = 'top'
     Checked = True
     OnChange = chkPosTopChange
@@ -22,63 +22,63 @@ object Form1: TForm1
   end
   object chkPosBottom: TRadioButton
     Left = 208
-    Height = 23
+    Height = 21
     Top = 136
-    Width = 78
+    Width = 63
     Caption = 'bottom'
     OnChange = chkPosBottomChange
     TabOrder = 1
   end
   object chkPosLeft: TRadioButton
     Left = 208
-    Height = 23
+    Height = 21
     Top = 160
-    Width = 50
+    Width = 41
     Caption = 'left'
     OnChange = chkPosLeftChange
     TabOrder = 2
   end
   object chkPosRight: TRadioButton
     Left = 208
-    Height = 23
+    Height = 21
     Top = 184
-    Width = 58
+    Width = 49
     Caption = 'right'
     OnChange = chkPosRightChange
     TabOrder = 3
   end
   object chkEmptyBtns: TCheckBox
     Left = 312
-    Height = 23
+    Height = 21
     Top = 112
-    Width = 99
+    Width = 82
     Caption = 'no buttons'
     OnChange = chkEmptyBtnsChange
     TabOrder = 4
   end
   object chkFlat: TCheckBox
     Left = 312
-    Height = 23
+    Height = 21
     Top = 136
-    Width = 50
+    Width = 41
     Caption = 'flat'
     OnChange = chkFlatChange
     TabOrder = 5
   end
   object chkFullColor: TCheckBox
     Left = 312
-    Height = 23
+    Height = 21
     Top = 160
-    Width = 103
+    Width = 85
     Caption = 'full colored'
     OnChange = chkFullColorChange
     TabOrder = 6
   end
   object chkColorAllowVert: TCheckBox
     Left = 312
-    Height = 23
+    Height = 21
     Top = 184
-    Width = 170
+    Width = 142
     Caption = 'color band: allow vert'
     Checked = True
     OnChange = chkColorAllowVertChange
@@ -87,18 +87,18 @@ object Form1: TForm1
   end
   object chkAngled: TCheckBox
     Left = 312
-    Height = 23
+    Height = 21
     Top = 208
-    Width = 104
+    Width = 88
     Caption = 'angled tabs'
     OnChange = chkAngledChange
     TabOrder = 8
   end
   object chkBetween: TCheckBox
     Left = 312
-    Height = 23
+    Height = 21
     Top = 232
-    Width = 159
+    Width = 134
     Caption = 'space between tabs'
     OnChange = chkBetweenChange
     TabOrder = 9

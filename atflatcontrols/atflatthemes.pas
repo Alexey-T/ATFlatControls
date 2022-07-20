@@ -35,6 +35,7 @@ type
     ColorFontDisabled: TColor;
     ColorFontListbox: TColor;
     ColorFontListboxSel: TColor;
+    ColorFontListboxHeader: TColor;
     ColorFontOverlay: TColor;
     ColorBgPassive: TColor;
     ColorBgOver: TColor;
@@ -45,6 +46,8 @@ type
     ColorBgListboxHottrack: TColor;
     ColorBgListboxHeader: TColor;
     ColorBgOverlay: TColor;
+    ColorListboxBorderPassive: TColor;
+    ColorListboxBorderFocused: TColor;
     ColorArrows: TColor;
     ColorArrowsOver: TColor;
     ColorSeparators: TColor;
@@ -68,6 +71,9 @@ type
     XMarkOffsetLeft: integer;
     XMarkOffsetRight: integer;
     XMarkLineWidth: integer;
+    CrossLineForDisabled: boolean;
+    CrossLineWidth: integer;
+
     ScalePercents: integer;
     ScaleFontPercents: integer;
     function DoScale(AValue: integer): integer;
@@ -107,6 +113,7 @@ initialization
     ColorFontDisabled:= $808088;
     ColorFontListbox:= ColorFont;
     ColorFontListboxSel:= clWhite;
+    ColorFontListboxHeader:= ColorFont;
     ColorFontOverlay:= clWhite;
     ColorBgPassive:= $e0e0e0;
     ColorBgOver:= $90a080;
@@ -117,13 +124,18 @@ initialization
     ColorBgListboxHottrack:= clMoneyGreen;
     ColorBgListboxHeader:= $80aa80;
     ColorBgOverlay:= clRed;
+    ColorListboxBorderPassive:= $a0a0a0;
+    ColorListboxBorderFocused:= clNavy;
     ColorArrows:= clGray;
     ColorArrowsOver:= clBlue;
     ColorSeparators:= clDkGray;
     ColorBorderPassive:= $a0a0a0;
     ColorBorderOver:= $d0d0d0;
     ColorBorderFocused:= clNavy;
-    EnableColorBgOver:= true;
+
+    //LCL gives incorrect mouse-hover highlight for buttons,
+    //for CudaText Find dialog, on gtk2 and windows too
+    EnableColorBgOver:= false;
 
     ColoredLineWidth:= 4;
     MouseoverBorderWidth:= 1;
@@ -140,6 +152,8 @@ initialization
     XMarkOffsetLeft:= 1;
     XMarkOffsetRight:= 1;
     XMarkLineWidth:= 1;
+    CrossLineForDisabled:= true;
+    CrossLineWidth:= 2;
 
     ScalePercents:= 100;
     ScaleFontPercents:= 0;

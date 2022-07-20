@@ -94,6 +94,7 @@ type
   TATStatus = class(TCustomControl)
   private
     FColorBorderTop: TColor;
+    FColorBorderBottom: TColor;
     FColorBorderR: TColor;
     FColorBorderL: TColor;
     FColorBorderU: TColor;
@@ -108,6 +109,9 @@ type
     FBitmap: TBitmap;
     FImages: TImageList;
     FTheme: PATFlatTheme;
+    FSeparatorString: string;
+    FOverflowLeft: boolean;
+    FOverflowScrollX: integer;
 
     FOnPanelClick: TATStatusClickEvent;
     FOnPanelDrawBefore: TATStatusDrawEvent;
@@ -126,6 +130,7 @@ type
   public
     constructor Create(AOnwer: TComponent); override;
     destructor Destroy; override;
+    procedure Invalidate; override;
     function CanFocus: boolean; override;
     function GetPanelRect(AIndex: integer): TRect;
     function GetPanelAt(X, Y: integer): integer;
@@ -152,7 +157,9 @@ type
     procedure DoPanelAutoWidth(C: TCanvas; AIndex: integer);
     function FindPanel(ATag: IntPtr): integer;
     property HeightInitial: integer read FHeightInitial write FHeightInitial;
-    procedure Invalidate; override;
+    property SeparatorString: string read FSeparatorString write FSeparatorString;
+    property OverflowLeft: boolean read FOverflowLeft write FOverflowLeft;
+    property OverflowScrollX: integer read FOverflowScrollX;
   protected
     procedure Paint; override;
     procedure Resize; override;
@@ -175,6 +182,7 @@ type
     property Visible;
     property Color default cDefaultStatusbarColorBack;
     property ColorBorderTop: TColor read FColorBorderTop write FColorBorderTop default cDefaultStatusbarColorBorderTop;
+    property ColorBorderBottom: TColor read FColorBorderBottom write FColorBorderBottom default clNone;
     property ColorBorderR: TColor read FColorBorderR write FColorBorderR default cDefaultStatusbarColorBorderR;
     property ColorBorderL: TColor read FColorBorderL write FColorBorderL default cDefaultStatusbarColorBorderL;
     property ColorBorderU: TColor read FColorBorderU write FColorBorderU default cDefaultStatusbarColorBorderU;
@@ -262,6 +270,7 @@ begin
 
   Color:= cDefaultStatusbarColorBack;
   FColorBorderTop:= cDefaultStatusbarColorBorderTop;
+  FColorBorderBottom:= clNone;
   FColorBorderR:= cDefaultStatusbarColorBorderR;
   FColorBorderL:= cDefaultStatusbarColorBorderL;
   FColorBorderU:= cDefaultStatusbarColorBorderU;
@@ -273,6 +282,7 @@ begin
 
   FItems:= TCollection.Create(TATStatusData);
   FPrevPanelMouseOver:= -1;
+  FSeparatorString:= '';
 end;
 
 destructor TATStatus.Destroy;
@@ -319,7 +329,7 @@ end;
 procedure TATStatus.DoPaintPanelTo(C: TCanvas; ARect: TRect;
   AData: TATStatusData; AMouseOver: boolean);
 var
-  RectText: TRect;
+  RectBg, RectText: TRect;
   PosIcon: TPoint;
   TextSize: TSize;
   NOffsetLeft, NPad: integer;
@@ -339,8 +349,11 @@ begin
     else
       NColor:= ColorToRGB(Color);
   end;
+
+  RectBg:= ARect;
+  Inc(RectBg.Right); //to fill the right border filled with Color
   C.Brush.Color:= NColor;
-  C.FillRect(ARect);
+  C.FillRect(RectBg);
 
   NPad:= Theme^.DoScale(FPadding);
   RectText:= Rect(ARect.Left+NPad, ARect.Top, ARect.Right-NPad, ARect.Bottom);
@@ -390,6 +403,7 @@ begin
       nil);
   end;
 
+  if FSeparatorString='' then
   if FColorBorderR<>clNone then
   begin
     C.Pen.Color:= ColorToRGB(FColorBorderR);
@@ -397,6 +411,7 @@ begin
     C.LineTo(ARect.Right, ARect.Bottom);
   end;
 
+  if FSeparatorString='' then
   if FColorBorderL<>clNone then
   begin
     C.Pen.Color:= ColorToRGB(FColorBorderL);
@@ -487,7 +502,8 @@ begin
   Result.Bottom:= Height;
 
   if IsIndexOk(AIndex) then
-    for i:= 0 to PanelCount-1 do
+  begin
+    for i:= 0 to AIndex do
     begin
       Data:= GetPanelData(i);
       Result.Left:= Result.Right + 1;
@@ -497,8 +513,10 @@ begin
         NSize:= Theme^.DoScale(NSize);
 
       Result.Right:= Result.Left + NSize - 1;
-      if AIndex=i then Exit;
     end;
+    if FOverflowLeft then
+      OffsetRect(Result, -FOverflowScrollX, 0);
+  end;
 end;
 
 procedure TATStatus.DoPaintTo(C: TCanvas);
@@ -507,8 +525,16 @@ var
   D: TATStatusData;
   PntMouse: TPoint;
   bHottrackUsed, bHottrack: boolean;
+  {bHasAutoSize,} bHasAutoStretch: boolean;
+  Size: Types.TSize;
+  NTotalWidth: integer;
   i: integer;
 begin
+  //bHasAutoSize:= false;
+  bHasAutoStretch:= false;
+  NTotalWidth:= 0;
+  FOverflowScrollX:= 0;
+
   C.Brush.Color:= ColorToRGB(Color);
   C.FillRect(ClientRect);
 
@@ -523,7 +549,10 @@ begin
   begin
     D:= GetPanelData(i);
     if Assigned(D) and D.AutoSize then
+    begin
+      //bHasAutoSize:= true;
       DoPanelAutoWidth(C, i);
+    end;
   end;
 
   //consider AutoStretch
@@ -532,27 +561,61 @@ begin
     D:= GetPanelData(i);
     if Assigned(D) and not D.AutoSize and D.AutoStretch then
     begin
+      bHasAutoStretch:= true;
       DoPanelStretch(i);
       Break; //allowed for single panel
     end;
+  end;
+
+  if FOverflowLeft and not bHasAutoStretch then
+  begin
+    for i:= 0 to PanelCount-1 do
+    begin
+      D:= GetPanelData(i);
+      if Assigned(D) then
+        Inc(NTotalWidth, D.Width);
+    end;
+    if Width<NTotalWidth then
+      FOverflowScrollX:= NTotalWidth-Width;
   end;
 
   //paint panels
   for i:= 0 to PanelCount-1 do
   begin
     PanelRect:= GetPanelRect(i);
+
     if DoDrawBefore(i, C, PanelRect) then
     begin
       D:= GetPanelData(i);
       bHottrack:= bHottrackUsed and D.HotTrack and PtInRect(PanelRect, PntMouse);
       DoPaintPanelTo(C, PanelRect, D, bHottrack);
       DoDrawAfter(i, C, PanelRect);
-    end;  
+    end;
+
+    if FSeparatorString<>'' then
+      if i>0 then
+      begin
+        Size:= C.TextExtent(FSeparatorString);
+        C.Font.Color:= FTheme^.ColorFontDisabled;
+        C.Brush.Style:= bsClear;
+        C.TextOut(
+          PanelRect.Left - Size.cx div 2 - 1,
+          (PanelRect.Top + PanelRect.Bottom - Size.cy) div 2,
+          FSeparatorString);
+        C.Brush.Style:= bsSolid;
+      end;
   end;
 
   C.Pen.Color:= ColorToRGB(FColorBorderTop);
   C.MoveTo(0, 0);
   C.LineTo(Width, 0);
+
+  if FColorBorderBottom<>clNone then
+  begin
+    C.Pen.Color:= ColorToRGB(FColorBorderBottom);
+    C.MoveTo(0, Height-1);
+    C.LineTo(Width, Height-1);
+  end;
 end;
 
 
@@ -560,12 +623,16 @@ function TATStatus.GetPanelAt(X, Y: integer): integer;
 var
   i: integer;
   Pnt: TPoint;
+  R: TRect;
 begin
   Result:= -1;
   Pnt:= Point(X, Y);
 
   for i:= 0 to PanelCount-1 do
-    if PtInRect(GetPanelRect(i), Pnt) then exit(i);
+  begin
+    R:= GetPanelRect(i);
+    if PtInRect(R, Pnt) then exit(i);
+  end;
 end;
 
 procedure TATStatus.MouseDown(Button: TMouseButton; Shift: TShiftState;

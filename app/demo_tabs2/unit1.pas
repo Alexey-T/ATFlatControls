@@ -41,6 +41,7 @@ type
     procedure chkPosTopChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
+    procedure TabMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure TabPlusClick(Sender: TObject);
 
   public
@@ -72,10 +73,20 @@ begin
   t.OptMouseDragEnabled:= true;
   t.DragMode:= dmAutomatic;
   t.OnTabPlusClick:= @TabPlusClick;
+  t.OnMouseMove:=@TabMouseMove;
 
   t.AddTab(-1, 'tab0', nil, true, clGreen);
   t.AddTab(-1, 'tab1', nil, true, clYellow);
   t.AddTab(-1, 'tab2');
+end;
+
+procedure TForm1.TabMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+var
+  N: integer;
+  bX: boolean;
+begin
+  N:= t.GetTabAt(X, Y, bX);
+  Caption:= Format('ATTabs demo (mouse hover: %d)', [N]);
 end;
 
 procedure TForm1.TabPlusClick(Sender: TObject);

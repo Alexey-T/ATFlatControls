@@ -1,4 +1,18 @@
 
+2021.10.18
++ ATTabs: prop OptMouseDragFromNotATTabs
+
+2021.07.07
++ ATStatus: prop OverflowLeft (works when all panels don't fit)
++ ATStatus: prop SeparatorString (painted between cells)
+
+2021.06.28
+- ATTabs: fixed lot of issues for hidden tabs (Data.TabVisible=False)
++ ATGroups: added global var MaxTabsHeightPercentsForMultiline=70, fixed its work for left/right tabs
+
+2021.05.13
++ ATListbox: prop BorderVisible (border inside the control; note that BorderStyle is border outside)
+
 2021.04.29
 + ATListbox: prop ColumnHeader
 + ATListbox: prop ColumnImageIndexes

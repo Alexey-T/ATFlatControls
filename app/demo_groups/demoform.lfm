@@ -4,7 +4,7 @@ object fmTest: TfmTest
   Top = 137
   Width = 914
   Caption = 'Groups'
-  ClientHeight = 520
+  ClientHeight = 522
   ClientWidth = 914
   Color = clBtnFace
   Font.Color = clWindowText
@@ -14,7 +14,7 @@ object fmTest: TfmTest
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '2.1.0.0'
+  LCLVersion = '2.3.0.0'
   object Tree: TTreeView
     Left = 0
     Height = 502
@@ -40,7 +40,7 @@ object fmTest: TfmTest
   end
   object Status: TStatusBar
     Left = 0
-    Height = 18
+    Height = 20
     Top = 502
     Width = 914
     Panels = <>
