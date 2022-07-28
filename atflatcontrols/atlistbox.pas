@@ -384,7 +384,7 @@ begin
   end
   else
   begin
-    for i:= 0 to ItemCount-1 do
+    for i:= 0 to Min(ItemCount, Items.Count)-1 do
       Result:= Max(Result, C.TextWidth(Items[i]));
     Inc(Result, FIndentLeft+2);
   end;
@@ -608,7 +608,7 @@ end;
 
 function TATListbox.GetColumnWidth(AIndex: integer): integer;
 begin
-  if (AIndex>=0) and (AIndex<Length(FColumnSizes)) then
+  if (AIndex>=0) and (AIndex<Length(FColumnWidths)) then
     Result:= FColumnWidths[AIndex]
   else
     Result:= 0;
@@ -732,7 +732,7 @@ begin
     C.Pen.Color:= Theme^.ColorSeparators;
     Sep.Init(SLine, FColumnSep);
 
-    for i:= 0 to Length(FColumnSizes)-1 do
+    for i:= 0 to Min(Length(FColumnSizes), Length(FColumnWidths))-1 do
     begin
       NColWidth:= FColumnWidths[i];
       Sep.GetItemStr(SItem);
