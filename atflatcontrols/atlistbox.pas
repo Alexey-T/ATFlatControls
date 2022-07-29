@@ -526,7 +526,7 @@ begin
   FItemTop:= Min(FItemTop,
     Max(0, ItemCount - H div FItemHeight + 1));
 
-  for Index:= FItemTop to ItemCount-1 do
+  for Index:= Max(0, FItemTop) to ItemCount-1 do
   begin
     r.Top:= (Index-FItemTop)*FItemHeight + FClientOriginY;
     r.Bottom:= r.Top+FItemHeight;
