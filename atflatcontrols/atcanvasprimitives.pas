@@ -219,7 +219,12 @@ begin
   C.Pen.Mode:= {$ifdef darwin} pmNot {$else} pmNotXor {$endif};
   C.Pen.Style:= psSolid;
   C.Pen.Color:= AColor;
+
+  // https://github.com/Alexey-T/CudaText/issues/4250#issuecomment-1200446225
+  {$ifndef darwin}
   C.AntialiasingMode:= amOff;
+  {$endif}
+
   {$ifdef FPC}
   C.Pen.EndCap:= pecFlat;
   {$endif}
