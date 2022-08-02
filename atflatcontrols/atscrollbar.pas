@@ -193,6 +193,7 @@ type
     procedure SetPageSize(Value: Int64);
     function DoDrawEvent(AType: TATScrollbarElemType;
       ACanvas: TCanvas; const ARect, ARect2: TRect): boolean;
+    function BetterPtInRect(R: TRect; P: TPoint): boolean;
   public
     constructor Create(AOnwer: TComponent); override;
     destructor Destroy; override;
@@ -516,26 +517,28 @@ begin
 end;
 
 
+function TATScrollbar.BetterPtInRect(R: TRect; P: TPoint): boolean;
+begin
+  if IsHorz then
+    Inc(R.Bottom)
+  else
+    Inc(R.Right);
+  Result:= PtInRect(R, P);
+end;
+
 procedure TATScrollbar.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
 var
   ScrollVal: integer;
-  RectThumbBigger: TRect;
 begin
   inherited;
 
-  RectThumbBigger:= FRectThumb;
-  if IsHorz then
-    Inc(RectThumbBigger.Bottom)
-  else
-    Inc(RectThumbBigger.Right);
-
   FMouseDown:= Button=mbLeft;
-  FMouseDownOnThumb:= PtInRect(RectThumbBigger, Point(X, Y));
-  FMouseDownOnUp:= PtInRect(FRectArrUp, Point(X, Y));
-  FMouseDownOnDown:= PtInRect(FRectArrDown, Point(X, Y));
-  FMouseDownOnPageUp:= PtInRect(FRectPageUp, Point(X, Y));
-  FMouseDownOnPageDown:= PtInRect(FRectPageDown, Point(X, Y));
+  FMouseDownOnThumb:= BetterPtInRect(FRectThumb, Point(X, Y));
+  FMouseDownOnUp:= BetterPtInRect(FRectArrUp, Point(X, Y));
+  FMouseDownOnDown:= BetterPtInRect(FRectArrDown, Point(X, Y));
+  FMouseDownOnPageUp:= BetterPtInRect(FRectPageUp, Point(X, Y));
+  FMouseDownOnPageDown:= BetterPtInRect(FRectPageDown, Point(X, Y));
 
   Invalidate;
 
