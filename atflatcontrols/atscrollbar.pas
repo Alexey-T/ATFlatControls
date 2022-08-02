@@ -520,11 +520,18 @@ procedure TATScrollbar.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
 var
   ScrollVal: integer;
+  RectThumbBigger: TRect;
 begin
   inherited;
 
+  RectThumbBigger:= FRectThumb;
+  if IsHorz then
+    Inc(RectThumbBigger.Bottom)
+  else
+    Inc(RectThumbBigger.Right);
+
   FMouseDown:= Button=mbLeft;
-  FMouseDownOnThumb:= PtInRect(FRectThumb, Point(X, Y));
+  FMouseDownOnThumb:= PtInRect(RectThumbBigger, Point(X, Y));
   FMouseDownOnUp:= PtInRect(FRectArrUp, Point(X, Y));
   FMouseDownOnDown:= PtInRect(FRectArrDown, Point(X, Y));
   FMouseDownOnPageUp:= PtInRect(FRectPageUp, Point(X, Y));
