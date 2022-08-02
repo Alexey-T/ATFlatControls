@@ -94,7 +94,7 @@ type
     FTabVisible: boolean;
     FTabVisibleX: boolean;
     FTabPinned: boolean;
-    FTag: PtrInt;
+    FTag: NativeInt; //PtrInt not exists in Delphi
     function GetTabCaptionFull: TATTabString;
     procedure UpdateTabSet;
     procedure SetTabImageIndex(const Value: TImageIndex);
@@ -116,7 +116,7 @@ type
     property TabSpecial: boolean read FTabSpecial write FTabSpecial;
     property TabStartsNewLine: boolean read FTabStartsNewLine write FTabStartsNewLine;
     property TabVisibleX: boolean read FTabVisibleX write FTabVisibleX;
-    property Tag: PtrInt read FTag write FTag;
+    property Tag: NativeInt read FTag write FTag;
     procedure Assign(Source: TPersistent); override;
   published
     property TabCaption: TATTabString read FTabCaption write SetTabCaption;
