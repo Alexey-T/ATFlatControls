@@ -176,7 +176,7 @@ type
     procedure DoPaintStd_Arrow(C: TCanvas; R: TRect; AType: TATScrollbarElemType);
     procedure DoPaintStd_Thumb(C: TCanvas; const R: TRect);
 
-    function IsHorz: boolean; inline;
+    function IsHorz: boolean;
     function CoordToPos(X, Y: Integer): Integer;
     procedure DoUpdateThumbRect;
     procedure DoUpdateCornerRect;
@@ -518,6 +518,7 @@ end;
 
 
 function TATScrollbar.BetterPtInRect(R: TRect; P: TPoint): boolean;
+//this wrapper is to catch MouseDown on the right-most pixels
 begin
   if IsHorz then
     Inc(R.Bottom)
