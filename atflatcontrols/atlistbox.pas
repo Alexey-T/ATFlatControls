@@ -432,7 +432,7 @@ begin
       FScrollbar.Min:= 0;
       FScrollbar.Max:= ItemCount;
       FScrollbar.PageSize:= VisibleItems;
-      FScrollbar.Position:= Max(0, ItemTop);
+      FScrollbar.Position:= ItemTop;
       FScrollbar.Update;
     end;
 
@@ -461,7 +461,7 @@ begin
     begin
       si.nMax:= ItemCount;
       si.nPage:= GetVisibleItems;
-      si.nPos:= Max(0, FItemTop);
+      si.nPos:= ItemTop;
       SetScrollInfo(Handle, SB_VERT, si, True);
     end;
 
@@ -525,10 +525,10 @@ begin
   end;
 
   //adjust index of top visible item, to not leave empty space on bottom
-  FItemTop:= Min(FItemTop,
-    Max(0, ItemCount - H div FItemHeight + 1));
+  FItemTop:= Max(0, Min(FItemTop,
+    ItemCount - H div FItemHeight + 1));
 
-  CurTopItem:= Max(0, FItemTop);
+  CurTopItem:= FItemTop;
   for Index:= CurTopItem to ItemCount-1 do
   begin
     r.Top:= (Index-CurTopItem)*FItemHeight + FClientOriginY;
@@ -919,7 +919,7 @@ begin
 
   if (Pnt.X>=0) and (Pnt.X<ClientWidth) then
   begin
-    Result:= Pnt.Y div FItemHeight + Max(0, FItemTop);
+    Result:= Pnt.Y div FItemHeight + FItemTop;
     if Result>=ItemCount then
       Result:= -1;
   end;
@@ -927,12 +927,12 @@ end;
 
 function TATListbox.ItemBottom: integer;
 begin
-  Result:= Min(ItemCount-1, Max(0, FItemTop)+GetVisibleItems-1);
+  Result:= Min(ItemCount-1, FItemTop+GetVisibleItems-1);
 end;
 
 procedure TATListbox.ScrollbarChange(Sender: TObject);
 begin
-  ItemTop:= FScrollbar.Position;
+  ItemTop:= Max(0, FScrollbar.Position);
 end;
 
 procedure TATListbox.ScrollbarHorzChange(Sender: TObject);
@@ -995,7 +995,7 @@ begin
     FItemTop:= 0
   else
   if FItemIndex<FItemTop then
-    FItemTop:= FItemIndex
+    FItemTop:= Max(0, FItemIndex)
   else
   if FItemIndex>ItemBottom then
     FItemTop:= Max(0, FItemIndex-GetVisibleItems+1);
@@ -1008,7 +1008,7 @@ procedure TATListbox.SetItemTop(AValue: integer);
 begin
   if FItemTop=AValue then Exit;
   if not IsIndexValid(AValue) then Exit;
-  FItemTop:= Max(0, AValue);
+  FItemTop:= AValue;
   Scrolled;
   Invalidate;
 end;
@@ -1100,19 +1100,22 @@ begin
       FItemTop:= NMax;
 
     SB_LINEUP:
-      FItemTop:= Max(0, FItemTop-1);
+      FItemTop:= FItemTop-1;
     SB_LINEDOWN:
       FItemTop:= Min(NMax, FItemTop+1);
 
     SB_PAGEUP:
-      FItemTop:= Max(0, FItemTop-GetVisibleItems);
+      FItemTop:= FItemTop-GetVisibleItems;
     SB_PAGEDOWN:
       FItemTop:= Min(NMax, FItemTop+GetVisibleItems);
 
     SB_THUMBPOSITION,
     SB_THUMBTRACK:
-      FItemTop:= Max(0, Msg.Pos);
+      FItemTop:= Msg.Pos;
   end;
+
+  //limit by 0
+  FItemTop:= Max(0, FItemTop);
 end;
 
 procedure TATListbox.UpdateFromScrollbarHorzMsg(const Msg: {$ifdef FPC}TLMScroll{$else}TWMHScroll{$endif});
