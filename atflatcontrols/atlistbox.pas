@@ -461,7 +461,7 @@ begin
     begin
       si.nMax:= ItemCount;
       si.nPage:= GetVisibleItems;
-      si.nPos:= FItemTop;
+      si.nPos:= Max(0, FItemTop);
       SetScrollInfo(Handle, SB_VERT, si, True);
     end;
 
@@ -469,7 +469,7 @@ begin
     begin
       si.nMax:= FMaxWidth;
       si.nPage:= ClientWidth;
-      si.nPos:= ScrollHorz;
+      si.nPos:= Max(0, ScrollHorz);
       SetScrollInfo(Handle, SB_HORZ, si, True);
     end;
   end;
