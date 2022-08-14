@@ -489,7 +489,7 @@ var
   Index: integer;
   bPaintX, bCircle: boolean;
   R, RectX: TRect;
-  W, H: integer;
+  W, H, CurTopItem: integer;
 begin
   W:= ClientWidth;
   H:= ClientHeight;
@@ -528,9 +528,10 @@ begin
   FItemTop:= Min(FItemTop,
     Max(0, ItemCount - H div FItemHeight + 1));
 
-  for Index:= Max(0, FItemTop) to ItemCount-1 do
+  CurTopItem:= Max(0, FItemTop);
+  for Index:= CurTopItem to ItemCount-1 do
   begin
-    r.Top:= (Index-FItemTop)*FItemHeight + FClientOriginY;
+    r.Top:= (Index-CurTopItem)*FItemHeight + FClientOriginY;
     r.Bottom:= r.Top+FItemHeight;
     r.Left:= 0;
     r.Right:= W;
