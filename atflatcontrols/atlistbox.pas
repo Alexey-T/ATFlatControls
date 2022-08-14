@@ -432,7 +432,7 @@ begin
       FScrollbar.Min:= 0;
       FScrollbar.Max:= ItemCount;
       FScrollbar.PageSize:= VisibleItems;
-      FScrollbar.Position:= ItemTop;
+      FScrollbar.Position:= Max(0, ItemTop);
       FScrollbar.Update;
     end;
 
@@ -446,7 +446,7 @@ begin
       FScrollbarHorz.Min:= 0;
       FScrollbarHorz.Max:= FMaxWidth;
       FScrollbarHorz.PageSize:= ClientWidth;
-      FScrollbarHorz.Position:= ScrollHorz;
+      FScrollbarHorz.Position:= Max(0, ScrollHorz);
       FScrollbarHorz.Update;
     end;
   end
