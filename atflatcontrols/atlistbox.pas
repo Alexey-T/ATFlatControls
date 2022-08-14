@@ -919,7 +919,7 @@ begin
 
   if (Pnt.X>=0) and (Pnt.X<ClientWidth) then
   begin
-    Result:= Pnt.Y div FItemHeight + FItemTop;
+    Result:= Pnt.Y div FItemHeight + Max(0, FItemTop);
     if Result>=ItemCount then
       Result:= -1;
   end;
@@ -927,7 +927,7 @@ end;
 
 function TATListbox.ItemBottom: integer;
 begin
-  Result:= Min(ItemCount-1, FItemTop+GetVisibleItems-1);
+  Result:= Min(ItemCount-1, Max(0, FItemTop)+GetVisibleItems-1);
 end;
 
 procedure TATListbox.ScrollbarChange(Sender: TObject);
