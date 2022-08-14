@@ -1094,17 +1094,24 @@ begin
   NMax:= Max(0, ItemCount-GetVisibleItems);
 
   case Msg.ScrollCode of
-    SB_TOP:        FItemTop:= 0;
-    SB_BOTTOM:     FItemTop:= NMax;
+    SB_TOP:
+      FItemTop:= 0;
+    SB_BOTTOM:
+      FItemTop:= NMax;
 
-    SB_LINEUP:     FItemTop:= Max(0, FItemTop-1);
-    SB_LINEDOWN:   FItemTop:= Min(NMax, FItemTop+1);
+    SB_LINEUP:
+      FItemTop:= Max(0, FItemTop-1);
+    SB_LINEDOWN:
+      FItemTop:= Min(NMax, FItemTop+1);
 
-    SB_PAGEUP:     FItemTop:= Max(0, FItemTop-GetVisibleItems);
-    SB_PAGEDOWN:   FItemTop:= Min(NMax, FItemTop+GetVisibleItems);
+    SB_PAGEUP:
+      FItemTop:= Max(0, FItemTop-GetVisibleItems);
+    SB_PAGEDOWN:
+      FItemTop:= Min(NMax, FItemTop+GetVisibleItems);
 
     SB_THUMBPOSITION,
-    SB_THUMBTRACK: FItemTop:= Max(0, Msg.Pos);
+    SB_THUMBTRACK:
+      FItemTop:= Max(0, Msg.Pos);
   end;
 end;
 
