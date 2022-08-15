@@ -369,7 +369,7 @@ begin
   inherited;
 
   //override value set by LCL scaling to make all buttons look the same
-  Canvas.Font.PixelsPerInch:= Screen.PixelsPerInch;
+  Canvas.Font.PixelsPerInch:= Max(96, Screen.PixelsPerInch);
 
   PaintTo(Canvas);
 end;
