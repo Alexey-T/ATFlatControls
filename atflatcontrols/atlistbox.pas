@@ -492,7 +492,7 @@ var
   W, H, CurTopItem: integer;
 begin
   W:= ClientWidth;
-  H:= ClientHeight;
+  H:= Height; //better ClientHeight, but it gave issue CudaText #4281 on macOS
 
   C.Font.Name:= CurrentFontName;
   C.Font.Size:= FTheme^.DoScaleFont(CurrentFontSize);
@@ -524,9 +524,9 @@ begin
     C.LineTo(W, FItemHeight-1);
   end;
 
-  //adjust index of top visible item, to not leave empty space on bottom
+  //adjust ItemTop, to not leave empty space on bottom
   FItemTop:= Max(0, Min(FItemTop,
-    ItemCount - H div FItemHeight + 1));
+    ItemCount - ClientHeight div FItemHeight + 1));
 
   CurTopItem:= FItemTop;
   for Index:= CurTopItem to ItemCount-1 do
