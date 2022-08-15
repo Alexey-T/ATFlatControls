@@ -1067,12 +1067,14 @@ begin
   FThemedFont:= true;
 
   FScrollbar:= TATScrollbar.Create(Self);
+  FScrollbar.Hide;
   FScrollbar.Parent:= Self;
   FScrollbar.Kind:= sbVertical;
   FScrollbar.Align:= alRight;
   FScrollbar.OnChange:= ScrollbarChange;
 
   FScrollbarHorz:= TATScrollbar.Create(Self);
+  FScrollbarHorz.Hide;
   FScrollbarHorz.Parent:= Self;
   FScrollbarHorz.Kind:= sbHorizontal;
   FScrollbarHorz.Align:= alBottom;
