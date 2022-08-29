@@ -371,10 +371,6 @@ begin
   //override value set by LCL scaling to make all buttons look the same
   Canvas.Font.PixelsPerInch:= Max(96, Screen.PixelsPerInch);
 
-  ////don't do it, causes CudaText infinite looping on mass-replace (Linux gtk2)
-  //if AutoSize then
-  //  DoAutoSize;
-
   PaintTo(Canvas);
 end;
 
