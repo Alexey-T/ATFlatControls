@@ -80,6 +80,7 @@ type
     FTabColor: TColor;
     FTabColorActive: TColor;
     FTabColorOver: TColor;
+    FTabFontColor: TColor;
     FTabModified: boolean;
     FTabSpecial: boolean;
     FTabSpecialWidth: integer;
@@ -102,6 +103,7 @@ type
     procedure SetTabColor(const Value: TColor);
     procedure SetTabColorActive(const Value: TColor);
     procedure SetTabColorOver(const Value: TColor);
+    procedure SetTabFontColor(const Value: TColor);
     procedure SetTabHideXButton(const Value: boolean);
     procedure SetTabVisible(const Value: boolean);
   public
@@ -125,6 +127,7 @@ type
     property TabColor: TColor read FTabColor write SetTabColor default clNone;
     property TabColorActive: TColor read FTabColorActive write SetTabColorActive default clNone;
     property TabColorOver: TColor read FTabColorOver write SetTabColorOver default clNone;
+    property TabFontColor: TColor read FTabFontColor write SetTabFontColor default clNone;
     property TabModified: boolean read FTabModified write FTabModified default false;
     property TabImageIndex: TImageIndex read FTabImageIndex write SetTabImageIndex default -1;
     property TabFontStyle: TFontStyles read FTabFontStyle write FTabFontStyle default [];
@@ -1034,6 +1037,15 @@ begin
   end;
 end;
 
+procedure TATTabData.SetTabFontColor(const Value: TColor);
+begin
+  if FTabFontColor<>Value then
+  begin
+    FTabFontColor:= Value;
+    UpdateTabSet;
+  end;
+end;
+
 procedure TATTabData.SetTabHideXButton(const Value: boolean);
 begin
   if FTabHideXButton<>Value then
@@ -1199,6 +1211,7 @@ begin
   TabColor:= clNone;
   TabColorActive:= clNone;
   TabColorOver:= clNone;
+  TabFontColor:= clNone;
   TabImageIndex:= -1;
   TabFontStyle:= [];
 end;
@@ -1230,6 +1243,7 @@ begin
     TabColor:= D.TabColor;
     TabColorActive:= D.TabColorActive;
     TabColorOver:= D.TabColorOver;
+    TabFontColor:= D.TabFontColor;
     TabModified:= D.TabModified;
     TabImageIndex:= D.TabImageIndex;
     TabFontStyle:= D.TabFontStyle;
@@ -1606,7 +1620,10 @@ begin
   begin
     C.Font.Assign(Self.Font);
     C.Font.Style:= AInfo.FontStyle;
-    C.Font.Color:= AInfo.ColorFont;
+    if Assigned(Data) and (Data.TabFontColor<>clNone) then
+      C.Font.Color:= Data.TabFontColor
+    else
+      C.Font.Color:= AInfo.ColorFont;
     C.Font.Size:= DoScaleFont(C.Font.Size);
 
     TempCaption:= AInfo.Caption;

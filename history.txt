@@ -1,4 +1,7 @@
 
+2022.09.03
++ ATTabs: TATTabData field TabFontColor (default clNone)
+
 2021.10.18
 + ATTabs: prop OptMouseDragFromNotATTabs
 
