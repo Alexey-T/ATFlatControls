@@ -156,6 +156,7 @@ type
     procedure DoPanelStretch(AIndex: integer);
     procedure DoPanelAutoWidth(C: TCanvas; AIndex: integer);
     function FindPanel(ATag: IntPtr): integer;
+    function MovePanel(AFromIndex, AToIndex: integer): boolean;
     property HeightInitial: integer read FHeightInitial write FHeightInitial;
     property SeparatorString: string read FSeparatorString write FSeparatorString;
     property OverflowLeft: boolean read FOverflowLeft write FOverflowLeft;
@@ -889,6 +890,17 @@ begin
     D:= GetPanelData(i);
     if Assigned(D) and (D.Tag=ATag) then exit(i);
   end;
+end;
+
+function TATStatus.MovePanel(AFromIndex, AToIndex: integer): boolean;
+begin
+  Result:= false;
+  if AFromIndex=AToIndex then exit;
+  if not IsIndexOk(AFromIndex) then exit;
+  if not IsIndexOk(AToIndex) then exit;
+  FItems.Move(AFromIndex, AToIndex);
+  Invalidate;
+  Result:= true;
 end;
 
 procedure TATStatus.Invalidate;
