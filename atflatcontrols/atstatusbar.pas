@@ -898,7 +898,7 @@ begin
   if AFromIndex=AToIndex then exit;
   if not IsIndexOk(AFromIndex) then exit;
   if not IsIndexOk(AToIndex) then exit;
-  FItems.Move(AFromIndex, AToIndex);
+  FItems.Items[AFromIndex].Index:= AToIndex;
   Invalidate;
   Result:= true;
 end;
