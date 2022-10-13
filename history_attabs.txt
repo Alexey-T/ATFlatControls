@@ -1,8 +1,8 @@
 
 2022.10.13
-* change: remove OptShowModifiedText
-+ add: OptShowModifiedCircle (default True)
-+ add: OptSpaceModifiedCircle
+* change: remove prop OptShowModifiedText
++ add: prop OptShowModifiedCircle (default True)
++ add: prop OptSpaceModifiedCircle
 
 2022.09.03
 + add: TATTabData field TabFontColor (default clNone)
@@ -11,7 +11,7 @@
 + add: prop OptMouseDragFromNotATTabs
 
 2021.06.28
-- add: fixed lot of issues for hidden tabs (Data.TabVisible=False)
+- fix: lot of issues for hidden tabs (Data.TabVisible=False)
 
 2021.03.30
 + add: support 'pinned tabs', show pinned tabs with prefix: prop OptShowPinnedText='#'
