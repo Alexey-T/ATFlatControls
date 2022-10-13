@@ -1,16 +1,9 @@
 
-2022.09.03
-+ ATTabs: TATTabData field TabFontColor (default clNone)
-
-2021.10.18
-+ ATTabs: prop OptMouseDragFromNotATTabs
-
 2021.07.07
 + ATStatus: prop OverflowLeft (works when all panels don't fit)
 + ATStatus: prop SeparatorString (painted between cells)
 
 2021.06.28
-- ATTabs: fixed lot of issues for hidden tabs (Data.TabVisible=False)
 + ATGroups: added global var MaxTabsHeightPercentsForMultiline=70, fixed its work for left/right tabs
 
 2021.05.13
@@ -24,30 +17,12 @@
 + ATListbox: method GetColumnIndexAt(), returns -2 for "x mark area"
 + ATListbox: GetItemIndexAt() returns -1 for header, -2 for nothing
 
-2021.03.30
-+ ATTabs: support 'pinned tabs', show pinned tabs with prefix: prop OptShowPinnedText='#'
-
-2021.03.14
-+ ATTabs: prop OptSpaceAfterText
-
-2021.03.05
-+ ATTabs: paint scroll-arrows dimmed, when no scrolling is needed
-
-2021.02.27
-+ ATTabs: prop OptTabRounded
-+ ATTabs: global vars: ATTabsStretchDrawEnabled, ATTabsCircleDrawEnabled
-
 2021.02.18
-+ ATTabs: in OptMultiline view, tabs can scroll vertically if too many tabs
 + ATButton, ATStatusbar: allow to paint colored lines (on top and bottom)
 + ATStatusbar: allow to paint overlay text in the cell corner
 
 2020.06.07
 + ATScrollbar: events OnMouseDown, OnMouseUp
-
-2020.05.12
-+ ATTabs: prop OptScrollPagesizePercents
-+ ATTabs: prop OptMouseWheelMode (enum, 3 modes)
 
 2019.11.03
 + ATListbox: prop ScrollStyleHorz, ScrollStyleVert
