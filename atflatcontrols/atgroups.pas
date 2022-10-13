@@ -85,7 +85,6 @@ type
 
 type
   TATTabsStringOptionId = (
-    tabOptionModifiedText,
     tabOptionButtonLayout,
     tabOptionHintForX,
     tabOptionHintForPlus,
@@ -1791,8 +1790,6 @@ begin
   for i:= Low(Pages) to High(Pages) do
     with Pages[i].Tabs do
       case Id of
-        //tabOptionModifiedText:
-        //  OptShowModifiedText:= AValue;
         tabOptionButtonLayout:
           OptButtonLayout:= AValue;
         tabOptionHintForX:
