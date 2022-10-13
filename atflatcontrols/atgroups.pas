@@ -446,7 +446,7 @@ begin
   FTabs.OptTabWidthMinimal:= 40;
   FTabs.Height:= FTabs.OptTabHeight+FTabs.OptSpacer+1;
 
-  FTabs.OptShowModifiedText:= #$95;
+  //FTabs.OptShowModifiedText:= #$95;
   FTabs.OptMouseMiddleClickClose:= true;
   FTabs.OptMouseDoubleClickPlus:= true;
 
@@ -1791,8 +1791,8 @@ begin
   for i:= Low(Pages) to High(Pages) do
     with Pages[i].Tabs do
       case Id of
-        tabOptionModifiedText:
-          OptShowModifiedText:= AValue;
+        //tabOptionModifiedText:
+        //  OptShowModifiedText:= AValue;
         tabOptionButtonLayout:
           OptButtonLayout:= AValue;
         tabOptionHintForX:

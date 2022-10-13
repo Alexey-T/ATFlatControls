@@ -345,6 +345,7 @@ const
   _InitOptSpaceXInner = 3;
   _InitOptSpaceXSize = 12;
   _InitOptSpaceXIncrementRound = 1;
+  _InitOptSpaceModifiedCircle = 5;
   _InitOptArrowSize = 4;
   _InitOptArrowSpaceLeft = 4;
   _InitOptColoredBandSize = 4;
@@ -361,6 +362,7 @@ const
   _InitOptShowFlat = false;
   _InitOptShowFlatMouseOver = true;
   _InitOptShowFlatSep = true;
+  _InitOptShowModifiedCircle = true;
   _InitOptPosition = atpTop;
   _InitOptFillWidth = true;
   _InitOptFillWidthLastToo = false;
@@ -371,7 +373,6 @@ const
   _InitOptShowXRounded = true;
   _InitOptShowXButtons = atbxShowAll;
   _InitOptShowPlusTab = true;
-  _InitOptShowModifiedText = '*';
   _InitOptShowPinnedText = '!';
   _InitOptShowEntireColor = false;
   _InitOptShowActiveMarkInverted = true;
@@ -456,6 +457,7 @@ type
     FOptSpaceXInner: integer; //space from "x" square edge to "x" mark
     FOptSpaceXSize: integer; //size of "x" mark
     FOptSpaceXIncrementRound: integer;
+    FOptSpaceModifiedCircle: integer; //diameter of 'modified circle mark' above caption
     FOptColoredBandSize: integer; //height of "misc color" line
     FOptColoredBandForTop: TATTabPosition;
     FOptColoredBandForBottom: TATTabPosition;
@@ -473,6 +475,7 @@ type
     FOptIconPosition: TATTabIconPosition;
     FOptWhichActivateOnClose: TATTabActionOnClose;
     FOptCaptionAlignment: TAlignment;
+    FOptShowModifiedCircle: boolean;
     FOptShowFlat: boolean;
     FOptShowFlatMouseOver: boolean;
     FOptShowFlatSepar: boolean;
@@ -480,7 +483,6 @@ type
     FOptShowXButtons: TATTabShowClose; //show mode for "x" buttons
     FOptShowArrowsNear: boolean;
     FOptShowPlusTab: boolean; //show "plus" tab
-    FOptShowModifiedText: TATTabString;
     FOptShowPinnedText: TATTabString;
     FOptShowEntireColor: boolean;
     FOptShowNumberPrefix: TATTabString;
@@ -847,6 +849,7 @@ type
     property OptSpaceXInner: integer read FOptSpaceXInner write FOptSpaceXInner default _InitOptSpaceXInner;
     property OptSpaceXSize: integer read FOptSpaceXSize write FOptSpaceXSize default _InitOptSpaceXSize;
     property OptSpaceXIncrementRound: integer read FOptSpaceXIncrementRound write FOptSpaceXIncrementRound default _InitOptSpaceXIncrementRound;
+    property OptSpaceModifiedCircle: integer read FOptSpaceModifiedCircle write FOptSpaceModifiedCircle default _InitOptSpaceModifiedCircle;
     property OptColoredBandSize: integer read FOptColoredBandSize write FOptColoredBandSize default _InitOptColoredBandSize;
     property OptColoredBandForTop: TATTabPosition read FOptColoredBandForTop write FOptColoredBandForTop default atpTop;
     property OptColoredBandForBottom: TATTabPosition read FOptColoredBandForBottom write FOptColoredBandForBottom default atpBottom;
@@ -867,13 +870,13 @@ type
     property OptShowFlat: boolean read FOptShowFlat write FOptShowFlat default _InitOptShowFlat;
     property OptShowFlatMouseOver: boolean read FOptShowFlatMouseOver write FOptShowFlatMouseOver default _InitOptShowFlatMouseOver;
     property OptShowFlatSepar: boolean read FOptShowFlatSepar write FOptShowFlatSepar default _InitOptShowFlatSep;
+    property OptShowModifiedCircle: boolean read FOptShowModifiedCircle write FOptShowModifiedCircle default _InitOptShowModifiedCircle;
     property OptShowScrollMark: boolean read FOptShowScrollMark write FOptShowScrollMark default _InitOptShowScrollMark;
     property OptShowDropMark: boolean read FOptShowDropMark write FOptShowDropMark default _InitOptShowDropMark;
     property OptShowXRounded: boolean read FOptShowXRounded write FOptShowXRounded default _InitOptShowXRounded;
     property OptShowXButtons: TATTabShowClose read FOptShowXButtons write FOptShowXButtons default _InitOptShowXButtons;
     property OptShowPlusTab: boolean read FOptShowPlusTab write SetOptShowPlusTab default _InitOptShowPlusTab;
     property OptShowArrowsNear: boolean read FOptShowArrowsNear write FOptShowArrowsNear default _InitOptShowArrowsNear;
-    property OptShowModifiedText: TATTabString read FOptShowModifiedText write FOptShowModifiedText;
     property OptShowPinnedText: TATTabString read FOptShowPinnedText write FOptShowPinnedText;
     property OptShowEntireColor: boolean read FOptShowEntireColor write FOptShowEntireColor default _InitOptShowEntireColor;
     property OptShowNumberPrefix: TATTabString read FOptShowNumberPrefix write FOptShowNumberPrefix;
@@ -1354,6 +1357,7 @@ begin
   FOptSpaceXInner:= _InitOptSpaceXInner;
   FOptSpaceXSize:= _InitOptSpaceXSize;
   FOptSpaceXIncrementRound:= _InitOptSpaceXIncrementRound;
+  FOptSpaceModifiedCircle:= _InitOptSpaceModifiedCircle;
   FOptArrowSize:= _InitOptArrowSize;
   FOptColoredBandSize:= _InitOptColoredBandSize;
   FOptColoredBandForTop:= atpTop;
@@ -1374,6 +1378,7 @@ begin
   FOptShowFlat:= _InitOptShowFlat;
   FOptShowFlatMouseOver:= _InitOptShowFlatMouseOver;
   FOptShowFlatSepar:= _InitOptShowFlatSep;
+  FOptShowModifiedCircle:= _InitOptShowModifiedCircle;
   FOptPosition:= _InitOptPosition;
   FOptShowNumberPrefix:= _InitOptShowNumberPrefix;
   FOptShowScrollMark:= _InitOptShowScrollMark;
@@ -1382,7 +1387,6 @@ begin
   FOptShowXButtons:= _InitOptShowXButtons;
   FOptShowPlusTab:= _InitOptShowPlusTab;
   FOptShowArrowsNear:= _InitOptShowArrowsNear;
-  FOptShowModifiedText:= _InitOptShowModifiedText;
   FOptShowPinnedText:= _InitOptShowPinnedText;
   FOptShowEntireColor:= _InitOptShowEntireColor;
   FOptShowActiveMarkInverted:= _InitOptShowActiveMarkInverted;
@@ -1503,8 +1507,9 @@ const
   cIndentSepBottom = 1;
 var
   RectText: TRect;
-  NIndentL, NIndentR, NIndentTop, NLeft,
+  NIndentL, NIndentR, NIndentTop, NLeft, NTop,
   NLineHeight, NLineWidth, NLineIndex: integer;
+  NCircleSize: integer;
   AImageIndex: integer;
   ATabModified: boolean;
   TempCaption: TATTabString;
@@ -1712,6 +1717,16 @@ begin
       end;
       DoPaintColoredBand(C, AInfo.Rect, NColor, ColorPos);
     end;
+  end;
+
+  if ATabModified and FOptShowModifiedCircle then
+  begin
+    C.Brush.Color:= AInfo.ColorFont;
+    C.Pen.Color:= AInfo.ColorFont;
+    NCircleSize:= DoScale(FOptSpaceModifiedCircle);
+    NLeft:= (AInfo.Rect.Left+AInfo.Rect.Right) div 2 - NCircleSize div 2;
+    NTop:= RectText.Top+1;
+    C.Ellipse(NLeft, NTop, NLeft+NCircleSize, NTop+NCircleSize);
   end;
 end;
 
@@ -4898,16 +4913,20 @@ begin
   begin
     if AData.TabPinned then
       Result:= Result+FOptShowPinnedText;
+    {
     if AData.TabModified then
       Result:= Result+FOptShowModifiedText;
+      }
     if FOptShowNumberPrefix<>'' then
       Result:= Result+Format(FOptShowNumberPrefix, [ATabIndex+1]);
     Result:= Result+AData.TabCaptionFull;
   end
   else
   begin
+    {
     if AData.TabModified then
       Result:= Result+FOptShowModifiedText;
+      }
   end;
 end;
 

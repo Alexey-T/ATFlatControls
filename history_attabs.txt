@@ -1,4 +1,9 @@
 
+2022.10.13
+* change: remove OptShowModifiedText
++ add: OptShowModifiedCircle (default True)
++ add: OptSpaceModifiedCircle
+
 2019.09.07
 * change: remove published ClientWidth, ClientHeight
 
