@@ -1734,7 +1734,11 @@ begin
   if FOptShowModifiedCircle and (bTabModified or bTabModified2) then
   begin
     NCircleSize:= DoScale(FOptSpaceModifiedCircle);
-    NLeft:= (AInfo.Rect.Left+AInfo.Rect.Right) div 2 - NCircleSize div 2;
+    NLeft:= (AInfo.Rect.Left+AInfo.Rect.Right) div 2;
+    if bTwoDocs then
+      Dec(NLeft, NCircleSize)
+    else
+      Dec(NLeft, NCircleSize div 2);
     NTop:= RectText.Top+cIndentAboveCircle;
     C.Pen.Color:= AInfo.ColorFont;
     C.Brush.Color:= AInfo.ColorFont;
