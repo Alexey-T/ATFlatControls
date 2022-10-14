@@ -1509,8 +1509,8 @@ end;
 
 procedure TATTabs.DoPaintTabTo(C: TCanvas; const AInfo: TATTabPaintInfo);
 const
-  cIndentSepTop = 0;
-  cIndentSepBottom = 1;
+  cIndentFlatSeparatorTop = 0;
+  cIndentFlatSeparatorBottom = 1;
   cIndentAboveCircle = 1;
   cIndentBetweenCircles = 1;
 var
@@ -1579,7 +1579,7 @@ begin
   if FOptShowFlat and FOptShowFlatSepar then
   begin
     NLeft:= AInfo.Rect.Left - DoScale(FOptSpaceBetweenTabs) div 2;
-    DrawLine(C, NLeft, AInfo.Rect.Top+cIndentSepTop, NLeft, AInfo.Rect.Bottom-cIndentSepBottom, FColorSeparator);
+    DrawLine(C, NLeft, AInfo.Rect.Top+cIndentFlatSeparatorTop, NLeft, AInfo.Rect.Bottom-cIndentFlatSeparatorBottom, FColorSeparator);
   end;
 
   //imagelist
