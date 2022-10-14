@@ -2711,7 +2711,7 @@ begin
         if (FColorFontHot<>clNone) and bMouseOver then
           NColorFont:= FColorFontHot
         else
-        if Data.TabModified then
+        if Data.TabModified or Data.TabModified2 then
           NColorFont:= FColorFontModified
         else
           NColorFont:= FColorFont;
@@ -2763,7 +2763,7 @@ begin
       if FColorFontActive<>clNone then
         NColorFont:= FColorFontActive
       else
-      if Data.TabModified then
+      if Data.TabModified or Data.TabModified2 then
         NColorFont:= FColorFontModified
       else
         NColorFont:= FColorFont;
