@@ -1511,6 +1511,7 @@ procedure TATTabs.DoPaintTabTo(C: TCanvas; const AInfo: TATTabPaintInfo);
 const
   cIndentSepTop = 0;
   cIndentSepBottom = 1;
+  cIndentBetweenCircles = 1;
 var
   RectText: TRect;
   NIndentL, NIndentR, NIndentTop, NLeft, NTop,
@@ -1751,7 +1752,7 @@ begin
         C.Brush.Style:= bsSolid
       else
         C.Brush.Style:= bsClear;
-      Inc(NLeft, NCircleSize+2);
+      Inc(NLeft, NCircleSize+cIndentBetweenCircles);
       C.Ellipse(NLeft, NTop, NLeft+NCircleSize, NTop+NCircleSize);
     end;
   end;
