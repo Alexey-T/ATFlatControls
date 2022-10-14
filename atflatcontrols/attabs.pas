@@ -1252,6 +1252,8 @@ begin
     TabColorOver:= D.TabColorOver;
     TabFontColor:= D.TabFontColor;
     TabModified:= D.TabModified;
+    TabModified2:= D.TabModified2;
+    TabTwoDocuments:= D.TabTwoDocuments;
     TabImageIndex:= D.TabImageIndex;
     TabFontStyle:= D.TabFontStyle;
     TabPopupMenu:= D.TabPopupMenu;
