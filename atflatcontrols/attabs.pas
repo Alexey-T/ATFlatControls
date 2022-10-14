@@ -1727,16 +1727,16 @@ begin
     end;
   end;
 
-  if FOptShowModifiedCircle then
+  if FOptShowModifiedCircle and (bTabModified or bTabModified2) then
   begin
     NCircleSize:= DoScale(FOptSpaceModifiedCircle);
     NLeft:= (AInfo.Rect.Left+AInfo.Rect.Right) div 2 - NCircleSize div 2;
     NTop:= RectText.Top+1;
+    C.Pen.Color:= AInfo.ColorFont;
+    C.Brush.Color:= AInfo.ColorFont;
 
     if bTwoDocs or bTabModified then
     begin
-      C.Pen.Color:= AInfo.ColorFont;
-      C.Brush.Color:= AInfo.ColorFont;
       if bTabModified then
         C.Brush.Style:= bsSolid
       else
@@ -1745,8 +1745,6 @@ begin
     end;
     if bTwoDocs then
     begin
-      C.Pen.Color:= AInfo.ColorFont;
-      C.Brush.Color:= AInfo.ColorFont;
       if bTabModified2 then
         C.Brush.Style:= bsSolid
       else
