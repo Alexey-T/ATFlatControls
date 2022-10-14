@@ -82,6 +82,8 @@ type
     FTabColorOver: TColor;
     FTabFontColor: TColor;
     FTabModified: boolean;
+    FTabModified2: boolean;
+    FTabTwoDocuments: boolean;
     FTabSpecial: boolean;
     FTabSpecialWidth: integer;
     FTabSpecialHeight: integer;
@@ -129,6 +131,8 @@ type
     property TabColorOver: TColor read FTabColorOver write SetTabColorOver default clNone;
     property TabFontColor: TColor read FTabFontColor write SetTabFontColor default clNone;
     property TabModified: boolean read FTabModified write FTabModified default false;
+    property TabModified2: boolean read FTabModified2 write FTabModified2 default false;
+    property TabTwoDocuments: boolean read FTabTwoDocuments write FTabTwoDocuments default false;
     property TabImageIndex: TImageIndex read FTabImageIndex write SetTabImageIndex default -1;
     property TabFontStyle: TFontStyles read FTabFontStyle write FTabFontStyle default [];
     property TabPopupMenu: TPopupMenu read FTabPopupMenu write FTabPopupMenu;
@@ -1509,9 +1513,9 @@ var
   RectText: TRect;
   NIndentL, NIndentR, NIndentTop, NLeft, NTop,
   NLineHeight, NLineWidth, NLineIndex: integer;
+  NImageIndex: integer;
   NCircleSize: integer;
-  AImageIndex: integer;
-  ATabModified: boolean;
+  bTabModified, bTabModified2, bTwoDocs: boolean;
   TempCaption: TATTabString;
   Extent: TSize;
   bNeedMoreSpace: boolean;
@@ -1531,16 +1535,20 @@ begin
   Data:= GetTabData(AInfo.TabIndex);
   if Assigned(Data) then
   begin
-    AImageIndex:= Data.TabImageIndex;
-    ATabModified:= Data.TabModified;
+    NImageIndex:= Data.TabImageIndex;
+    bTabModified:= Data.TabModified;
+    bTabModified2:= Data.TabModified2;
+    bTwoDocs:= Data.TabTwoDocuments;
     // if tab is not visible then don't draw
     if not Data.TabVisible then
-       exit;
+      exit;
   end
   else
   begin
-    AImageIndex:= -1;
-    ATabModified:= false;
+    NImageIndex:= -1;
+    bTabModified:= false;
+    bTabModified2:= false;
+    bTwoDocs:= false;
   end;
 
   UpdateCanvasAntialiasMode(C);
@@ -1572,7 +1580,7 @@ begin
 
   //imagelist
   if Assigned(FImages) then
-    if (AImageIndex>=0) and (AImageIndex<FImages.Count) then
+    if (NImageIndex>=0) and (NImageIndex<FImages.Count) then
     begin
       NIndentTop:=
         (RectText.Top + RectText.Bottom - FImages.Height + DoScale(FOptColoredBandSize)) div 2;
@@ -1582,7 +1590,7 @@ begin
             FImages.Draw(C,
               RectText.Left - 2,
               NIndentTop,
-              AImageIndex);
+              NImageIndex);
             Inc(RectText.Left, FImages.Width+DoScale(FOptSpaceBetweenIconCaption));
           end;
         aipIconRighterThanText:
@@ -1590,7 +1598,7 @@ begin
             FImages.Draw(C,
               RectText.Right - FImages.Width + 2,
               NIndentTop,
-              AImageIndex);
+              NImageIndex);
             Dec(RectText.Right, FImages.Width+DoScale(FOptSpaceBetweenIconCaption));
           end;
         aipIconCentered:
@@ -1598,14 +1606,14 @@ begin
             FImages.Draw(C,
               (RectText.Left + RectText.Right - FImages.Width) div 2,
               NIndentTop,
-              AImageIndex);
+              NImageIndex);
           end;
         aipIconAboveTextCentered:
           begin
             FImages.Draw(C,
               (RectText.Left + RectText.Right - FImages.Width) div 2,
               RectText.Top + DoScale(FOptColoredBandSize),
-              AImageIndex);
+              NImageIndex);
             Inc(RectText.Top, FImages.Height+DoScale(FOptSpaceBetweenIconCaption));
           end;
         aipIconBelowTextCentered:
@@ -1613,7 +1621,7 @@ begin
             FImages.Draw(C,
               (RectText.Left + RectText.Right - FImages.Width) div 2,
               RectText.Bottom - FImages.Height,
-              AImageIndex);
+              NImageIndex);
             Dec(RectText.Bottom, FImages.Height+DoScale(FOptSpaceBetweenIconCaption));
           end;
       end;
@@ -1719,14 +1727,33 @@ begin
     end;
   end;
 
-  if ATabModified and FOptShowModifiedCircle then
+  if FOptShowModifiedCircle then
   begin
-    C.Brush.Color:= AInfo.ColorFont;
-    C.Pen.Color:= AInfo.ColorFont;
     NCircleSize:= DoScale(FOptSpaceModifiedCircle);
     NLeft:= (AInfo.Rect.Left+AInfo.Rect.Right) div 2 - NCircleSize div 2;
     NTop:= RectText.Top+1;
-    C.Ellipse(NLeft, NTop, NLeft+NCircleSize, NTop+NCircleSize);
+
+    if bTwoDocs or bTabModified then
+    begin
+      C.Pen.Color:= AInfo.ColorFont;
+      C.Brush.Color:= AInfo.ColorFont;
+      if bTabModified then
+        C.Brush.Style:= bsSolid
+      else
+        C.Brush.Style:= bsClear;
+      C.Ellipse(NLeft, NTop, NLeft+NCircleSize, NTop+NCircleSize);
+    end;
+    if bTwoDocs then
+    begin
+      C.Pen.Color:= AInfo.ColorFont;
+      C.Brush.Color:= AInfo.ColorFont;
+      if bTabModified2 then
+        C.Brush.Style:= bsSolid
+      else
+        C.Brush.Style:= bsClear;
+      Inc(NLeft, NCircleSize+2);
+      C.Ellipse(NLeft, NTop, NLeft+NCircleSize, NTop+NCircleSize);
+    end;
   end;
 end;
 
