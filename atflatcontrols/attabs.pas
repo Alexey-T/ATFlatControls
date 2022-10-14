@@ -1739,7 +1739,7 @@ begin
       Dec(NLeft, NCircleSize)
     else
       Dec(NLeft, NCircleSize div 2);
-    NTop:= RectText.Top+cIndentAboveCircle;
+    NTop:= RectText.Top+DoScale(cIndentAboveCircle);
 
     C.Pen.Color:= AInfo.ColorFont;
     C.Brush.Color:= AInfo.ColorFont;
@@ -1758,7 +1758,7 @@ begin
         C.Brush.Style:= bsSolid
       else
         C.Brush.Style:= bsClear;
-      Inc(NLeft, NCircleSize+cIndentBetweenCircles);
+      Inc(NLeft, NCircleSize+DoScale(cIndentBetweenCircles));
       C.Ellipse(NLeft, NTop, NLeft+NCircleSize, NTop+NCircleSize);
     end;
 
