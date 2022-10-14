@@ -1740,6 +1740,7 @@ begin
     else
       Dec(NLeft, NCircleSize div 2);
     NTop:= RectText.Top+cIndentAboveCircle;
+
     C.Pen.Color:= AInfo.ColorFont;
     C.Brush.Color:= AInfo.ColorFont;
 
@@ -1760,6 +1761,8 @@ begin
       Inc(NLeft, NCircleSize+cIndentBetweenCircles);
       C.Ellipse(NLeft, NTop, NLeft+NCircleSize, NTop+NCircleSize);
     end;
+
+    C.Brush.Style:= bsSolid;
   end;
 end;
 
