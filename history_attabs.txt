@@ -1,8 +1,9 @@
 
-2022.10.13
+2022.10.14
 * change: remove prop OptShowModifiedText
 + add: prop OptShowModifiedCircle (default True)
 + add: prop OptSpaceModifiedCircle
++ add: TATTabData: add TabModified2 and TabTwoDocuments
 
 2022.09.03
 + add: TATTabData field TabFontColor (default clNone)
