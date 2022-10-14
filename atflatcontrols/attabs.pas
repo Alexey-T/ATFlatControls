@@ -1511,6 +1511,7 @@ procedure TATTabs.DoPaintTabTo(C: TCanvas; const AInfo: TATTabPaintInfo);
 const
   cIndentSepTop = 0;
   cIndentSepBottom = 1;
+  cIndentAboveCircle = 1;
   cIndentBetweenCircles = 1;
 var
   RectText: TRect;
@@ -1734,7 +1735,7 @@ begin
   begin
     NCircleSize:= DoScale(FOptSpaceModifiedCircle);
     NLeft:= (AInfo.Rect.Left+AInfo.Rect.Right) div 2 - NCircleSize div 2;
-    NTop:= RectText.Top+1;
+    NTop:= RectText.Top+cIndentAboveCircle;
     C.Pen.Color:= AInfo.ColorFont;
     C.Brush.Color:= AInfo.ColorFont;
 
