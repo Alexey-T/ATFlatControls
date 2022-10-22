@@ -83,6 +83,10 @@ type
     FTabFontColor: TColor;
     FTabModified: boolean;
     FTabModified2: boolean;
+    FTabExtModified: boolean;
+    FTabExtModified2: boolean;
+    FTabExtDeleted: boolean;
+    FTabExtDeleted2: boolean;
     FTabTwoDocuments: boolean;
     FTabSpecial: boolean;
     FTabSpecialWidth: integer;
@@ -132,6 +136,10 @@ type
     property TabFontColor: TColor read FTabFontColor write SetTabFontColor default clNone;
     property TabModified: boolean read FTabModified write FTabModified default false;
     property TabModified2: boolean read FTabModified2 write FTabModified2 default false;
+    property TabExtModified: boolean read FTabExtModified write FTabExtModified default false;
+    property TabExtModified2: boolean read FTabExtModified2 write FTabExtModified2 default false;
+    property TabExtDeleted: boolean read FTabExtDeleted write FTabExtDeleted default false;
+    property TabExtDeleted2: boolean read FTabExtDeleted2 write FTabExtDeleted2 default false;
     property TabTwoDocuments: boolean read FTabTwoDocuments write FTabTwoDocuments default false;
     property TabImageIndex: TImageIndex read FTabImageIndex write SetTabImageIndex default -1;
     property TabFontStyle: TFontStyles read FTabFontStyle write FTabFontStyle default [];
@@ -1253,6 +1261,10 @@ begin
     TabFontColor:= D.TabFontColor;
     TabModified:= D.TabModified;
     TabModified2:= D.TabModified2;
+    TabExtModified:= D.TabExtModified;
+    TabExtModified2:= D.TabExtModified2;
+    TabExtDeleted:= D.TabExtDeleted;
+    TabExtDeleted2:= D.TabExtDeleted2;
     TabTwoDocuments:= D.TabTwoDocuments;
     TabImageIndex:= D.TabImageIndex;
     TabFontStyle:= D.TabFontStyle;
@@ -1520,6 +1532,8 @@ var
   NImageIndex: integer;
   NCircleSize: integer;
   bTabModified, bTabModified2, bTwoDocs: boolean;
+  bTabExtModified, bTabExtDeleted,
+  bTabExtModified2, bTabExtDeleted2: boolean;
   TempCaption: TATTabString;
   Extent: TSize;
   bNeedMoreSpace: boolean;
@@ -1542,6 +1556,10 @@ begin
     NImageIndex:= Data.TabImageIndex;
     bTabModified:= Data.TabModified;
     bTabModified2:= Data.TabModified2;
+    bTabExtModified:= Data.TabExtModified;
+    bTabExtModified2:= Data.TabExtModified2;
+    bTabExtDeleted:= Data.TabExtDeleted;
+    bTabExtDeleted2:= Data.TabExtDeleted2;
     bTwoDocs:= Data.TabTwoDocuments;
     // if tab is not visible then don't draw
     if not Data.TabVisible then
@@ -1552,6 +1570,10 @@ begin
     NImageIndex:= -1;
     bTabModified:= false;
     bTabModified2:= false;
+    bTabExtModified:= false;
+    bTabExtModified2:= false;
+    bTabExtDeleted:= false;
+    bTabExtDeleted2:= false;
     bTwoDocs:= false;
   end;
 
@@ -1731,7 +1753,14 @@ begin
     end;
   end;
 
-  if FOptShowModifiedCircle and (bTabModified or bTabModified2) then
+  if FOptShowModifiedCircle and (
+    bTabModified or
+    bTabModified2 or
+    bTabExtModified or
+    bTabExtModified2 or
+    bTabExtDeleted or
+    bTabExtDeleted2
+    ) then
   begin
     NCircleSize:= DoScale(FOptSpaceModifiedCircle);
     NLeft:= (AInfo.Rect.Left+AInfo.Rect.Right) div 2;
@@ -1744,9 +1773,9 @@ begin
     C.Pen.Color:= AInfo.ColorFont;
     C.Brush.Color:= AInfo.ColorFont;
 
-    if bTwoDocs or bTabModified then
+    if bTwoDocs or bTabModified or bTabExtModified or bTabExtDeleted then
     begin
-      if bTabModified then
+      if bTabModified or bTabExtModified or bTabExtDeleted then
         C.Brush.Style:= bsSolid
       else
         C.Brush.Style:= bsClear;
@@ -1754,7 +1783,7 @@ begin
     end;
     if bTwoDocs then
     begin
-      if bTabModified2 then
+      if bTabModified2 or bTabExtModified2 or bTabExtDeleted2 then
         C.Brush.Style:= bsSolid
       else
         C.Brush.Style:= bsClear;
@@ -2723,6 +2752,9 @@ begin
         if Data.TabModified or Data.TabModified2 then
           NColorFont:= FColorFontModified
         else
+        if Data.TabFontColor<>clNone then
+          NColorFont:= Data.TabFontColor
+        else
           NColorFont:= FColorFont;
 
         Info.Clear;
@@ -2774,6 +2806,9 @@ begin
       else
       if Data.TabModified or Data.TabModified2 then
         NColorFont:= FColorFontModified
+      else
+      if Data.TabFontColor<>clNone then
+        NColorFont:= Data.TabFontColor
       else
         NColorFont:= FColorFont;
 
