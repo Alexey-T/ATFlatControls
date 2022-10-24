@@ -499,7 +499,7 @@ begin
     pnt2.Y:= 0;
     pnt2.X:= pnt1.X+NHeight;
     C.Pen.Color:= Theme^.ColorBorderPassive;
-    for i:= 1 to Theme^.CrossLineWidth do
+    for i:= 1 to Max(1, Theme^.DoScale(Theme^.CrossLineWidth)) do
     begin
       C.MoveTo(pnt1.X, pnt1.Y);
       C.LineTo(pnt2.X, pnt2.Y);
