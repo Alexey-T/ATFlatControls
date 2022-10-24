@@ -69,7 +69,7 @@ begin
   inherited;
   Cursor:= crHandPoint;
   ShowHint:= true;
-  ColorLinkNormal:= clBlue;
+  ColorLinkNormal:= clHighlight;
   ColorLinkMouseover:= clRed;
   Font.Color:= ColorLinkNormal;
 end;
