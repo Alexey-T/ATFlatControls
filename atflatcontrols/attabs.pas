@@ -3200,7 +3200,7 @@ end;
 
 procedure TATTabs.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: integer);
 var
-  IsX: boolean;
+  bOverX: boolean;
 begin
   inherited;
   FMouseDown:= Button in [mbLeft, mbMiddle]; //but not mbRight
@@ -3210,11 +3210,11 @@ begin
   FMouseDownShift:= Shift;
   FMouseDragBegins:= false;
 
-  FTabIndexOver:= GetTabAt(X, Y, IsX);
+  FTabIndexOver:= GetTabAt(X, Y, bOverX);
 
   if Button=mbLeft then
     //activate tab only if not X clicked
-    if not IsX then
+    if not bOverX then
       //if TabIndex<>FTabIndexOver then //with this check, CudaText cannot focus active tab in passive tab-group
         TabIndex:= FTabIndexOver;
 
