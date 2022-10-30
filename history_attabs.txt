@@ -1,3 +1,5 @@
+2022.10.30
+* change: don't activate tab by right-click
 
 2022.10.14
 * change: remove prop OptShowModifiedText
