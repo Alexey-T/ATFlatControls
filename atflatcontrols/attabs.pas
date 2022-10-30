@@ -3156,14 +3156,14 @@ end;
 
 procedure TATTabs.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: integer);
 var
-  IsClick, IsDblClick: boolean;
+  bClick, bDblClick: boolean;
 begin
   inherited;
-  IsClick:= FMouseDown and
+  bClick:= FMouseDown and
     (Abs(X-FMouseDownPnt.X) < cTabsMouseMaxDistanceToClick) and
     (Abs(Y-FMouseDownPnt.Y) < cTabsMouseMaxDistanceToClick);
-  IsDblClick:= IsClick and FMouseDownDbl;
-  //IsRightClick:= FMouseDownRightBtn and
+  bDblClick:= bClick and FMouseDownDbl;
+  //bRightClick:= FMouseDownRightBtn and
   //  (Abs(X-FMouseDownPnt.X) < cTabsMouseMaxDistanceToClick) and
   //  (Abs(Y-FMouseDownPnt.Y) < cTabsMouseMaxDistanceToClick);
 
@@ -3176,7 +3176,7 @@ begin
   FTabIndexDrop:= -1;
   FTabIndexDropOld:= -1;
 
-  if IsDblClick then
+  if bDblClick then
   begin
     if Assigned(FOnTabDblClick) and (FTabIndexOver>=0) then
       FOnTabDblClick(Self, FTabIndexOver);
@@ -3190,7 +3190,7 @@ begin
     Exit
   end;
 
-  if IsClick then     
+  if bClick then
   begin
     DoHandleClick;
     Invalidate;
@@ -3329,7 +3329,7 @@ type
 
 procedure TATTabs.MouseMove(Shift: TShiftState; X, Y: integer);
 var
-  IsX: boolean;
+  bOverX: boolean;
   Data: TATTabData;
 begin
   inherited;
@@ -3353,14 +3353,14 @@ begin
     Exit
   end;
 
-  FTabIndexOver:= GetTabAt(X, Y, IsX);
+  FTabIndexOver:= GetTabAt(X, Y, bOverX);
   FTabIndexDrop:= FTabIndexOver;
   if FTabIndexOver=cTabIndexNone then exit;
   Data:= nil;
 
   if ShowHint then
   begin
-    if IsX then
+    if bOverX then
       FTabIndexHinted:= cTabIndexCloseBtn
     else
       FTabIndexHinted:= FTabIndexOver;
@@ -3415,7 +3415,7 @@ begin
 
   //repaint only if really needed
   //use {$define tab_paint_counter} to debug it
-  if (FTabIndexOver<>FLastOverIndex) or (IsX<>FLastOverX) then
+  if (FTabIndexOver<>FLastOverIndex) or (bOverX<>FLastOverX) then
   begin
     Invalidate;
   end;
@@ -4061,7 +4061,7 @@ var
   NTab, NTabTo: integer;
   Data: TATTabData;
   P: TPoint;
-  IsX: boolean;
+  bOverX: boolean;
 begin
   if not (ATarget is TATTabs) then
   begin
@@ -4079,7 +4079,7 @@ begin
   if not ATabs.OptMouseDragEnabled then Exit;
 
   NTab:= FTabIndex;
-  NTabTo:= ATabs.GetTabAt(APnt.X, APnt.Y, IsX); //-1 is allowed
+  NTabTo:= ATabs.GetTabAt(APnt.X, APnt.Y, bOverX); //-1 is allowed
 
   Data:= GetTabData(NTab);
   if Data=nil then Exit;
