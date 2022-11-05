@@ -1519,6 +1519,14 @@ begin
   {$endif}
 end;
 
+procedure _PaintMaybeCircle(C: TCanvas; X1, Y1, X2, Y2: integer);
+begin
+  if ATTabsCircleDrawEnabled then
+    C.Ellipse(X1, Y1, X2, Y2)
+  else
+    C.Rectangle(X1, Y1, X2, Y2);
+end;
+
 procedure TATTabs.DoPaintTabTo(C: TCanvas; const AInfo: TATTabPaintInfo);
 const
   cIndentFlatSeparatorTop = 0;
@@ -1779,7 +1787,7 @@ begin
         C.Brush.Style:= bsSolid
       else
         C.Brush.Style:= bsClear;
-      C.Ellipse(NLeft, NTop, NLeft+NCircleSize, NTop+NCircleSize);
+      _PaintMaybeCircle(C, NLeft, NTop, NLeft+NCircleSize, NTop+NCircleSize);
     end;
     if bTwoDocs then
     begin
@@ -1788,7 +1796,7 @@ begin
       else
         C.Brush.Style:= bsClear;
       Inc(NLeft, NCircleSize+DoScale(cIndentBetweenCircles));
-      C.Ellipse(NLeft, NTop, NLeft+NCircleSize, NTop+NCircleSize);
+      _PaintMaybeCircle(C, NLeft, NTop, NLeft+NCircleSize, NTop+NCircleSize);
     end;
 
     C.Brush.Style:= bsSolid;
