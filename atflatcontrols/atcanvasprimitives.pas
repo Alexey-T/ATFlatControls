@@ -443,14 +443,17 @@ procedure CanvasPilcrowChar(C: TCanvas;
   AColorFont: TColor);
 var
   X1, X2, Y1, Y2, Xr1, Yr1, Yr2: integer;
+  H: integer;
 begin
   C.Pen.Color:= AColorFont;
   C.Brush.Color:= AColorFont;
 
-  X1:= (ARect.Left+ARect.Right) div 2;
+  H:= (ARect.Bottom-ARect.Top)*7 div 10;
+  X1:= (ARect.Left+ARect.Right) div 2+1;
   X2:= ARect.Right-1;
+  if X2-X1<2 then Dec(X1);
   Y1:= ARect.Top+3;
-  Y2:= ARect.Bottom-2;
+  Y2:= Y1+H;
   C.MoveTo(X1, Y1);
   C.LineTo(X1, Y2);
   C.MoveTo(X2, Y1);
@@ -458,7 +461,7 @@ begin
   C.MoveTo(X1, Y1);
   C.LineTo(X2, Y1);
 
-  Xr1:= ARect.Left+1;
+  Xr1:= Min(ARect.Left+2, X1-2);
   Yr1:= Y1;
   Yr2:= Yr1+(X1-Xr1)+1;
   C.FillRect(Xr1, Yr1, X1, Yr2);
