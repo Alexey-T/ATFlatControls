@@ -66,6 +66,10 @@ procedure CanvasArrowWrapped(C: TCanvas;
   AWidthScale: integer;
   APointerScale: integer);
 
+procedure CanvasPilcrowChar(C: TCanvas;
+  const ARect: TRect;
+  AColorFont: TColor);
+
 procedure CanvasPaintPlusMinus(C: TCanvas;
   AColorBorder, AColorBG: TColor;
   ACenter: TPoint;
@@ -433,6 +437,32 @@ begin
   C.LineTo(X1+Dx, Y2+Dx);
 end;
 
+
+procedure CanvasPilcrowChar(C: TCanvas;
+  const ARect: TRect;
+  AColorFont: TColor);
+var
+  X1, X2, Y1, Y2, Xr1, Yr1, Yr2: integer;
+begin
+  C.Pen.Color:= AColorFont;
+  C.Brush.Color:= AColorFont;
+
+  X1:= (ARect.Left+ARect.Right) div 2;
+  X2:= ARect.Right-1;
+  Y1:= ARect.Top+3;
+  Y2:= ARect.Bottom-2;
+  C.MoveTo(X1, Y1);
+  C.LineTo(X1, Y2);
+  C.MoveTo(X2, Y1);
+  C.LineTo(X2, Y2);
+  C.MoveTo(X1, Y1);
+  C.LineTo(X2, Y1);
+
+  Xr1:= ARect.Left+1;
+  Yr1:= Y1;
+  Yr2:= Yr1+(X1-Xr1)+1;
+  C.FillRect(Xr1, Yr1, X1, Yr2);
+end;
 
 procedure CanvasPaintPlusMinus(C: TCanvas; AColorBorder, AColorBG: TColor;
   ACenter: TPoint; ASize: integer; APlus: boolean); inline;
