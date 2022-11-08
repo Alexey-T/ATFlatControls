@@ -442,8 +442,8 @@ procedure CanvasPilcrowChar(C: TCanvas;
   const ARect: TRect;
   AColorFont: TColor);
 var
-  X1, X2, Y1, Y2, Xr1, Yr1, Yr2: integer;
-  H: integer;
+  H, X1, X2, Y1, Y2, Xr1, Yr1, Yr2: integer;
+  R2: TRect;
 begin
   C.Pen.Color:= AColorFont;
   C.Brush.Color:= AColorFont;
@@ -464,7 +464,8 @@ begin
   Xr1:= Min(ARect.Left+2, X1-2);
   Yr1:= Y1;
   Yr2:= Yr1+(X1-Xr1)+1;
-  C.FillRect(Xr1, Yr1, X1, Yr2);
+  R2:= Rect(Xr1, Yr1, X1, Yr2);
+  C.FillRect(R2);
 end;
 
 procedure CanvasPaintPlusMinus(C: TCanvas; AColorBorder, AColorBG: TColor;
