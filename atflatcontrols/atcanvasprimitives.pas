@@ -108,7 +108,6 @@ function CanvasCollapseStringByDots(C: TCanvas;
 function ColorBlend(c1, c2: Longint; A: Longint): Longint;
 function ColorBlendHalf(c1, c2: Longint): Longint;
 
-
 implementation
 
 var
@@ -441,6 +440,8 @@ end;
 procedure CanvasPilcrowChar(C: TCanvas;
   const ARect: TRect;
   AColorFont: TColor);
+const
+  cCharSizePercents = 70;
 var
   H, X1, X2, Y1, Y2, Xr1, Yr1, Yr2: integer;
   R2: TRect;
@@ -448,7 +449,7 @@ begin
   C.Pen.Color:= AColorFont;
   C.Brush.Color:= AColorFont;
 
-  H:= (ARect.Bottom-ARect.Top)*7 div 10;
+  H:= (ARect.Bottom-ARect.Top) * cCharSizePercents div 100;
   X1:= (ARect.Left+ARect.Right) div 2+1;
   X2:= ARect.Right-1;
   if X2-X1<2 then Dec(X1);
