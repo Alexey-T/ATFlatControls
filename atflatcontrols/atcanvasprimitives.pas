@@ -452,7 +452,7 @@ begin
   X1:= (ARect.Left+ARect.Right) div 2+1;
   X2:= ARect.Right-1;
   if X2-X1<2 then Dec(X1);
-  Y1:= ARect.Top+3;
+  Y1:= (ARect.Bottom+ARect.Top-H) div 2;
   Y2:= Y1+H;
   C.MoveTo(X1, Y1);
   C.LineTo(X1, Y2);
