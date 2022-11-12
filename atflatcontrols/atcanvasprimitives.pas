@@ -126,7 +126,7 @@ begin
 end;
 
 procedure _CalcMarkRect(const R: TRect; AIndentLeft, AIndentRight: integer;
-  out X1, Y1, X2, Y2: integer); inline;
+  out X1, Y1, X2, Y2: integer);
 var
   W: integer;
 begin
@@ -470,7 +470,7 @@ begin
 end;
 
 procedure CanvasPaintPlusMinus(C: TCanvas; AColorBorder, AColorBG: TColor;
-  ACenter: TPoint; ASize, APenWidth: integer; APlus: boolean); inline;
+  ACenter: TPoint; ASize, APenWidth: integer; APlus: boolean);
 var
   OldPenWidth: integer;
   OldPenCap: TPenEndCap;
