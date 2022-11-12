@@ -481,7 +481,7 @@ begin
   C.Brush.Color:= AColorBG;
   C.Pen.Color:= AColorBorder;
   C.Pen.Width:= APenWidth;
-  C.Pen.EndCap:= pecSquare;
+  C.Pen.EndCap:= pecFlat;
 
   C.Rectangle(ACenter.X-ASize, ACenter.Y-ASize, ACenter.X+ASize+1, ACenter.Y+ASize+1);
 
