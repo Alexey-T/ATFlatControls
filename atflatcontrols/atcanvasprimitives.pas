@@ -73,7 +73,7 @@ procedure CanvasPilcrowChar(C: TCanvas;
 procedure CanvasPaintPlusMinus(C: TCanvas;
   AColorBorder, AColorBG: TColor;
   ACenter: TPoint;
-  ASize, AEmptyIndent: integer;
+  ASize, APenWidth: integer;
   APlus: boolean);
 
 procedure CanvasPaintCircleMark(C: TCanvas;
@@ -470,18 +470,35 @@ begin
 end;
 
 procedure CanvasPaintPlusMinus(C: TCanvas; AColorBorder, AColorBG: TColor;
-  ACenter: TPoint; ASize, AEmptyIndent: integer; APlus: boolean); inline;
+  ACenter: TPoint; ASize, APenWidth: integer; APlus: boolean); inline;
+var
+  OldPenWidth: integer;
+  OldPenCap: TPenEndCap;
 begin
+  OldPenWidth:= C.Pen.Width;
+  OldPenCap:= C.Pen.EndCap;
+
   C.Brush.Color:= AColorBG;
   C.Pen.Color:= AColorBorder;
+  C.Pen.Width:= APenWidth;
+  C.Pen.EndCap:= pecSquare;
+
   C.Rectangle(ACenter.X-ASize, ACenter.Y-ASize, ACenter.X+ASize+1, ACenter.Y+ASize+1);
-  C.MoveTo(ACenter.X-ASize+AEmptyIndent+1, ACenter.Y);
-  C.LineTo(ACenter.X+ASize-AEmptyIndent, ACenter.Y);
+
+  //avoid painting plus/minus by pen width 2/4/6
+  if not Odd(APenWidth) then
+    C.Pen.Width:= APenWidth-1;
+
+  C.MoveTo(ACenter.X-ASize+APenWidth+1, ACenter.Y);
+  C.LineTo(ACenter.X+ASize-APenWidth, ACenter.Y);
   if APlus then
   begin
-    C.MoveTo(ACenter.X, ACenter.Y-ASize+AEmptyIndent+1);
-    C.LineTo(ACenter.X, ACenter.Y+ASize-AEmptyIndent);
+    C.MoveTo(ACenter.X, ACenter.Y-ASize+APenWidth+1);
+    C.LineTo(ACenter.X, ACenter.Y+ASize-APenWidth);
   end;
+
+  C.Pen.Width:= OldPenWidth;
+  C.Pen.EndCap:= OldPenCap;
 end;
 
 procedure CanvasLine_WavyHorz(C: TCanvas; Color: TColor; X1, Y1, X2, Y2: integer; AtDown: boolean);
