@@ -73,7 +73,7 @@ procedure CanvasPilcrowChar(C: TCanvas;
 procedure CanvasPaintPlusMinus(C: TCanvas;
   AColorBorder, AColorBG: TColor;
   ACenter: TPoint;
-  ASize: integer;
+  ASize, AEmptyIndent: integer;
   APlus: boolean);
 
 procedure CanvasPaintCircleMark(C: TCanvas;
@@ -470,17 +470,17 @@ begin
 end;
 
 procedure CanvasPaintPlusMinus(C: TCanvas; AColorBorder, AColorBG: TColor;
-  ACenter: TPoint; ASize: integer; APlus: boolean); inline;
+  ACenter: TPoint; ASize, AEmptyIndent: integer; APlus: boolean); inline;
 begin
   C.Brush.Color:= AColorBG;
   C.Pen.Color:= AColorBorder;
   C.Rectangle(ACenter.X-ASize, ACenter.Y-ASize, ACenter.X+ASize+1, ACenter.Y+ASize+1);
-  C.MoveTo(ACenter.X-ASize+2, ACenter.Y);
-  C.LineTo(ACenter.X+ASize-1, ACenter.Y);
+  C.MoveTo(ACenter.X-ASize+AEmptyIndent+1, ACenter.Y);
+  C.LineTo(ACenter.X+ASize-AEmptyIndent, ACenter.Y);
   if APlus then
   begin
-    C.MoveTo(ACenter.X, ACenter.Y-ASize+2);
-    C.LineTo(ACenter.X, ACenter.Y+ASize-1);
+    C.MoveTo(ACenter.X, ACenter.Y-ASize+AEmptyIndent+1);
+    C.LineTo(ACenter.X, ACenter.Y+ASize-AEmptyIndent);
   end;
 end;
 
