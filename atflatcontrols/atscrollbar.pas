@@ -1151,7 +1151,7 @@ initialization
     ColorArrowSign:= $404040;
     ColorScrolled:= $d0b0b0;
 
-    InitialSize:= 16;
+    InitialSize:= 14;
     ScalePercents:= 100;
     ArrowStyleH:= asaArrowsNormal;
     ArrowStyleV:= asaArrowsNormal;
