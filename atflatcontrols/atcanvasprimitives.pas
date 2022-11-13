@@ -473,15 +473,21 @@ procedure CanvasPaintPlusMinus(C: TCanvas; AColorBorder, AColorBG: TColor;
   ACenter: TPoint; ASize, APenWidth: integer; APlus: boolean);
 var
   OldPenWidth: integer;
+  {$ifdef fpc}
   OldPenCap: TPenEndCap;
+  {$endif}
 begin
   OldPenWidth:= C.Pen.Width;
+  {$ifdef fpc}
   OldPenCap:= C.Pen.EndCap;
+  {$endif}
 
   C.Brush.Color:= AColorBG;
   C.Pen.Color:= AColorBorder;
   C.Pen.Width:= APenWidth;
+  {$ifdef fpc}
   C.Pen.EndCap:= pecFlat;
+  {$endif}
 
   C.Rectangle(ACenter.X-ASize, ACenter.Y-ASize, ACenter.X+ASize+1, ACenter.Y+ASize+1);
 
@@ -498,7 +504,9 @@ begin
   end;
 
   C.Pen.Width:= OldPenWidth;
+  {$ifdef fpc}
   C.Pen.EndCap:= OldPenCap;
+  {$endif}
 end;
 
 procedure CanvasLine_WavyHorz(C: TCanvas; Color: TColor; X1, Y1, X2, Y2: integer; AtDown: boolean);
