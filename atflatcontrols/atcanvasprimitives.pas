@@ -68,7 +68,8 @@ procedure CanvasArrowWrapped(C: TCanvas;
 
 procedure CanvasPilcrowChar(C: TCanvas;
   const ARect: TRect;
-  AColorFont: TColor);
+  AColorFont: TColor;
+  AScalePercents: integer);
 
 procedure CanvasPaintPlusMinus(C: TCanvas;
   AColorBorder, AColorBG: TColor;
@@ -439,9 +440,8 @@ end;
 
 procedure CanvasPilcrowChar(C: TCanvas;
   const ARect: TRect;
-  AColorFont: TColor);
-const
-  cCharSizePercents = 70;
+  AColorFont: TColor;
+  AScalePercents: integer);
 var
   H, X1, X2, Y1, Y2, Xr1, Yr1, Yr2: integer;
   R2: TRect;
@@ -449,7 +449,7 @@ begin
   C.Pen.Color:= AColorFont;
   C.Brush.Color:= AColorFont;
 
-  H:= (ARect.Bottom-ARect.Top) * cCharSizePercents div 100;
+  H:= ARect.Height * AScalePercents div 100;
   X1:= (ARect.Left+ARect.Right) div 2+1;
   X2:= ARect.Right-1;
   if X2-X1<2 then Dec(X1);
