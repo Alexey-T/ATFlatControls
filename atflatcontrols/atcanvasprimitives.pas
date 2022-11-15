@@ -111,10 +111,6 @@ function ColorBlendHalf(c1, c2: Longint): Longint;
 
 implementation
 
-var
-  _Pen: TPen = nil;
-
-
 procedure CanvasLine(C: TCanvas; P1, P2: TPoint; AColor: TColor);
 begin
   C.Pen.Color:= ColorToRGB(AColor);
@@ -214,28 +210,42 @@ end;
 procedure CanvasInvertRect(C: TCanvas; const R: TRect; AColor: TColor);
 var
   X: integer;
-  AM: TAntialiasingMode;
+  OldAntialias: TAntialiasingMode;
+  OldMode: TPenMode;
+  OldStyle: TPenStyle;
+  OldWidth: integer;
+  {$ifdef FPC}
+  OldEndCap: TPenEndCap;
+  {$endif}
 begin
-  AM:= C.AntialiasingMode;
-  _Pen.Assign(C.Pen);
+  OldAntialias:= C.AntialiasingMode;
+  OldMode:= C.Pen.Mode;
+  OldStyle:= C.Pen.Style;
+  OldWidth:= C.Pen.Width;
 
   X:= (R.Left+R.Right) div 2;
   C.Pen.Mode:= {$ifdef darwin} pmNot {$else} pmNotXor {$endif};
   C.Pen.Style:= psSolid;
   C.Pen.Color:= AColor;
-
   C.AntialiasingMode:= amOff;
 
   {$ifdef FPC}
+  OldEndCap:= C.Pen.EndCap;
   C.Pen.EndCap:= pecFlat;
   {$endif}
+
   C.Pen.Width:= R.Width;
 
   C.MoveTo(X, R.Top);
   C.LineTo(X, R.Bottom);
 
-  C.Pen.Assign(_Pen);
-  C.AntialiasingMode:= AM;
+  {$ifdef FPC}
+  C.Pen.EndCap:= OldEndCap;
+  {$endif}
+  C.Pen.Width:= OldWidth;
+  C.Pen.Style:= OldStyle;
+  C.Pen.Mode:= OldMode;
+  C.AntialiasingMode:= OldAntialias;
   C.Rectangle(0, 0, 0, 0); //apply pen
 end;
 {$endif}
@@ -750,13 +760,6 @@ begin
   end;
 end;
 
-
-initialization
-  _Pen:= TPen.Create;
-
-finalization
-  if Assigned(_Pen) then
-    FreeAndNil(_Pen);
 
 end.
 
