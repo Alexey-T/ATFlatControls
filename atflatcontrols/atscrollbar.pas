@@ -993,7 +993,7 @@ begin
   begin
     FPos:= AValue;
 
-    {$ifdef windows}
+    {$IF Defined(LCLWin32) or Defined(LCLWin64)}
     Repaint; //only Invalidate is not ok, it delays painting on big files
     {$else}
     Invalidate;
@@ -1155,7 +1155,7 @@ initialization
     ScalePercents:= 100;
     ArrowStyleH:= asaArrowsNormal;
     ArrowStyleV:= asaArrowsNormal;
-    ArrowSize:= 2;
+    ArrowSize:= 3;
     ArrowLengthPercents:= 100;
     BorderSize:= 0;
     TimerInterval:= 200;
