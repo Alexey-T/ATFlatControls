@@ -4818,6 +4818,10 @@ begin
 
   if IsTabVisible(AIndex) then exit;
 
+  //additional repaint is needed, otherwise cannot scroll to the actual end for last indexes :(
+  Invalidate;
+  Application.ProcessMessages;
+
   D:= GetTabData(AIndex);
   if D=nil then exit;
   R:= D.TabRect;
