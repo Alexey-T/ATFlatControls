@@ -664,6 +664,7 @@ type
     function GetRectOfButtonIndex(AIndex: integer; AtLeft: boolean): TRect;
     function GetScrollPageSize: integer;
     function IsDraggingAllowed: boolean;
+    procedure PaintSimulated;
     procedure SetOptButtonLayout(const AValue: string);
     procedure SetOptScalePercents(AValue: integer);
     procedure SetOptVarWidth(AValue: boolean);
@@ -1495,6 +1496,12 @@ begin
   FreeAndNil(FBitmapAngleR);
   FreeAndNil(FBitmap);
   inherited;
+end;
+
+procedure TATTabs.PaintSimulated;
+begin
+  if Assigned(FBitmap) then
+    DoPaintTo(FBitmap.Canvas);
 end;
 
 procedure TATTabs.Paint;
@@ -4818,12 +4825,9 @@ begin
 
   if IsTabVisible(AIndex) then exit;
 
-  //additional repaint is needed, otherwise cannot scroll to the actual end for last indexes :(
+  //simulate repaint, otherwise cannot scroll to the actual end for the last index :(
   if AIndex=TabCount-1 then
-  begin
-    Invalidate;
-    Application.ProcessMessages;
-  end;
+    PaintSimulated;
 
   D:= GetTabData(AIndex);
   if D=nil then exit;
