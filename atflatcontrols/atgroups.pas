@@ -512,7 +512,6 @@ begin
 end;
 
 
-
 procedure TATPages.TabClick(Sender: TObject);
 var
   i: Integer;
