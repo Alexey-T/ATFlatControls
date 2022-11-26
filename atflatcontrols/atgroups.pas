@@ -2014,54 +2014,53 @@ end;
 
 function TATGroups.CloseTabs(Id: TATTabCloseId; AForPopupMenu: boolean): boolean;
 var
-  i: Integer;
-  APagesIndex, ATabIndex: Integer;
+  NPagesIndex, NTabIndex, i: Integer;
 begin
   Result:= false;
 
-  //we need APagesIndex for Id<>tabCloseAll
+  //we need NPagesIndex for Id<>tabCloseAll
   if Id<>tabCloseAll then
   begin
     if AForPopupMenu then
     begin
       if not Assigned(PopupPages) then exit;
-      APagesIndex:= FindPages(PopupPages);
-      ATabIndex:= PopupTabIndex;
+      NPagesIndex:= FindPages(PopupPages);
+      NTabIndex:= PopupTabIndex;
     end
     else
     begin
       if not Assigned(PagesCurrent) then exit;
-      APagesIndex:= FindPages(PagesCurrent);
-      ATabIndex:= PagesCurrent.Tabs.TabIndex;
+      NPagesIndex:= FindPages(PagesCurrent);
+      NTabIndex:= PagesCurrent.Tabs.TabIndex;
     end;
 
-    if (APagesIndex<0) or (APagesIndex>High(TATGroupsNums)) then exit;
+    if (NPagesIndex<0) or (NPagesIndex>High(TATGroupsNums)) then exit;
   end;
 
   case Id of
     tabCloseCurrent:
       begin
-        with Pages[APagesIndex].Tabs do
-          if not DeleteTab(ATabIndex, true, true) then Exit;
+        with Pages[NPagesIndex].Tabs do
+          if not DeleteTab(NTabIndex, true, true) then Exit;
       end;
     tabCloseOthersThisPage:
       begin
-        if not CloseTabsOther(Pages[APagesIndex], ATabIndex, true, true) then Exit;
+        if not CloseTabsOther(Pages[NPagesIndex], NTabIndex, true, true) then Exit;
       end;
     tabCloseLefterThisPage:
       begin
-        if not CloseTabsOther(Pages[APagesIndex], ATabIndex, false, true) then Exit;
+        if not CloseTabsOther(Pages[NPagesIndex], NTabIndex, false, true) then Exit;
       end;
     tabCloseRighterThisPage:
       begin
-        if not CloseTabsOther(Pages[APagesIndex], ATabIndex, true, false) then Exit;
+        if not CloseTabsOther(Pages[NPagesIndex], NTabIndex, true, false) then Exit;
       end;
     tabCloseOthersAllPages:
       begin
         for i:= High(Pages) downto Low(Pages) do
-          if i=APagesIndex then
+          if i=NPagesIndex then
           begin
-            if not CloseTabsOther(Pages[i], ATabIndex, true, true) then Exit;
+            if not CloseTabsOther(Pages[i], NTabIndex, true, true) then Exit;
           end
           else
           begin
@@ -2070,7 +2069,7 @@ begin
       end;
     tabCloseAllThisPage:
       begin
-        if not CloseTabsAll(Pages[APagesIndex]) then Exit;
+        if not CloseTabsAll(Pages[NPagesIndex]) then Exit;
       end;
     tabCloseAll:
       begin
