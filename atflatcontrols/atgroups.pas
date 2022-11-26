@@ -1795,12 +1795,14 @@ procedure TATGroups.TabClose(Sender: TObject; ATabIndex: Integer;
 begin
   //not needed
   //DoControlLock(Self);
-  try
-    if Assigned(FOnTabClose) then
-      FOnTabClose(Sender, ATabIndex, ACanClose, ACanContinue);
-  finally
+  //try
+
+  if Assigned(FOnTabClose) then
+    FOnTabClose(Sender, ATabIndex, ACanClose, ACanContinue);
+
+  //finally
     //DoControlUnlock(Self);
-  end;      
+  //end;
 end;
 
 procedure TATGroups.TabAdd(Sender: TObject);
