@@ -2019,20 +2019,24 @@ var
 begin
   Result:= false;
 
-  if AForPopupMenu then
+  //we need APagesIndex for Id<>tabCloseAll
+  if Id<>tabCloseAll then
   begin
-    if not Assigned(PopupPages) then exit;
-    APagesIndex:= FindPages(PopupPages);
-    ATabIndex:= PopupTabIndex;
-  end
-  else
-  begin
-    if not Assigned(PagesCurrent) then exit;
-    APagesIndex:= FindPages(PagesCurrent);
-    ATabIndex:= PagesCurrent.Tabs.TabIndex;
-  end;
+    if AForPopupMenu then
+    begin
+      if not Assigned(PopupPages) then exit;
+      APagesIndex:= FindPages(PopupPages);
+      ATabIndex:= PopupTabIndex;
+    end
+    else
+    begin
+      if not Assigned(PagesCurrent) then exit;
+      APagesIndex:= FindPages(PagesCurrent);
+      ATabIndex:= PagesCurrent.Tabs.TabIndex;
+    end;
 
-  if (APagesIndex<0) or (APagesIndex>High(TATGroupsNums)) then exit;
+    if (APagesIndex<0) or (APagesIndex>High(TATGroupsNums)) then exit;
+  end;
 
   case Id of
     tabCloseCurrent:
