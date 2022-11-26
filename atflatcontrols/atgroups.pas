@@ -61,6 +61,8 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     function AddTab(AIndex: integer; AData: TATTabData; AndActivate: boolean=true): integer;
+    function CloseTabsAll: boolean;
+    function CloseTabsOther(ATabIndex: Integer; ADoRighter, ADoLefter: boolean): boolean;
     property Tabs: TATTabs read FTabs;
     property EnabledEmpty: boolean read FEnabledEmpty write FEnabledEmpty;
     property OnTabFocus: TNotifyEvent read FOnTabFocus write FOnTabFocus;
@@ -308,9 +310,6 @@ type
     procedure SetTabFont(AFont: TFont);
     function GetTabSingleRowHeight: integer;
     //
-    function CloseTabsOther(APages: TATPages; ATabIndex: Integer;
-      ADoRighter, ADoLefter: boolean): boolean;
-    function CloseTabsAll(APages: TATPages): boolean;
     function CloseTabs(Id: TATTabCloseId; AForPopupMenu: boolean): boolean;
     //
     procedure MoveTab(AFromPages: TATPages; AFromIndex: Integer;
@@ -472,6 +471,47 @@ begin
   if AndActivate then
     FTabs.TabIndex:= Result;
 end;
+
+function TATPages.CloseTabsAll: boolean;
+var
+  Data: TATTabData;
+  i: Integer;
+begin
+  Result:= false;
+  Tabs.TabIndex:= 0; //activate 1st tab to remove TabIndex change on closing
+  for i:= Tabs.TabCount-1 downto 0 do
+  begin
+    Data:= Tabs.GetTabData(i);
+    if Assigned(Data) and Data.TabPinned then Continue;
+    if not Tabs.DeleteTab(i, true, true) then Exit;
+  end;
+  Result:= true;
+end;
+
+function TATPages.CloseTabsOther(ATabIndex: Integer; ADoRighter, ADoLefter: boolean): boolean;
+var
+  Data: TATTabData;
+  i: Integer;
+begin
+  Result:= false;
+  if ADoRighter then
+    for i:= Tabs.TabCount-1 downto ATabIndex+1 do
+    begin
+      Data:= Tabs.GetTabData(i);
+      if Assigned(Data) and Data.TabPinned then Continue;
+      if not Tabs.DeleteTab(i, true, true) then Exit;
+    end;
+  if ADoLefter then
+    for i:= ATabIndex-1 downto 0 do
+    begin
+      Data:= Tabs.GetTabData(i);
+      if Assigned(Data) and Data.TabPinned then Continue;
+      if not Tabs.DeleteTab(i, true, true) then Exit;
+    end;
+  Result:= true;
+end;
+
+
 
 procedure TATPages.TabClick(Sender: TObject);
 var
@@ -1966,52 +2006,6 @@ begin
   end;
 end;
 
-function TATGroups.CloseTabsOther(APages: TATPages; ATabIndex: Integer;
-  ADoRighter, ADoLefter: boolean): boolean;
-var
-  Data: TATTabData;
-  j: Integer;
-begin
-  Result:= false;
-  with APages do
-  begin
-    if ADoRighter then
-      for j:= Tabs.TabCount-1 downto ATabIndex+1 do
-      begin
-        Data:= Tabs.GetTabData(j);
-        if Assigned(Data) and Data.TabPinned then Continue;
-        if not Tabs.DeleteTab(j, true, true) then Exit;
-      end;
-    if ADoLefter then
-      for j:= ATabIndex-1 downto 0 do
-      begin
-        Data:= Tabs.GetTabData(j);
-        if Assigned(Data) and Data.TabPinned then Continue;
-        if not Tabs.DeleteTab(j, true, true) then Exit;
-      end;
-  end;
-  Result:= true;
-end;
-
-function TATGroups.CloseTabsAll(APages: TATPages): boolean;
-var
-  Data: TATTabData;
-  j: Integer;
-begin
-  Result:= false;
-  with APages do
-  begin
-    Tabs.TabIndex:= 0; //activate 1st tab to remove TabIndex change on closing
-    for j:= Tabs.TabCount-1 downto 0 do
-    begin
-      Data:= Tabs.GetTabData(j);
-      if Assigned(Data) and Data.TabPinned then Continue;
-      if not Tabs.DeleteTab(j, true, true) then Exit;
-    end;
-  end;
-  Result:= true;
-end;
-
 function TATGroups.CloseTabs(Id: TATTabCloseId; AForPopupMenu: boolean): boolean;
 var
   NPagesIndex, NTabIndex, i: Integer;
@@ -2045,36 +2039,36 @@ begin
       end;
     tabCloseOthersThisPage:
       begin
-        if not CloseTabsOther(Pages[NPagesIndex], NTabIndex, true, true) then Exit;
+        if not Pages[NPagesIndex].CloseTabsOther(NTabIndex, true, true) then Exit;
       end;
     tabCloseLefterThisPage:
       begin
-        if not CloseTabsOther(Pages[NPagesIndex], NTabIndex, false, true) then Exit;
+        if not Pages[NPagesIndex].CloseTabsOther(NTabIndex, false, true) then Exit;
       end;
     tabCloseRighterThisPage:
       begin
-        if not CloseTabsOther(Pages[NPagesIndex], NTabIndex, true, false) then Exit;
+        if not Pages[NPagesIndex].CloseTabsOther(NTabIndex, true, false) then Exit;
       end;
     tabCloseOthersAllPages:
       begin
         for i:= High(Pages) downto Low(Pages) do
           if i=NPagesIndex then
           begin
-            if not CloseTabsOther(Pages[i], NTabIndex, true, true) then Exit;
+            if not Pages[i].CloseTabsOther(NTabIndex, true, true) then Exit;
           end
           else
           begin
-            if not CloseTabsAll(Pages[i]) then Exit;
+            if not Pages[i].CloseTabsAll then Exit;
           end;
       end;
     tabCloseAllThisPage:
       begin
-        if not CloseTabsAll(Pages[NPagesIndex]) then Exit;
+        if not Pages[NPagesIndex].CloseTabsAll then Exit;
       end;
     tabCloseAll:
       begin
         for i:= High(Pages) downto Low(Pages) do
-          if not CloseTabsAll(Pages[i]) then Exit;
+          if not Pages[i].CloseTabsAll then Exit;
       end;
   end;
 
