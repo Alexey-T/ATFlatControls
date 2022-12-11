@@ -1155,7 +1155,7 @@ initialization
     ScalePercents:= 100;
     ArrowStyleH:= asaArrowsNormal;
     ArrowStyleV:= asaArrowsNormal;
-    ArrowSize:= 3;
+    ArrowSize:= 2;
     ArrowLengthPercents:= 100;
     BorderSize:= 0;
     TimerInterval:= 200;
