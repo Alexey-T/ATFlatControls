@@ -61,8 +61,8 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     function AddTab(AIndex: integer; AData: TATTabData; AndActivate: boolean=true): integer;
-    function CloseTabsAll: boolean;
-    function CloseTabsOther(ATabIndex: Integer; ADoRighter, ADoLefter: boolean): boolean;
+    function CloseTabsAll(AClosePinned: boolean): boolean;
+    function CloseTabsOther(ATabIndex: Integer; AClosePinned, ADoRighter, ADoLefter: boolean): boolean;
     property Tabs: TATTabs read FTabs;
     property EnabledEmpty: boolean read FEnabledEmpty write FEnabledEmpty;
     property OnTabFocus: TNotifyEvent read FOnTabFocus write FOnTabFocus;
@@ -310,7 +310,7 @@ type
     procedure SetTabFont(AFont: TFont);
     function GetTabSingleRowHeight: integer;
     //
-    function CloseTabs(Id: TATTabCloseId; AForPopupMenu: boolean): boolean;
+    function CloseTabs(Id: TATTabCloseId; AForPopupMenu, AClosePinned: boolean): boolean;
     //
     procedure MoveTab(AFromPages: TATPages; AFromIndex: Integer;
       AToPages: TATPages; AToIndex: Integer; AActivateTabAfter: boolean);
@@ -472,7 +472,7 @@ begin
     FTabs.TabIndex:= Result;
 end;
 
-function TATPages.CloseTabsAll: boolean;
+function TATPages.CloseTabsAll(AClosePinned: boolean): boolean;
 var
   Data: TATTabData;
   i: Integer;
@@ -482,13 +482,16 @@ begin
   for i:= Tabs.TabCount-1 downto 0 do
   begin
     Data:= Tabs.GetTabData(i);
-    if Assigned(Data) and Data.TabPinned then Continue;
-    if not Tabs.DeleteTab(i, true, true) then Exit;
+    if Assigned(Data) and Data.TabPinned and not AClosePinned then
+      Continue;
+    if not Tabs.DeleteTab(i, true, true) then
+      Exit;
   end;
   Result:= true;
 end;
 
-function TATPages.CloseTabsOther(ATabIndex: Integer; ADoRighter, ADoLefter: boolean): boolean;
+function TATPages.CloseTabsOther(ATabIndex: Integer; AClosePinned, ADoRighter,
+  ADoLefter: boolean): boolean;
 var
   Data: TATTabData;
   i: Integer;
@@ -498,15 +501,19 @@ begin
     for i:= Tabs.TabCount-1 downto ATabIndex+1 do
     begin
       Data:= Tabs.GetTabData(i);
-      if Assigned(Data) and Data.TabPinned then Continue;
-      if not Tabs.DeleteTab(i, true, true) then Exit;
+      if Assigned(Data) and Data.TabPinned and not AClosePinned then
+        Continue;
+      if not Tabs.DeleteTab(i, true, true) then
+        Exit;
     end;
   if ADoLefter then
     for i:= ATabIndex-1 downto 0 do
     begin
       Data:= Tabs.GetTabData(i);
-      if Assigned(Data) and Data.TabPinned then Continue;
-      if not Tabs.DeleteTab(i, true, true) then Exit;
+      if Assigned(Data) and Data.TabPinned and not AClosePinned then
+        Continue;
+      if not Tabs.DeleteTab(i, true, true) then
+        Exit;
     end;
   Result:= true;
 end;
@@ -2007,7 +2014,7 @@ begin
   end;
 end;
 
-function TATGroups.CloseTabs(Id: TATTabCloseId; AForPopupMenu: boolean): boolean;
+function TATGroups.CloseTabs(Id: TATTabCloseId; AForPopupMenu, AClosePinned: boolean): boolean;
 var
   NPagesIndex, NTabIndex, i: Integer;
 begin
@@ -2040,36 +2047,36 @@ begin
       end;
     tabCloseOthersThisPage:
       begin
-        if not Pages[NPagesIndex].CloseTabsOther(NTabIndex, true, true) then Exit;
+        if not Pages[NPagesIndex].CloseTabsOther(NTabIndex, AClosePinned, true, true) then Exit;
       end;
     tabCloseLefterThisPage:
       begin
-        if not Pages[NPagesIndex].CloseTabsOther(NTabIndex, false, true) then Exit;
+        if not Pages[NPagesIndex].CloseTabsOther(NTabIndex, AClosePinned, false, true) then Exit;
       end;
     tabCloseRighterThisPage:
       begin
-        if not Pages[NPagesIndex].CloseTabsOther(NTabIndex, true, false) then Exit;
+        if not Pages[NPagesIndex].CloseTabsOther(NTabIndex, AClosePinned, true, false) then Exit;
       end;
     tabCloseOthersAllPages:
       begin
         for i:= High(Pages) downto Low(Pages) do
           if i=NPagesIndex then
           begin
-            if not Pages[i].CloseTabsOther(NTabIndex, true, true) then Exit;
+            if not Pages[i].CloseTabsOther(NTabIndex, AClosePinned, true, true) then Exit;
           end
           else
           begin
-            if not Pages[i].CloseTabsAll then Exit;
+            if not Pages[i].CloseTabsAll(AClosePinned) then Exit;
           end;
       end;
     tabCloseAllThisPage:
       begin
-        if not Pages[NPagesIndex].CloseTabsAll then Exit;
+        if not Pages[NPagesIndex].CloseTabsAll(AClosePinned) then Exit;
       end;
     tabCloseAll:
       begin
         for i:= High(Pages) downto Low(Pages) do
-          if not Pages[i].CloseTabsAll then Exit;
+          if not Pages[i].CloseTabsAll(AClosePinned) then Exit;
       end;
   end;
 
