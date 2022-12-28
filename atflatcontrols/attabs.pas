@@ -4676,7 +4676,7 @@ procedure TATTabs.UpdateCanvasAntialiasMode(C: TCanvas);
 {$ifdef fpc}
 begin
   // https://gitlab.com/freepascal.org/lazarus/lazarus/-/issues/39416
-  {$ifndef LCLQt5}
+  {$if not defined(LCLQt5) and not defined(LCLQt6)}
   C.AntialiasingMode:= amOn;
   {$endif}
 end;
@@ -5028,7 +5028,7 @@ end;
 initialization
   cRect0:= Rect(0, 0, 0, 0);
 
-  {$if defined(LCLQT5) or defined(darwin)}
+  {$if defined(LCLQt5) or defined(LCLQt6) or defined(darwin)}
   ATTabsStretchDrawEnabled:= false;
   ATTabsCircleDrawEnabled:= false;
   ATTabsPixelsDrawEnabled:= false;
