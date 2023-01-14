@@ -993,7 +993,7 @@ begin
   begin
     FPos:= AValue;
 
-    {$IF Defined(LCLWin32) or Defined(LCLWin64)}
+    {$IF Defined(LCLWin32)}
     Repaint; //only Invalidate is not ok, it delays painting on big files
     {$else}
     Invalidate;
