@@ -1776,24 +1776,26 @@ end;
 
 procedure TATGroups.MovePopupTabToNext(ANext: boolean);
 var
-  N0, N1: Integer;
+  NFrom, NTo: Integer;
 begin
-  N0:= FindPages(PopupPages);
-  if N0<0 then Exit;
-  N1:= PagesNextIndex(N0, ANext, true);
-  if N1<0 then Exit;
-  MoveTab(PopupPages, PopupTabIndex, Pages[N1], -1, false);
+  NFrom:= FindPages(PopupPages);
+  if NFrom<0 then Exit;
+  NTo:= PagesNextIndex(NFrom, ANext, true);
+  if NTo<0 then Exit;
+  MoveTab(PopupPages, PopupTabIndex, Pages[NTo], -1, false);
 end;
 
 procedure TATGroups.MoveCurrentTabToNext(ANext: boolean);
 var
-  N0, N1: Integer;
+  PagesTo: TATPages;
+  NFrom, NTo: Integer;
 begin
-  N0:= FindPages(PagesCurrent);
-  if N0<0 then Exit;
-  N1:= PagesNextIndex(N0, ANext, true);
-  if N1<0 then Exit;
-  MoveTab(PagesCurrent, PagesCurrent.Tabs.TabIndex, Pages[N1], -1, true);
+  NFrom:= FindPages(PagesCurrent);
+  if NFrom<0 then Exit;
+  NTo:= PagesNextIndex(NFrom, ANext, true);
+  if NTo<0 then Exit;
+  PagesTo:= Pages[NTo];
+  MoveTab(PagesCurrent, PagesCurrent.Tabs.TabIndex, PagesTo, -1, true);
 end;
 
 procedure TATGroups.TabClose(Sender: TObject; ATabIndex: Integer;
