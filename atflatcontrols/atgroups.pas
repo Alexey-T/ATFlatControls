@@ -1706,16 +1706,16 @@ end;
 
 function TATGroups.PagesSetIndex(ANum: Integer): boolean;
 var
-  APages: TATPages;
+  FPages: TATPages;
 begin
   if (ANum>=Low(Pages)) and (ANum<=High(Pages)) then
-    APages:= Pages[ANum]
+    FPages:= Pages[ANum]
   else
-    APages:= nil;
+    FPages:= nil;
 
-  Result:= (APages<>nil) and APages.Visible and (APages.Tabs.TabCount>0);
+  Result:= (FPages<>nil) and FPages.Visible and (FPages.Tabs.TabCount>0);
   if Result then
-    APages.Tabs.OnTabClick(nil);
+    FPages.Tabs.OnTabClick(nil);
 end;
 
 procedure TATGroups.PagesSetNext(ANext: boolean);
