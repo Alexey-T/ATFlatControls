@@ -1699,8 +1699,11 @@ begin
   AFromPages.Tabs.DeleteTab(AFromIndex, false, false);
 
   if AActivateTabAfter then
+  begin
     with AToPages.Tabs do
       TabIndex:= IfThen(AToIndex>=0, AToIndex, TabCount-1);
+    PagesCurrent:= AToPages;
+  end;
 end;
 
 
@@ -1777,12 +1780,14 @@ end;
 procedure TATGroups.MovePopupTabToNext(ANext: boolean);
 var
   NFrom, NTo: Integer;
+  PagesTo: TATPages;
 begin
   NFrom:= FindPages(PopupPages);
   if NFrom<0 then Exit;
   NTo:= PagesNextIndex(NFrom, ANext, true);
   if NTo<0 then Exit;
-  MoveTab(PopupPages, PopupTabIndex, Pages[NTo], -1, false);
+  PagesTo:= Pages[NTo];
+  MoveTab(PopupPages, PopupTabIndex, PagesTo, -1, false);
 end;
 
 procedure TATGroups.MoveCurrentTabToNext(ANext: boolean);
