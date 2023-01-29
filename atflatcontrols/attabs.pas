@@ -1442,7 +1442,7 @@ begin
   FBitmapRound.PixelFormat:= pf24bit;
   BitmapResize(FBitmapRound, _InitRoundedBitmapSize, _InitRoundedBitmapSize);
 
-  FTabIndex:= 0;
+  FTabIndex:= -1;
   FTabIndexOver:= -1;
   FTabIndexHinted:= -1;
   FTabIndexHintedPrev:= -1;
@@ -1463,7 +1463,7 @@ end;
 procedure TATTabs.Clear;
 begin
   FTabList.Clear;
-  FTabIndex:= 0;
+  FTabIndex:= -1;
 end;
 
 destructor TATTabs.Destroy;
@@ -3540,6 +3540,9 @@ begin
   if Assigned(FOnTabMove) then
     FOnTabMove(Self, -1, AIndex);
 
+  if FTabIndex<0 then
+    FTabIndex:= 0;
+
   Result:= Data;
 end;
 
@@ -3654,8 +3657,11 @@ begin
     Invalidate;
 
     if (TabCount=0) then
+    begin
+      FTabIndex:= -1;
       if Assigned(FOnTabEmpty) then
         FOnTabEmpty(Self);
+    end;
 
     if Assigned(FOnTabMove) then
       FOnTabMove(Self, AIndex, -1);
