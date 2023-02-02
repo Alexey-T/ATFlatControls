@@ -219,10 +219,17 @@ type
   TATTabPaintInfo = record
     Rect: TRect;
     Caption: TATTabString;
-    Modified: boolean;
+    Modified,
+    Modified2,
+    ExtModified,
+    ExtModified2,
+    ExtDeleted,
+    ExtDeleted2: boolean;
     Pinned: boolean;
     TabIndex: integer;
+    ImageIndex: integer;
     ColorFont: TColor;
+    TwoDocuments: boolean;
     TabActive,
     TabMouseOver,
     TabMouseOverX: boolean;
@@ -970,6 +977,7 @@ procedure TATTabPaintInfo.Clear;
 begin
   Self.Caption:= '';
   FillChar(Self, SizeOf(Self), 0);
+  ImageIndex:= -1;
 end;
 
 { TATTabListCollection }
@@ -1544,11 +1552,7 @@ var
   RectText: TRect;
   NIndentL, NIndentR, NIndentTop, NLeft, NTop,
   NLineHeight, NLineWidth, NLineIndex: integer;
-  NImageIndex: integer;
   NCircleSize: integer;
-  bTabModified, bTabModified2, bTwoDocs: boolean;
-  bTabExtModified, bTabExtDeleted,
-  bTabExtModified2, bTabExtDeleted2: boolean;
   TempCaption: TATTabString;
   Extent: TSize;
   bNeedMoreSpace: boolean;
@@ -1568,28 +1572,9 @@ begin
   Data:= GetTabData(AInfo.TabIndex);
   if Assigned(Data) then
   begin
-    NImageIndex:= Data.TabImageIndex;
-    bTabModified:= Data.TabModified;
-    bTabModified2:= Data.TabModified2;
-    bTabExtModified:= Data.TabExtModified;
-    bTabExtModified2:= Data.TabExtModified2;
-    bTabExtDeleted:= Data.TabExtDeleted;
-    bTabExtDeleted2:= Data.TabExtDeleted2;
-    bTwoDocs:= Data.TabTwoDocuments;
     // if tab is not visible then don't draw
     if not Data.TabVisible then
       exit;
-  end
-  else
-  begin
-    NImageIndex:= -1;
-    bTabModified:= false;
-    bTabModified2:= false;
-    bTabExtModified:= false;
-    bTabExtModified2:= false;
-    bTabExtDeleted:= false;
-    bTabExtDeleted2:= false;
-    bTwoDocs:= false;
   end;
 
   UpdateCanvasAntialiasMode(C);
@@ -1621,7 +1606,7 @@ begin
 
   //imagelist
   if Assigned(FImages) then
-    if (NImageIndex>=0) and (NImageIndex<FImages.Count) then
+    if (AInfo.ImageIndex>=0) and (AInfo.ImageIndex<FImages.Count) then
     begin
       NIndentTop:=
         (RectText.Top + RectText.Bottom - FImages.Height + DoScale(FOptColoredBandSize)) div 2;
@@ -1631,7 +1616,7 @@ begin
             FImages.Draw(C,
               RectText.Left - 2,
               NIndentTop,
-              NImageIndex);
+              AInfo.ImageIndex);
             Inc(RectText.Left, FImages.Width+DoScale(FOptSpaceBetweenIconCaption));
           end;
         aipIconRighterThanText:
@@ -1639,7 +1624,7 @@ begin
             FImages.Draw(C,
               RectText.Right - FImages.Width + 2,
               NIndentTop,
-              NImageIndex);
+              AInfo.ImageIndex);
             Dec(RectText.Right, FImages.Width+DoScale(FOptSpaceBetweenIconCaption));
           end;
         aipIconCentered:
@@ -1647,14 +1632,14 @@ begin
             FImages.Draw(C,
               (RectText.Left + RectText.Right - FImages.Width) div 2,
               NIndentTop,
-              NImageIndex);
+              AInfo.ImageIndex);
           end;
         aipIconAboveTextCentered:
           begin
             FImages.Draw(C,
               (RectText.Left + RectText.Right - FImages.Width) div 2,
               RectText.Top + DoScale(FOptColoredBandSize),
-              NImageIndex);
+              AInfo.ImageIndex);
             Inc(RectText.Top, FImages.Height+DoScale(FOptSpaceBetweenIconCaption));
           end;
         aipIconBelowTextCentered:
@@ -1662,7 +1647,7 @@ begin
             FImages.Draw(C,
               (RectText.Left + RectText.Right - FImages.Width) div 2,
               RectText.Bottom - FImages.Height,
-              NImageIndex);
+              AInfo.ImageIndex);
             Dec(RectText.Bottom, FImages.Height+DoScale(FOptSpaceBetweenIconCaption));
           end;
       end;
@@ -1769,17 +1754,17 @@ begin
   end;
 
   if FOptShowModifiedCircle and (
-    bTabModified or
-    bTabModified2 or
-    bTabExtModified or
-    bTabExtModified2 or
-    bTabExtDeleted or
-    bTabExtDeleted2
+    AInfo.Modified or
+    AInfo.Modified2 or
+    AInfo.ExtModified or
+    AInfo.ExtModified2 or
+    AInfo.ExtDeleted or
+    AInfo.ExtDeleted2
     ) then
   begin
     NCircleSize:= DoScale(FOptSpaceModifiedCircle);
     NLeft:= (AInfo.Rect.Left+AInfo.Rect.Right) div 2;
-    if bTwoDocs then
+    if AInfo.TwoDocuments then
       Dec(NLeft, NCircleSize)
     else
       Dec(NLeft, NCircleSize div 2);
@@ -1788,17 +1773,17 @@ begin
     C.Pen.Color:= AInfo.ColorFont;
     C.Brush.Color:= AInfo.ColorFont;
 
-    if bTwoDocs or bTabModified or bTabExtModified or bTabExtDeleted then
+    if AInfo.TwoDocuments or AInfo.Modified or AInfo.ExtModified or AInfo.ExtDeleted then
     begin
-      if bTabModified or bTabExtModified or bTabExtDeleted then
+      if AInfo.Modified or AInfo.ExtModified or AInfo.ExtDeleted then
         C.Brush.Style:= bsSolid
       else
         C.Brush.Style:= bsClear;
       _PaintMaybeCircle(C, NLeft, NTop, NLeft+NCircleSize, NTop+NCircleSize);
     end;
-    if bTwoDocs then
+    if AInfo.TwoDocuments then
     begin
-      if bTabModified2 or bTabExtModified2 or bTabExtDeleted2 then
+      if AInfo.Modified2 or AInfo.Modified2 or AInfo.ExtDeleted2 then
         C.Brush.Style:= bsSolid
       else
         C.Brush.Style:= bsClear;
@@ -2776,9 +2761,16 @@ begin
         Info.Rect:= RRect;
         Info.Caption:= GetTabCaptionFinal(Data, i);
         Info.Modified:= Data.TabModified;
+        Info.Modified2:= Data.TabModified2;
+        Info.ExtModified:= Data.TabExtModified;
+        Info.ExtModified2:= Data.TabExtModified2;
+        Info.ExtDeleted:= Data.TabExtDeleted;
+        Info.ExtDeleted2:= Data.TabExtDeleted2;
         Info.Pinned:= Data.TabPinned;
         Info.TabIndex:= i;
+        Info.ImageIndex:= Data.TabImageIndex;
         Info.ColorFont:= NColorFont;
+        Info.TwoDocuments:= Data.TabTwoDocuments;
         Info.TabMouseOver:= bMouseOver;
         Info.TabMouseOverX:= bMouseOverX;
         Info.FontStyle:= NFontStyle;
@@ -2831,9 +2823,16 @@ begin
       Info.Rect:= RRect;
       Info.Caption:= GetTabCaptionFinal(Data, i);
       Info.Modified:= Data.TabModified;
+      Info.Modified2:= Data.TabModified2;
+      Info.ExtModified:= Data.TabExtModified;
+      Info.ExtModified2:= Data.TabExtModified2;
+      Info.ExtDeleted:= Data.TabExtDeleted;
+      Info.ExtDeleted2:= Data.TabExtDeleted2;
       Info.Pinned:= Data.TabPinned;
       Info.TabIndex:= i;
+      Info.ImageIndex:= Data.TabImageIndex;
       Info.ColorFont:= NColorFont;
+      Info.TwoDocuments:= Data.TabTwoDocuments;
       Info.TabActive:= true;
       Info.TabMouseOver:= bMouseOver;
       Info.TabMouseOverX:= bMouseOverX;
