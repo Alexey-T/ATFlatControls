@@ -382,6 +382,7 @@ const
   _InitOptShowFlatMouseOver = true;
   _InitOptShowFlatSep = true;
   _InitOptShowModifiedCircle = true;
+  _InitOptShowModifiedColorOnX = false;
   _InitOptPosition = atpTop;
   _InitOptFillWidth = true;
   _InitOptFillWidthLastToo = false;
@@ -495,6 +496,7 @@ type
     FOptWhichActivateOnClose: TATTabActionOnClose;
     FOptCaptionAlignment: TAlignment;
     FOptShowModifiedCircle: boolean;
+    FOptShowModifiedColorOnX: boolean;
     FOptShowFlat: boolean;
     FOptShowFlatMouseOver: boolean;
     FOptShowFlatSepar: boolean;
@@ -891,6 +893,7 @@ type
     property OptShowFlatMouseOver: boolean read FOptShowFlatMouseOver write FOptShowFlatMouseOver default _InitOptShowFlatMouseOver;
     property OptShowFlatSepar: boolean read FOptShowFlatSepar write FOptShowFlatSepar default _InitOptShowFlatSep;
     property OptShowModifiedCircle: boolean read FOptShowModifiedCircle write FOptShowModifiedCircle default _InitOptShowModifiedCircle;
+    property OptShowModifiedColorOnX: boolean read FOptShowModifiedColorOnX write FOptShowModifiedColorOnX default _InitOptShowModifiedColorOnX;
     property OptShowScrollMark: boolean read FOptShowScrollMark write FOptShowScrollMark default _InitOptShowScrollMark;
     property OptShowDropMark: boolean read FOptShowDropMark write FOptShowDropMark default _InitOptShowDropMark;
     property OptShowXRounded: boolean read FOptShowXRounded write FOptShowXRounded default _InitOptShowXRounded;
@@ -1406,6 +1409,7 @@ begin
   FOptShowFlatMouseOver:= _InitOptShowFlatMouseOver;
   FOptShowFlatSepar:= _InitOptShowFlatSep;
   FOptShowModifiedCircle:= _InitOptShowModifiedCircle;
+  FOptShowModifiedColorOnX:= _InitOptShowModifiedColorOnX;
   FOptPosition:= _InitOptPosition;
   FOptShowNumberPrefix:= _InitOptShowNumberPrefix;
   FOptShowScrollMark:= _InitOptShowScrollMark;
@@ -2149,6 +2153,15 @@ begin
     NColorBg:= GetTabBgColor_Passive(AInfo.TabIndex);
   GetTabXColors(AInfo.TabIndex, AInfo.TabMouseOverX, NColorXBg, NColorXBorder, NColorXMark);
 
+  if FOptShowModifiedColorOnX then
+    if AInfo.Modified or
+       AInfo.Modified2 or
+       AInfo.ExtModified or
+       AInfo.ExtModified2 or
+       AInfo.ExtDeleted or
+       AInfo.ExtDeleted2 then
+      NColorXMark:= FColorFontModified;
+
   if FOptShowXRounded and ATTabsCircleDrawEnabled then
   begin
     if NColorXBg<>clNone then
@@ -2737,6 +2750,22 @@ begin
       else
         ElemType:= aeTabPassive;
 
+      Info.Clear;
+      Info.Rect:= RRect;
+      Info.Caption:= GetTabCaptionFinal(Data, i);
+      Info.Modified:= Data.TabModified;
+      Info.Modified2:= Data.TabModified2;
+      Info.ExtModified:= Data.TabExtModified;
+      Info.ExtModified2:= Data.TabExtModified2;
+      Info.ExtDeleted:= Data.TabExtDeleted;
+      Info.ExtDeleted2:= Data.TabExtDeleted2;
+      Info.Pinned:= Data.TabPinned;
+      Info.TabIndex:= i;
+      Info.ImageIndex:= Data.TabImageIndex;
+      Info.TwoDocuments:= Data.TabTwoDocuments;
+      Info.TabMouseOver:= bMouseOver;
+      Info.TabMouseOverX:= bMouseOverX;
+
       if IsPaintNeeded(ElemType, i, C, RRect) then
       begin
         if not Data.TabVisible then Continue;
@@ -2757,23 +2786,8 @@ begin
         else
           NColorFont:= FColorFont;
 
-        Info.Clear;
-        Info.Rect:= RRect;
-        Info.Caption:= GetTabCaptionFinal(Data, i);
-        Info.Modified:= Data.TabModified;
-        Info.Modified2:= Data.TabModified2;
-        Info.ExtModified:= Data.TabExtModified;
-        Info.ExtModified2:= Data.TabExtModified2;
-        Info.ExtDeleted:= Data.TabExtDeleted;
-        Info.ExtDeleted2:= Data.TabExtDeleted2;
-        Info.Pinned:= Data.TabPinned;
-        Info.TabIndex:= i;
-        Info.ImageIndex:= Data.TabImageIndex;
-        Info.ColorFont:= NColorFont;
-        Info.TwoDocuments:= Data.TabTwoDocuments;
-        Info.TabMouseOver:= bMouseOver;
-        Info.TabMouseOverX:= bMouseOverX;
         Info.FontStyle:= NFontStyle;
+        Info.ColorFont:= NColorFont;
 
         DoPaintTabTo(C, Info);
         DoPaintAfter(ElemType, i, C, RRect);
@@ -2781,10 +2795,7 @@ begin
 
       if Data.TabVisibleX then
       begin
-        Info.Clear;
         Info.Rect:= RectX;
-        Info.TabIndex:= i;
-        Info.TabMouseOverX:= bMouseOverX;
         DoPaintX(C, Info);
       end;
     end;
@@ -2800,6 +2811,25 @@ begin
     GetTabXProps(i, RRect, bMouseOverX, RectX);
 
     bMouseOver:= i=FTabIndexOver;
+
+    Info.Clear;
+    Info.Rect:= RRect;
+    Info.Caption:= GetTabCaptionFinal(Data, i);
+    Info.Modified:= Data.TabModified;
+    Info.Modified2:= Data.TabModified2;
+    Info.ExtModified:= Data.TabExtModified;
+    Info.ExtModified2:= Data.TabExtModified2;
+    Info.ExtDeleted:= Data.TabExtDeleted;
+    Info.ExtDeleted2:= Data.TabExtDeleted2;
+    Info.Pinned:= Data.TabPinned;
+    Info.TabIndex:= i;
+    Info.ImageIndex:= Data.TabImageIndex;
+    Info.TwoDocuments:= Data.TabTwoDocuments;
+    Info.TabActive:= true;
+    Info.TabMouseOver:= bMouseOver;
+    Info.TabMouseOverX:= bMouseOverX;
+    Info.TabActive:= true;
+    Info.TabMouseOverX:= bMouseOverX;
 
     if IsPaintNeeded(aeTabActive, i, C, RRect) then
     begin
@@ -2819,24 +2849,8 @@ begin
       else
         NColorFont:= FColorFont;
 
-      Info.Clear;
-      Info.Rect:= RRect;
-      Info.Caption:= GetTabCaptionFinal(Data, i);
-      Info.Modified:= Data.TabModified;
-      Info.Modified2:= Data.TabModified2;
-      Info.ExtModified:= Data.TabExtModified;
-      Info.ExtModified2:= Data.TabExtModified2;
-      Info.ExtDeleted:= Data.TabExtDeleted;
-      Info.ExtDeleted2:= Data.TabExtDeleted2;
-      Info.Pinned:= Data.TabPinned;
-      Info.TabIndex:= i;
-      Info.ImageIndex:= Data.TabImageIndex;
-      Info.ColorFont:= NColorFont;
-      Info.TwoDocuments:= Data.TabTwoDocuments;
-      Info.TabActive:= true;
-      Info.TabMouseOver:= bMouseOver;
-      Info.TabMouseOverX:= bMouseOverX;
       Info.FontStyle:= NFontStyle;
+      Info.ColorFont:= NColorFont;
 
       DoPaintTabTo(C, Info);
       DoPaintAfter(aeTabActive, i, C, RRect);
@@ -2844,11 +2858,7 @@ begin
 
     if Data.TabVisibleX then
     begin
-      Info.Clear;
       Info.Rect:= RectX;
-      Info.TabIndex:= i;
-      Info.TabActive:= true;
-      Info.TabMouseOverX:= bMouseOverX;
       DoPaintX(C, Info);
     end;
    end;
