@@ -2805,64 +2805,64 @@ begin
   i:= FTabIndex;
   if IsIndexOk(i) then
   begin
-   Data:= GetTabData(i);
-   if Assigned(Data) and Data.TabVisible then
-   begin
-    RRect:= GetRectScrolled(Data.TabRect);
-    GetTabXProps(i, RRect, bMouseOverX, RRectXMark);
-
-    bMouseOver:= i=FTabIndexOver;
-
-    Info.Clear;
-    Info.Rect:= RRect;
-    Info.RectX:= RRectXMark;
-    Info.Caption:= GetTabCaptionFinal(Data, i);
-    Info.Modified:= Data.TabModified;
-    Info.Modified2:= Data.TabModified2;
-    Info.ExtModified:= Data.TabExtModified;
-    Info.ExtModified2:= Data.TabExtModified2;
-    Info.ExtDeleted:= Data.TabExtDeleted;
-    Info.ExtDeleted2:= Data.TabExtDeleted2;
-    Info.Pinned:= Data.TabPinned;
-    Info.TabIndex:= i;
-    Info.ImageIndex:= Data.TabImageIndex;
-    Info.TwoDocuments:= Data.TabTwoDocuments;
-    Info.TabActive:= true;
-    Info.TabMouseOver:= bMouseOver;
-    Info.TabMouseOverX:= bMouseOverX;
-    Info.TabActive:= true;
-    Info.TabMouseOverX:= bMouseOverX;
-
-    if IsPaintNeeded(aeTabActive, i, C, RRect) then
+    Data:= GetTabData(i);
+    if Assigned(Data) and Data.TabVisible then
     begin
-      if FOptActiveFontStyleUsed then
-        NFontStyle:= FOptActiveFontStyle
-      else
-        NFontStyle:= Data.TabFontStyle;
+      RRect:= GetRectScrolled(Data.TabRect);
+      GetTabXProps(i, RRect, bMouseOverX, RRectXMark);
 
-      if FColorFontActive<>clNone then
-        NColorFont:= FColorFontActive
-      else
-      if Data.TabModified or Data.TabModified2 then
-        NColorFont:= FColorFontModified
-      else
-      if Data.TabFontColor<>clNone then
-        NColorFont:= Data.TabFontColor
-      else
-        NColorFont:= FColorFont;
+      bMouseOver:= i=FTabIndexOver;
 
-      Info.FontStyle:= NFontStyle;
-      Info.ColorFont:= NColorFont;
+      Info.Clear;
+      Info.Rect:= RRect;
+      Info.RectX:= RRectXMark;
+      Info.Caption:= GetTabCaptionFinal(Data, i);
+      Info.Modified:= Data.TabModified;
+      Info.Modified2:= Data.TabModified2;
+      Info.ExtModified:= Data.TabExtModified;
+      Info.ExtModified2:= Data.TabExtModified2;
+      Info.ExtDeleted:= Data.TabExtDeleted;
+      Info.ExtDeleted2:= Data.TabExtDeleted2;
+      Info.Pinned:= Data.TabPinned;
+      Info.TabIndex:= i;
+      Info.ImageIndex:= Data.TabImageIndex;
+      Info.TwoDocuments:= Data.TabTwoDocuments;
+      Info.TabActive:= true;
+      Info.TabMouseOver:= bMouseOver;
+      Info.TabMouseOverX:= bMouseOverX;
+      Info.TabActive:= true;
+      Info.TabMouseOverX:= bMouseOverX;
 
-      DoPaintTabTo(C, Info);
-      DoPaintAfter(aeTabActive, i, C, RRect);
+      if IsPaintNeeded(aeTabActive, i, C, RRect) then
+      begin
+        if FOptActiveFontStyleUsed then
+          NFontStyle:= FOptActiveFontStyle
+        else
+          NFontStyle:= Data.TabFontStyle;
+
+        if FColorFontActive<>clNone then
+          NColorFont:= FColorFontActive
+        else
+        if Data.TabModified or Data.TabModified2 then
+          NColorFont:= FColorFontModified
+        else
+        if Data.TabFontColor<>clNone then
+          NColorFont:= Data.TabFontColor
+        else
+          NColorFont:= FColorFont;
+
+        Info.FontStyle:= NFontStyle;
+        Info.ColorFont:= NColorFont;
+
+        DoPaintTabTo(C, Info);
+        DoPaintAfter(aeTabActive, i, C, RRect);
+      end;
+
+      if Data.TabVisibleX then
+      begin
+        DoPaintX(C, Info);
+      end;
     end;
-
-    if Data.TabVisibleX then
-    begin
-      DoPaintX(C, Info);
-    end;
-   end;
   end;
 
   //button back
