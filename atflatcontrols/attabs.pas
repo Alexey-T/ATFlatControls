@@ -2665,7 +2665,7 @@ end;
 
 procedure TATTabs.DoPaintTo(C: TCanvas);
 var
-  RRect, RectX: TRect;
+  RRect, RRectXMark: TRect;
   NColorFont: TColor;
   ElemType: TATTabElemType;
   Data: TATTabData;
@@ -2743,7 +2743,7 @@ begin
       RRect:= GetRectScrolled(Data.TabRect);
       if RRect=cRect0 then Continue;
 
-      GetTabXProps(i, RRect, bMouseOverX, RectX);
+      GetTabXProps(i, RRect, bMouseOverX, RRectXMark);
       bMouseOver:= i=FTabIndexOver;
 
       if bMouseOver then
@@ -2753,7 +2753,7 @@ begin
 
       Info.Clear;
       Info.Rect:= RRect;
-      Info.RectX:= RectX;
+      Info.RectX:= RRectXMark;
       Info.Caption:= GetTabCaptionFinal(Data, i);
       Info.Modified:= Data.TabModified;
       Info.Modified2:= Data.TabModified2;
@@ -2809,13 +2809,13 @@ begin
    if Assigned(Data) and Data.TabVisible then
    begin
     RRect:= GetRectScrolled(Data.TabRect);
-    GetTabXProps(i, RRect, bMouseOverX, RectX);
+    GetTabXProps(i, RRect, bMouseOverX, RRectXMark);
 
     bMouseOver:= i=FTabIndexOver;
 
     Info.Clear;
     Info.Rect:= RRect;
-    Info.RectX:= RectX;
+    Info.RectX:= RRectXMark;
     Info.Caption:= GetTabCaptionFinal(Data, i);
     Info.Modified:= Data.TabModified;
     Info.Modified2:= Data.TabModified2;
