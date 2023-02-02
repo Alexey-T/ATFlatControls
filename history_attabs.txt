@@ -1,5 +1,5 @@
 2023.02.02
-+ ATTabs: prop OptShowModifiedColorOnX
++ add: prop OptShowModifiedColorOnX
 
 2022.10.30
 * change: don't activate tab by right-click
