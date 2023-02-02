@@ -218,6 +218,7 @@ type
 
   TATTabPaintInfo = record
     Rect: TRect;
+    RectX: TRect;
     Caption: TATTabString;
     Modified,
     Modified2,
@@ -2123,10 +2124,10 @@ begin
   else
     ElemType:= aeTabIconX;
 
-  if IsPaintNeeded(ElemType, -1, C, AInfo.Rect) then
+  if IsPaintNeeded(ElemType, -1, C, AInfo.RectX) then
   begin
     DoPaintXTo(C, AInfo);
-    DoPaintAfter(ElemType, -1, C, AInfo.Rect);
+    DoPaintAfter(ElemType, -1, C, AInfo.RectX);
   end;
 end;
 
@@ -2143,7 +2144,7 @@ begin
       Pic:= FPic_X_a
     else
       Pic:= FPic_X;
-    Pic.Draw(C, AInfo.Rect.Left, AInfo.Rect.Top);
+    Pic.Draw(C, AInfo.RectX.Left, AInfo.RectX.Top);
     exit;
   end;
 
@@ -2166,7 +2167,7 @@ begin
   begin
     if NColorXBg<>clNone then
     begin
-      RectRound:= AInfo.Rect;
+      RectRound:= AInfo.RectX;
       NSize:= DoScale(FOptSpaceXIncrementRound);
       InflateRect(RectRound, NSize, NSize);
 
@@ -2187,18 +2188,18 @@ begin
     else
     begin
       C.Brush.Color:= NColorBg;
-      C.FillRect(AInfo.Rect);
+      C.FillRect(AInfo.RectX);
     end;
   end
   else
   begin
     C.Brush.Color:= IfThen(NColorXBg<>clNone, NColorXBg, NColorBg);
-    C.FillRect(AInfo.Rect);
+    C.FillRect(AInfo.RectX);
     C.Pen.Color:= IfThen(NColorXBorder<>clNone, NColorXBorder, NColorBg);
-    C.Rectangle(AInfo.Rect);
+    C.Rectangle(AInfo.RectX);
   end;
 
-  RectRound:= AInfo.Rect;
+  RectRound:= AInfo.RectX;
   Dec(RectRound.Right);
   Dec(RectRound.Bottom);
   NSize:= DoScale(FOptSpaceXInner);
@@ -2752,6 +2753,7 @@ begin
 
       Info.Clear;
       Info.Rect:= RRect;
+      Info.RectX:= RectX;
       Info.Caption:= GetTabCaptionFinal(Data, i);
       Info.Modified:= Data.TabModified;
       Info.Modified2:= Data.TabModified2;
@@ -2795,7 +2797,6 @@ begin
 
       if Data.TabVisibleX then
       begin
-        Info.Rect:= RectX;
         DoPaintX(C, Info);
       end;
     end;
@@ -2814,6 +2815,7 @@ begin
 
     Info.Clear;
     Info.Rect:= RRect;
+    Info.RectX:= RectX;
     Info.Caption:= GetTabCaptionFinal(Data, i);
     Info.Modified:= Data.TabModified;
     Info.Modified2:= Data.TabModified2;
@@ -2858,7 +2860,6 @@ begin
 
     if Data.TabVisibleX then
     begin
-      Info.Rect:= RectX;
       DoPaintX(C, Info);
     end;
    end;
