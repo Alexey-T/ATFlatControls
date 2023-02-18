@@ -958,7 +958,6 @@ implementation
 
 uses
   SysUtils,
-  StrUtils,
   Dialogs,
   Forms,
   Math;
@@ -4751,6 +4750,8 @@ procedure TATTabs.UpdateCaptionProps(C: TCanvas; const ACaption: TATTabString;
     StrW: WideString;
   {$endif}
   begin
+    Ex.cx:= 0;
+    Ex.cy:= 0;
     {$ifdef WIDE}
     StrW:= UTF8Decode(S);
     Windows.GetTextExtentPoint32W(C.Handle, PWideChar(StrW), Length(StrW), Ex);
