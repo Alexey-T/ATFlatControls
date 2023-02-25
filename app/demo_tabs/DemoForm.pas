@@ -104,6 +104,8 @@ type
     tabTopHeight: integer;
 
     procedure SetTheme(const SName: string);
+    procedure TabChangeQuery(Sender: TObject; ANewTabIndex: integer;
+      var ACanChange: boolean);
     procedure TabClickUserButton(Sender: TObject; AIndex: integer);
     procedure TabCloseEvent(Sender: TObject; ATabIndex: Integer; var ACanClose,
       ACanContinue: boolean);
@@ -157,6 +159,7 @@ begin
   t_top.ColorFont:= $E0E0E0;
   t_top.OnTabClick:= TabClick;
   t_top.OnTabPlusClick:= TabPlusClick;
+  t_top.OnTabChangeQuery:=TabChangeQuery;
   t_top.OnTabClose:= TabClose;
   t_top.OnTabMove:= TabMove;
   t_top.OnTabClose:= TabCloseEvent;
@@ -339,6 +342,15 @@ begin
 
   t_top.SetTheme(Data);
   t_top.Invalidate;
+end;
+
+procedure TForm1.TabChangeQuery(Sender: TObject; ANewTabIndex: integer;
+  var ACanChange: boolean);
+begin
+  ACanChange:= Application.MessageBox(
+    PChar('Change tab index to '+IntToStr(ANewTabIndex)+'?'),
+    'Tab change',
+    MB_OKCANCEL or MB_ICONQUESTION)= ID_OK;
 end;
 
 procedure TForm1.btnToggleSpecialClick(Sender: TObject);
