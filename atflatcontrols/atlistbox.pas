@@ -1287,46 +1287,46 @@ end;
 
 procedure TATListbox.DoKeyDown(var Key: Word; Shift: TShiftState);
 begin
-  if (key=vk_up) then
+  if (Key=VK_UP) and (Shift=[]) then
   begin
     ItemIndex:= ItemIndex-1;
     key:= 0;
     Exit
   end;
-  if (key=vk_down) then
+  if (Key=VK_DOWN) and (Shift=[]) then
   begin
     ItemIndex:= ItemIndex+1;
     key:= 0;
     Exit
   end;
 
-  if (key=vk_prior) then
+  if (Key=VK_PRIOR) and (Shift=[]) then
   begin
     ItemIndex:= Max(0, ItemIndex-(VisibleItems-1));
     key:= 0;
     Exit
   end;
-  if (key=vk_next) then
+  if (Key=VK_NEXT) and (Shift=[]) then
   begin
     ItemIndex:= Min(ItemCount-1, ItemIndex+(VisibleItems-1));
     key:= 0;
     Exit
   end;
 
-  if (key=vk_home) then
+  if (Key=VK_HOME) and (Shift=[]) then
   begin
     ItemIndex:= 0;
     key:= 0;
     Exit
   end;
-  if (key=vk_end) then
+  if (Key=VK_END) and (Shift=[]) then
   begin
     ItemIndex:= ItemCount-1;
     key:= 0;
     Exit
   end;
 
-  if (key=vk_return) then
+  if (Key=VK_RETURN) and (Shift=[]) then
   begin
     DblClick;
     key:= 0;
