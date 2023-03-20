@@ -1046,6 +1046,7 @@ begin
   FItemHeightPercents:= 100;
   FItemHeight:= 17;
   FItemTop:= 0;
+  FHotTrackIndex:= -1;
   FScrollStyleVert:= alssShow;
   FScrollStyleHorz:= alssAuto;
   FScrollHorz:= 0;
@@ -1337,7 +1338,7 @@ end;
 procedure TATListbox.KeyDown(var Key: Word; Shift: TShiftState);
 begin
   inherited;
-  DoKeyDown(Key,Shift);
+  DoKeyDown(Key, Shift);
 end;
 
 procedure TATListbox.MouseMove(Shift: TShiftState; X, Y: Integer);
