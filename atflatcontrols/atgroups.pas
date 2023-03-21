@@ -272,6 +272,7 @@ type
     Pages6,
     PagesCurrent: TATPages;
     Pages: array[TATGroupsNums] of TATPages;
+    IndexOfGroup: integer;
     //
     property Images: TImageList read GetImages write SetImages;
     property Panel1: TPanel read FPanel1;
