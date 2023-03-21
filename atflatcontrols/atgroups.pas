@@ -2148,14 +2148,24 @@ procedure TATGroups.FindPositionOfControl(AObject: TObject;
   out APagesIndex, ATabIndex: Integer);
 var
   TempPages: TATPages;
+  P: TWinControl;
 begin
   APagesIndex:= -1;
   ATabIndex:= -1;
   if AObject=nil then Exit;
 
-  TempPages:= TWinControl(AObject).Parent as TATPages;
-  APagesIndex:= FindPages(TempPages);
-  ATabIndex:= TempPages.Tabs.FindTabByObject(AObject);
+  P:= TWinControl(AObject).Parent;
+  if Assigned(P) then
+  begin
+    TempPages:= P as TATPages;
+    APagesIndex:= FindPages(TempPages);
+    ATabIndex:= TempPages.Tabs.FindTabByObject(AObject);
+  end
+  else
+  begin
+    APagesIndex:= 0;
+    ATabIndex:= 0;
+  end;
 end;
 
 function TATGroups.GetImages: TImageList;
