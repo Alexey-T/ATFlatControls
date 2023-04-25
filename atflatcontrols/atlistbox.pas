@@ -496,6 +496,7 @@ begin
 
   C.Font.Name:= CurrentFontName;
   C.Font.Size:= FTheme^.DoScaleFont(CurrentFontSize);
+  C.Font.Quality:= FTheme^.FontQuality;
 
   C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListbox);
   C.FillRect(Rect(0, 0, W, H));

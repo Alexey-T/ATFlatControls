@@ -129,6 +129,7 @@ begin
 
   Canvas.Font.Name:= ATFlatTheme.FontName;
   Canvas.Font.Size:= ATFlatTheme.DoScaleFont(ATFlatTheme.FontSize);
+  Canvas.Font.Quality:= ATFlatTheme.FontQuality;
 
   for i:= ControlCount-1 downto 0 do
   begin

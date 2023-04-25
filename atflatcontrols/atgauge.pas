@@ -126,6 +126,7 @@ begin
   StrSize:= C.TextExtent(Str);
   C.Font.Name:= Theme^.FontName;
   C.Font.Size:= Theme^.DoScaleFont(Theme^.FontSize);
+  C.Font.Quality:= Theme^.FontQuality;
   C.Brush.Style:= bsClear;
   C.TextOut(
     (r.Left+r.Right-StrSize.cx) div 2,
@@ -381,6 +382,7 @@ begin
   begin
     FBitmap.Canvas.Font.Name:= Theme^.FontName;
     FBitmap.Canvas.Font.Size:= Theme^.DoScaleFont(Theme^.FontSize);
+    FBitmap.Canvas.Font.Quality:= Theme^.FontQuality;
     FBitmap.Canvas.Font.Color:= Theme^.ColorFont;
     DoPaintTo(FBitmap.Canvas, R);
     Canvas.CopyRect(R, FBitmap.Canvas, R);

@@ -325,6 +325,8 @@ begin
     C.Font.Color:= ColorToRGB(D.ColorFont)
   else
     C.Font.Color:= ColorToRGB(Theme^.ColorFont);
+
+  C.Font.Quality:= Theme^.FontQuality;
 end;
 
 procedure TATStatus.DoPaintPanelTo(C: TCanvas; ARect: TRect;

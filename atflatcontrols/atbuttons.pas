@@ -511,6 +511,7 @@ begin
   C.Font.Name:= Theme^.FontName;
   C.Font.Color:= ColorToRGB(IfThen(Enabled, Theme^.ColorFont, Theme^.ColorFontDisabled));
   C.Font.Size:= Theme^.DoScaleFont(Theme^.FontSize);
+  C.Font.Quality:= Theme^.FontQuality;
 
   if BoldFont then
     C.Font.Style:= [fsBold]
@@ -856,6 +857,7 @@ begin
   C:= Canvas;
   C.Font.Name:= Theme^.FontName;
   C.Font.Size:= Theme^.DoScaleFont(Theme^.FontSize);
+  C.Font.Quality:= Theme^.FontQuality;
   C.Font.Style:= [];
 
   //if FBoldFont then
