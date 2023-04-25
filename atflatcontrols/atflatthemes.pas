@@ -32,6 +32,9 @@ type
     FontQuality: TFontQuality;
     FontStyles: TFontStyles;
 
+    MonoFontName: string;
+    MonoFontSize: integer;
+
     ColorFont: TColor;
     ColorFontDisabled: TColor;
     ColorFontListbox: TColor;
