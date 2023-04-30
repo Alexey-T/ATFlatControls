@@ -177,20 +177,20 @@ type
     procedure DoPaintStd_Thumb(C: TCanvas; const R: TRect);
 
     function IsHorz: boolean;
-    function CoordToPos(X, Y: Integer): Integer;
+    function CoordToPos(X, Y: Integer): Int64;
     procedure DoUpdateThumbRect;
     procedure DoUpdateCornerRect;
     procedure DoUpdatePosOnDrag(X, Y: Integer);
-    procedure DoScrollBy(NDelta: Integer);
-    function PosToCoord(APos: Integer): Integer;
+    procedure DoScrollBy(const ADelta: Int64);
+    function PosToCoord(const APos: Int64): Int64;
     function DoScale(AValue: integer): integer;
 
     procedure TimerTimer(Sender: TObject);
     procedure SetKind(AValue: TScrollBarKind);
     procedure SetPos(AValue: Int64);
-    procedure SetMin(Value: Int64);
-    procedure SetMax(Value: Int64);
-    procedure SetPageSize(Value: Int64);
+    procedure SetMin(const Value: Int64);
+    procedure SetMax(const Value: Int64);
+    procedure SetPageSize(const Value: Int64);
     function DoDrawEvent(AType: TATScrollbarElemType;
       ACanvas: TCanvas; const ARect, ARect2: TRect): boolean;
     function BetterPtInRect(R: TRect; P: TPoint): boolean;
@@ -527,10 +527,9 @@ begin
   Result:= PtInRect(R, P);
 end;
 
-procedure TATScrollbar.MouseDown(Button: TMouseButton; Shift: TShiftState;
-  X, Y: Integer);
+procedure TATScrollbar.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var
-  ScrollVal: integer;
+  NScrollVal: Int64;
 begin
   inherited;
 
@@ -575,14 +574,14 @@ begin
       else
       begin
         if FLargeChange>0 then
-          ScrollVal:= FLargeChange
+          NScrollVal:= FLargeChange
         else
-          ScrollVal:= FPageSize;
+          NScrollVal:= FPageSize;
 
         if FMouseDownOnPageUp then
-          DoScrollBy(-ScrollVal)
+          DoScrollBy(-NScrollVal)
         else
-          DoScrollBy(ScrollVal);
+          DoScrollBy(NScrollVal);
 
         FTimer.Enabled:= true;
       end;
@@ -762,9 +761,9 @@ begin
     Result:= 1;
 end;
 
-function TATScrollbar.PosToCoord(APos: Integer): Integer;
+function TATScrollbar.PosToCoord(const APos: Int64): Int64;
 var
-  N0: Integer;
+  N0: Int64;
 begin
   if IsHorz then
   begin
@@ -774,7 +773,7 @@ begin
   begin
     N0:= FRectMain.Top;
   end;
-  Result:= N0 + (APos-FMin) * EffectiveRectSize div Math.Max(1, FMax-FMin);
+  Result:= N0 + (APos-FMin) * EffectiveRectSize div Math.Max(FMax-FMin, 1);
 end;
 
 procedure TATScrollbar.DoUpdateThumbRect;
@@ -953,7 +952,7 @@ begin
 end;
 
 
-procedure TATScrollbar.SetMax(Value: Int64);
+procedure TATScrollbar.SetMax(const Value: Int64);
 begin
   if FMax<>Value then
   begin
@@ -963,7 +962,7 @@ begin
   end;
 end;
 
-procedure TATScrollbar.SetMin(Value: Int64);
+procedure TATScrollbar.SetMin(const Value: Int64);
 begin
   if FMin<>Value then
   begin
@@ -973,7 +972,7 @@ begin
   end;
 end;
 
-procedure TATScrollbar.SetPageSize(Value: Int64);
+procedure TATScrollbar.SetPageSize(const Value: Int64);
 begin
   if FPageSize<>Value then
   begin
@@ -1015,17 +1014,17 @@ begin
   end;
 end;
 
-function TATScrollbar.CoordToPos(X, Y: Integer): Integer;
+function TATScrollbar.CoordToPos(X, Y: Integer): Int64;
 begin
   if IsHorz then
-    Result:= FMin + (X-FRectMain.Left) * (FMax-FMin) div EffectiveRectSize
+    Result:= FMin + Int64(X-FRectMain.Left) * (FMax-FMin) div EffectiveRectSize
   else
-    Result:= FMin + (Y-FRectMain.Top) * (FMax-FMin) div EffectiveRectSize;
+    Result:= FMin + Int64(Y-FRectMain.Top) * (FMax-FMin) div EffectiveRectSize;
 end;
 
 procedure TATScrollbar.DoUpdatePosOnDrag(X, Y: Integer);
 var
-  N: Integer;
+  N: Int64;
 begin
   N:= CoordToPos(
     X-FMouseDragOffset,
@@ -1035,13 +1034,12 @@ begin
   SetPos(N);
 end;
 
-procedure TATScrollbar.DoScrollBy(NDelta: Integer);
+procedure TATScrollbar.DoScrollBy(const ADelta: Int64);
 var
-  N: Integer;
+  N: Int64;
 begin
-  N:= FPos;
-  Inc(N, NDelta);
-  if (NDelta>0) then
+  N:= FPos+ADelta;
+  if (ADelta>0) then
     N:= Math.Min(N, FMax-FPageSize);
   SetPos(N);
 end;
