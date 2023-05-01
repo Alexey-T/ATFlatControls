@@ -713,7 +713,8 @@ type
     procedure DragDrop(Source: TObject; X, Y: integer); override;
 
     procedure ApplyButtonLayout;
-    procedure ApplyTabHintToControlHint(ATabIndex: integer; var AData: TATTabData);
+    procedure ApplyTabHintToControlHint(ATabIndex: integer; var AData: TATTabData;
+      AResetLastIndex: boolean);
     function GetTabRectWidth(APlusBtn: boolean): integer;
     procedure UpdateRectPlus(var R: TRect);
     procedure UpdateTabTooltip;
@@ -3393,7 +3394,7 @@ begin
     if FTabIndexHinted<>FTabIndexHintedPrev then
     begin
       FTabIndexHintedPrev:= FTabIndexHinted;
-      ApplyTabHintToControlHint(FTabIndexHinted, Data);
+      ApplyTabHintToControlHint(FTabIndexHinted, Data, false);
 
       if Hint<>'' then
         Application.ActivateHint(Mouse.CursorPos)
@@ -3417,9 +3418,11 @@ begin
   end;
 end;
 
-procedure TATTabs.ApplyTabHintToControlHint(ATabIndex: integer; var AData: TATTabData);
+procedure TATTabs.ApplyTabHintToControlHint(ATabIndex: integer; var AData: TATTabData; AResetLastIndex: boolean);
 begin
-  Hint:= '';
+  if AResetLastIndex then
+    FTabIndexHintedPrev:= cTabIndexNone;
+
   case ATabIndex of
     cTabIndexPlus,
     cTabIndexPlusBtn:
@@ -3444,10 +3447,14 @@ begin
       Hint:= FHintForUser4;
     0..10000:
       begin
-        AData:= GetTabData(FTabIndexOver);
-        if Assigned(AData) and (AData.TabHint<>'') then
-          Hint:= AData.TabHint;
+        AData:= GetTabData(ATabIndex);
+        if Assigned(AData) then
+          Hint:= AData.TabHint
+        else
+          Hint:= '';
       end;
+    else
+      Hint:= '';
   end; //case
 end;
 
