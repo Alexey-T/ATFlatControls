@@ -713,7 +713,7 @@ type
     procedure DragDrop(Source: TObject; X, Y: integer); override;
 
     procedure ApplyButtonLayout;
-    procedure ApplyTabHintToControlHint(ATabIndex: integer; var AData: TATTabData);
+    procedure ApplyTabHintToControlHint(var AData: TATTabData);
     function GetTabRectWidth(APlusBtn: boolean): integer;
     procedure UpdateRectPlus(var R: TRect);
     procedure UpdateTabTooltip;
@@ -3383,17 +3383,17 @@ begin
   if FTabIndexOver=cTabIndexNone then exit;
   Data:= nil;
 
+  if bOverX then
+    FTabIndexHinted:= cTabIndexCloseBtn
+  else
+    FTabIndexHinted:= FTabIndexOver;
+
   if ShowHint then
   begin
-    if bOverX then
-      FTabIndexHinted:= cTabIndexCloseBtn
-    else
-      FTabIndexHinted:= FTabIndexOver;
-
     if FTabIndexHinted<>FTabIndexHintedPrev then
     begin
       FTabIndexHintedPrev:= FTabIndexHinted;
-      ApplyTabHintToControlHint(FTabIndexHinted, Data);
+      ApplyTabHintToControlHint(Data);
 
       if Hint<>'' then
         Application.ActivateHint(Mouse.CursorPos)
@@ -3417,11 +3417,10 @@ begin
   end;
 end;
 
-procedure TATTabs.ApplyTabHintToControlHint(ATabIndex: integer;
-  var AData: TATTabData);
+procedure TATTabs.ApplyTabHintToControlHint(var AData: TATTabData);
 begin
   Hint:= '';
-  case ATabIndex of
+  case FTabIndexHinted of
     cTabIndexPlus,
     cTabIndexPlusBtn:
       Hint:= FHintForPlus;
