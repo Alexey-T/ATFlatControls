@@ -713,6 +713,7 @@ type
     procedure DragDrop(Source: TObject; X, Y: integer); override;
 
     procedure ApplyButtonLayout;
+    procedure ApplyTabHintToControlHint(ATabIndex: integer; var AData: TATTabData);
     function GetTabRectWidth(APlusBtn: boolean): integer;
     procedure UpdateRectPlus(var R: TRect);
     procedure UpdateTabTooltip;
@@ -3392,36 +3393,7 @@ begin
     if FTabIndexHinted<>FTabIndexHintedPrev then
     begin
       FTabIndexHintedPrev:= FTabIndexHinted;
-      Hint:= '';
-      case FTabIndexHinted of
-        cTabIndexPlus,
-        cTabIndexPlusBtn:
-          Hint:= FHintForPlus;
-        cTabIndexArrowScrollLeft:
-          Hint:= FHintForArrowLeft;
-        cTabIndexArrowScrollRight:
-          Hint:= FHintForArrowRight;
-        cTabIndexArrowMenu:
-          Hint:= FHintForArrowMenu;
-        cTabIndexCloseBtn:
-          Hint:= FHintForX;
-        cTabIndexUser0:
-          Hint:= FHintForUser0;
-        cTabIndexUser1:
-          Hint:= FHintForUser1;
-        cTabIndexUser2:
-          Hint:= FHintForUser2;
-        cTabIndexUser3:
-          Hint:= FHintForUser3;
-        cTabIndexUser4:
-          Hint:= FHintForUser4;
-        0..10000:
-          begin
-            Data:= GetTabData(FTabIndexOver);
-            if Assigned(Data) and (Data.TabHint<>'') then
-              Hint:= Data.TabHint;
-          end;
-      end; //case
+      ApplyTabHintToControlHint(FTabIndexHinted, Data);
 
       if Hint<>'' then
         Application.ActivateHint(Mouse.CursorPos)
@@ -3443,6 +3415,41 @@ begin
   begin
     Invalidate;
   end;
+end;
+
+procedure TATTabs.ApplyTabHintToControlHint(ATabIndex: integer;
+  var AData: TATTabData);
+begin
+  Hint:= '';
+  case ATabIndex of
+    cTabIndexPlus,
+    cTabIndexPlusBtn:
+      Hint:= FHintForPlus;
+    cTabIndexArrowScrollLeft:
+      Hint:= FHintForArrowLeft;
+    cTabIndexArrowScrollRight:
+      Hint:= FHintForArrowRight;
+    cTabIndexArrowMenu:
+      Hint:= FHintForArrowMenu;
+    cTabIndexCloseBtn:
+      Hint:= FHintForX;
+    cTabIndexUser0:
+      Hint:= FHintForUser0;
+    cTabIndexUser1:
+      Hint:= FHintForUser1;
+    cTabIndexUser2:
+      Hint:= FHintForUser2;
+    cTabIndexUser3:
+      Hint:= FHintForUser3;
+    cTabIndexUser4:
+      Hint:= FHintForUser4;
+    0..10000:
+      begin
+        AData:= GetTabData(FTabIndexOver);
+        if Assigned(AData) and (AData.TabHint<>'') then
+          Hint:= AData.TabHint;
+      end;
+  end; //case
 end;
 
 function TATTabs.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint): Boolean;
