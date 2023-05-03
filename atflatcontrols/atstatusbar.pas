@@ -259,7 +259,7 @@ begin
   {$ifdef FPC}
   BorderStyle:= bsNone;
   {$endif}
-  ControlStyle:= ControlStyle+[csOpaque];
+  ControlStyle:= ControlStyle+[csOpaque {$ifdef FPC}, csNoFocus{$endif}];
   DoubleBuffered:= IsDoubleBufferedNeeded;
 
   Width:= 400;
