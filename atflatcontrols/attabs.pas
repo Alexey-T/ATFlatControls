@@ -1314,7 +1314,7 @@ begin
   inherited;
 
   Caption:= '';
-  ControlStyle:= ControlStyle+[csOpaque];
+  ControlStyle:= ControlStyle+[csOpaque {$ifdef FPC}, csNoFocus{$endif}];
   DoubleBuffered:= IsDoubleBufferedNeeded;
   DragMode:= dmManual; //required Manual
   ParentColor:= false; //better don't support ParentColor, it's mess in code
