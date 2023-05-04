@@ -104,6 +104,7 @@ type
     FClickedIndex: integer;
     FPrevPanelMouseOver: integer;
     FScaleFromFont: boolean;
+    FInResize: boolean;
 
     FItems: TCollection;
     FBitmap: TBitmap;
@@ -130,7 +131,6 @@ type
   public
     constructor Create(AOnwer: TComponent); override;
     destructor Destroy; override;
-    procedure Invalidate; override;
     function CanFocus: boolean; override;
     function GetPanelRect(AIndex: integer): TRect;
     function GetPanelAt(X, Y: integer): integer;
@@ -660,12 +660,25 @@ end;
 
 procedure TATStatus.Resize;
 begin
+  if FInResize then exit;
+  FInResize:= true;
   inherited;
 
-  if Assigned(FBitmap) then
-    BitmapResizeBySteps(FBitmap, Width, Height);
+  try
+    if Assigned(FBitmap) then
+      BitmapResizeBySteps(FBitmap, Width, Height);
 
-  Invalidate;
+    if Align in [alNone, alTop, alBottom] then
+     if FHeightInitial>0 then
+      if FScaleFromFont then
+        Height:= Theme^.DoScaleFont(FHeightInitial)
+      else
+        Height:= Theme^.DoScale(FHeightInitial);
+
+    Invalidate;
+  finally
+    FInResize:= false;
+  end;
 end;
 
 procedure TATStatus.MouseMove(Shift: TShiftState; X, Y: Integer);
@@ -903,18 +916,6 @@ begin
   FItems.Items[AFromIndex].Index:= AToIndex;
   Invalidate;
   Result:= true;
-end;
-
-procedure TATStatus.Invalidate;
-begin
-  if Align in [alNone, alTop, alBottom] then
-   if FHeightInitial>0 then
-    if FScaleFromFont then
-      Height:= Theme^.DoScaleFont(FHeightInitial)
-    else
-      Height:= Theme^.DoScale(FHeightInitial);
-
-  inherited;
 end;
 
 function TATStatus.IsHotTrackUsed: boolean;
