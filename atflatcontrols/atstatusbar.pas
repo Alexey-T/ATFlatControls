@@ -161,6 +161,7 @@ type
     property SeparatorString: string read FSeparatorString write FSeparatorString;
     property OverflowLeft: boolean read FOverflowLeft write FOverflowLeft;
     property OverflowScrollX: integer read FOverflowScrollX;
+    procedure AutoSize;
   protected
     procedure Paint; override;
     procedure Resize; override;
@@ -658,6 +659,16 @@ begin
   Result:= false;
 end;
 
+procedure TATStatus.AutoSize;
+begin
+  if Align in [alNone, alTop, alBottom] then
+   if FHeightInitial>0 then
+    if FScaleFromFont then
+      Height:= Theme^.DoScaleFont(FHeightInitial)
+    else
+      Height:= Theme^.DoScale(FHeightInitial);
+end;
+
 procedure TATStatus.Resize;
 begin
   if FInResize then exit;
@@ -667,13 +678,6 @@ begin
   try
     if Assigned(FBitmap) then
       BitmapResizeBySteps(FBitmap, Width, Height);
-
-    if Align in [alNone, alTop, alBottom] then
-     if FHeightInitial>0 then
-      if FScaleFromFont then
-        Height:= Theme^.DoScaleFont(FHeightInitial)
-      else
-        Height:= Theme^.DoScale(FHeightInitial);
 
     Invalidate;
   finally
