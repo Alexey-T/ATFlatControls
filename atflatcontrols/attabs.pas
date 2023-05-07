@@ -2673,12 +2673,15 @@ var
   NFontStyle: TFontStyles;
   bMouseOver, bMouseOverX: boolean;
   Info: TATTabPaintInfo;
+  PntMouse: TPoint;
   i: integer;
 begin
   FActualMultiline:= (FOptPosition in [atpLeft, atpRight]) or FOptMultiline;
 
   ElemType:= aeBackground;
   RRect:= ClientRect;
+  bMouseOver:= false;
+  bMouseOverX:= false;
 
   if not ATTabsStretchDrawEnabled then
     FLastSpaceSide:= 0
@@ -2689,8 +2692,11 @@ begin
     FLastSpaceSide:= 0;
 
   //update index here, because user can add/del tabs by keyboard
-  with ScreenToClient(Mouse.CursorPos) do
-    FTabIndexOver:= GetTabAt(X, Y, bMouseOverX);
+  PntMouse:= ScreenToClient(Mouse.CursorPos);
+  if not PtInRect(RRect, PntMouse) then
+    FTabIndexOver:= -1
+  else
+    FTabIndexOver:= GetTabAt(PntMouse.X, PntMouse.Y, bMouseOverX);
 
   FLastOverIndex:= FTabIndexOver;
   FLastOverX:= bMouseOverX;
