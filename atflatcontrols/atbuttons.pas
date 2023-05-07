@@ -402,6 +402,10 @@ begin
   if not Theme^.EnableColorBgOver then
     FOver:= false;
 
+  //needed for Linux, where OnMouseLeave is not called on moving mouse out of the window
+  if not PtInRect(RectAll, ScreenToClient(Mouse.CursorPos)) then
+    FOver:= false;
+
   bKindSeparator:= FKind in [abuSeparatorHorz, abuSeparatorVert];
   bUseBack:=
     (not FFlat)
