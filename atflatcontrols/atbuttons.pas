@@ -237,14 +237,12 @@ end;
 
 procedure TATButton.DoMouseEnter;
 begin
-  FOver:= true;
   Invalidate;
   if Assigned(FOnMouseEnter) then FOnMouseEnter(Self);
 end;
 
 procedure TATButton.DoMouseLeave;
 begin
-  FOver:= false;
   Invalidate;
   if Assigned(FOnMouseLeave) then FOnMouseLeave(Self);
 end;
@@ -399,12 +397,9 @@ begin
   else
     NSizeArrow:= 0;
 
-  if not Theme^.EnableColorBgOver then
-    FOver:= false;
-
-  //needed for Linux, where OnMouseLeave is not called on moving mouse out of the window
-  if not PtInRect(RectAll, ScreenToClient(Mouse.CursorPos)) then
-    FOver:= false;
+  FOver:=
+    Theme^.EnableColorBgOver and
+    PtInRect(RectAll, ScreenToClient(Mouse.CursorPos));
 
   bKindSeparator:= FKind in [abuSeparatorHorz, abuSeparatorVert];
   bUseBack:=
@@ -768,14 +763,12 @@ end;
 procedure TATButton.MouseLeave;
 begin
   inherited;
-  FOver:= false;
   Invalidate;
 end;
 
 procedure TATButton.MouseEnter;
 begin
   inherited;
-  FOver:= true;
   Invalidate;
 end;
 {$endif}
