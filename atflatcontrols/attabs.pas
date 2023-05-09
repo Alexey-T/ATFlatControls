@@ -2919,6 +2919,8 @@ var
   Pnt: TPoint;
   bOverX, bRightSide: boolean;
 begin
+  if not _IsDrag then Exit;
+
   Pnt:= ScreenToClient(Mouse.CursorPos);
   N:= GetTabAt(Pnt.X, Pnt.Y, bOverX);
 
@@ -3357,6 +3359,12 @@ var
   P: TPoint;
   D: TATTabData;
 begin
+  if _IsDrag then
+  begin
+    DragManager.DragStop(false);
+    Invalidate;
+  end;
+
   if (FTabIndex=FTabIndexOver) then // to check if click was processed as a valid click on a tab
   begin
     D:= GetTabData(FTabIndex);
