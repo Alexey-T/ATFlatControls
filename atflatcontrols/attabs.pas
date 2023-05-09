@@ -2538,7 +2538,9 @@ end;
 
 function TATTabs._IsDrag: boolean;
 begin
-  Result:= Dragging and FMouseDragBegins;
+  Result:=
+    DragManager.IsDragging;
+    //Dragging and FMouseDragBegins;
 end;
 
 procedure TATTabs.GetTabXColors(AIndex: integer;
@@ -2914,35 +2916,48 @@ var
   D: TATTabData;
   R: TRect;
   N: integer;
+  Pnt: TPoint;
+  bOverX, bRightSide: boolean;
 begin
-  N:= FTabIndexDrop;
-  if N<0 then
-    N:= TabCount-1;
-  //if N<>FTabIndex then
+  Pnt:= ScreenToClient(Mouse.CursorPos);
+  N:= GetTabAt(Pnt.X, Pnt.Y, bOverX);
+
+  if (N=cTabIndexPlus) or (N=cTabIndexEmptyArea) then
   begin
-    D:= GetTabData(N);
-    if D=nil then Exit;
-    R:= GetRectScrolled(D.TabRect);
-
-    case FOptPosition of
-      atpTop,
-      atpBottom:
-        begin
-          R.Left:= IfThen(N<=FTabIndex, R.Left, R.Right);
-          R.Left:= R.Left - DoScale(FOptDropMarkSize) div 2;
-          R.Right:= R.Left + DoScale(FOptDropMarkSize);
-        end;
-      else
-        begin
-          R.Top:= IfThen(N<=FTabIndex, R.Top, R.Bottom);
-          R.Top:= R.Top  - DoScale(FOptDropMarkSize) div 2;
-          R.Bottom:= R.Top + DoScale(FOptDropMarkSize);
-        end;
-    end;
-
-    C.Brush.Color:= FColorDropMark;
-    C.FillRect(R);
+    N:= TabCount-1;
+    bRightSide:= true;
+  end
+  else
+  begin
+    if N<0 then
+      N:= TabCount-1;
+    bRightSide:= false; //N>FTabIndex;
   end;
+
+  D:= GetTabData(N);
+  if D=nil then Exit;
+  R:= GetRectScrolled(D.TabRect);
+
+  case FOptPosition of
+    atpTop,
+    atpBottom:
+      begin
+        if bRightSide then
+          R.Left:= R.Right;
+        R.Left:= R.Left - DoScale(FOptDropMarkSize) div 2;
+        R.Right:= R.Left + DoScale(FOptDropMarkSize);
+      end;
+    else
+      begin
+        if bRightSide then
+          R.Top:= R.Bottom;
+        R.Top:= R.Top - DoScale(FOptDropMarkSize) div 2;
+        R.Bottom:= R.Top + DoScale(FOptDropMarkSize);
+      end;
+  end;
+
+  C.Brush.Color:= FColorDropMark;
+  C.FillRect(R);
 end;
 
 
