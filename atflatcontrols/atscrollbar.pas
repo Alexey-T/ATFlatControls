@@ -533,7 +533,7 @@ var
 begin
   inherited;
 
-  FMouseDown:= Button=mbLeft;
+  FMouseDown:= Button in [mbLeft, mbMiddle];
   FMouseDownOnThumb:= BetterPtInRect(FRectThumb, Point(X, Y));
   FMouseDownOnUp:= BetterPtInRect(FRectArrUp, Point(X, Y));
   FMouseDownOnDown:= BetterPtInRect(FRectArrDown, Point(X, Y));
@@ -565,7 +565,7 @@ begin
     else
     if FMouseDownOnPageUp or FMouseDownOnPageDown then
     begin
-      if FTheme^.DirectJumpOnClickPageUpDown then
+      if (Button=mbMiddle) or FTheme^.DirectJumpOnClickPageUpDown then
       begin
         Position:= Math.Min(FMax-FPageSize,
                    Math.Max(FMin,
