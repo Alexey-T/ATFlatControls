@@ -4278,7 +4278,7 @@ begin
     //support drag-drop of text from TATSynEdit
     Accept:= false;
     NIndex:= GetTabAt(X, Y, IsX);
-    if TabIndex<>NIndex then
+    if (NIndex>=0) and (TabIndex<>NIndex) then
       TabIndex:= NIndex;
   end
   else
