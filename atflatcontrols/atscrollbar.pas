@@ -569,6 +569,9 @@ begin
         ((Button=mbLeft) and (ssShift in Shift)) or
         FTheme^.DirectJumpOnClickPageUpDown then
       begin
+        FMouseDownOnThumb:= true;
+        FMouseDragOffset:= 0;
+
         Position:= Math.Min(FMax-FPageSize,
                    Math.Max(FMin,
                    CoordToPos(X, Y)));
