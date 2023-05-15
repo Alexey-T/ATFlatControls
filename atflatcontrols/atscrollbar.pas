@@ -291,14 +291,12 @@ procedure TATScrollbar.MouseLeave;
 begin
   inherited;
   FTimerMouseover.Enabled:= false;
-  //FOver:= false;
   Invalidate;
 end;
 
 procedure TATScrollbar.MouseEnter;
 begin
   inherited;
-  //FOver:= true;
   Invalidate;
   FTimerMouseover.Enabled:= true;
 end;
