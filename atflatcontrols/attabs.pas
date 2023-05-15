@@ -1,4 +1,4 @@
-{
+﻿{
 ATTabs component for Delphi/Lazarus
 Copyright (c) Alexey Torgashin (UVviewsoft.com)
 License: MPL 2.0 or LGPL
@@ -2539,8 +2539,12 @@ end;
 function TATTabs._IsDrag: boolean;
 begin
   Result:=
+    {$ifdef FPC}
     DragManager.IsDragging; //better check than commented code below: it works when drag was started in another control
     //Dragging and FMouseDragBegins;
+    {$else}
+    Dragging;
+    {$endif}
 end;
 
 procedure TATTabs.GetTabXColors(AIndex: integer;
@@ -3361,7 +3365,9 @@ var
 begin
   if _IsDrag then
   begin
+    {$ifdef FPC}
     DragManager.DragStop(false);
+    {$endif}
     Invalidate;
   end;
 
