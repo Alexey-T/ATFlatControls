@@ -1013,7 +1013,7 @@ begin
   inherited;
   Invalidate;
 
-  if FMouseDownOnThumb then
+  if FMouseDown and FMouseDownOnThumb then
   begin
     DoUpdatePosOnDrag(X, Y);
   end;
