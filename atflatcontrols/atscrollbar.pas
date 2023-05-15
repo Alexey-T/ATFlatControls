@@ -1011,6 +1011,14 @@ begin
   inherited;
   Invalidate;
 
+  //workaround for Lazarus issue: MouseUp is not called
+  //if middle-button is released when cursor is out of control
+  if [ssLeft, ssMiddle]*Shift=[] then
+  begin
+    FMouseDown:= false;
+    FMouseDownOnThumb:= false;
+  end;
+
   if FMouseDown and FMouseDownOnThumb then
   begin
     DoUpdatePosOnDrag(X, Y);
