@@ -3365,10 +3365,9 @@ var
 begin
   if _IsDrag then
   begin
-    {$ifdef FPC}
-    DragManager.DragStop(false);
-    {$endif}
+    CancelDrag;
     Invalidate;
+    exit;
   end;
 
   if (FTabIndex=FTabIndexOver) then // to check if click was processed as a valid click on a tab
