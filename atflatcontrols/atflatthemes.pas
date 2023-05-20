@@ -110,7 +110,7 @@ initialization
   with ATFlatTheme do
   begin
     FontName:= 'default';
-    FontSize:= 10;
+    FontSize:= 9;
     FontQuality:= fqDefault;
     FontStyles:= [];
 
