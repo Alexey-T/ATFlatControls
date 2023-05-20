@@ -161,8 +161,7 @@ type
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-    function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
-      MousePos: TPoint): Boolean; override;
+    function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint): Boolean; override;
     procedure ChangedSelection; virtual;
     procedure Scrolled; virtual;
     procedure DoContextPopup(MousePos: TPoint; var Handled: Boolean); override;
@@ -1271,8 +1270,9 @@ begin
   {$endif}
 end;
 
-function TATListbox.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
-  MousePos: TPoint): Boolean;
+function TATListbox.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint): Boolean;
+const
+  cHorzDelta = 100;
 begin
   if not ThemedScrollbar then
   begin
@@ -1281,10 +1281,21 @@ begin
   end;
 
   Result:= true;
-  if WheelDelta>0 then
-    ItemTop:= Max(0, ItemTop-Mouse.WheelScrollLines)
+
+  if ssShift in Shift then
+  begin
+    if WheelDelta>0 then
+      ScrollHorz:= Max(0, ScrollHorz-cHorzDelta)
+    else
+      ScrollHorz:= Min(Max(0, FScrollbarHorz.Max-FScrollbarHorz.PageSize), ScrollHorz+cHorzDelta);
+  end
   else
-    ItemTop:= Max(0, Min(ItemCount-VisibleItems, ItemTop+Mouse.WheelScrollLines));
+  begin
+    if WheelDelta>0 then
+      ItemTop:= Max(0, ItemTop-Mouse.WheelScrollLines)
+    else
+      ItemTop:= Max(0, Min(ItemCount-VisibleItems, ItemTop+Mouse.WheelScrollLines));
+  end;
 end;
 
 procedure TATListbox.DoKeyDown(var Key: Word; Shift: TShiftState);
