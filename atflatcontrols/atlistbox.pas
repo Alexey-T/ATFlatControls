@@ -1271,6 +1271,8 @@ begin
 end;
 
 function TATListbox.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint): Boolean;
+var
+  NDelta: integer;
 begin
   if not ThemedScrollbar then
   begin
@@ -1282,10 +1284,11 @@ begin
 
   if ssShift in Shift then
   begin
+    NDelta:= FScrollbarHorz.PageSize div 2;
     if WheelDelta>0 then
-      ScrollHorz:= Max(0, ScrollHorz-FScrollbarHorz.PageSize div 2)
+      ScrollHorz:= Max(0, ScrollHorz-NDelta)
     else
-      ScrollHorz:= Min(Max(0, FScrollbarHorz.Max-FScrollbarHorz.PageSize), ScrollHorz+FScrollbarHorz.PageSize div 2);
+      ScrollHorz:= Min(Max(0, FScrollbarHorz.Max-FScrollbarHorz.PageSize), ScrollHorz+NDelta);
   end
   else
   begin
