@@ -1,3 +1,6 @@
+2023.05.21
++ ATListbox: support horizontal scroll by Ctrl+mouse_wheel
+
 2022.12.12
 + ATGroups: added param AClosePinned to few tab-closing funcs
 
