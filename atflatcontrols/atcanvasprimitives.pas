@@ -23,6 +23,7 @@ procedure BitmapResizeBySteps(b: TBitmap; W, H: integer);
 function CanvasFontSizeToPixels(AValue: integer): integer;
 
 procedure CanvasInvertRect(C: TCanvas; const R: TRect; AColor: TColor);
+procedure CanvasInvertFrameRect(C: TCanvas; const R: TRect; AColor: TColor);
 
 procedure CanvasLine(C: TCanvas; P1, P2: TPoint; AColor: TColor); inline;
 procedure CanvasLine_DottedVertAlt(C: TCanvas; Color: TColor; X1, Y1, Y2: integer); inline;
@@ -257,6 +258,37 @@ begin
   C.Rectangle(0, 0, 0, 0); //apply pen
 end;
 {$endif}
+
+procedure CanvasInvertFrameRect(C: TCanvas; const R: TRect; AColor: TColor);
+var
+  OldAntialias: TAntialiasingMode;
+  OldPenMode: TPenMode;
+  OldPenStyle: TPenStyle;
+  OldPenWidth: integer;
+  OldBrushStyle: TBrushStyle;
+begin
+  OldAntialias:= C.AntialiasingMode;
+  OldPenMode:= C.Pen.Mode;
+  OldPenStyle:= C.Pen.Style;
+  OldPenWidth:= C.Pen.Width;
+  OldBrushStyle:= C.Brush.Style;
+
+  C.Pen.Mode:= {$ifdef darwin} pmNot {$else} pmNotXor {$endif};
+  C.Pen.Style:= psSolid;
+  C.Pen.Color:= AColor;
+  C.AntialiasingMode:= amOff;
+  C.Pen.Width:= 1;
+  C.Brush.Style:= bsClear;
+
+  C.Rectangle(R);
+
+  C.Brush.Style:= OldBrushStyle;
+  C.Pen.Width:= OldPenWidth;
+  C.Pen.Style:= OldPenStyle;
+  C.Pen.Mode:= OldPenMode;
+  C.AntialiasingMode:= OldAntialias;
+  C.Rectangle(0, 0, 0, 0); //apply pen
+end;
 
 procedure CanvasLine_Dotted(C: TCanvas; Color: TColor; X1, Y1, X2, Y2: integer);
 var
