@@ -328,7 +328,7 @@ end;
 
 function TATListbox.GetItemHeightDefault: integer;
 begin
-  Result:= FTheme^.DoScaleFont(CurrentFontSize) * 18 div 10 + 2;
+  Result:= CanvasFontSizeToPixels(FTheme^.DoScaleFont(CurrentFontSize));
   Result:= Result * Max(96, Screen.PixelsPerInch) div 96;
 end;
 

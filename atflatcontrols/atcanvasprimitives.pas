@@ -20,6 +20,8 @@ uses
 procedure BitmapResize(b: TBitmap; W, H: integer);
 procedure BitmapResizeBySteps(b: TBitmap; W, H: integer);
 
+function CanvasFontSizeToPixels(AValue: integer): integer;
+
 procedure CanvasInvertRect(C: TCanvas; const R: TRect; AColor: TColor);
 
 procedure CanvasLine(C: TCanvas; P1, P2: TPoint; AColor: TColor); inline;
@@ -110,6 +112,11 @@ function ColorBlend(c1, c2: Longint; A: Longint): Longint;
 function ColorBlendHalf(c1, c2: Longint): Longint;
 
 implementation
+
+function CanvasFontSizeToPixels(AValue: integer): integer;
+begin
+  Result:= AValue * 18 div 10 + 2;
+end;
 
 procedure CanvasLine(C: TCanvas; P1, P2: TPoint; AColor: TColor);
 begin
@@ -207,6 +214,7 @@ begin
       C.Pixels[i, j]:= C.Pixels[i, j] xor (not AColor and $ffffff);
 end;
 {$else}
+
 procedure CanvasInvertRect(C: TCanvas; const R: TRect; AColor: TColor);
 var
   X: integer;
