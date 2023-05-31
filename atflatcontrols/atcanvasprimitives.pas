@@ -23,7 +23,7 @@ procedure BitmapResizeBySteps(b: TBitmap; W, H: integer);
 function CanvasFontSizeToPixels(AValue: integer): integer;
 
 procedure CanvasInvertRect(C: TCanvas; const R: TRect; AColor: TColor);
-procedure CanvasInvertFrameRect(C: TCanvas; const R: TRect; AColor: TColor);
+procedure CanvasInvertRectEmptyInside(C: TCanvas; const R: TRect; AColor: TColor);
 
 procedure CanvasLine(C: TCanvas; P1, P2: TPoint; AColor: TColor); inline;
 procedure CanvasLine_DottedVertAlt(C: TCanvas; Color: TColor; X1, Y1, Y2: integer); inline;
@@ -259,7 +259,7 @@ begin
 end;
 {$endif}
 
-procedure CanvasInvertFrameRect(C: TCanvas; const R: TRect; AColor: TColor);
+procedure CanvasInvertRectEmptyInside(C: TCanvas; const R: TRect; AColor: TColor);
 var
   OldAntialias: TAntialiasingMode;
   OldPenMode: TPenMode;
