@@ -702,44 +702,46 @@ procedure TATScrollbar.DoPaintStd_Arrow(C: TCanvas; R: TRect;
 var
   P: TPoint;
   NSize: Integer;
+  NColorBack, NColorSymbol: TColor;
 begin
   if IsRectEmpty(R) then exit;
   C.Brush.Color:= ColorToRGB(FTheme^.ColorArrowBorder);
   C.FillRect(R);
 
   InflateRect(R, -1, -1);
-  C.Brush.Color:= ColorToRGB(FTheme^.ColorArrowFill);
-  C.FillRect(R);
+  NColorBack:= FTheme^.ColorArrowFill;
+  NColorSymbol:= FTheme^.ColorArrowSign;
 
   if (FMouseDownOnUp and (AType in [aseArrowUp, aseArrowLeft])) or
     (FMouseDownOnDown and (AType in [aseArrowDown, aseArrowRight])) then
   begin
-    C.Brush.Color:= ColorToRGB(FTheme^.ColorArrowFillPressed);
-    C.FillRect(R);
+    NColorBack:= ColorToRGB(FTheme^.ColorArrowFillPressed);
   end
   else
   begin
     P:= Mouse.CursorPos;
     P:= ScreenToClient(P);
-    if PtInRect(R,P) then
+    if PtInRect(R, P) then
     begin
-      C.Brush.Color:= ColorToRGB(FTheme^.ColorArrowFillOver);
-      C.FillRect(R);
+      NColorBack:= ColorToRGB(FTheme^.ColorArrowFillOver);
     end;
   end;
+
+  C.Brush.Color:= NColorBack;
+  C.FillRect(R);
 
   P:= CenterPoint(R);
   NSize:= DoScale(FTheme^.ArrowSize);
 
   case AType of
     aseArrowUp:
-      CanvasPaintTriangleUp(C, FTheme^.ColorArrowSign, P, NSize);
+      CanvasPaintTriangleUp(C, NColorSymbol, P, NSize);
     aseArrowDown:
-      CanvasPaintTriangleDown(C, FTheme^.ColorArrowSign, P, NSize);
+      CanvasPaintTriangleDown(C, NColorSymbol, P, NSize);
     aseArrowLeft:
-      CanvasPaintTriangleLeft(C, FTheme^.ColorArrowSign, P, NSize);
+      CanvasPaintTriangleLeft(C, NColorSymbol, P, NSize);
     aseArrowRight:
-      CanvasPaintTriangleRight(C, FTheme^.ColorArrowSign, P, NSize);
+      CanvasPaintTriangleRight(C, NColorSymbol, P, NSize);
     else
       Exit;
   end;
