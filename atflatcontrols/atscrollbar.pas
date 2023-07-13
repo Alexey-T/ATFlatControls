@@ -82,6 +82,8 @@ type
     ColorArrowFillPressed: TColor;
 
     ColorArrowSign: TColor;
+    ColorArrowSignOver: TColor;
+    ColorArrowSignPressed: TColor;
     ColorScrolled: TColor;
 
     InitialSize: integer;
@@ -716,6 +718,7 @@ begin
     (FMouseDownOnDown and (AType in [aseArrowDown, aseArrowRight])) then
   begin
     NColorBack:= ColorToRGB(FTheme^.ColorArrowFillPressed);
+    NColorSymbol:= ColorToRGB(FTheme^.ColorArrowSignPressed);
   end
   else
   begin
@@ -724,6 +727,7 @@ begin
     if PtInRect(R, P) then
     begin
       NColorBack:= ColorToRGB(FTheme^.ColorArrowFillOver);
+      NColorSymbol:= ColorToRGB(FTheme^.ColorArrowSignOver);
     end;
   end;
 
@@ -1160,6 +1164,8 @@ initialization
     ColorArrowFillPressed:= $e0a0a0;
 
     ColorArrowSign:= $404040;
+    ColorArrowSignOver:= ColorArrowSign;
+    ColorArrowSignPressed:= ColorArrowSign;
     ColorScrolled:= $d0b0b0;
 
     InitialSize:= 14;
