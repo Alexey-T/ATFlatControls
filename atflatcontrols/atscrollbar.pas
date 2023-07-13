@@ -115,8 +115,6 @@ type
 
   TATScrollbar = class(TCustomControl)
   private
-    FTimerMouseover: TTimer;
-
     {$ifndef FPC}
     FOnMouseLeave: TNotifyEvent;
     FOnMouseEnter: TNotifyEvent;
@@ -165,7 +163,6 @@ type
     {$endif}
 
     function EffectiveRectSize: integer;
-    procedure TimerMouseoverTick(Sender: TObject);
 
     procedure DoPaintArrow(C: TCanvas; const R: TRect; AType: TATScrollbarElemType);
     procedure DoPaintBackAndThumb(C: TCanvas);
@@ -273,26 +270,10 @@ end;
 
 { TATScrollbar }
 
-procedure TATScrollbar.TimerMouseoverTick(Sender: TObject);
-//timer is workaround for LCL issue, where MouseLeave not called
-//if mouse leaves app window area (at least on Linux)
-{$ifdef FPC}
-var
-  Pnt: TPoint;
-{$endif}
-begin
-  {$ifdef FPC}
-  Pnt:= ScreenToClient(Mouse.CursorPos);
-  if not PtInRect(ClientRect, Pnt) then
-    MouseLeave;
-  {$endif}
-end;
-
 {$ifdef FPC}
 procedure TATScrollbar.MouseLeave;
 begin
   inherited;
-  FTimerMouseover.Enabled:= false;
   Invalidate;
 end;
 
@@ -300,7 +281,6 @@ procedure TATScrollbar.MouseEnter;
 begin
   inherited;
   Invalidate;
-  FTimerMouseover.Enabled:= true;
 end;
 {$endif}
 
@@ -338,11 +318,6 @@ begin
   FTimer.Enabled:= false;
   FTimer.Interval:= 100;
   FTimer.OnTimer:= TimerTimer;
-
-  FTimerMouseover:= TTimer.Create(Self);
-  FTimerMouseover.Enabled:= false;
-  FTimerMouseover.Interval:= 1000;
-  FTimerMouseover.OnTimer:= TimerMouseoverTick;
 
   FMouseDown:= false;
   FMouseDragOffset:= 0;
