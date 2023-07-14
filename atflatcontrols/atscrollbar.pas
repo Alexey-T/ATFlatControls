@@ -164,7 +164,8 @@ type
 
     function EffectiveRectSize: integer;
 
-    procedure DoPaintArrow(C: TCanvas; const R: TRect; AType: TATScrollbarElemType);
+    procedure DoPaintArrow(C: TCanvas; const R: TRect;
+      AType: TATScrollbarElemType; AActionEnabled: boolean);
     procedure DoPaintBackAndThumb(C: TCanvas);
     procedure DoPaintBackScrolling(C: TCanvas);
     procedure DoPaintTo(C: TCanvas);
@@ -172,7 +173,8 @@ type
     procedure DoPaintStd_Corner(C: TCanvas; const R: TRect);
     procedure DoPaintStd_Back(C: TCanvas; const R: TRect);
     procedure DoPaintStd_BackScrolling(C: TCanvas; const R: TRect);
-    procedure DoPaintStd_Arrow(C: TCanvas; R: TRect; AType: TATScrollbarElemType);
+    procedure DoPaintStd_Arrow(C: TCanvas; R: TRect;
+      AType: TATScrollbarElemType; AActionEnabled: boolean);
     procedure DoPaintStd_Thumb(C: TCanvas; const R: TRect);
 
     function IsHorz: boolean;
@@ -414,8 +416,8 @@ begin
           Dec(FRectMain.Right, 2*FSize);
         end;
     end;
-    DoPaintArrow(C, FRectArrUp, aseArrowLeft);
-    DoPaintArrow(C, FRectArrDown, aseArrowRight);
+    DoPaintArrow(C, FRectArrUp, aseArrowLeft, FPos>0);
+    DoPaintArrow(C, FRectArrDown, aseArrowRight, FPos<FMax-FPageSize);
   end
   else
   begin
@@ -445,8 +447,8 @@ begin
           Inc(FRectMain.Top, 2*FSize);
         end;
     end;
-    DoPaintArrow(C, FRectArrUp, aseArrowUp);
-    DoPaintArrow(C, FRectArrDown, aseArrowDown);
+    DoPaintArrow(C, FRectArrUp, aseArrowUp, FPos>0);
+    DoPaintArrow(C, FRectArrDown, aseArrowDown, FPos<Max-FPageSize);
   end;
 
   DoUpdateThumbRect;
@@ -667,15 +669,15 @@ begin
 end;
 
 procedure TATScrollbar.DoPaintArrow(C: TCanvas; const R: TRect;
-  AType: TATScrollbarElemType);
+  AType: TATScrollbarElemType; AActionEnabled: boolean);
 begin
   if IsRectEmpty(R) then exit;
   if DoDrawEvent(AType, C, R, R) then
-    DoPaintStd_Arrow(C, R, AType);
+    DoPaintStd_Arrow(C, R, AType, AActionEnabled);
 end;    
 
 procedure TATScrollbar.DoPaintStd_Arrow(C: TCanvas; R: TRect;
-  AType: TATScrollbarElemType);
+  AType: TATScrollbarElemType; AActionEnabled: boolean);
 var
   P: TPoint;
   NSize: Integer;
@@ -705,6 +707,9 @@ begin
       NColorSymbol:= ColorToRGB(FTheme^.ColorArrowSignOver);
     end;
   end;
+
+  if not AActionEnabled then
+    NColorSymbol:= FTheme^.ColorArrowSign;
 
   C.Brush.Color:= NColorBack;
   C.FillRect(R);
