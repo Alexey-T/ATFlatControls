@@ -42,9 +42,11 @@ type
     FOnTabOver: TATTabOverEvent;
     FOnTabMove: TATTabMoveEvent;
     FOnTabGetTick: TATTabGetTickEvent;
+    FOnTabDblClick: TATTabDblClickEvent;
     procedure SetOnTabClose(AEvent: TATTabCloseEvent);
     procedure SetOnTabAdd(AEvent: TNotifyEvent);
     procedure TabClick(Sender: TObject);
+    procedure TabDblClick(Sender: TObject; AIndex: integer);
     procedure TabDrawBefore(Sender: TObject;
       AType: TATTabElemType; ATabIndex: Integer;
       C: TCanvas; const ARect: TRect; var ACanDraw: boolean);
@@ -72,6 +74,7 @@ type
     property OnTabOver: TATTabOverEvent read FOnTabOver write FOnTabOver;
     property OnTabMove: TATTabMoveEvent read FOnTabMove write FOnTabMove;
     property OnTabGetTick: TATTabGetTickEvent read FOnTabGetTick write FOnTabGetTick;
+    property OnTabDblClick: TATTabDblClickEvent read FOnTabDblClick write FOnTabDblClick;
   end;
 
 type
@@ -233,6 +236,7 @@ type
     FOnTabMove: TATTabMoveEvent;
     FOnEmpty: TNotifyEvent;
     FOnTabGetTick: TATTabGetTickEvent;
+    FOnTabDblClick: TATTabDblClickEvent;
     FPopupPages: TATPages;
     FPopupTabIndex: Integer;
     function GetImages: TImageList;
@@ -249,6 +253,7 @@ type
     procedure TabAdd(Sender: TObject);
     procedure TabOver(Sender: TObject; ATabIndex: Integer);
     procedure TabMove(Sender: TObject; NFrom, NTo: Integer);
+    procedure TabDblClick(Sender: TObject; AIndex: integer);
     function TabGetTick(Sender: TObject; ATabObject: TObject): Int64;
     procedure SetMode(Value: TATGroupsMode);
     function GetMainPos: Integer;
@@ -334,6 +339,7 @@ type
     property OnTabOver: TATTabOverEvent read FOnTabOver write FOnTabOver;
     property OnTabMove: TATTabMoveEvent read FOnTabMove write FOnTabMove;
     property OnTabGetTick: TATTabGetTickEvent read FOnTabGetTick write FOnTabGetTick;
+    property OnTabDblClick: TATTabDblClickEvent read FOnTabDblClick write FOnTabDblClick;
     property OnEmpty: TNotifyEvent read FOnEmpty write FOnEmpty;
   end;
 
@@ -426,6 +432,7 @@ begin
   FTabs.Parent:= Self;
   FTabs.Align:= alTop;
   FTabs.OnTabClick:= TabClick;
+  FTabs.OnTabDblClick:= TabDblClick;
   FTabs.OnTabDrawBefore:= TabDrawBefore;
   FTabs.OnTabEmpty:= TabEmpty;
   FTabs.OnTabOver:= TabOver;
@@ -551,6 +558,12 @@ begin
   end;
 end;
 
+procedure TATPages.TabDblClick(Sender: TObject; AIndex: integer);
+begin
+  if Assigned(FOnTabDblClick) then
+    FOnTabDblClick(Sender, AIndex);
+end;
+
 procedure TATPages.SetOnTabClose(AEvent: TATTabCloseEvent);
 begin
   FOnTabClose:= AEvent;
@@ -670,6 +683,7 @@ begin
       OnTabOver:= Self.TabOver;
       OnTabMove:= Self.TabMove;
       OnTabGetTick:= Self.TabGetTick;
+      OnTabDblClick:= Self.TabDblClick;
     end;
 
   FSplitW:= 5;
@@ -2134,6 +2148,12 @@ procedure TATGroups.TabMove(Sender: TObject; NFrom, NTo: Integer);
 begin
   if Assigned(FOnTabMove) then
     FOnTabMove(Sender, NFrom, NTo);
+end;
+
+procedure TATGroups.TabDblClick(Sender: TObject; AIndex: integer);
+begin
+  if Assigned(FOnTabDblClick) then
+    FOnTabDblClick(Sender, AIndex);
 end;
 
 function TATGroups.TabGetTick(Sender: TObject; ATabObject: TObject): Int64;
