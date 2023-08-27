@@ -467,22 +467,22 @@ end;
 
 procedure TfmTest.mnuCloseOthSameClick(Sender: TObject);
 begin
-  Groups.CloseTabs(tabCloseOthersThisPage, true);
+  Groups.CloseTabs(tabCloseOthersThisPage, true, true);
 end;
 
 procedure TfmTest.mnuCloseOthAllClick(Sender: TObject);
 begin
-  Groups.CloseTabs(tabCloseOthersAllPages, true);
+  Groups.CloseTabs(tabCloseOthersAllPages, true, true);
 end;
 
 procedure TfmTest.mnuCloseAllClick(Sender: TObject);
 begin
-  Groups.CloseTabs(tabCloseAll, false);
+  Groups.CloseTabs(tabCloseAll, true, false);
 end;
 
 procedure TfmTest.mnuCloseAllThisClick(Sender: TObject);
 begin
-  Groups.CloseTabs(tabCloseAllThisPage, true);
+  Groups.CloseTabs(tabCloseAllThisPage, true, true);
 end;
 
 procedure TfmTest.TabOver(Sender: TObject; N: Integer);
@@ -495,12 +495,12 @@ end;
 
 procedure TfmTest.mnuCloseRtClick(Sender: TObject);
 begin
-  Groups.CloseTabs(tabCloseRighterThisPage, true);
+  Groups.CloseTabs(tabCloseRighterThisPage, true, true);
 end;
 
 procedure TfmTest.mnuCloseLtClick(Sender: TObject);
 begin
-  Groups.CloseTabs(tabCloseLefterThisPage, true);
+  Groups.CloseTabs(tabCloseLefterThisPage, true, true);
 end;
 
 

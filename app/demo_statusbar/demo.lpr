@@ -1,4 +1,4 @@
-program Demo;
+program demo;
 
 uses
   Interfaces,

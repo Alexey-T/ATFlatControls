@@ -122,13 +122,13 @@ begin
   bar.Align:= alClient;
   bar.Images:= ImageList1;
   bar.OnMouseMove:= @ToolbarMouseMove;
-  bar.AddButton(0, @BtnColorsClick, 'Open', 'hint1', '', true);
+  bar.AddButton(0, @BtnColorsClick, nil, 'Open', 'hint1', '', true);
   bar.AddDropdown(-1, PopupMenu1, nil, '', 'Some menu');
   bar.AddDropdown(-1, PopupMenu1, nil, 'Sub:', 'Does same as btn before');
   bar.AddDropdown(1, PopupMenu1, nil, '', 'Does same as btn before');
-  bar.AddButton(1, @BtnColorsClick, '', 'hint2', '', false);
+  bar.AddButton(1, @BtnColorsClick, nil, '', 'hint2', '', false);
   bar.AddSep;
-  bar.AddButton(2, @BtnColorsClick, '', 'hint3', '', false);
+  bar.AddButton(2, @BtnColorsClick, nil, '', 'hint3', '', false);
   //bar.AddButton(-1, nil, 'Cap', 'hint4', '', true);
   bar.AddChoice(@BtnChoiceClick, 80, List, 0, 'choice combo', '');
 
@@ -138,14 +138,14 @@ begin
   bar2.Vertical:= true;
   bar2.Images:= ImageList1;
   bar2.OnMouseMove:= @ToolbarMouseMove;
-  bar2.AddButton(0, @BtnColorsClick, 'Open', 'hint1', '', true);
+  bar2.AddButton(0, @BtnColorsClick, nil, 'Open', 'hint1', '', true);
   bar2.AddDropdown(-1, PopupMenu1, nil, '', 'Some menu');
   bar2.AddDropdown(-1, PopupMenu1, nil, 'Sub:', 'Does same as btn before');
   bar2.AddDropdown(1, PopupMenu1, nil, '', 'Does same as btn before');
-  bar2.AddButton(1, @BtnColorsClick, '', 'hint2', '', false);
+  bar2.AddButton(1, @BtnColorsClick, nil, '', 'hint2', '', false);
   bar2.AddSep;
-  bar2.AddButton(2, @BtnColorsClick, '', 'hint3', '', false);
-  bar2.AddButton(-1, nil, 'Cap', 'hint4', '', true);
+  bar2.AddButton(2, @BtnColorsClick, nil, '', 'hint3', '', false);
+  bar2.AddButton(-1, nil, nil, 'Cap', 'hint4', '', true);
 end;
 
 procedure TfmMain.FormShow(Sender: TObject);

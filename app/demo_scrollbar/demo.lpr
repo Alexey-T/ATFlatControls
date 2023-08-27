@@ -1,4 +1,4 @@
-program Demo;
+program demo;
 
 {$MODE Delphi}
 

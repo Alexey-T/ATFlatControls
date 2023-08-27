@@ -4,20 +4,20 @@ object fmTest: TfmTest
   Top = 137
   Width = 914
   Caption = 'Groups'
-  ClientHeight = 522
+  ClientHeight = 545
   ClientWidth = 914
   Color = clBtnFace
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Menu = MainMenu1
+  Position = poScreenCenter
+  LCLVersion = '3.99.0.0'
   OnCreate = FormCreate
   OnShow = FormShow
-  Position = poScreenCenter
-  LCLVersion = '2.3.0.0'
   object Tree: TTreeView
     Left = 0
-    Height = 502
+    Height = 527
     Top = 0
     Width = 170
     Align = alLeft
@@ -26,8 +26,6 @@ object fmTest: TfmTest
     Indent = 19
     TabOrder = 0
     Visible = False
-    OnDragDrop = TreeDragDrop
-    OnDragOver = TreeDragOver
     Options = [tvoAutoItemHeight, tvoKeepCollapsedNodes, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
     Items.Data = {
       F9FFFFFF0200030000000000000000000000FFFFFFFFFFFFFFFF000000000000
@@ -37,11 +35,13 @@ object fmTest: TfmTest
       000000000000030000005454310000000000000000FFFFFFFFFFFFFFFF000000
       000000000000020000005454
     }
+    OnDragDrop = TreeDragDrop
+    OnDragOver = TreeDragOver
   end
   object Status: TStatusBar
     Left = 0
-    Height = 20
-    Top = 502
+    Height = 18
+    Top = 527
     Width = 914
     Panels = <>
   end
