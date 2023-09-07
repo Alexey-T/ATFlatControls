@@ -269,6 +269,12 @@ begin
   if FFocusable=AValue then Exit;
   FFocusable:= AValue;
   TabStop:= AValue;
+
+  //this is required for Qt5
+  if AValue then
+    ControlStyle:= ControlStyle-[csNoFocus]
+  else
+    ControlStyle:= ControlStyle+[csNoFocus];
 end;
 
 procedure TATButton.SetImageIndex(AValue: integer);
