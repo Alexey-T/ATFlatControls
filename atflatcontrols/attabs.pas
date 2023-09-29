@@ -5090,7 +5090,8 @@ begin
       }
     if FOptShowNumberPrefix<>'' then
       Result:= Result+Format(FOptShowNumberPrefix, [ATabIndex+1]);
-    Result:= Result+Copy(AData.TabCaptionFull, 1, 200); //limit the max len, for len=15K chars
+    //limit the max len, for len=15K chars
+    Result:= Result+Copy(AData.TabCaptionFull, 1, 300);
   end
   else
   begin
