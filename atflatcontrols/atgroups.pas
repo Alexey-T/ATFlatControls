@@ -1717,7 +1717,9 @@ begin
   begin
     with AToPages.Tabs do
       TabIndex:= IfThen(AToIndex>=0, AToIndex, TabCount-1);
-    PagesCurrent:= AToPages;
+
+    if GetParentForm(AFromPages)=GetParentForm(AToPages) then
+      PagesCurrent:= AToPages;
   end;
 end;
 
