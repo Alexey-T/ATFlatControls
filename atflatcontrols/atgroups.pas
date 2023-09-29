@@ -1718,7 +1718,7 @@ begin
     with AToPages.Tabs do
       TabIndex:= IfThen(AToIndex>=0, AToIndex, TabCount-1);
 
-    if AFromPages.Parent=AToPages.Parent then
+    if AFromPages.Owner=AToPages.Owner then
       PagesCurrent:= AToPages;
   end;
 end;
