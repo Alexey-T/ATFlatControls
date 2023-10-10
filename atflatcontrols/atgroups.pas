@@ -145,6 +145,7 @@ type
     tabOptionSpacer2,
     tabOptionSpaceInitial,
     tabOptionSpaceBeforeText,
+    tabOptionSpaceAfterText,
     tabOptionSpaceBetweenTabs,
     tabOptionSpaceSide,
     tabOptionFontScale,
@@ -1979,6 +1980,7 @@ begin
         tabOptionSpacer2:          OptSpacer2:= N;
         tabOptionSpaceInitial:     OptSpaceInitial:= N;
         tabOptionSpaceBeforeText:  OptSpaceBeforeText:= N;
+        tabOptionSpaceAfterText:   OptSpaceAfterText:= N;
         tabOptionSpaceBetweenTabs: OptSpaceBetweenTabs:= N;
         tabOptionSpaceSide:        OptSpaceSide:= N;
         tabOptionFontScale:        OptFontScale:= N;
