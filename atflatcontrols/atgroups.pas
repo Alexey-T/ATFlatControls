@@ -1741,13 +1741,13 @@ end;
 
 procedure TATGroups.PagesSetNext(ANext: boolean);
 var
-  Num0, Num1: Integer;
+  IndexOld, IndexNew: Integer;
 begin
-  Num0:= FindPages(PagesCurrent);
-  if Num0<0 then Exit;
-  Num1:= PagesNextIndex(Num0, ANext, false);
-  if Num1<0 then Exit;
-  PagesSetIndex(Num1);
+  IndexOld:= FindPages(PagesCurrent);
+  if IndexOld<0 then Exit;
+  IndexNew:= PagesNextIndex(IndexOld, ANext, false);
+  if IndexNew<0 then Exit;
+  PagesSetIndex(IndexNew);
 end;
 
 
