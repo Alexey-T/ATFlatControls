@@ -297,7 +297,8 @@ type
     function PagesVisibleCount: Integer;
     function PagesSetIndex(ANum: Integer): boolean;
     procedure PagesSetNext(ANext: boolean);
-    function PagesNextIndex(AIndex: Integer; ANext: boolean; AEnableEmpty: boolean): Integer;
+    function PagesNextIndex(AIndex: Integer; ANext: boolean;
+      AEnableEmpty: boolean; out AWrapped: boolean): Integer;
     function FindPages(APages: TATPages): Integer;
     procedure FindPositionOfControl(AObject: TObject; out APagesIndex, ATabIndex: Integer);
     procedure GetSizes(out APanelSize: TPoint; out APageSize: TATGroupsPoints);
@@ -1742,10 +1743,11 @@ end;
 procedure TATGroups.PagesSetNext(ANext: boolean);
 var
   IndexOld, IndexNew: Integer;
+  bWrapped: boolean;
 begin
   IndexOld:= FindPages(PagesCurrent);
   if IndexOld<0 then Exit;
-  IndexNew:= PagesNextIndex(IndexOld, ANext, false);
+  IndexNew:= PagesNextIndex(IndexOld, ANext, false, bWrapped);
   if IndexNew<0 then Exit;
   PagesSetIndex(IndexNew);
 end;
@@ -1765,17 +1767,33 @@ begin
 end;
 
 function TATGroups.PagesNextIndex(AIndex: Integer; ANext: boolean;
-  AEnableEmpty: boolean): Integer;
+  AEnableEmpty: boolean; out AWrapped: boolean): Integer;
 var
   N: Integer;
 begin
   Result:= -1;
+  AWrapped:= false;
   N:= AIndex;
 
   repeat
-    if ANext then Inc(N) else Dec(N);
-    if N>High(Pages) then N:= Low(Pages) else
-      if N<Low(Pages) then N:= High(Pages);
+    if ANext then
+    begin
+      Inc(N);
+      if N>High(Pages) then
+      begin
+        N:= Low(Pages);
+        AWrapped:= true;
+      end
+    end
+    else
+    begin
+      Dec(N);
+      if N<Low(Pages) then
+      begin
+        N:= High(Pages);
+        AWrapped:= true;
+      end;
+    end;
 
     if N=AIndex then Exit; //don't return same index
 
@@ -1799,10 +1817,11 @@ procedure TATGroups.MovePopupTabToNext(ANext: boolean);
 var
   NFrom, NTo: Integer;
   PagesTo: TATPages;
+  bWrapped: boolean;
 begin
   NFrom:= FindPages(PopupPages);
   if NFrom<0 then Exit;
-  NTo:= PagesNextIndex(NFrom, ANext, true);
+  NTo:= PagesNextIndex(NFrom, ANext, true, bWrapped);
   if NTo<0 then Exit;
   PagesTo:= Pages[NTo];
   MoveTab(PopupPages, PopupTabIndex, PagesTo, -1, false);
@@ -1812,10 +1831,11 @@ procedure TATGroups.MoveCurrentTabToNext(ANext: boolean);
 var
   PagesTo: TATPages;
   NFrom, NTo: Integer;
+  bWrapped: boolean;
 begin
   NFrom:= FindPages(PagesCurrent);
   if NFrom<0 then Exit;
-  NTo:= PagesNextIndex(NFrom, ANext, true);
+  NTo:= PagesNextIndex(NFrom, ANext, true, bWrapped);
   if NTo<0 then Exit;
   PagesTo:= Pages[NTo];
   MoveTab(PagesCurrent, PagesCurrent.Tabs.TabIndex, PagesTo, -1, true);
