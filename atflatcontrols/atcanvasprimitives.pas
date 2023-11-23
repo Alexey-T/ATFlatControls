@@ -261,13 +261,17 @@ end;
 
 procedure CanvasInvertRectEmptyInside(C: TCanvas; const R: TRect; AColor: TColor);
 var
+  {$ifdef FPC}
   OldAntialias: TAntialiasingMode;
+  {$endif}
   OldPenMode: TPenMode;
   OldPenStyle: TPenStyle;
   OldPenWidth: integer;
   OldBrushStyle: TBrushStyle;
 begin
+  {$ifdef FPC}
   OldAntialias:= C.AntialiasingMode;
+  {$endif}
   OldPenMode:= C.Pen.Mode;
   OldPenStyle:= C.Pen.Style;
   OldPenWidth:= C.Pen.Width;
@@ -276,7 +280,9 @@ begin
   C.Pen.Mode:= {$ifdef darwin} pmNot {$else} pmNotXor {$endif};
   C.Pen.Style:= psSolid;
   C.Pen.Color:= AColor;
+  {$ifdef FPC}
   C.AntialiasingMode:= amOff;
+  {$endif}
   C.Pen.Width:= 1;
   C.Brush.Style:= bsClear;
 
@@ -286,7 +292,9 @@ begin
   C.Pen.Width:= OldPenWidth;
   C.Pen.Style:= OldPenStyle;
   C.Pen.Mode:= OldPenMode;
+  {$ifdef FPC}
   C.AntialiasingMode:= OldAntialias;
+  {$endif}
   C.Rectangle(0, 0, 0, 0); //apply pen
 end;
 
