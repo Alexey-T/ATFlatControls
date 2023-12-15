@@ -114,6 +114,9 @@ initialization
     FontQuality:= fqDefault;
     FontStyles:= [];
 
+    MonoFontName:= 'Courier';
+    MonoFontSize:= 9;
+
     ColorFont:= $303030;
     ColorFontDisabled:= $808088;
     ColorFontListbox:= ColorFont;
