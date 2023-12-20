@@ -1525,7 +1525,10 @@ begin
     if Assigned(FBitmap) then
     begin
       DoPaintTo(FBitmap.Canvas);
-      Canvas.CopyRect(ClientRect, FBitmap.Canvas, ClientRect);
+      //method 1
+      //Canvas.CopyRect(ClientRect, FBitmap.Canvas, ClientRect);
+      //method 2
+      Canvas.Draw(0, 0, FBitmap); //seems little faster that Canvas.CopyRect, on Win32
     end;
   end
   else
