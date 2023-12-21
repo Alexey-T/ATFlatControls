@@ -791,7 +791,6 @@ end;
 
 procedure TATListbox.Paint;
 var
-  R: TRect;
   C: TCanvas;
 begin
   inherited;
@@ -806,11 +805,10 @@ begin
   UpdateClientSizes;
   UpdateColumnWidths;
 
-  R:= Rect(0, 0, ClientWidth, ClientHeight);
   if DoubleBuffered then
   begin
     DoPaintTo(C);
-    Canvas.CopyRect(R, C, R);
+    Canvas.Draw(0, 0, FBitmap);
   end
   else
     DoPaintTo(C);
