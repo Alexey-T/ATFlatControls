@@ -385,7 +385,7 @@ begin
     FBitmap.Canvas.Font.Quality:= Theme^.FontQuality;
     FBitmap.Canvas.Font.Color:= Theme^.ColorFont;
     DoPaintTo(FBitmap.Canvas, R);
-    Canvas.CopyRect(R, FBitmap.Canvas, R);
+    Canvas.Draw(0, 0, FBitmap);
   end
   else
     DoPaintTo(Canvas, R);
