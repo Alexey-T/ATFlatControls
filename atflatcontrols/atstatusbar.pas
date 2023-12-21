@@ -303,7 +303,7 @@ begin
     if Assigned(FBitmap) then
     begin
       DoPaintTo(FBitmap.Canvas);
-      Canvas.CopyRect(ClientRect, FBitmap.Canvas, ClientRect);
+      Canvas.Draw(0, 0, FBitmap);
     end;
   end
   else
