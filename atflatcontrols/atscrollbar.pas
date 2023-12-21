@@ -360,9 +360,6 @@ begin
     if Assigned(FBitmap) then
     begin
       DoPaintTo(FBitmap.Canvas);
-      //method 1
-      //Canvas.CopyRect(ClientRect, FBitmap.Canvas, ClientRect);
-      //method 2
       Canvas.Draw(0, 0, FBitmap);
     end;
   end
