@@ -1674,7 +1674,10 @@ begin
     TempCaption:= AInfo.Caption;
     UpdateCaptionProps(C, TempCaption, NLineHeight, Extent);
 
-    NIndentTop:= (RectText.Bottom-RectText.Top-Extent.cy) div 2 + 1;
+    if FOptPosition in [atpLeft, atpRight] then
+      NIndentTop:= FOptSpaceBeforeText
+    else
+      NIndentTop:= (RectText.Bottom-RectText.Top-Extent.cy) div 2 + 1;
 
     bOneLiner:= Pos(#10, TempCaption)=0;
     Sep.Init(TempCaption, #10);
