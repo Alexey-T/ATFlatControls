@@ -1675,7 +1675,7 @@ begin
     UpdateCaptionProps(C, TempCaption, NLineHeight, Extent);
 
     if FOptPosition in [atpLeft, atpRight] then
-      NIndentTop:= FOptSpaceBeforeText
+      NIndentTop:= DoScale(FOptSpaceBeforeText)
     else
       NIndentTop:= (RectText.Bottom-RectText.Top-Extent.cy) div 2 + 1;
 
