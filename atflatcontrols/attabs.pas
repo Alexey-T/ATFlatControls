@@ -1674,10 +1674,7 @@ begin
     TempCaption:= AInfo.Caption;
     UpdateCaptionProps(C, TempCaption, NLineHeight, Extent);
 
-    if FOptPosition in [atpLeft, atpRight] then
-      NIndentTop:= DoScale(FOptSpaceBeforeText)
-    else
-      NIndentTop:= (RectText.Bottom-RectText.Top-Extent.cy) div 2 + 1;
+    NIndentTop:= (RectText.Bottom-RectText.Top-Extent.cy) div 2 + 1;
 
     bOneLiner:= Pos(#10, TempCaption)=0;
     Sep.Init(TempCaption, #10);
@@ -2315,7 +2312,7 @@ begin
       if FOptVarWidth then
       begin
         UpdateCaptionProps(C, GetTabCaptionFinal(Data, i), NLineHeight, Extent);
-        NLineHeight:= Max(DoScale(FOptTabHeight), DoScale(FOptSpaceBeforeText+FOptSpaceAfterText) + Extent.CY);
+        NLineHeight:= Max(DoScale(FOptTabHeight), DoScale(FOptSpaceBeforeText*2) + Extent.CY);
       end
       else
         NLineHeight:= DoScale(FOptTabHeight);
