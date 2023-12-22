@@ -2312,7 +2312,7 @@ begin
       if FOptVarWidth then
       begin
         UpdateCaptionProps(C, GetTabCaptionFinal(Data, i), NLineHeight, Extent);
-        NLineHeight:= DoScale(FOptSpaceBeforeText+FOptSpaceAfterText) + Extent.CY;
+        NLineHeight:= Max(DoScale(FOptTabHeight), DoScale(FOptSpaceBeforeText+FOptSpaceAfterText) + Extent.CY);
       end
       else
         NLineHeight:= DoScale(FOptTabHeight);
