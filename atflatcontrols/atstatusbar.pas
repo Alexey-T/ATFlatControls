@@ -361,13 +361,14 @@ begin
   C.FillRect(RectBg);
 
   NPad:= Theme^.DoScale(FPadding);
-  iconWidth:= Theme^.DoScale(FImages.Width);
-  iconHeight:= Theme^.DoScale(FImages.Height);
   RectText:= Rect(ARect.Left+NPad, ARect.Top, ARect.Right-NPad, ARect.Bottom);
 
   if Assigned(FImages) then
     if AData.ImageIndex>=0 then
     begin
+      iconWidth:= Theme^.DoScale(FImages.Width);
+      iconHeight:= Theme^.DoScale(FImages.Height);
+
       if AData.Caption='' then
         case AData.Align of
           taLeftJustify:
@@ -379,17 +380,23 @@ begin
         end
       else
         PosIcon.x:= ARect.Left+NPad;
+
       PosIcon.y:= (ARect.Top+ARect.Bottom-iconHeight) div 2;
 
-
-      FImages.StretchDraw(C, AData.ImageIndex,
-        Rect(
+      if Theme^.ScalePercents<=100 then
+        FImages.Draw(C,
           PosIcon.X,
           PosIcon.Y,
-          PosIcon.X + iconWidth,
-          PosIcon.Y + iconHeight
-        )
-      );
+          AData.ImageIndex)
+      else
+        FImages.StretchDraw(C,
+          AData.ImageIndex,
+          Rect(
+            PosIcon.X,
+            PosIcon.Y,
+            PosIcon.X+iconWidth,
+            PosIcon.Y+iconHeight));
+
       Inc(RectText.Left, iconWidth);
     end;
 
