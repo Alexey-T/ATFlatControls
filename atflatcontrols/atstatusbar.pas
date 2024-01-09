@@ -335,6 +335,7 @@ procedure TATStatus.DoPaintPanelTo(C: TCanvas; ARect: TRect;
 var
   RectBg, RectText: TRect;
   PosIcon: TPoint;
+  iconWidth, iconHeight: Integer;
   TextSize: TSize;
   NOffsetLeft, NPad: integer;
   NColor: TColor;
@@ -360,6 +361,8 @@ begin
   C.FillRect(RectBg);
 
   NPad:= Theme^.DoScale(FPadding);
+  iconWidth:= Theme^.DoScale(FImages.Width);
+  iconHeight:= Theme^.DoScale(FImages.Height);
   RectText:= Rect(ARect.Left+NPad, ARect.Top, ARect.Right-NPad, ARect.Bottom);
 
   if Assigned(FImages) then
@@ -370,16 +373,24 @@ begin
           taLeftJustify:
             PosIcon.x:= ARect.Left+NPad;
           taRightJustify:
-            PosIcon.x:= (ARect.Right-FImages.Width-NPad);
+            PosIcon.x:= (ARect.Right-iconWidth-NPad);
           taCenter:
-            PosIcon.x:= (ARect.Left+ARect.Right-FImages.Width) div 2
+            PosIcon.x:= (ARect.Left+ARect.Right-iconWidth) div 2
         end
       else
         PosIcon.x:= ARect.Left+NPad;
-      PosIcon.y:= (ARect.Top+ARect.Bottom-FImages.Height) div 2;
+      PosIcon.y:= (ARect.Top+ARect.Bottom-iconHeight) div 2;
 
-      FImages.Draw(C, PosIcon.x, PosIcon.y, AData.ImageIndex);
-      Inc(RectText.Left, FImages.Width);
+
+      FImages.StretchDraw(C, AData.ImageIndex,
+        Rect(
+          PosIcon.X,
+          PosIcon.Y,
+          PosIcon.X + iconWidth,
+          PosIcon.Y + iconHeight
+        )
+      );
+      Inc(RectText.Left, iconWidth);
     end;
 
   if AData.Caption<>'' then
