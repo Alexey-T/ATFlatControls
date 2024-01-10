@@ -366,8 +366,13 @@ begin
   if Assigned(FImages) then
     if AData.ImageIndex>=0 then
     begin
+      {$ifdef FPC}
       iconWidth:= Theme^.DoScale(FImages.Width);
       iconHeight:= Theme^.DoScale(FImages.Height);
+      {$else}
+      iconWidth:= FImages.Width;
+      iconHeight:= FImages.Height;
+      {$endif}
 
       if AData.Caption='' then
         case AData.Align of
@@ -383,7 +388,8 @@ begin
 
       PosIcon.y:= (ARect.Top+ARect.Bottom-iconHeight) div 2;
 
-      if Theme^.ScalePercents<=100 then
+      {$ifdef FPC}
+      if Theme^.ScalePercents<150 then
         FImages.Draw(C,
           PosIcon.X,
           PosIcon.Y,
@@ -396,6 +402,12 @@ begin
             PosIcon.Y,
             PosIcon.X+iconWidth,
             PosIcon.Y+iconHeight));
+      {$else}
+      FImages.Draw(C,
+        PosIcon.X,
+        PosIcon.Y,
+        AData.ImageIndex);
+      {$endif}
 
       Inc(RectText.Left, iconWidth);
     end;
