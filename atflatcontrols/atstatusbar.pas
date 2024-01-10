@@ -480,6 +480,14 @@ begin
   if AData.OverlayText<>'' then
   begin
     TextSize:= C.TextExtent(AData.OverlayText);
+
+    //auto-decrease font size if OverlayText is wide
+    while (TextSize.cx>ARect.Width div 2) and (C.Font.Size>7) do
+    begin
+      C.Font.Size:= C.Font.Size-1;
+      TextSize:= C.TextExtent(AData.OverlayText);
+    end;
+
     C.Brush.Color:= Theme^.ColorBgOverlay;
     C.Font.Color:= Theme^.ColorFontOverlay;
 
