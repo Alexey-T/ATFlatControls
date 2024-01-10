@@ -648,6 +648,14 @@ begin
   if FTextOverlay<>'' then
   begin
     TextSize:= C.TextExtent(FTextOverlay);
+
+    //auto-decrease font size if TextOverlay is wide
+    while (TextSize.cx>Width div 2) and (C.Font.Size>7) do
+    begin
+      C.Font.Size:= C.Font.Size-1;
+      TextSize:= C.TextExtent(FTextOverlay);
+    end;
+
     C.Brush.Color:= Theme^.ColorBgOverlay;
     C.Font.Color:= Theme^.ColorFontOverlay;
 
