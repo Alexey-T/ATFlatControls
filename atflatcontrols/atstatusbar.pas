@@ -335,7 +335,7 @@ procedure TATStatus.DoPaintPanelTo(C: TCanvas; ARect: TRect;
 var
   RectBg, RectText: TRect;
   PosIcon: TPoint;
-  iconWidth, iconHeight: Integer;
+  iconWidth, iconHeight, FontSize: Integer;
   TextSize: TSize;
   NOffsetLeft, NPad: integer;
   NColor: TColor;
@@ -492,6 +492,7 @@ begin
   if AData.OverlayText<>'' then
   begin
     TextSize:= C.TextExtent(AData.OverlayText);
+    FontSize:= C.Font.Size;
 
     //auto-decrease font size if OverlayText is wide
     while (TextSize.cx>ARect.Width div 2) and (C.Font.Size>7) do
@@ -530,6 +531,7 @@ begin
       ARect.Left+PosIcon.x,
       ARect.Top+PosIcon.y,
       AData.OverlayText);
+    C.Font.Size:= FontSize;
   end;
 end;
 
