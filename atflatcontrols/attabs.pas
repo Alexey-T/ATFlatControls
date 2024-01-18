@@ -4263,10 +4263,10 @@ begin
 
   if Source is TATTabs then
   begin
-    Accept:=
-      FOptMouseDragEnabled and
-      FOptMouseDragOutEnabled and
-      ((Source<>Self) or IsDraggingAllowed);
+    if Source=Self then
+      Accept:= FOptMouseDragEnabled and IsDraggingAllowed
+    else
+      Accept:= FOptMouseDragEnabled and FOptMouseDragOutEnabled and TATTabs(Source).OptMouseDragOutEnabled;
 
     // Delphi 7 don't call MouseMove during dragging
     {$ifndef fpc}
