@@ -1,5 +1,6 @@
 2024.01.18
 + add: prop OptMouseRightClickActivatesTab
+- fix: OptMouseDragOutEnabled=False disabled the drag-drop inside single tabs-control
 
 2023.02.02
 + add: prop OptShowModifiedColorOnX
