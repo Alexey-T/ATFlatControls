@@ -347,6 +347,10 @@ end;
 procedure TForm1.TabChangeQuery(Sender: TObject; ANewTabIndex: integer;
   var ACanChange: boolean);
 begin
+  ACanChange:= true;
+  exit;
+
+  //this is not used now:
   ACanChange:= Application.MessageBox(
     PChar('Change tab index to '+IntToStr(ANewTabIndex)+'?'),
     'Tab change',
