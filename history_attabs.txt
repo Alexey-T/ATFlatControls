@@ -1,3 +1,6 @@
+2024.01.18
++ add: prop OptMouseRightClickActivatesTab
+
 2023.02.02
 + add: prop OptShowModifiedColorOnX
 

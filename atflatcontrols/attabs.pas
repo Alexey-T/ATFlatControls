@@ -406,6 +406,7 @@ const
   _InitOptMouseDragEnabled = true;
   _InitOptMouseDragOutEnabled = true;
   _InitOptMouseDragFromNotATTabs = false;
+  _InitOptMouseRightClickActivatesTab = false;
 
 type
   { TATTabs }
@@ -523,6 +524,7 @@ type
     FOptMouseDragEnabled: boolean; //enable drag-drop
     FOptMouseDragOutEnabled: boolean; //also enable drag-drop to another controls
     FOptMouseDragFromNotATTabs: boolean;
+    FOptMouseRightClickActivatesTab: boolean;
 
     //others
     FTabWidth: integer;
@@ -919,6 +921,7 @@ type
     property OptMouseDragEnabled: boolean read FOptMouseDragEnabled write FOptMouseDragEnabled default _InitOptMouseDragEnabled;
     property OptMouseDragOutEnabled: boolean read FOptMouseDragOutEnabled write FOptMouseDragOutEnabled default _InitOptMouseDragOutEnabled;
     property OptMouseDragFromNotATTabs: boolean read FOptMouseDragFromNotATTabs write FOptMouseDragFromNotATTabs default _InitOptMouseDragFromNotATTabs;
+    property OptMouseRightClickActivatesTab: boolean read FOptMouseRightClickActivatesTab write FOptMouseRightClickActivatesTab default _InitOptMouseRightClickActivatesTab;
 
     property OptHintForX: string read FHintForX write FHintForX;
     property OptHintForPlus: string read FHintForPlus write FHintForPlus;
@@ -1431,6 +1434,7 @@ begin
   FOptMouseDragEnabled:= _InitOptMouseDragEnabled;
   FOptMouseDragOutEnabled:= _InitOptMouseDragOutEnabled;
   FOptMouseDragFromNotATTabs:= _InitOptMouseDragFromNotATTabs;
+  FOptMouseRightClickActivatesTab:= _InitOptMouseRightClickActivatesTab;
 
   FHintForX:= 'Close tab';
   FHintForPlus:= 'Add tab';
@@ -3369,6 +3373,10 @@ begin
     Invalidate;
     exit;
   end;
+
+  if FOptMouseRightClickActivatesTab then
+    if IsIndexOk(FTabIndexOver) then
+      TabIndex:= FTabIndexOver;
 
   if (FTabIndex=FTabIndexOver) then // to check if click was processed as a valid click on a tab
   begin
