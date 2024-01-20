@@ -1673,7 +1673,9 @@ begin
       C.Font.Color:= Data.TabFontColor
     else
       C.Font.Color:= AInfo.ColorFont;
-    C.Font.Size:= DoScaleFont(C.Font.Size);
+
+    //C.Font.Size:= DoScaleFont(Self.Font.Size);
+    C.Font.Height:= DoScaleFont(Self.Font.Height); //fixes the issue #75
 
     TempCaption:= AInfo.Caption;
     UpdateCaptionProps(C, TempCaption, NLineHeight, Extent);
