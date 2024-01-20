@@ -10,10 +10,10 @@ object Form1: TForm1
   Font.Color = clBlack
   Font.Height = -13
   Font.Name = 'Default'
+  Position = poScreenCenter
+  LCLVersion = '3.99.0.0'
   OnCreate = FormCreate
   OnShow = FormShow
-  Position = poScreenCenter
-  LCLVersion = '2.3.0.0'
   object Label1: TLabel
     Left = 128
     Height = 16
@@ -34,8 +34,8 @@ object Form1: TForm1
     Top = 416
     Width = 113
     Caption = '&add tab'
-    OnClick = btnAddClick
     TabOrder = 2
+    OnClick = btnAddClick
   end
   object btnDel: TButton
     Left = 248
@@ -43,8 +43,8 @@ object Form1: TForm1
     Top = 416
     Width = 75
     Caption = '&delete tab'
-    OnClick = btnDelClick
     TabOrder = 3
+    OnClick = btnDelClick
   end
   object btnColor: TButton
     Left = 328
@@ -52,8 +52,8 @@ object Form1: TForm1
     Top = 416
     Width = 75
     Caption = 'color'
-    OnClick = btnColorClick
     TabOrder = 4
+    OnClick = btnColorClick
   end
   object btnLeft: TButton
     Left = 248
@@ -61,8 +61,8 @@ object Form1: TForm1
     Top = 448
     Width = 75
     Caption = 'switch <'
-    OnClick = btnLeftClick
     TabOrder = 7
+    OnClick = btnLeftClick
   end
   object btnRight: TButton
     Left = 328
@@ -70,16 +70,16 @@ object Form1: TForm1
     Top = 448
     Width = 75
     Caption = 'switch >'
-    OnClick = btnRightClick
     TabOrder = 8
+    OnClick = btnRightClick
   end
   object EditInfo: TEdit
     Left = 408
-    Height = 25
+    Height = 32
     Top = 448
     Width = 209
-    OnChange = EditInfoChange
     TabOrder = 9
+    OnChange = EditInfoChange
   end
   object btnModify: TButton
     Left = 128
@@ -87,8 +87,8 @@ object Form1: TForm1
     Top = 448
     Width = 113
     Caption = 'toggle modified'
-    OnClick = btnModifyClick
     TabOrder = 6
+    OnClick = btnModifyClick
   end
   object btnStress: TButton
     Left = 408
@@ -96,8 +96,8 @@ object Form1: TForm1
     Top = 416
     Width = 208
     Caption = 'add lot of tabs (stress)'
-    OnClick = btnStressClick
     TabOrder = 5
+    OnClick = btnStressClick
   end
   object btnToggleSpecial: TButton
     Left = 128
@@ -105,8 +105,8 @@ object Form1: TForm1
     Top = 480
     Width = 113
     Caption = 'toggle special'
-    OnClick = btnToggleSpecialClick
     TabOrder = 10
+    OnClick = btnToggleSpecialClick
   end
   object GroupBoxBtm: TGroupBox
     Left = 632
@@ -114,35 +114,36 @@ object Form1: TForm1
     Top = 104
     Width = 160
     Caption = 'bottom tabs'
-    ClientHeight = 94
-    ClientWidth = 156
+    ClientHeight = 95
+    ClientWidth = 158
+    ParentBackground = False
     TabOrder = 1
     object chkNums_Bottom: TCheckBox
       Left = 6
-      Height = 24
+      Height = 23
       Top = 56
       Width = 111
       Caption = 'show numbers'
-      OnChange = chkNums_BottomChange
       TabOrder = 2
+      OnChange = chkNums_BottomChange
     end
     object chkVarSize_Bottom: TCheckBox
       Left = 6
-      Height = 24
+      Height = 23
       Top = 32
       Width = 81
       Caption = 'var width'
-      OnChange = chkVarSize_BottomChange
       TabOrder = 1
+      OnChange = chkVarSize_BottomChange
     end
     object chkMultiline_Bottom: TCheckBox
       Left = 6
-      Height = 24
+      Height = 23
       Top = 8
       Width = 81
       Caption = 'multi-line'
-      OnChange = chkMultiline_BottomChange
       TabOrder = 0
+      OnChange = chkMultiline_BottomChange
     end
   end
   object GroupBoxTop: TGroupBox
@@ -151,28 +152,29 @@ object Form1: TForm1
     Top = 104
     Width = 496
     Caption = 'top tabs'
-    ClientHeight = 286
-    ClientWidth = 492
+    ClientHeight = 287
+    ClientWidth = 494
+    ParentBackground = False
     TabOrder = 0
     object chkShowPlus: TCheckBox
       Left = 8
-      Height = 24
+      Height = 23
       Top = 7
       Width = 66
       Caption = '"+" tab'
       Checked = True
-      OnChange = chkShowPlusChange
       State = cbChecked
       TabOrder = 0
+      OnChange = chkShowPlusChange
     end
     object chkShowFullColor: TCheckBox
       Left = 83
-      Height = 24
+      Height = 23
       Top = 7
       Width = 80
       Caption = 'color full'
-      OnChange = chkShowFullColorChange
       TabOrder = 1
+      OnChange = chkShowFullColorChange
     end
     object Label4: TLabel
       Left = 344
@@ -183,7 +185,7 @@ object Form1: TForm1
     end
     object comboShowX: TComboBox
       Left = 173
-      Height = 26
+      Height = 28
       Top = 36
       Width = 160
       ItemHeight = 0
@@ -194,9 +196,9 @@ object Form1: TForm1
         'mouse-over tab'
         'active and mouse-over'
       )
-      OnChange = comboShowXChange
       Style = csDropDownList
       TabOrder = 11
+      OnChange = comboShowXChange
     end
     object Label5: TLabel
       Left = 344
@@ -207,7 +209,7 @@ object Form1: TForm1
     end
     object comboLayout: TComboBox
       Left = 173
-      Height = 26
+      Height = 28
       Top = 68
       Width = 160
       DropDownCount = 20
@@ -220,27 +222,27 @@ object Form1: TForm1
         '<,>v'
         '||0_2||4,|<>+_x|13'
       )
-      OnChange = comboLayoutChange
       Style = csDropDownList
       TabOrder = 12
+      OnChange = comboLayoutChange
     end
     object chkShowFlat: TCheckBox
       Left = 8
-      Height = 24
+      Height = 23
       Top = 31
       Width = 47
       Caption = 'flat'
-      OnChange = chkShowFlatChange
       TabOrder = 2
+      OnChange = chkShowFlatChange
     end
     object chkCenterCaption: TCheckBox
       Left = 8
-      Height = 24
+      Height = 23
       Top = 128
       Width = 110
       Caption = 'center caption'
-      OnChange = chkCenterCaptionChange
       TabOrder = 8
+      OnChange = chkCenterCaptionChange
     end
     object Label6: TLabel
       Left = 344
@@ -251,7 +253,7 @@ object Form1: TForm1
     end
     object comboIconPos: TComboBox
       Left = 173
-      Height = 26
+      Height = 28
       Top = 100
       Width = 160
       DropDownCount = 20
@@ -263,42 +265,42 @@ object Form1: TForm1
         'icon above text'
         'icon below text'
       )
-      OnChange = comboIconPosChange
       Style = csDropDownList
       TabOrder = 13
+      OnChange = comboIconPosChange
     end
     object chkVarSize: TCheckBox
       Left = 88
-      Height = 24
+      Height = 23
       Top = 80
       Width = 81
       Caption = 'var width'
       Checked = True
-      OnChange = chkVarSizeChange
       State = cbChecked
       TabOrder = 6
+      OnChange = chkVarSizeChange
     end
     object chkMultiline: TCheckBox
       Left = 8
-      Height = 24
+      Height = 23
       Top = 80
       Width = 81
       Caption = 'multi-line'
-      OnChange = chkMultilineChange
       TabOrder = 5
+      OnChange = chkMultilineChange
     end
     object chkFill: TCheckBox
       Left = 8
-      Height = 24
+      Height = 23
       Top = 104
       Width = 144
       Caption = 'fill entire tabs width'
-      OnChange = chkFillChange
       TabOrder = 7
+      OnChange = chkFillChange
     end
     object chkNewNearCurrent: TCheckBox
       Left = 8
-      Height = 24
+      Height = 23
       Top = 152
       Width = 147
       Caption = 'new tab near current'
@@ -313,7 +315,7 @@ object Form1: TForm1
     end
     object comboTruncate: TComboBox
       Left = 173
-      Height = 26
+      Height = 28
       Top = 132
       Width = 160
       DropDownCount = 20
@@ -324,30 +326,30 @@ object Form1: TForm1
         'dots - middle'
         'dots - right'
       )
-      OnChange = comboTruncateChange
       Style = csDropDownList
       TabOrder = 14
+      OnChange = comboTruncateChange
     end
     object chkAngled: TCheckBox
       Left = 83
-      Height = 24
+      Height = 23
       Top = 31
       Width = 67
       Caption = 'angled'
       Checked = True
-      OnChange = chkAngledChange
       State = cbChecked
       TabOrder = 3
+      OnChange = chkAngledChange
     end
     object comboThemes: TComboBox
       Left = 173
-      Height = 29
+      Height = 31
       Top = 0
       Width = 160
       ItemHeight = 0
-      OnChange = comboThemesChange
       Style = csDropDownList
       TabOrder = 10
+      OnChange = comboThemesChange
     end
     object LabelThemes: TLabel
       Left = 344
@@ -358,7 +360,7 @@ object Form1: TForm1
     end
     object comboWheelMode: TComboBox
       Left = 173
-      Height = 26
+      Height = 28
       Top = 163
       Width = 160
       ItemHeight = 0
@@ -369,9 +371,9 @@ object Form1: TForm1
         'wheel: switch tabs'
         'wheel: switch tabs, shift+wheel: scroll tabs'
       )
-      OnChange = comboWheelModeChange
       Style = csDropDownList
       TabOrder = 15
+      OnChange = comboWheelModeChange
     end
     object Label10: TLabel
       Left = 344
@@ -389,11 +391,11 @@ object Form1: TForm1
     end
     object edBetweenTabs: TSpinEdit
       Left = 8
-      Height = 25
+      Height = 32
       Top = 184
       Width = 56
-      OnChange = edBetweenTabsChange
       TabOrder = 16
+      OnChange = edBetweenTabsChange
     end
     object Label8: TLabel
       Left = 70
@@ -404,11 +406,11 @@ object Form1: TForm1
     end
     object edInitialSpace: TSpinEdit
       Left = 8
-      Height = 25
+      Height = 32
       Top = 208
       Width = 56
-      OnChange = edInitialSpaceChange
       TabOrder = 17
+      OnChange = edInitialSpaceChange
     end
     object Label3: TLabel
       Left = 216
@@ -425,29 +427,29 @@ object Form1: TForm1
       LineSize = 10
       Max = 250
       Min = 80
-      OnChange = BarScaleChange
       PageSize = 10
       Position = 100
+      OnChange = BarScaleChange
       TabOrder = 18
     end
     object chkRounded: TCheckBox
       Left = 8
-      Height = 24
+      Height = 23
       Top = 56
       Width = 76
       Caption = 'rounded'
       Checked = True
-      OnChange = chkRoundedChange
       State = cbChecked
       TabOrder = 4
+      OnChange = chkRoundedChange
     end
     object edBeforeText: TSpinEdit
       Left = 8
-      Height = 25
+      Height = 32
       Top = 232
       Width = 56
-      OnChange = edBeforeTextChange
       TabOrder = 19
+      OnChange = edBeforeTextChange
     end
     object Label11: TLabel
       Left = 70
@@ -458,11 +460,11 @@ object Form1: TForm1
     end
     object edAfterText: TSpinEdit
       Left = 8
-      Height = 25
+      Height = 32
       Top = 256
       Width = 56
-      OnChange = edAfterTextChange
       TabOrder = 20
+      OnChange = edAfterTextChange
     end
     object Label12: TLabel
       Left = 70
@@ -490,5 +492,16 @@ object Form1: TForm1
       FF8FE6FF9156FF833028AF935BFFE32B03E891FF71E57D72F33F721930DCF23F
       0084E3B0F3
     }
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 638
+    Top = 386
+    object MenuItem1: TMenuItem
+      Caption = 'MenuItem1'
+      OnClick = MenuItem1Click
+    end
+    object MenuItem2: TMenuItem
+      Caption = 'MenuItem2'
+    end
   end
 end
