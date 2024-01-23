@@ -2549,7 +2549,7 @@ begin
     DragManager.IsDragging; //better check than commented code below: it works when drag was started in another control
     //Dragging and FMouseDragBegins;
     {$else}
-    Dragging;
+    Dragging and Mouse.IsDragging;
     {$endif}
 end;
 
