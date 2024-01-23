@@ -145,4 +145,14 @@ object Form1: TForm1
     Left = 712
     Top = 104
   end
+  object PopupMenu1: TPopupMenu
+    Left = 608
+    Top = 168
+    object item11: TMenuItem
+      Caption = 'item 1'
+    end
+    object item21: TMenuItem
+      Caption = 'item 2'
+    end
+  end
 end

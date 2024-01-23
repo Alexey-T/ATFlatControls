@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, attabs, StdCtrls, math, XPMan;
+  Dialogs, attabs, StdCtrls, math, XPMan, Menus;
 
 type
   TForm1 = class(TForm)
@@ -23,6 +23,9 @@ type
     XPManifest1: TXPManifest;
     Label2: TLabel;
     cbThemeList: TComboBox;
+    PopupMenu1: TPopupMenu;
+    item11: TMenuItem;
+    item21: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure chkFlatClick(Sender: TObject);
     procedure chkShowPlusClick(Sender: TObject);
@@ -43,6 +46,8 @@ type
     { Public declarations }
     t: TATTabs;
     procedure TabPlusClick(Sender: TObject);
+    procedure TabContextPopup(Sender: TObject; MousePos: TPoint;
+      var Handled: boolean);
   end;
 
 var
@@ -67,7 +72,9 @@ begin
   t.AddTab(-1, 'tab first', nil, true, clGreen);
   t.AddTab(-1, WideString('юникод строка ')+WideChar($1020)+WideChar($2020));
   t.AddTab(-1, 'tab'#10'multiline'#10'caption', nil, false, clYellow);
+
   t.OnTabPlusClick:= TabPlusClick;
+  t.OnContextPopup:= TabContextPopup;
 
   t.ColorBg:= clWhite;
   t.OptMouseDragEnabled:= true;
@@ -123,6 +130,15 @@ begin
     
   t.SetTheme(Data);
   t.Invalidate;
+end;
+
+procedure TForm1.TabContextPopup(Sender: TObject; MousePos: TPoint;
+  var Handled: boolean);
+var
+  P: TPoint;
+begin
+  P:= Mouse.CursorPos;
+  PopupMenu1.Popup(P.X, P.Y);
 end;
 
 procedure TForm1.TabPlusClick(Sender: TObject);
