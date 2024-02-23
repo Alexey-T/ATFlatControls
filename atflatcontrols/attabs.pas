@@ -2544,13 +2544,17 @@ end;
 
 function TATTabs._IsDrag: boolean;
 begin
+  {$ifdef FPC}
+  if DragMode=dmAutomatic then
+    Result:= Dragging and FMouseDragBegins
+  else
+    Result:= DragManager.IsDragging;
+    //better check this, than 'Dragging and FMouseDragBegins' -
+    //it works when drag was started in another control
+  {$else}
   Result:=
-    {$ifdef FPC}
-    DragManager.IsDragging; //better check than commented code below: it works when drag was started in another control
-    //Dragging and FMouseDragBegins;
-    {$else}
     Dragging and Mouse.IsDragging;
-    {$endif}
+  {$endif}
 end;
 
 procedure TATTabs.GetTabXColors(AIndex: integer;

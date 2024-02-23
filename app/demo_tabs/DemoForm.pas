@@ -181,6 +181,10 @@ begin
   t_top.Images:= ImageList1;
   t_top.OptVarWidth:= true;
   t_top.ShowHint:= true;
+  //
+  //t_top.DragMode:= dmAutomatic; //drag-drop must work with automatic too
+  t_top.DragMode:= dmManual;
+  //
   tabTopHeight:= t_top.Height;
 
   t_top.AddTab(-1, 'Tab'#10'multiline');
