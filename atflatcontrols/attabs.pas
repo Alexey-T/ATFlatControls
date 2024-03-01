@@ -1319,7 +1319,7 @@ begin
   Caption:= '';
   ControlStyle:= ControlStyle+[csOpaque {$ifdef FPC}, csNoFocus{$endif}];
   DoubleBuffered:= IsDoubleBufferedNeeded;
-  DragMode:= dmManual; //required Manual
+  DragMode:= dmManual; //dmManual is better for CudaText, dmAutomatic support was added much later
   ParentColor:= false; //better don't support ParentColor, it's mess in code
   Width:= 400;
   Height:= 35;
@@ -2549,8 +2549,10 @@ begin
     Result:= Dragging and FMouseDragBegins
   else
     Result:= DragManager.IsDragging;
-    //better check this, than 'Dragging and FMouseDragBegins' -
-    //it works when drag was started in another control
+    //better check DragManager.IsDragging than 'Dragging and FMouseDragBegins' -
+    //it works better when dragging of UI-tab was started in another ATTabs control
+    //(in CudaText with 6 groups of tabs);
+    //so red marker appears in target group when dragging UI-tab between groups
   {$else}
   Result:=
     Dragging and Mouse.IsDragging;
