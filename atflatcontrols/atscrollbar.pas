@@ -1159,8 +1159,8 @@ initialization
     DirectJumpOnClickPageUpDown:= false;
     ClickFocusesParentControl:= true;
 
-    MinSizeToShowThumb:= 16;
-    ThumbMinSize:= 12;
+    MinSizeToShowThumb:= 20;
+    ThumbMinSize:= 16;
     ThumbMarkerOffset:= 3;
     ThumbMarkerMinimalSize:= 20;
     ThumbMarkerDecorSize:= 2;
