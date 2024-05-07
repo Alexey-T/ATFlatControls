@@ -542,9 +542,9 @@ begin
     else
     if FMouseDownOnPageUp or FMouseDownOnPageDown then
     begin
-      if (Button=mbMiddle) or
-        ((Button=mbLeft) and (ssShift in Shift)) or
-        FTheme^.DirectJumpOnClickPageUpDown then
+      if (Button=mbMiddle) xor //middle-click makes different choice
+        (((Button=mbLeft) and (ssShift in Shift)) or
+         FTheme^.DirectJumpOnClickPageUpDown) then
       begin
         FMouseDownOnThumb:= true;
         FMouseDragOffset:= 0;
