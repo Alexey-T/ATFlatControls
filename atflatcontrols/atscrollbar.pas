@@ -147,6 +147,7 @@ type
     FOnOwnerDraw: TATScrollbarDrawEvent;
 
     //drag-drop
+    FMouseDirectJumping: boolean;
     FMouseDown: boolean;
     FMouseDragOffset: Integer;
     FMouseDownOnUp,
@@ -477,7 +478,7 @@ procedure TATScrollbar.DoPaintBackScrolling(C: TCanvas);
 var
   Typ: TATScrollbarElemType;
 begin
-  //if Theme^.DirectJumpOnClickPageUpDown then exit;
+  if FMouseDirectJumping then exit;
 
   if IsHorz then
     Typ:= aseScrollingAreaH
@@ -516,6 +517,7 @@ begin
   FMouseDownOnDown:= BetterPtInRect(FRectArrDown, Point(X, Y));
   FMouseDownOnPageUp:= BetterPtInRect(FRectPageUp, Point(X, Y));
   FMouseDownOnPageDown:= BetterPtInRect(FRectPageDown, Point(X, Y));
+  FMouseDirectJumping:= false;
 
   Invalidate;
 
@@ -542,9 +544,12 @@ begin
     else
     if FMouseDownOnPageUp or FMouseDownOnPageDown then
     begin
-      if (Button=mbMiddle) xor //middle-click makes different choice
+      FMouseDirectJumping:=
+        (Button=mbMiddle) xor //middle-click makes different choice
         (((Button=mbLeft) and (ssShift in Shift)) or
-         FTheme^.DirectJumpOnClickPageUpDown) then
+         FTheme^.DirectJumpOnClickPageUpDown);
+
+      if FMouseDirectJumping then
       begin
         FMouseDownOnThumb:= true;
         FMouseDragOffset:= 0;
