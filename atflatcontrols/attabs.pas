@@ -4906,6 +4906,7 @@ procedure TATTabs.MakeVisible(AIndex: integer);
 var
   D: TATTabData;
   R: TRect;
+  NPos: integer;
 begin
   //sometimes new tab has not updated Data.TabRect
   if FTabsChanged or FTabsResized then
@@ -4929,9 +4930,11 @@ begin
   R:= D.TabRect;
 
   if not FActualMultiline then
-    SetScrollPos(Min(GetMaxScrollPos, Max(0, R.Left - Width div 2)))
+    NPos:= R.Left - Width div 2
   else
-    SetScrollPos(Min(GetMaxScrollPos, Max(0, R.Top - Height div 2)));
+    NPos:= R.Top - Height div 2;
+
+  SetScrollPos(Min(GetMaxScrollPos, Max(0, NPos)));
 end;
 
 procedure TATTabs.SetScrollPos(AValue: integer);
