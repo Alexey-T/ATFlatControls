@@ -3571,9 +3571,7 @@ begin
 
   //auto-scroll tabs to right when width is shrinked
   if FScrollPos>0 then
-    FScrollPos:= Min(FScrollPos, GetMaxScrollPos);
-
-  Invalidate;
+    SetScrollPos(Min(FScrollPos, GetMaxScrollPos));
 end;
 
 
@@ -4390,11 +4388,7 @@ var
   NPos: integer;
 begin
   NPos:= Max(0, FScrollPos-GetScrollPageSize);
-  if NPos<>FScrollPos then
-  begin
-    FScrollPos:= NPos;
-    Invalidate;
-  end;
+  SetScrollPos(NPos);
 end;
 
 procedure TATTabs.DoScrollRight;
@@ -4402,11 +4396,7 @@ var
   NPos: integer;
 begin
   NPos:= Min(GetMaxScrollPos, FScrollPos+GetScrollPageSize);
-  if NPos<>FScrollPos then
-  begin
-    FScrollPos:= NPos;
-    Invalidate;
-  end;
+  SetScrollPos(NPos);
 end;
 
 procedure TATTabs.DoPaintButtonPlus(C: TCanvas);
