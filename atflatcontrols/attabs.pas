@@ -4939,11 +4939,9 @@ begin
   R:= D.TabRect;
 
   if not FActualMultiline then
-    FScrollPos:= Min(GetMaxScrollPos, Max(0, R.Left - Width div 2))
+    SetScrollPos(Min(GetMaxScrollPos, Max(0, R.Left - Width div 2)))
   else
-    FScrollPos:= Min(GetMaxScrollPos, Max(0, R.Top - Height div 2));
-
-  Invalidate;
+    SetScrollPos(Min(GetMaxScrollPos, Max(0, R.Top - Height div 2)));
 end;
 
 procedure TATTabs.SetScrollPos(AValue: integer);
