@@ -378,6 +378,7 @@ const
   _InitOptActiveFontStyleUsed = false;
   _InitOptHotFontStyle = [fsUnderline];
   _InitOptHotFontStyleUsed = false;
+  _InitOptActiveVisibleOnResize = false;
 
   _InitOptShowFlat = false;
   _InitOptShowFlatMouseOver = true;
@@ -888,7 +889,7 @@ type
     property OptScrollMarkSizeY: integer read FOptScrollMarkSizeY write FOptScrollMarkSizeY default _InitOptScrollMarkSizeY;
     property OptScrollPagesizePercents: integer read FOptScrollPagesizePercents write FOptScrollPagesizePercents default _InitOptScrollPagesizePercents;
     property OptDropMarkSize: integer read FOptDropMarkSize write FOptDropMarkSize default _InitOptDropMarkSize;
-    property OptActiveVisibleOnResize: boolean read FOptActiveVisibleOnResize write FOptActiveVisibleOnResize default true;
+    property OptActiveVisibleOnResize: boolean read FOptActiveVisibleOnResize write FOptActiveVisibleOnResize default _InitOptActiveVisibleOnResize;
 
     property OptPosition: TATTabPosition read FOptPosition write FOptPosition default _InitOptPosition;
     property OptIconPosition: TATTabIconPosition read FOptIconPosition write FOptIconPosition default aipIconLefterThanText;
@@ -1403,7 +1404,7 @@ begin
   FOptScrollMarkSizeX:= _InitOptScrollMarkSizeX;
   FOptScrollMarkSizeY:= _InitOptScrollMarkSizeY;
   FOptScrollPagesizePercents:= _InitOptScrollPagesizePercents;
-  FOptActiveVisibleOnResize:= true;
+  FOptActiveVisibleOnResize:= _InitOptActiveVisibleOnResize;
   FOptDropMarkSize:= _InitOptDropMarkSize;
   FOptActiveFontStyle:= _InitOptActiveFontStyle;
   FOptActiveFontStyleUsed:= _InitOptActiveFontStyleUsed;
@@ -3681,6 +3682,7 @@ function TATTabs.DeleteTab(AIndex: integer;
   //
 var
   CanClose, CanContinue: boolean;
+  NTabIndexBefore: integer;
   NMax: integer;
 begin
   FTabsChanged:= true;
@@ -3702,24 +3704,30 @@ begin
 
   if IsIndexOk(AIndex) then
   begin
+    NTabIndexBefore:= FTabIndex;
     FTabIndexHinted:= cTabIndexNone;
     FTabIndexHintedPrev:= cTabIndexNone;
 
     FTabList.Delete(AIndex);
 
-    if AAction=aocDefault then
-      AAction:= FOptWhichActivateOnClose;
-
-    case AAction of
-      aocNone:
-        begin end;
-      aocRight:
-        _ActivateRightTab;
-      aocRecent:
-        _ActivateRecentTab;
-      else
-        _ActivateRightTab;
-    end;
+    if NTabIndexBefore=AIndex then
+    begin
+      if AAction=aocDefault then
+        AAction:= FOptWhichActivateOnClose;
+      case AAction of
+        aocNone:
+          begin end;
+        aocRight:
+          _ActivateRightTab;
+        aocRecent:
+          _ActivateRecentTab;
+        else
+          _ActivateRightTab;
+      end;
+    end
+    else
+    if NTabIndexBefore>AIndex then
+      Dec(FTabIndex);
 
     //if lot of tabs were opened, and closed last tab, need to scroll all tabs righter
     NMax:= GetMaxScrollPos;
