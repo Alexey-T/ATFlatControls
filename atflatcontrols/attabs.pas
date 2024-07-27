@@ -4134,6 +4134,8 @@ begin
   if not bCanDrop then Exit;
 
   FTabList.Items[NFrom].Index:= NTo;
+  if Assigned(FBitmap) then
+    UpdateTabRects(FBitmap.Canvas); //fixing wrong scroll pos after drop after MouseWheel
   SetTabIndex(NTo);
 
   if Assigned(FOnTabMove) then
