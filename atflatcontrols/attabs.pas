@@ -4171,7 +4171,7 @@ end;
 
 procedure TATTabs.DoTabDropToOtherControl(ATarget: TControl; const APnt: TPoint);
 var
-  ATabs: TATTabs;
+  TargetTabs: TATTabs;
   NTab, NTabTo: integer;
   Data: TATTabData;
   P: TPoint;
@@ -4189,30 +4189,30 @@ begin
     Exit;
   end;  
 
-  ATabs:= ATarget as TATTabs;
-  if not ATabs.OptMouseDragEnabled then Exit;
+  TargetTabs:= ATarget as TATTabs;
+  if not TargetTabs.OptMouseDragEnabled then Exit;
 
   NTab:= FTabIndex;
-  NTabTo:= ATabs.GetTabAt(APnt.X, APnt.Y, bOverX); //-1 is allowed
+  NTabTo:= TargetTabs.GetTabAt(APnt.X, APnt.Y, bOverX); //-1 is allowed
 
   Data:= GetTabData(NTab);
   if Data=nil then Exit;
 
-  ATabs.AddTab(NTabTo, Data);
+  TargetTabs.AddTab(NTabTo, Data);
 
   //correct TabObject parent
   if Data.TabObject is TWinControl then
     if (Data.TabObject as TWinControl).Parent = Self.Parent then
-      (Data.TabObject as TWinControl).Parent:= ATabs.Parent;
+      (Data.TabObject as TWinControl).Parent:= TargetTabs.Parent;
 
   //delete old tab (don't call OnTabClose)
   DeleteTab(NTab, false{AllowEvent}, false);
 
   //activate dropped tab
   if NTabTo<0 then
-    ATabs.TabIndex:= ATabs.TabCount-1
+    TargetTabs.TabIndex:= TargetTabs.TabCount-1
   else
-    ATabs.TabIndex:= NTabTo;
+    TargetTabs.TabIndex:= NTabTo;
 end;
 
 function TATTabs.GetTabTick(AIndex: integer): Int64;
