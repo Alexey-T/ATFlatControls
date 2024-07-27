@@ -3432,6 +3432,8 @@ begin
 
   FTabIndexOver:= GetTabAt(X, Y, bOverX);
   FTabIndexDrop:= FTabIndexOver;
+  //Application.MainForm.Caption:= 'TabIndexDrop (MouseMove): '+IntToStr(FTabIndexDrop);
+
   if FTabIndexOver=cTabIndexNone then exit;
   Data:= nil;
 
@@ -3513,6 +3515,7 @@ function TATTabs.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer; MousePos:
 var
   bToRight: boolean;
   bSwitchTab: boolean;
+  bOverX: boolean;
 begin
   Result:= false;
   bSwitchTab:= false;
@@ -3553,6 +3556,10 @@ begin
     else
       DoScrollLeft;
   end;
+
+  FTabIndexOver:= GetTabAt(MousePos.X, MousePos.Y, bOverX);
+  FTabIndexDrop:= FTabIndexOver;
+  //Application.MainForm.Caption:= 'TabIndexDrop (MouseWheel): '+IntToStr(FTabIndexDrop);
 
   Result:= true;
 end;
