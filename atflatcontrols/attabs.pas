@@ -214,6 +214,17 @@ type
     aocRecent
     );
 
+  TATTabDeleteReason = (
+    adrNone,
+    adrClickOnXIcon,
+    adrClickOnXButton,
+    adrDoubleClick,
+    adrMiddleClick,
+    adrDragDrop,
+    adrCloseManyTabs,
+    adrMoveBetweenGroups
+    );
+
   { TATTabPaintInfo }
 
   TATTabPaintInfo = record
@@ -553,6 +564,7 @@ type
     FActualMultiline: boolean;
     FTabsChanged: boolean;
     FTabsResized: boolean;
+    FTabDeleteReason: TATTabDeleteReason;
     FScrollingNeeded: boolean;
 
     FScrollPos: integer;
@@ -728,6 +740,7 @@ type
     function GetTabData(AIndex: integer): TATTabData;
     function GetTabLastVisibleIndex: integer;
     function TabCount: integer;
+    property TabDeleteReason: TATTabDeleteReason read FTabDeleteReason;
     function AddTab(
       AIndex: integer;
       const ACaption: TATTabString;
@@ -738,7 +751,8 @@ type
     procedure AddTab(AIndex: integer; AData: TATTabData); overload;
     procedure Clear;
     function DeleteTab(AIndex: integer; AAllowEvent, AWithCancelBtn: boolean;
-      AAction: TATTabActionOnClose=aocDefault): boolean;
+      AAction: TATTabActionOnClose=aocDefault;
+      AReason: TATTabDeleteReason=adrNone): boolean;
     function HideTab(AIndex: integer): boolean;
     function ShowTab(AIndex: integer): boolean;
     procedure MakeVisible(AIndex: integer);
@@ -3249,7 +3263,7 @@ begin
       FOnTabDblClick(Self, FTabIndexOver);
 
     if FOptMouseDoubleClickClose and (FTabIndexOver>=0) and (not FMouseDownThenTabsScrolled) then
-      DeleteTab(FTabIndexOver, true, true)
+      DeleteTab(FTabIndexOver, true, true, aocDefault, adrDoubleClick)
     else
     if FOptMouseDoubleClickPlus and (FTabIndexOver=cTabIndexEmptyArea) then
       if Assigned(FOnTabPlusClick) then
@@ -3302,7 +3316,7 @@ begin
   begin
     if FOptMouseMiddleClickClose then
       if FTabIndexOver>=0 then
-        DeleteTab(FTabIndexOver, true, true);
+        DeleteTab(FTabIndexOver, true, true, aocDefault, adrMiddleClick);
     Exit;
   end;
 
@@ -3348,7 +3362,7 @@ begin
           Action:= aocDefault;
           if Assigned(FOnTabGetCloseAction) then
             FOnTabGetCloseAction(Self, Action);
-          DeleteTab(FTabIndex, true, true, Action);
+          DeleteTab(FTabIndex, true, true, Action, adrClickOnXButton);
         end
 
       else
@@ -3360,7 +3374,7 @@ begin
             if PtInRect(R, FMouseDownPnt) and (not FMouseDownThenTabsScrolled) then
             begin
               EndDrag(false);
-              DeleteTab(FTabIndexOver, true, true);
+              DeleteTab(FTabIndexOver, true, true, aocDefault, adrClickOnXIcon);
               exit
             end;
           end;
@@ -3651,7 +3665,8 @@ end;
 
 function TATTabs.DeleteTab(AIndex: integer;
   AAllowEvent, AWithCancelBtn: boolean;
-  AAction: TATTabActionOnClose=aocDefault): boolean;
+  AAction: TATTabActionOnClose=aocDefault;
+  AReason: TATTabDeleteReason=adrNone): boolean;
   //
   procedure _ActivateRightTab;
   begin
@@ -3692,6 +3707,7 @@ var
   NTabIndexBefore: integer;
   NMax: integer;
 begin
+  FTabDeleteReason:= AReason;
   FTabsChanged:= true;
   FMouseDown:= false;
 
@@ -4212,7 +4228,7 @@ begin
       (Data.TabObject as TWinControl).Parent:= TargetTabs.Parent;
 
   //delete old tab (don't call OnTabClose)
-  DeleteTab(NTab, false{AllowEvent}, false);
+  DeleteTab(NTab, false{AllowEvent}, false, aocDefault, adrDragDrop);
 
   //activate dropped tab
   if NTabTo<0 then

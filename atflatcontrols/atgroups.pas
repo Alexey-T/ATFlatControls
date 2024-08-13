@@ -494,7 +494,7 @@ begin
     Data:= Tabs.GetTabData(i);
     if Assigned(Data) and Data.TabPinned and not AClosePinned then
       Continue;
-    if not Tabs.DeleteTab(i, true, true) then
+    if not Tabs.DeleteTab(i, true, true, aocDefault, adrCloseManyTabs) then
       Exit;
   end;
   Result:= true;
@@ -513,7 +513,7 @@ begin
       Data:= Tabs.GetTabData(i);
       if Assigned(Data) and Data.TabPinned and not AClosePinned then
         Continue;
-      if not Tabs.DeleteTab(i, true, true) then
+      if not Tabs.DeleteTab(i, true, true, aocDefault, adrCloseManyTabs) then
         Exit;
     end;
   if ADoLefter then
@@ -522,7 +522,7 @@ begin
       Data:= Tabs.GetTabData(i);
       if Assigned(Data) and Data.TabPinned and not AClosePinned then
         Continue;
-      if not Tabs.DeleteTab(i, true, true) then
+      if not Tabs.DeleteTab(i, true, true, aocDefault, adrCloseManyTabs) then
         Exit;
     end;
   Result:= true;
@@ -1713,7 +1713,7 @@ begin
   if D=nil then Exit;
 
   AToPages.AddTab(AToIndex, D);
-  AFromPages.Tabs.DeleteTab(AFromIndex, false, false);
+  AFromPages.Tabs.DeleteTab(AFromIndex, false, false, aocDefault, adrMoveBetweenGroups);
 
   if AActivateTabAfter then
   begin
