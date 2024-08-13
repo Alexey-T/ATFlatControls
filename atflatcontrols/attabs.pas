@@ -721,6 +721,8 @@ type
     function GetTabTick(AIndex: integer): Int64;
     function _IsDrag: boolean; inline;
     procedure SetOptShowPlusTab(const Value: boolean);
+    function RealMaxVisibleX: integer;
+    function RealMaxVisibleY: integer;
 
   public
     TabMenuExternal: TPopupMenu;
@@ -4908,6 +4910,16 @@ begin
   end;
 end;
 
+function TATTabs.RealMaxVisibleX: integer;
+begin
+  Result:= Width - FRealIndentRight + FOptSpaceInitial - FOptSpaceSide;
+end;
+
+function TATTabs.RealMaxVisibleY: integer;
+begin
+  Result:= Height - FRealIndentBottom;
+end;
+
 function TATTabs.IsTabVisible(AIndex: integer): boolean;
 var
   D: TATTabData;
@@ -4941,13 +4953,11 @@ begin
   if not FActualMultiline then
     Result:=
       (R.Left >= FRealIndentLeft) and
-      (R.Right <= W - FRealIndentRight + FOptSpaceInitial - FOptSpaceSide)
-    //right part must correspond to line in MakeVisible():
-    //NPosHigh:= R.Right - Width + FRealIndentRight - FOptSpaceInitial + FOptSpaceSide;
+      (R.Right <= RealMaxVisibleX)
   else
     Result:=
       (R.Top >= FRealIndentTop) and
-      (R.Bottom <= H - FRealIndentBottom);
+      (R.Bottom <= RealMaxVisibleY);
 end;
 
 procedure TATTabs.MakeVisible(AIndex: integer);
@@ -4982,7 +4992,7 @@ begin
   if not FActualMultiline then
   begin
     NPosLow:= R.Left - FRealIndentLeft - FOptSpaceSide;
-    NPosHigh:= R.Right - Width + FRealIndentRight - FOptSpaceInitial + FOptSpaceSide;
+    NPosHigh:= R.Right - RealMaxVisibleX;
     if FOptShowPlusTab and (AIndex = TabCount-1) then
       Inc(NPosHigh, FRectTabPlus_NotScrolled.Width + FOptSpaceSide);
 
@@ -4997,7 +5007,7 @@ begin
   else
   begin
     NPosLow:= R.Top - FRealIndentTop;
-    NPosHigh:= R.Bottom - Height + FRealIndentBottom;
+    NPosHigh:= R.Bottom - RealMaxVisibleY;
     if FOptShowPlusTab and (AIndex = TabCount-1) then
       Inc(NPosHigh, FRectTabPlus_NotScrolled.Height);
 
