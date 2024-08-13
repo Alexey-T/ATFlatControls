@@ -4952,7 +4952,7 @@ procedure TATTabs.MakeVisible(AIndex: integer);
 var
   D: TATTabData;
   R: TRect;
-  NPos, NPosLeft, NPosRight, NMaxScrollPos: integer;
+  NPos, NPosLow, NPosHigh, NMaxScrollPos: integer;
 begin
   //sometimes new tab has not updated Data.TabRect
   if FTabsChanged or FTabsResized then
@@ -4979,31 +4979,31 @@ begin
 
   if not FActualMultiline then
   begin
-    NPosLeft:= R.Left - FRealIndentLeft - FOptSpaceSide;
-    NPosRight:= R.Right - Width + FRealIndentRight - FOptSpaceInitial + FOptSpaceSide;
+    NPosLow:= R.Left - FRealIndentLeft - FOptSpaceSide;
+    NPosHigh:= R.Right - Width + FRealIndentRight - FOptSpaceInitial + FOptSpaceSide;
     if FOptShowPlusTab and (AIndex = TabCount-1) then
-      Inc(NPosRight, FRectTabPlus_NotScrolled.Width + FOptSpaceSide);
+      Inc(NPosHigh, FRectTabPlus_NotScrolled.Width + FOptSpaceSide);
 
-    if ScrollPos > NPosLeft then
-      NPos:= NPosLeft
+    if ScrollPos > NPosLow then
+      NPos:= NPosLow
     else
-    if ScrollPos < NPosRight then
-      NPos:= NPosRight
+    if ScrollPos < NPosHigh then
+      NPos:= NPosHigh
     else
       NPos:= R.Left - Width div 2;
   end
   else
   begin
-    NPosLeft:= R.Top - FRealIndentTop;
-    NPosRight:= R.Bottom - Height + FRealIndentBottom;
+    NPosLow:= R.Top - FRealIndentTop;
+    NPosHigh:= R.Bottom - Height + FRealIndentBottom;
     if FOptShowPlusTab and (AIndex = TabCount-1) then
-      Inc(NPosRight, FRectTabPlus_NotScrolled.Height);
+      Inc(NPosHigh, FRectTabPlus_NotScrolled.Height);
 
-    if ScrollPos > NPosLeft then
-      NPos:= NPosLeft
+    if ScrollPos > NPosLow then
+      NPos:= NPosLow
     else
-    if ScrollPos < NPosRight then
-      NPos:= NPosRight
+    if ScrollPos < NPosHigh then
+      NPos:= NPosHigh
     else
       NPos:= R.Top - Height div 2;
   end;
