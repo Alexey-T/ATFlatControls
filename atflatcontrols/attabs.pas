@@ -4912,6 +4912,7 @@ function TATTabs.IsTabVisible(AIndex: integer): boolean;
 var
   D: TATTabData;
   R: TRect;
+  W, H: integer;
 begin
   D:= GetTabData(AIndex);
   if D=nil then
@@ -4933,15 +4934,20 @@ begin
     exit
   end;
 
+  W:= Width;
+  H:= Height;
   R:= GetRectScrolled(R);
+
   if not FActualMultiline then
     Result:=
       (R.Left >= FRealIndentLeft) and
-      (R.Right <= Width-FRealIndentRight)
+      (R.Right <= W - FRealIndentRight + FOptSpaceInitial - FOptSpaceSide)
+    //right part must correspond to line in MakeVisible():
+    //NPosHigh:= R.Right - Width + FRealIndentRight - FOptSpaceInitial + FOptSpaceSide;
   else
     Result:=
       (R.Top >= FRealIndentTop) and
-      (R.Bottom <= Height-FRealIndentBottom);
+      (R.Bottom <= H - FRealIndentBottom);
 end;
 
 procedure TATTabs.MakeVisible(AIndex: integer);
