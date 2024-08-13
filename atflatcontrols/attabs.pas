@@ -4943,8 +4943,8 @@ begin
     if ScrollPos > R.Left - FRealIndentLeft - FOptSpaceSide then
       NPos:=       R.Left - FRealIndentLeft - FOptSpaceSide
     else
-    if ScrollPos < R.Right - Width + FRealIndentRight then
-      NPos :=      R.Right - Width + FRealIndentRight
+    if ScrollPos < R.Right - Width + FRealIndentRight - FOptSpaceInitial then
+      NPos :=      R.Right - Width + FRealIndentRight - FOptSpaceInitial
     else
       NPos:= R.Left - Width div 2;
   end
