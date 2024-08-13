@@ -4913,7 +4913,7 @@ procedure TATTabs.MakeVisible(AIndex: integer);
 var
   D: TATTabData;
   R: TRect;
-  NPos: integer;
+  NPos, NMaxScrollPos: integer;
 begin
   //sometimes new tab has not updated Data.TabRect
   if FTabsChanged or FTabsResized then
@@ -4936,12 +4936,22 @@ begin
   if D=nil then exit;
   R:= D.TabRect;
 
-  if not FActualMultiline then
-    NPos:= R.Left - Width div 2
-  else
-    NPos:= R.Top - Height div 2;
+  NMaxScrollPos:= GetMaxScrollPos;
 
-  SetScrollPos(Min(GetMaxScrollPos, Max(0, NPos)));
+  if not FActualMultiline then
+  begin
+    if ScrollPos > R.Left - FRealIndentLeft - FOptSpaceSide then
+      NPos:= R.Left - FRealIndentLeft - FOptSpaceSide
+    else
+      NPos:= R.Left - Width div 2;
+  end
+  else
+  begin
+    //todo, maybe: adjust NPos additionally for ScrollPos, like in block above
+    NPos:= R.Top - Height div 2;
+  end;
+
+  SetScrollPos(Min(NMaxScrollPos, Max(0, NPos)));
 end;
 
 procedure TATTabs.SetScrollPos(AValue: integer);
@@ -5128,6 +5138,7 @@ procedure TATTabs.UpdateTabTooltip;
 begin
   FTabIndexHintedPrev:= -1;
 end;
+
 
 initialization
   cRect0:= Rect(0, 0, 0, 0);
