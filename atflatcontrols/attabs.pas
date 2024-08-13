@@ -3708,7 +3708,6 @@ var
   NMax: integer;
 begin
   FTabDeletionReason:= AReason;
-  FTabsChanged:= true;
   FMouseDown:= false;
 
   if AAllowEvent then
@@ -3727,6 +3726,7 @@ begin
 
   if IsIndexOk(AIndex) then
   begin
+    FTabsChanged:= true;
     NTabIndexBefore:= FTabIndex;
     FTabIndexHinted:= cTabIndexNone;
     FTabIndexHintedPrev:= cTabIndexNone;
