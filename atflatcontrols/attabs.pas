@@ -556,6 +556,8 @@ type
     FRealIndentRight: integer;
     FRealIndentTop: integer;
     FRealIndentBottom: integer;
+    FRealMaxVisibleX: integer;
+    FRealMaxVisibleY: integer;
     FOptFontScale: integer;
     FOptMinimalWidthForSides: integer;
     FOptSpaceSide: integer;
@@ -721,8 +723,6 @@ type
     function GetTabTick(AIndex: integer): Int64;
     function _IsDrag: boolean; inline;
     procedure SetOptShowPlusTab(const Value: boolean);
-    function RealMaxVisibleX: integer;
-    function RealMaxVisibleY: integer;
 
   public
     TabMenuExternal: TPopupMenu;
@@ -2754,6 +2754,9 @@ begin
     FRealIndentTop:= 0;
     FRealIndentBottom:= 0;
   end;
+
+  FRealMaxVisibleX:= Width - FRealIndentRight + FOptSpaceInitial - FOptSpaceSide;
+  FRealMaxVisibleY:= Height - FRealIndentBottom;
 
   FRectArrowLeft:= GetRectOfButton(atbScrollLeft);
   FRectArrowRight:= GetRectOfButton(atbScrollRight);
@@ -4910,16 +4913,6 @@ begin
   end;
 end;
 
-function TATTabs.RealMaxVisibleX: integer;
-begin
-  Result:= Width - FRealIndentRight + FOptSpaceInitial - FOptSpaceSide;
-end;
-
-function TATTabs.RealMaxVisibleY: integer;
-begin
-  Result:= Height - FRealIndentBottom;
-end;
-
 function TATTabs.IsTabVisible(AIndex: integer): boolean;
 var
   D: TATTabData;
@@ -4953,11 +4946,11 @@ begin
   if not FActualMultiline then
     Result:=
       (R.Left >= FRealIndentLeft) and
-      (R.Right <= RealMaxVisibleX)
+      (R.Right <= FRealMaxVisibleX)
   else
     Result:=
       (R.Top >= FRealIndentTop) and
-      (R.Bottom <= RealMaxVisibleY);
+      (R.Bottom <= FRealMaxVisibleY);
 end;
 
 procedure TATTabs.MakeVisible(AIndex: integer);
@@ -4992,7 +4985,7 @@ begin
   if not FActualMultiline then
   begin
     NPosLow:= R.Left - FRealIndentLeft - FOptSpaceSide;
-    NPosHigh:= R.Right - RealMaxVisibleX;
+    NPosHigh:= R.Right - FRealMaxVisibleX;
     if FOptShowPlusTab and (AIndex = TabCount-1) then
       Inc(NPosHigh, FRectTabPlus_NotScrolled.Width + FOptSpaceSide);
 
@@ -5007,7 +5000,7 @@ begin
   else
   begin
     NPosLow:= R.Top - FRealIndentTop;
-    NPosHigh:= R.Bottom - RealMaxVisibleY;
+    NPosHigh:= R.Bottom - FRealMaxVisibleY;
     if FOptShowPlusTab and (AIndex = TabCount-1) then
       Inc(NPosHigh, FRectTabPlus_NotScrolled.Height);
 
