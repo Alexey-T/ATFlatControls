@@ -214,7 +214,7 @@ type
     aocRecent
     );
 
-  TATTabDeleteReason = (
+  TATTabDeletionReason = (
     adrNone,
     adrClickOnXIcon,
     adrClickOnXButton,
@@ -564,7 +564,7 @@ type
     FActualMultiline: boolean;
     FTabsChanged: boolean;
     FTabsResized: boolean;
-    FTabDeleteReason: TATTabDeleteReason;
+    FTabDeletionReason: TATTabDeletionReason;
     FScrollingNeeded: boolean;
 
     FScrollPos: integer;
@@ -740,7 +740,7 @@ type
     function GetTabData(AIndex: integer): TATTabData;
     function GetTabLastVisibleIndex: integer;
     function TabCount: integer;
-    property TabDeleteReason: TATTabDeleteReason read FTabDeleteReason;
+    property TabDeletionReason: TATTabDeletionReason read FTabDeletionReason;
     function AddTab(
       AIndex: integer;
       const ACaption: TATTabString;
@@ -752,7 +752,7 @@ type
     procedure Clear;
     function DeleteTab(AIndex: integer; AAllowEvent, AWithCancelBtn: boolean;
       AAction: TATTabActionOnClose=aocDefault;
-      AReason: TATTabDeleteReason=adrNone): boolean;
+      AReason: TATTabDeletionReason=adrNone): boolean;
     function HideTab(AIndex: integer): boolean;
     function ShowTab(AIndex: integer): boolean;
     procedure MakeVisible(AIndex: integer);
@@ -3666,7 +3666,7 @@ end;
 function TATTabs.DeleteTab(AIndex: integer;
   AAllowEvent, AWithCancelBtn: boolean;
   AAction: TATTabActionOnClose=aocDefault;
-  AReason: TATTabDeleteReason=adrNone): boolean;
+  AReason: TATTabDeletionReason=adrNone): boolean;
   //
   procedure _ActivateRightTab;
   begin
@@ -3707,7 +3707,7 @@ var
   NTabIndexBefore: integer;
   NMax: integer;
 begin
-  FTabDeleteReason:= AReason;
+  FTabDeletionReason:= AReason;
   FTabsChanged:= true;
   FMouseDown:= false;
 

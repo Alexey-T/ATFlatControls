@@ -1,5 +1,5 @@
 2024.08.13
-+ add: prop TabDeleteReason
++ add: prop TabDeletionReason
 
 2024.01.18
 + add: prop OptMouseRightClickActivatesTab
