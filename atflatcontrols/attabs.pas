@@ -4913,7 +4913,7 @@ procedure TATTabs.MakeVisible(AIndex: integer);
 var
   D: TATTabData;
   R: TRect;
-  NPos, NMaxScrollPos: integer;
+  NPos, NPosLeft, NPosRight, NMaxScrollPos: integer;
 begin
   //sometimes new tab has not updated Data.TabRect
   if FTabsChanged or FTabsResized then
@@ -4940,11 +4940,13 @@ begin
 
   if not FActualMultiline then
   begin
-    if ScrollPos > R.Left - FRealIndentLeft - FOptSpaceSide then
-      NPos:=       R.Left - FRealIndentLeft - FOptSpaceSide
+    NPosLeft:= R.Left - FRealIndentLeft - FOptSpaceSide;
+    NPosRight:= R.Right - Width + FRealIndentRight - FOptSpaceInitial;
+    if ScrollPos > NPosLeft then
+      NPos:= NPosLeft
     else
-    if ScrollPos < R.Right - Width + FRealIndentRight - FOptSpaceInitial then
-      NPos :=      R.Right - Width + FRealIndentRight - FOptSpaceInitial
+    if ScrollPos < NPosRight then
+      NPos:= NPosRight
     else
       NPos:= R.Left - Width div 2;
   end
