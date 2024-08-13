@@ -4935,17 +4935,13 @@ begin
 
   R:= GetRectScrolled(R);
   if not FActualMultiline then
-  begin
     Result:=
       (R.Left >= FRealIndentLeft) and
-      (R.Right < Width-FRealIndentRight)
-  end
+      (R.Right <= Width-FRealIndentRight)
   else
-  begin
     Result:=
       (R.Top >= FRealIndentTop) and
-      (R.Bottom < Height-FRealIndentBottom);
-  end;
+      (R.Bottom <= Height-FRealIndentBottom);
 end;
 
 procedure TATTabs.MakeVisible(AIndex: integer);
