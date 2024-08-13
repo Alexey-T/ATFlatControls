@@ -4942,6 +4942,9 @@ begin
   begin
     NPosLeft:= R.Left - FRealIndentLeft - FOptSpaceSide;
     NPosRight:= R.Right - Width + FRealIndentRight - FOptSpaceInitial + FOptSpaceSide;
+    if FOptShowPlusTab and (AIndex = TabCount-1) then
+      Inc(NPosRight, FRectTabPlus_NotScrolled.Width + FOptSpaceSide);
+
     if ScrollPos > NPosLeft then
       NPos:= NPosLeft
     else
