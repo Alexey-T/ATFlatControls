@@ -554,6 +554,8 @@ type
 
     FRealIndentLeft: integer;
     FRealIndentRight: integer;
+    FRealIndentTop: integer;
+    FRealIndentBottom: integer;
     FOptFontScale: integer;
     FOptMinimalWidthForSides: integer;
     FOptSpaceSide: integer;
@@ -2700,7 +2702,7 @@ end;
 
 procedure TATTabs.DoPaintTo(C: TCanvas);
 var
-  RRect, RRectXMark: TRect;
+  RRect, RRectXMark, RRectBtn: TRect;
   NColorFont: TColor;
   ElemType: TATTabElemType;
   Data: TATTabData;
@@ -2735,8 +2737,21 @@ begin
   FLastOverIndex:= FTabIndexOver;
   FLastOverX:= bMouseOverX;
 
-  FRealIndentLeft:= DoScale(FOptSpaceInitial) + GetButtonsWidth(FButtonsLeft);
-  FRealIndentRight:= DoScale(FOptSpaceInitial) + GetButtonsWidth(FButtonsRight);
+  if FActualMultiline then
+  begin
+    FRealIndentLeft:= 0;
+    FRealIndentRight:= 0;
+    RRectBtn:= GetRectOfButtonIndex(0, true);
+    FRealIndentTop:= RRectBtn.Bottom;
+    FRealIndentBottom:= 0;
+  end
+  else
+  begin
+    FRealIndentLeft:= DoScale(FOptSpaceInitial) + GetButtonsWidth(FButtonsLeft);
+    FRealIndentRight:= DoScale(FOptSpaceInitial) + GetButtonsWidth(FButtonsRight);
+    FRealIndentTop:= 0;
+    FRealIndentBottom:= 0;
+  end;
 
   FRectArrowLeft:= GetRectOfButton(atbScrollLeft);
   FRectArrowRight:= GetRectOfButton(atbScrollRight);
@@ -4896,7 +4911,7 @@ end;
 function TATTabs.IsTabVisible(AIndex: integer): boolean;
 var
   D: TATTabData;
-  R, RectBtn: TRect;
+  R: TRect;
 begin
   D:= GetTabData(AIndex);
   if D=nil then
@@ -4927,17 +4942,16 @@ begin
   end
   else
   begin
-    RectBtn:= GetRectOfButtonIndex(0, true);
     Result:=
-      (R.Top >= RectBtn.Bottom) and
-      (R.Bottom < Height);
+      (R.Top >= FRealIndentTop) and
+      (R.Bottom < Height-FRealIndentBottom);
   end;
 end;
 
 procedure TATTabs.MakeVisible(AIndex: integer);
 var
   D: TATTabData;
-  R, RectBtn: TRect;
+  R: TRect;
   NPos, NPosLeft, NPosRight, NMaxScrollPos: integer;
 begin
   //sometimes new tab has not updated Data.TabRect
@@ -4980,9 +4994,10 @@ begin
   end
   else
   begin
-    RectBtn:= GetRectOfButtonIndex(0, true);
-    NPosLeft:= R.Top - RectBtn.Bottom;
-    NPosRight:= R.Bottom - Height;
+    NPosLeft:= R.Top - FRealIndentTop;
+    NPosRight:= R.Bottom - Height + FRealIndentBottom;
+    if FOptShowPlusTab and (AIndex = TabCount-1) then
+      Inc(NPosRight, FRectTabPlus_NotScrolled.Height);
 
     if ScrollPos > NPosLeft then
       NPos:= NPosLeft
