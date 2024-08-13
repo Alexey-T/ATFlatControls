@@ -422,6 +422,7 @@ type
     FMouseDownShift: TShiftState;
     FMouseDownRightBtn: boolean;
     FMouseDragBegins: boolean;
+    FMouseDownThenTabsScrolled: boolean;
 
     //colors
     FColorBg: TColor; //color of background (visible at top and between tabs)
@@ -3247,18 +3248,21 @@ begin
     if Assigned(FOnTabDblClick) and (FTabIndexOver>=0) then
       FOnTabDblClick(Self, FTabIndexOver);
 
-    if FOptMouseDoubleClickClose and (FTabIndexOver>=0) then
+    if FOptMouseDoubleClickClose and (FTabIndexOver>=0) and (not FMouseDownThenTabsScrolled) then
       DeleteTab(FTabIndexOver, true, true)
     else
     if FOptMouseDoubleClickPlus and (FTabIndexOver=cTabIndexEmptyArea) then
       if Assigned(FOnTabPlusClick) then
         FOnTabPlusClick(Self);
+
+    FMouseDownThenTabsScrolled:= false;
     Exit
   end;
 
   if bClick then
   begin
     DoHandleClick;
+    FMouseDownThenTabsScrolled:= false;
     Invalidate;
     Exit
   end;
@@ -3353,7 +3357,7 @@ begin
           if Assigned(D) and D.TabVisibleX then
           begin
             R:= GetRectScrolled(D.TabRectX);
-            if PtInRect(R, FMouseDownPnt) then
+            if PtInRect(R, FMouseDownPnt) and (not FMouseDownThenTabsScrolled) then
             begin
               EndDrag(false);
               DeleteTab(FTabIndexOver, true, true);
@@ -4960,6 +4964,7 @@ begin
   end;
 
   SetScrollPos(Min(NMaxScrollPos, Max(0, NPos)));
+  FMouseDownThenTabsScrolled:= FMouseDown;
 end;
 
 procedure TATTabs.SetScrollPos(AValue: integer);
