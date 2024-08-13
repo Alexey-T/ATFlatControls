@@ -4941,7 +4941,10 @@ begin
   if not FActualMultiline then
   begin
     if ScrollPos > R.Left - FRealIndentLeft - FOptSpaceSide then
-      NPos:= R.Left - FRealIndentLeft - FOptSpaceSide
+      NPos:=       R.Left - FRealIndentLeft - FOptSpaceSide
+    else
+    if ScrollPos < R.Right - Width + FRealIndentRight then
+      NPos :=      R.Right - Width + FRealIndentRight
     else
       NPos:= R.Left - Width div 2;
   end
