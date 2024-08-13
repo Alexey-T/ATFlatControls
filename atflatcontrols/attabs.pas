@@ -4896,7 +4896,7 @@ end;
 function TATTabs.IsTabVisible(AIndex: integer): boolean;
 var
   D: TATTabData;
-  R: TRect;
+  R, RectBtn: TRect;
 begin
   D:= GetTabData(AIndex);
   if D=nil then
@@ -4920,19 +4920,24 @@ begin
 
   R:= GetRectScrolled(R);
   if not FActualMultiline then
+  begin
     Result:=
       (R.Left >= FRealIndentLeft) and
       (R.Right < Width-FRealIndentRight)
+  end
   else
+  begin
+    RectBtn:= GetRectOfButtonIndex(0, true);
     Result:=
-      (R.Top >= FRealIndentLeft) and
-      (R.Bottom < Height-FRealIndentRight);
+      (R.Top >= RectBtn.Bottom) and
+      (R.Bottom < Height);
+  end;
 end;
 
 procedure TATTabs.MakeVisible(AIndex: integer);
 var
   D: TATTabData;
-  R: TRect;
+  R, RectBtn: TRect;
   NPos, NPosLeft, NPosRight, NMaxScrollPos: integer;
 begin
   //sometimes new tab has not updated Data.TabRect
@@ -4975,8 +4980,17 @@ begin
   end
   else
   begin
-    //todo, maybe: adjust NPos additionally for ScrollPos, like in block above
-    NPos:= R.Top - Height div 2;
+    RectBtn:= GetRectOfButtonIndex(0, true);
+    NPosLeft:= R.Top - RectBtn.Bottom;
+    NPosRight:= R.Bottom - Height;
+
+    if ScrollPos > NPosLeft then
+      NPos:= NPosLeft
+    else
+    if ScrollPos < NPosRight then
+      NPos:= NPosRight
+    else
+      NPos:= R.Top - Height div 2;
   end;
 
   SetScrollPos(Min(NMaxScrollPos, Max(0, NPos)));
