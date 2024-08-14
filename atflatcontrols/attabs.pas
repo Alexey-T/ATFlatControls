@@ -3127,7 +3127,7 @@ function TATTabs.GetTabAt(AX, AY: integer; out APressedX: boolean;
 var
   Pnt: TPoint;
   RectTab, RectNext: TRect;
-  D, DNext: TATTabData;
+  Data, DataNext: TATTabData;
   ok: boolean;
   NCount, L, R, M: integer;
 begin
@@ -3225,10 +3225,10 @@ begin
   while (L<=R) do
   begin
     M:= (L+R+1) div 2;
-    D:= GetTabData(M);
-    if D=nil then Break;
+    Data:= GetTabData(M);
+    if Data=nil then Break;
 
-    RectTab:= GetRectScrolled(D.TabRect);
+    RectTab:= GetRectScrolled(Data.TabRect);
     if RectTab=cRect0 then Break;
 
     //support drag-drop into area between tabs
@@ -3240,17 +3240,17 @@ begin
 
     if PtInRect(RectTab, Pnt) then
     begin
-      if D.TabVisible then
+      if Data.TabVisible then
       begin
         Result:= M;
-        APressedX:= D.TabVisibleX and PtInRect(GetRectScrolled(D.TabRectX), Pnt);
+        APressedX:= Data.TabVisibleX and PtInRect(GetRectScrolled(Data.TabRectX), Pnt);
         if AForDragDrop and (M+1<NCount) then
           if PtInRect(Rect((RectTab.Left+RectTab.Right) div 2, RectTab.Top, RectTab.Right, RectTab.Bottom), Pnt) then
           begin
-            DNext:= GetTabData(M+1);
-            if Assigned(DNext) then
+            DataNext:= GetTabData(M+1);
+            if Assigned(DataNext) then
             begin
-              RectNext:= GetRectScrolled(DNext.TabRect);
+              RectNext:= GetRectScrolled(DataNext.TabRect);
               if (RectNext.Top=RectTab.Top) and (RectNext.Left>RectTab.Right) then
                 Result:= M+1;
             end;
