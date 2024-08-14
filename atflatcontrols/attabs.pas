@@ -2971,16 +2971,14 @@ begin
   Pnt:= ScreenToClient(Mouse.CursorPos);
   N:= GetTabAt(Pnt.X, Pnt.Y, bOverX);
 
-  if (N=cTabIndexPlus) or (N=cTabIndexEmptyArea) then
+  if N<0 then //includes all user-buttons, plus-button, close-button, empty area
   begin
     N:= TabCount-1;
     bRightSide:= true;
   end
   else
   begin
-    if N<0 then
-      N:= TabCount-1;
-    bRightSide:= false; //N>FTabIndex;
+    bRightSide:= false;
   end;
 
   D:= GetTabData(N);
