@@ -735,7 +735,7 @@ type
     procedure UpdateTabTooltip;
     function GetTabRect_X(const ARect: TRect): TRect;
     function GetRectScrolled(const R: TRect): TRect;
-    function GetTabAt(AX, AY: integer; out APressedX: boolean): integer;
+    function GetTabAt(AX, AY: integer; out APressedX: boolean; AForDragDrop: boolean=false): integer;
     function GetTabData(AIndex: integer): TATTabData;
     function GetTabLastVisibleIndex: integer;
     function TabCount: integer;
@@ -2963,13 +2963,17 @@ var
   D: TATTabData;
   R: TRect;
   N: integer;
-  Pnt: TPoint;
-  bOverX, bRightSide: boolean;
+  //Pnt: TPoint;
+  //bOverX: boolean;
+  bRightSide: boolean;
 begin
   if not _IsDrag then Exit;
 
+  {
   Pnt:= ScreenToClient(Mouse.CursorPos);
-  N:= GetTabAt(Pnt.X, Pnt.Y, bOverX);
+  N:= GetTabAt(Pnt.X, Pnt.Y, bOverX, true);
+  }
+  N:= FTabIndexDrop;
 
   if N<0 then //includes all user-buttons, plus-button, close-button, empty area
   begin
@@ -3118,17 +3122,19 @@ begin
 end;
 
 
-function TATTabs.GetTabAt(AX, AY: integer; out APressedX: boolean): integer;
+function TATTabs.GetTabAt(AX, AY: integer; out APressedX: boolean;
+  AForDragDrop: boolean=false): integer;
 var
   Pnt: TPoint;
-  RectTab: TRect;
-  D: TATTabData;
+  RectTab, RectNext: TRect;
+  D, DNext: TATTabData;
   ok: boolean;
-  L, R, M: integer;
+  NCount, L, R, M: integer;
 begin
   Result:= cTabIndexNone;
   APressedX:= false;
   Pnt:= Point(AX, AY);
+  NCount:= TabCount;
 
   if PtInRect(FRectArrowLeft, Pnt) then
   begin
@@ -3215,7 +3221,7 @@ begin
 
   //normal tab?
   L:= 0;
-  R:= TabCount-1;
+  R:= NCount-1;
   while (L<=R) do
   begin
     M:= (L+R+1) div 2;
@@ -3238,6 +3244,17 @@ begin
       begin
         Result:= M;
         APressedX:= D.TabVisibleX and PtInRect(GetRectScrolled(D.TabRectX), Pnt);
+        if AForDragDrop and (M+1<NCount) then
+          if PtInRect(Rect((RectTab.Left+RectTab.Right) div 2, RectTab.Top, RectTab.Right, RectTab.Bottom), Pnt) then
+          begin
+            DNext:= GetTabData(M+1);
+            if Assigned(DNext) then
+            begin
+              RectNext:= GetRectScrolled(DNext.TabRect);
+              if (RectNext.Top=RectTab.Top) and (RectNext.Left>RectTab.Right) then
+                Result:= M+1;
+            end;
+          end;
       end;
       Exit;
     end;
@@ -3469,7 +3486,7 @@ begin
   end;
 
   FTabIndexOver:= GetTabAt(X, Y, bOverX);
-  FTabIndexDrop:= FTabIndexOver;
+  FTabIndexDrop:= GetTabAt(X, Y, bOverX, true);
   //Application.MainForm.Caption:= 'TabIndexDrop (MouseMove): '+IntToStr(FTabIndexDrop);
 
   if FTabIndexOver=cTabIndexNone then exit;
@@ -3594,7 +3611,7 @@ begin
   end;
 
   FTabIndexOver:= GetTabAt(MousePos.X, MousePos.Y, bOverX);
-  FTabIndexDrop:= FTabIndexOver;
+  FTabIndexDrop:= GetTabAt(MousePos.X, MousePos.Y, bOverX, true);
   //Application.MainForm.Caption:= 'TabIndexDrop (MouseWheel): '+IntToStr(FTabIndexDrop);
 
   Result:= true;
