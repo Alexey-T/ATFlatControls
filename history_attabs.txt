@@ -1,4 +1,5 @@
-2024.08.13
+2024.08.14
++ add: optional param AForDragDrop in GetTabAt
 + add: prop TabDeletionReason
 
 2024.01.18
