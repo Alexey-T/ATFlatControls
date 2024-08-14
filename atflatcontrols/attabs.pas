@@ -3248,11 +3248,14 @@ begin
           if PtInRect(Rect((RectTab.Left+RectTab.Right) div 2, RectTab.Top, RectTab.Right, RectTab.Bottom), Pnt) then
           begin
             DataNext:= GetTabData(M+1);
-            if Assigned(DataNext) then
+            if Assigned(DataNext) and DataNext.TabVisible then
             begin
               RectNext:= GetRectScrolled(DataNext.TabRect);
               if (RectNext.Top=RectTab.Top) and (RectNext.Left>RectTab.Right) then
+              begin
                 Result:= M+1;
+                APressedX:= false;
+              end;
             end;
           end;
       end;
