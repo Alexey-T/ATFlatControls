@@ -2963,16 +2963,10 @@ var
   D: TATTabData;
   R: TRect;
   N: integer;
-  //Pnt: TPoint;
-  //bOverX: boolean;
   bRightSide: boolean;
 begin
   if not _IsDrag then Exit;
 
-  {
-  Pnt:= ScreenToClient(Mouse.CursorPos);
-  N:= GetTabAt(Pnt.X, Pnt.Y, bOverX, true);
-  }
   N:= FTabIndexDrop;
 
   if N<0 then //includes all user-buttons, plus-button, close-button, empty area
