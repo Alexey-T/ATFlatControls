@@ -3124,7 +3124,7 @@ var
   RectTab: TRect;
   D: TATTabData;
   ok: boolean;
-  i: integer;
+  L, R, M: integer;
 begin
   Result:= cTabIndexNone;
   APressedX:= false;
@@ -3190,41 +3190,7 @@ begin
     Exit
   end;
 
-  //normal tab?
-  for i:= 0 to TabCount-1 do
-  begin
-    D:= GetTabData(i);
-    if D=nil then Continue;
-    if not D.TabVisible then Continue;
-
-    RectTab:= GetRectScrolled(D.TabRect);
-    if RectTab=cRect0 then Continue;
-
-    //support drag-drop into area between tabs
-    //we need to increase RectTab, because it doesn't contain inter-tab area
-    if FOptPosition in [atpTop, atpBottom] then
-      Dec(RectTab.Left, DoScale(FOptSpaceBetweenTabs))
-    else
-      Dec(RectTab.Top, DoScale(FOptSpaceBetweenTabs));
-
-    if FActualMultiline then
-    begin
-      if RectTab.Top>Pnt.Y then Break;
-    end
-    else
-    begin
-      if RectTab.Left>Pnt.X then Break;
-    end;
-
-    if PtInRect(RectTab, Pnt) then
-    begin
-      Result:= i;
-      APressedX:= D.TabVisibleX and PtInRect(GetRectScrolled(D.TabRectX), Pnt);
-      Exit;
-    end;
-  end;
-
-  //plus tab?
+  //plus pseudo-tab?
   if FOptShowPlusTab then
     if PtInRect(FRectTabPlus_Scrolled, Pnt) then
     begin
@@ -3245,6 +3211,47 @@ begin
       Result:= cTabIndexEmptyArea;
       Exit;
     end;
+  end;
+
+  //normal tab?
+  L:= 0;
+  R:= TabCount-1;
+  while (L<=R) do
+  begin
+    M:= (L+R+1) div 2;
+    D:= GetTabData(M);
+    if D=nil then Break;
+
+    RectTab:= GetRectScrolled(D.TabRect);
+    if RectTab=cRect0 then Break;
+
+    //support drag-drop into area between tabs
+    //we need to increase RectTab, because it doesn't contain inter-tab area
+    if FOptPosition in [atpTop, atpBottom] then
+      Dec(RectTab.Left, DoScale(FOptSpaceBetweenTabs))
+    else
+      Dec(RectTab.Top, DoScale(FOptSpaceBetweenTabs));
+
+    if PtInRect(RectTab, Pnt) then
+    begin
+      if D.TabVisible then
+      begin
+        Result:= M;
+        APressedX:= D.TabVisibleX and PtInRect(GetRectScrolled(D.TabRectX), Pnt);
+      end;
+      Exit;
+    end;
+
+    if (AY>=RectTab.Bottom) then
+      L:= M+1
+    else
+    if (AY<RectTab.Top) then
+      R:= M-1
+    else
+    if (AX>=RectTab.Right) then
+      L:= M+1
+    else
+      R:= M-1;
   end;
 end;
 
