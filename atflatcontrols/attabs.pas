@@ -425,7 +425,6 @@ type
 
   TATTabs = class(TCustomControl)
   private
-    //drag-drop
     FMouseDown: boolean;
     FMouseDownPnt: TPoint;
     FMouseDownDbl: boolean;
@@ -435,7 +434,6 @@ type
     FMouseDragBegins: boolean;
     FMouseDownThenTabsScrolled: boolean;
 
-    //colors
     FColorBg: TColor; //color of background (visible at top and between tabs)
     FColorBorderActive: TColor; //color of 1px border of active tab
     FColorBorderPassive: TColor; //color of 1px border of inactive tabs
@@ -458,7 +456,6 @@ type
     FColorDropMark: TColor;
     FColorScrollMark: TColor;
 
-    //opts
     FButtonsLeft: TATTabButtons;
     FButtonsRight: TATTabButtons;
     FOptButtonSize: integer;
@@ -478,6 +475,7 @@ type
     FOptTabWidthNormal: integer; //tab maximal width (used when only few tabs)
     FOptTabWidthMinimalHidesX: integer; //tab minimal width, after which "x" mark hides for inactive tabs
     FOptTabRounded: boolean;
+    FOptSpaceSide: integer;
     FOptSpaceBetweenTabs: integer; //space between nearest tabs
     FOptSpaceBetweenLines: integer;
     FOptSpaceBetweenIconCaption: integer;
@@ -529,6 +527,8 @@ type
     FOptActiveFontStyleUsed: boolean;
     FOptHotFontStyle: TFontStyles;
     FOptHotFontStyleUsed: boolean;
+    FOptFontScale: integer;
+    FOptMinimalWidthForSides: integer;
 
     FOptMouseWheelMode: TATTabMouseWheelMode;
     FOptMouseMiddleClickClose: boolean; //enable close tab by middle-click
@@ -539,7 +539,6 @@ type
     FOptMouseDragFromNotATTabs: boolean;
     FOptMouseRightClickActivatesTab: boolean;
 
-    //others
     FTabWidth: integer;
     FTabIndex: integer;
     FTabIndexLoaded: integer;
@@ -558,9 +557,6 @@ type
     FRealIndentBottom: integer;
     FRealMaxVisibleX: integer;
     FRealMaxVisibleY: integer;
-    FOptFontScale: integer;
-    FOptMinimalWidthForSides: integer;
-    FOptSpaceSide: integer;
     FPaintCount: integer;
     FLastOverIndex: integer;
     FLastOverX: boolean;
@@ -622,9 +618,8 @@ type
     FPic_Arrow_D: TATTabsPicture;
     FPic_Arrow_D_a: TATTabsPicture;
 
-    //events    
     FOnTabClick: TNotifyEvent;
-    FOnTabChanged: TNotifyEvent;                   // aducom
+    FOnTabChanged: TNotifyEvent;
     FOnTabPlusClick: TNotifyEvent;
     FOnTabClickUserButton: TATTabClickUserButton;
     FOnTabClose: TATTabCloseEvent;
@@ -641,7 +636,7 @@ type
     FOnTabDropQuery: TATTabDropQueryEvent;
     FOnTabDragging: TATTabDropQueryEvent;
 
-    function ConvertButtonIdToTabIndex(Id: TATTabButton): integer; inline;
+    function ConvertButtonIdToTabIndex(Id: TATTabButton): integer;
     procedure DoClickUser(AIndex: integer);
     procedure DoHandleClick;
     procedure DoHandleRightClick;
@@ -655,7 +650,7 @@ type
       APos: TATTabPosition);
     procedure DoPaintPlus(C: TCanvas; const ARect: TRect);
     procedure DoPaintSeparator(C: TCanvas; const R: TRect);
-    procedure DoPaintSpaceInital(C: TCanvas); inline;
+    procedure DoPaintSpaceInital(C: TCanvas);
     procedure DoPaintSpacerRect(C: TCanvas);
     procedure DoPaintTabShape(C: TCanvas; const ATabRect: TRect;
       ATabActive: boolean; ATabIndex: integer);
@@ -679,13 +674,13 @@ type
     function GetTabCaptionFinal(AData: TATTabData; ATabIndex: integer): TATTabString;
     function GetButtonsEdgeCoord(AtLeft: boolean): integer;
     function GetButtonsWidth(const B: TATTabButtons): integer;
-    function GetPositionInverted(APos: TATTabPosition): TATTabPosition; inline;
+    function GetPositionInverted(APos: TATTabPosition): TATTabPosition;
     function GetIndexOfButton(const AButtons: TATTabButtons; ABtn: TATTabButton): integer;
-    function GetInitialVerticalIndent: integer; inline;
-    function GetButtonsEmpty: boolean; inline;
+    function GetInitialVerticalIndent: integer;
+    function GetButtonsEmpty: boolean;
     function GetTabBgColor_Passive(AIndex: integer): TColor;
     function GetTabBgColor_Active(AIndex: integer): TColor;
-    function GetTabFlatEffective(AIndex: integer): boolean; inline;
+    function GetTabFlatEffective(AIndex: integer): boolean;
     procedure GetTabXColors(AIndex: integer; AMouseOverX: boolean; out AColorXBg,
       AColorXBorder, AColorXMark: TColor);
     function GetScrollMarkNeeded: boolean;
@@ -716,12 +711,12 @@ type
     procedure UpdateTabRectsSpecial;
     procedure UpdateTabPropsX;
     procedure UpdateTabRectsToFillLine(AIndexFrom, AIndexTo: integer; ALastLine: boolean);
-    procedure UpdateCanvasAntialiasMode(C: TCanvas); inline;
+    procedure UpdateCanvasAntialiasMode(C: TCanvas);
     procedure UpdateCaptionProps(C: TCanvas; const ACaption: TATTabString;
       out ALineHeight: integer; out ATextSize: TSize);
     procedure DoTabDrop;
     function GetTabTick(AIndex: integer): Int64;
-    function _IsDrag: boolean; inline;
+    function _IsDrag: boolean;
     procedure SetOptShowPlusTab(const Value: boolean);
 
   public
