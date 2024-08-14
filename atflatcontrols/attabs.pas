@@ -4160,7 +4160,11 @@ begin
   if not IsIndexOk(NFrom) then Exit;
   NTo:= FTabIndexDrop;
   if not IsIndexOk(NTo) then
-    NTo:= TabCount-1;
+    NTo:= TabCount-1
+  else
+  if NTo>NFrom then
+    Dec(NTo); //fix index if drop after current
+
   if NFrom=NTo then Exit;
 
   bCanDrop:= true;
