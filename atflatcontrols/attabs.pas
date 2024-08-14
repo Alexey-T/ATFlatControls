@@ -3244,17 +3244,27 @@ begin
       begin
         Result:= M;
         APressedX:= Data.TabVisibleX and PtInRect(GetRectScrolled(Data.TabRectX), Pnt);
-        if AForDragDrop and (M+1<NCount) then
+        if AForDragDrop then
+          //position is over right-half of tab?
           if PtInRect(Rect((RectTab.Left+RectTab.Right) div 2, RectTab.Top, RectTab.Right, RectTab.Bottom), Pnt) then
           begin
-            DataNext:= GetTabData(M+1);
-            if Assigned(DataNext) and DataNext.TabVisible then
+            if (M+1=NCount) and FOptShowPlusTab then
             begin
-              RectNext:= GetRectScrolled(DataNext.TabRect);
-              if (RectNext.Top=RectTab.Top) and (RectNext.Left>=RectTab.Right) then
+              Result:= cTabIndexPlus;
+              APressedX:= false;
+            end
+            else
+            if (M+1<NCount) then
+            begin
+              DataNext:= GetTabData(M+1);
+              if Assigned(DataNext) and DataNext.TabVisible then
               begin
-                Result:= M+1;
-                APressedX:= false;
+                RectNext:= GetRectScrolled(DataNext.TabRect);
+                if (RectNext.Top=RectTab.Top) and (RectNext.Left>=RectTab.Right) then
+                begin
+                  Result:= M+1;
+                  APressedX:= false;
+                end;
               end;
             end;
           end;
