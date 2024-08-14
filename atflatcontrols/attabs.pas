@@ -3251,7 +3251,7 @@ begin
             if Assigned(DataNext) and DataNext.TabVisible then
             begin
               RectNext:= GetRectScrolled(DataNext.TabRect);
-              if (RectNext.Top=RectTab.Top) and (RectNext.Left>RectTab.Right) then
+              if (RectNext.Top=RectTab.Top) and (RectNext.Left>=RectTab.Right) then
               begin
                 Result:= M+1;
                 APressedX:= false;
