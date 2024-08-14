@@ -3248,7 +3248,7 @@ begin
           //position is over right-half of tab?
           if PtInRect(Rect((RectTab.Left+RectTab.Right) div 2, RectTab.Top, RectTab.Right, RectTab.Bottom), Pnt) then
           begin
-            if (M+1=NCount) and FOptShowPlusTab then
+            if (M+1=NCount) then
             begin
               Result:= cTabIndexPlus;
               APressedX:= false;
