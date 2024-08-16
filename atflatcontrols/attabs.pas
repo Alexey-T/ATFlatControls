@@ -670,7 +670,7 @@ type
     procedure DoPaintUserButtons(C: TCanvas; const AButtons: TATTabButtons; AtLeft: boolean);
     procedure DoPaintDropMark(C: TCanvas);
     procedure DoPaintScrollMark(C: TCanvas);
-    procedure GetTabFirstCoord(var R: TRect);
+    procedure GetTabFirstCoord(out R: TRect);
     function GetTabCaptionFinal(AData: TATTabData; ATabIndex: integer): TATTabString;
     function GetButtonsEdgeCoord(AtLeft: boolean): integer;
     function GetButtonsWidth(const B: TATTabButtons): integer;
@@ -2270,7 +2270,7 @@ begin
   end;
 end;
 
-procedure TATTabs.GetTabFirstCoord(var R: TRect);
+procedure TATTabs.GetTabFirstCoord(out R: TRect);
 begin
   if FOptPosition in [atpLeft, atpRight] then
   begin
@@ -2734,18 +2734,17 @@ begin
   FLastOverIndex:= FTabIndexOver;
   FLastOverX:= bMouseOverX;
 
+  FRealIndentLeft:= DoScale(FOptSpaceInitial) + GetButtonsWidth(FButtonsLeft);
+  FRealIndentRight:= DoScale(FOptSpaceInitial) + GetButtonsWidth(FButtonsRight);
+
   if FActualMultiline then
   begin
-    FRealIndentLeft:= 0;
-    FRealIndentRight:= 0;
     RRectBtn:= GetRectOfButtonIndex(0, true);
     FRealIndentTop:= RRectBtn.Bottom;
     FRealIndentBottom:= 0;
   end
   else
   begin
-    FRealIndentLeft:= DoScale(FOptSpaceInitial) + GetButtonsWidth(FButtonsLeft);
-    FRealIndentRight:= DoScale(FOptSpaceInitial) + GetButtonsWidth(FButtonsRight);
     FRealIndentTop:= 0;
     FRealIndentBottom:= 0;
   end;
