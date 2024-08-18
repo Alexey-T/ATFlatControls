@@ -4272,7 +4272,7 @@ begin
   if not TargetTabs.OptMouseDragEnabled then Exit;
 
   NTab:= FTabIndex;
-  NTabTo:= TargetTabs.GetTabAt(APnt.X, APnt.Y, bOverX); //-1 is allowed
+  NTabTo:= TargetTabs.GetTabAt(APnt.X, APnt.Y, bOverX, true); //-1 is allowed
 
   Data:= GetTabData(NTab);
   if Data=nil then Exit;
