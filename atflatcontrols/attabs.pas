@@ -2962,11 +2962,19 @@ var
   D: TATTabData;
   R: TRect;
   N: integer;
-  bRightSide: boolean;
+  Pnt: TPoint;
+  bOverX, bRightSide: boolean;
 begin
   if not _IsDrag then Exit;
 
   N:= FTabIndexDrop;
+
+  //when drag-dropping tab to another ATTabs (CudaText with 6 groups) FTabIndexDrop in target control is -1
+  if N<0 then
+  begin
+    Pnt:= ScreenToClient(Mouse.CursorPos);
+    N:= GetTabAt(Pnt.X, Pnt.Y, bOverX, true);
+  end;
 
   if N<0 then //includes all user-buttons, plus-button, close-button, empty area
   begin
