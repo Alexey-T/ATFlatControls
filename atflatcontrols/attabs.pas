@@ -3039,14 +3039,14 @@ begin
   if not FActualMultiline then
   begin
     NPos:= GetMaxScrollPos;
-    NSize:= Width - FRealIndentLeft - FRealIndentRight;
+    NSize:= Width {- FRealIndentLeft - FRealIndentRight};
 
     if NPos>0 then
     begin
       R.Top:= IfThen(FOptPosition=atpBottom, DoScale(FOptTabHeight) + DoScale(FOptSpacer), 0);
       R.Bottom:= R.Top + DoScale(FOptScrollMarkSizeY);
 
-      R.Left:= FRealIndentLeft +
+      R.Left:= {FRealIndentLeft +}
         Max(0, Min(
           NSize-DoScale(FOptScrollMarkSizeX),
           Int64(FScrollPos) * (NSize-DoScale(FOptScrollMarkSizeX)) div NPos
