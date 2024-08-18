@@ -670,7 +670,7 @@ type
     procedure DoPaintUserButtons(C: TCanvas; const AButtons: TATTabButtons; AtLeft: boolean);
     procedure DoPaintDropMark(C: TCanvas);
     procedure DoPaintScrollMark(C: TCanvas);
-    procedure GetTabFirstCoord(out R: TRect);
+    function GetTabFirstCoord: TRect;
     function GetTabCaptionFinal(AData: TATTabData; ATabIndex: integer): TATTabString;
     function GetButtonsEdgeCoord(AtLeft: boolean): integer;
     function GetButtonsWidth(const B: TATTabButtons): integer;
@@ -681,8 +681,8 @@ type
     function GetTabBgColor_Passive(AIndex: integer): TColor;
     function GetTabBgColor_Active(AIndex: integer): TColor;
     function GetTabFlatEffective(AIndex: integer): boolean;
-    procedure GetTabXColors(AIndex: integer; AMouseOverX: boolean; out AColorXBg,
-      AColorXBorder, AColorXMark: TColor);
+    procedure GetTabXColors(AIndex: integer; AMouseOverX: boolean;
+      out AColorXBg, AColorXBorder, AColorXMark: TColor);
     function GetScrollMarkNeeded: boolean;
     function GetMaxEdgePos: integer;
     function GetRectOfButton(AButton: TATTabButton): TRect;
@@ -695,8 +695,8 @@ type
     procedure SetScrollPos(AValue: integer);
     procedure SetTabIndexEx(AIndex: integer; ADisableEvent: boolean);
     procedure SetTabIndex(AIndex: integer);
-    procedure GetTabXProps(AIndex: integer; const ARect: TRect; out
-      AMouseOverX: boolean; out ARectX: TRect);
+    procedure GetTabXProps(AIndex: integer; const ARect: TRect;
+      out AMouseOverX: boolean; out ARectX: TRect);
     function IsIndexOk(AIndex: integer): boolean; inline;
     function GetTabVisibleX(AIndex: integer; const D: TATTabData): boolean;
     function IsPaintNeeded(AElemType: TATTabElemType;
@@ -2270,29 +2270,30 @@ begin
   end;
 end;
 
-procedure TATTabs.GetTabFirstCoord(out R: TRect);
+function TATTabs.GetTabFirstCoord: TRect;
 begin
+  Result:= cRect0;
   if FOptPosition in [atpLeft, atpRight] then
   begin
     if FOptPosition=atpLeft then
     begin
-      R.Left:= DoScale(FOptSpacer);
-      R.Right:= Width-DoScale(FOptSpacer2);
+      Result.Left:= DoScale(FOptSpacer);
+      Result.Right:= Width-DoScale(FOptSpacer2);
     end
     else
     begin
-      R.Left:= DoScale(FOptSpacer2)+1;
-      R.Right:= Width-DoScale(FOptSpacer);
+      Result.Left:= DoScale(FOptSpacer2)+1;
+      Result.Right:= Width-DoScale(FOptSpacer);
     end;
-    R.Bottom:= GetInitialVerticalIndent;
-    R.Top:= R.Bottom;
+    Result.Bottom:= GetInitialVerticalIndent;
+    Result.Top:= Result.Bottom;
   end
   else
   begin
-    R.Left:= FRealIndentLeft+DoScale(FLastSpaceSide);
-    R.Right:= R.Left;
-    R.Top:= DoScale(FOptSpacer);
-    R.Bottom:= R.Top+DoScale(FOptTabHeight);
+    Result.Left:= FRealIndentLeft+DoScale(FLastSpaceSide);
+    Result.Right:= Result.Left;
+    Result.Top:= DoScale(FOptSpacer);
+    Result.Bottom:= Result.Top+DoScale(FOptTabHeight);
   end;
 end;
 
@@ -2308,7 +2309,7 @@ var
   bFitLastRow: boolean;
   i: integer;
 begin
-  GetTabFirstCoord(R);
+  R:= GetTabFirstCoord;
 
   //left/right tabs
   if FOptPosition in [atpLeft, atpRight] then
