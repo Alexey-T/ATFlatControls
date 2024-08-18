@@ -689,7 +689,6 @@ type
     function GetRectOfButtonIndex(AIndex: integer; AtLeft: boolean): TRect;
     function GetScrollPageSize: integer;
     function IsDraggingAllowed: boolean;
-    procedure PaintSimulated;
     procedure SetOptButtonLayout(const AValue: string);
     procedure SetOptScalePercents(AValue: integer);
     procedure SetOptVarWidth(AValue: boolean);
@@ -769,6 +768,7 @@ type
     function DoScale(AValue: integer): integer;
     function DoScaleFont(AValue: integer): integer;
     procedure DoTabDropToOtherControl(ATarget: TControl; const APnt: TPoint);
+    procedure PaintSimulated;
 
   protected
     procedure Paint; override;
