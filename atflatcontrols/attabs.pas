@@ -4350,7 +4350,7 @@ procedure TATTabs.DragOver(Source: TObject; X, Y: integer; State: TDragState;
   var Accept: Boolean);
 var
   NIndex, Limit: integer;
-  IsX: Boolean;
+  bOverX: Boolean;
 begin
   //this is workaround for too early painted drop-mark (vertical red line)
   if not FMouseDragBegins then
@@ -4370,7 +4370,7 @@ begin
     {$ifndef fpc}
     if Accept then
     begin
-      FTabIndexDrop:= GetTabAt(X, Y, IsX);
+      FTabIndexDrop:= GetTabAt(X, Y, bOverX, true);
     end;
     {$endif}
 
@@ -4382,7 +4382,7 @@ begin
   begin
     //support drag-drop of text from TATSynEdit
     Accept:= false;
-    NIndex:= GetTabAt(X, Y, IsX);
+    NIndex:= GetTabAt(X, Y, bOverX, true);
     if (NIndex>=0) and (TabIndex<>NIndex) then
       TabIndex:= NIndex;
   end
