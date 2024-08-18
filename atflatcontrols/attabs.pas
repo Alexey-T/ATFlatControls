@@ -3467,7 +3467,7 @@ type
 
 procedure TATTabs.MouseMove(Shift: TShiftState; X, Y: integer);
 var
-  bOverX: boolean;
+  bOverX, bOverX2: boolean;
   Data: TATTabData;
 begin
   inherited;
@@ -3492,7 +3492,8 @@ begin
   end;
 
   FTabIndexOver:= GetTabAt(X, Y, bOverX);
-  FTabIndexDrop:= GetTabAt(X, Y, bOverX, true);
+  if _IsDrag then
+    FTabIndexDrop:= GetTabAt(X, Y, bOverX2, true);
   //Application.MainForm.Caption:= 'TabIndexDrop (MouseMove): '+IntToStr(FTabIndexDrop);
 
   if FTabIndexOver=cTabIndexNone then exit;
@@ -3574,7 +3575,7 @@ end;
 
 function TATTabs.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint): Boolean;
 var
-  bToRight, bSwitchTab, bOverX: boolean;
+  bToRight, bSwitchTab, bOverX, bOverX2: boolean;
 begin
   Result:= false;
   bSwitchTab:= false;
@@ -3617,7 +3618,7 @@ begin
   end;
 
   FTabIndexOver:= GetTabAt(MousePos.X, MousePos.Y, bOverX);
-  FTabIndexDrop:= GetTabAt(MousePos.X, MousePos.Y, bOverX, true);
+  FTabIndexDrop:= GetTabAt(MousePos.X, MousePos.Y, bOverX2, true);
   //Application.MainForm.Caption:= 'TabIndexDrop (MouseWheel): '+IntToStr(FTabIndexDrop);
 
   Result:= true;
