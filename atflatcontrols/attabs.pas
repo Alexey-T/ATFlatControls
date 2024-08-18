@@ -3031,7 +3031,7 @@ end;
 
 procedure TATTabs.DoPaintScrollMark(C: TCanvas);
 var
-  NPos, NSize, NIndent: integer;
+  NPos, NSize: integer;
   R: TRect;
 begin
   if not FScrollingNeeded then exit;
@@ -3059,13 +3059,13 @@ begin
   end
   else
   begin
-    NIndent:= 0; //GetInitialVerticalIndent;
+    //NIndent:= GetInitialVerticalIndent;
     NPos:= GetMaxScrollPos;
-    NSize:= Height-NIndent;
+    NSize:= Height {- NIndent};
 
     if NPos>0 then
     begin
-      R.Top:= NIndent +
+      R.Top:= {NIndent +}
         Max(0, Min(
           NSize - DoScale(FOptScrollMarkSizeX),
           Int64(FScrollPos) * (NSize-DoScale(FOptScrollMarkSizeX)) div NPos
