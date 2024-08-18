@@ -768,7 +768,7 @@ type
     function DoScale(AValue: integer): integer;
     function DoScaleFont(AValue: integer): integer;
     procedure DoTabDropToOtherControl(ATarget: TControl; const APnt: TPoint);
-    procedure PaintSimulated;
+    procedure PaintSimulated; //sometimes it's needed, it updates tab-rects so e.g. MakeVisible will work correctly
 
   protected
     procedure Paint; override;
