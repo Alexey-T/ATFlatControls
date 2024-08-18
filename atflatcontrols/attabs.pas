@@ -4448,6 +4448,7 @@ begin
       Result:= R.Right
     else
       Result:= R.Left;
+    Inc(Result, FOptSpaceSide);
   end;
 end;
 
