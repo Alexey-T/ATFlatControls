@@ -3059,7 +3059,7 @@ begin
   end
   else
   begin
-    NIndent:= GetInitialVerticalIndent;
+    NIndent:= 0; //GetInitialVerticalIndent;
     NPos:= GetMaxScrollPos;
     NSize:= Height-NIndent;
 
