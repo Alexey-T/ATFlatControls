@@ -4443,7 +4443,12 @@ begin
   if FActualMultiline then
     Result:= R.Bottom
   else
-    Result:= R.Right;
+  begin
+    if FOptShowPlusTab then
+      Result:= R.Right
+    else
+      Result:= R.Left;
+  end;
 end;
 
 function TATTabs.GetMaxScrollPos: integer;
