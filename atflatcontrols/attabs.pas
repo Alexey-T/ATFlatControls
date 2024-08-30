@@ -4006,21 +4006,23 @@ begin
 
   if AtLeft then
   begin
-    for i:= 0 to Min(AIndex, Length(FButtonsLeft)-1) do
-    begin
-      Result.Left:= NPos;
-      Result.Right:= Result.Left+FButtonsLeft[i].Size;
-      NPos:= Result.Right;
-    end;
+    if (AIndex>=0) and (AIndex<Length(FButtonsLeft)) then
+      for i:= 0 to AIndex do
+      begin
+        Result.Left:= NPos;
+        Result.Right:= Result.Left+FButtonsLeft[i].Size;
+        NPos:= Result.Right;
+      end;
   end
   else
   begin
-    for i:= 0 to Min(AIndex, Length(FButtonsRight)-1) do
-    begin
-      Result.Right:= NPos;
-      Result.Left:= Result.Right-FButtonsRight[i].Size;
-      NPos:= Result.Left;
-    end;
+    if (AIndex>=0) and (AIndex<Length(FButtonsRight)) then
+      for i:= 0 to AIndex do
+      begin
+        Result.Right:= NPos;
+        Result.Left:= Result.Right-FButtonsRight[i].Size;
+        NPos:= Result.Left;
+      end;
   end;
 
   if FOptPosition in [atpTop, atpBottom] then
