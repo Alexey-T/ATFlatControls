@@ -4001,9 +4001,12 @@ var
   NPos, i: integer;
 begin
   NPos:= GetButtonsEdgeCoord(AtLeft);
+  Result.Left:= NPos;
+  Result.Right:= NPos;
+
   if AtLeft then
   begin
-    for i:= 0 to AIndex do
+    for i:= 0 to Min(AIndex, Length(FButtonsLeft)-1) do
     begin
       Result.Left:= NPos;
       Result.Right:= Result.Left+FButtonsLeft[i].Size;
@@ -4012,7 +4015,7 @@ begin
   end
   else
   begin
-    for i:= 0 to AIndex do
+    for i:= 0 to Min(AIndex, Length(FButtonsRight)-1) do
     begin
       Result.Right:= NPos;
       Result.Left:= Result.Right-FButtonsRight[i].Size;
