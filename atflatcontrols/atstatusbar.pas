@@ -110,6 +110,7 @@ type
     FBitmap: TBitmap;
     FImages: TImageList;
     FTheme: PATFlatTheme;
+    FPanelRects: array of TRect;
     FSeparatorString: string;
     FOverflowLeft: boolean;
     FOverflowScrollX: integer;
@@ -128,12 +129,13 @@ type
     procedure SetCaption(AIndex: integer; const AValue: TCaption);
     procedure SetHint(AIndex: integer; const AValue: string); reintroduce;
     procedure UpdateCanvasFont(C: TCanvas; D: TATStatusData);
+    procedure UpdatePanelRects;
   public
     constructor Create(AOnwer: TComponent); override;
     destructor Destroy; override;
     function CanFocus: boolean; override;
-    function GetPanelRect(AIndex: integer): TRect;
     function GetPanelAt(X, Y: integer): integer;
+    function GetPanelRect(AIndex: integer): TRect;
     function GetPanelData(AIndex: integer): TATStatusData;
     function PanelCount: integer;
     function IsIndexOk(AIndex: integer): boolean;
@@ -535,31 +537,34 @@ begin
   end;
 end;
 
-function TATStatus.GetPanelRect(AIndex: integer): TRect;
+procedure TATStatus.UpdatePanelRects;
 var
   Data: TATStatusData;
-  NSize, i: integer;
+  NCount, NSize, i: integer;
+  R: TRect;
 begin
-  Result.Left:= 0;
-  Result.Right:= -1;
-  Result.Top:= 1;
-  Result.Bottom:= Height;
+  NCount:= PanelCount;
+  SetLength(FPanelRects, NCount);
 
-  if IsIndexOk(AIndex) then
+  R.Left:= 0;
+  R.Right:= -1;
+  R.Top:= 1;
+  R.Bottom:= Height;
+
+  for i:= 0 to NCount-1 do
   begin
-    for i:= 0 to AIndex do
-    begin
-      Data:= GetPanelData(i);
-      Result.Left:= Result.Right + 1;
+    Data:= GetPanelData(i);
+    R.Left:= R.Right + 1;
 
-      NSize:= Data.Width;
-      if not Data.AutoSize and not Data.AutoStretch then
-        NSize:= Theme^.DoScale(NSize);
+    NSize:= Data.Width;
+    if not Data.AutoSize and not Data.AutoStretch then
+      NSize:= Theme^.DoScale(NSize);
 
-      Result.Right:= Result.Left + NSize - 1;
-    end;
+    R.Right:= R.Left + NSize - 1;
+
+    FPanelRects[i]:= R;
     if FOverflowLeft then
-      OffsetRect(Result, -FOverflowScrollX, 0);
+      OffsetRect(FPanelRects[i], -FOverflowScrollX, 0);
   end;
 end;
 
@@ -623,10 +628,12 @@ begin
       FOverflowScrollX:= NTotalWidth-Width;
   end;
 
+  UpdatePanelRects;
+
   //paint panels
   for i:= 0 to PanelCount-1 do
   begin
-    PanelRect:= GetPanelRect(i);
+    PanelRect:= FPanelRects[i];
 
     if DoDrawBefore(i, C, PanelRect) then
     begin
@@ -672,11 +679,19 @@ begin
   Result:= -1;
   Pnt:= Point(X, Y);
 
-  for i:= 0 to PanelCount-1 do
+  for i:= 0 to High(FPanelRects) do
   begin
-    R:= GetPanelRect(i);
+    R:= FPanelRects[i];
     if PtInRect(R, Pnt) then exit(i);
   end;
+end;
+
+function TATStatus.GetPanelRect(AIndex: integer): TRect;
+begin
+  if (AIndex>=0) and (AIndex<High(FPanelRects)) then
+    Result:= FPanelRects[AIndex]
+  else
+    Result:= Rect(0, 0, 0, 0);
 end;
 
 procedure TATStatus.MouseDown(Button: TMouseButton; Shift: TShiftState;
