@@ -426,7 +426,7 @@ begin
       taRightJustify:
         NOffsetLeft:= RectText.Right-RectText.Left-TextSize.cx;
       taCenter:
-        NOffsetLeft:= (RectText.Right-RectText.Left-TextSize.cx) div 2;
+        NOffsetLeft:= Max(0, (RectText.Right-RectText.Left-TextSize.cx) div 2);
     end;
 
     ExtTextOut(C.Handle,
