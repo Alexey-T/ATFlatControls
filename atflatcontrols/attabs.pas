@@ -738,6 +738,7 @@ type
     function GetTabData(AIndex: integer): TATTabData;
     function GetTabLastVisibleIndex: integer;
     function TabCount: integer;
+    function FindNearestVisibleTab(AIndex: integer): integer;
     property TabDeletionReason: TATTabDeletionReason read FTabDeletionReason;
     function AddTab(
       AIndex: integer;
@@ -2363,7 +2364,11 @@ begin
   begin
     Data:= GetTabData(i);
     if not Assigned(Data) then Continue;
-    if not Data.TabVisible then Continue;
+    if not Data.TabVisible then
+    begin
+      Data.TabRect:= cRect0;
+      Continue;
+    end;
     Data.TabStartsNewLine:= false;
 
     R.Left:= R.Right;
@@ -3124,9 +3129,31 @@ begin
 end;
 
 
+function TATTabs.FindNearestVisibleTab(AIndex: integer): integer;
+var
+  D: TATTabData;
+  i: integer;
+begin
+  for i:= AIndex to TabCount-1 do
+  begin
+    D:= GetTabData(i);
+    if Assigned(D) and D.TabVisible then
+      Exit(i);
+  end;
+  for i:= AIndex-1 downto 0 do
+  begin
+    D:= GetTabData(i);
+    if Assigned(D) and D.TabVisible then
+      Exit(i);
+  end;
+  Result:= cTabIndexNone;
+end;
+
+
 function TATTabs.GetTabAt(AX, AY: integer; out APressedX: boolean;
   AForDragDrop: boolean=false): integer;
 var
+  VisTabs: TStringList;
   Pnt: TPoint;
   RectTab, RectNext: TRect;
   Data, DataNext: TATTabData;
@@ -3222,70 +3249,79 @@ begin
   end;
 
   //normal tab?
-  L:= 0;
-  R:= NCount-1;
-  while (L<=R) do
+  VisTabs:= TStringList.Create;
+  for L:= 0 to NCount-1 do
   begin
-    M:= (L+R+1) div 2;
-    Data:= GetTabData(M);
-    if Data=nil then Break;
+    Data:= GetTabData(L);
+    if Assigned(Data) and Data.TabVisible and (Data.TabRect<>cRect0) then
+      VisTabs.AddObject(IntToStr(L), Data);
+  end;
 
-    RectTab:= GetRectScrolled(Data.TabRect);
-    if RectTab=cRect0 then Break;
-
-    //support drag-drop into area between tabs
-    //we need to increase RectTab, because it doesn't contain inter-tab area
-    if FOptPosition in [atpTop, atpBottom] then
-      Dec(RectTab.Left, DoScale(FOptSpaceBetweenTabs))
-    else
-      Dec(RectTab.Top, DoScale(FOptSpaceBetweenTabs));
-
-    if PtInRect(RectTab, Pnt) then
+  try
+    L:= 0;
+    R:= VisTabs.Count-1;
+    while (L<=R) do
     begin
-      if Data.TabVisible then
+      M:= (L+R+1) div 2;
+      Data:= TATTabData(VisTabs.Objects[M]);
+      if Data=nil then Break;
+
+      RectTab:= GetRectScrolled(Data.TabRect);
+
+      //support drag-drop into area between tabs
+      //we need to increase RectTab, because it doesn't contain inter-tab area
+      if FOptPosition in [atpTop, atpBottom] then
+        Dec(RectTab.Left, DoScale(FOptSpaceBetweenTabs))
+      else
+        Dec(RectTab.Top, DoScale(FOptSpaceBetweenTabs));
+
+      if PtInRect(RectTab, Pnt) then
       begin
-        Result:= M;
+        Result:= StrToIntDef(VisTabs[M], -1);
         APressedX:= Data.TabVisibleX and PtInRect(GetRectScrolled(Data.TabRectX), Pnt);
         if AForDragDrop then
           //position is over right-half of tab?
           if PtInRect(Rect((RectTab.Left+RectTab.Right) div 2, RectTab.Top, RectTab.Right, RectTab.Bottom), Pnt) then
           begin
-            if (M+1=NCount) then
+            if (Result+1=NCount) then
             begin
               Result:= cTabIndexPlus;
               APressedX:= false;
             end
             else
-            if (M+1<NCount) then
+            if (Result+1<NCount) then
             begin
-              DataNext:= GetTabData(M+1);
+              DataNext:= GetTabData(Result+1);
               if Assigned(DataNext) and DataNext.TabVisible then
               begin
                 RectNext:= GetRectScrolled(DataNext.TabRect);
                 if (RectNext.Top=RectTab.Top) and (RectNext.Left>=RectTab.Right) then
                 begin
-                  Result:= M+1;
+                  Result:= Result+1;
                   APressedX:= false;
                 end;
               end;
             end;
           end;
+          Exit;
       end;
-      Exit;
-    end;
 
-    if (AY>=RectTab.Bottom) then
-      L:= M+1
-    else
-    if (AY<RectTab.Top) then
-      R:= M-1
-    else
-    if (AX>=RectTab.Right) then
-      L:= M+1
-    else
-      R:= M-1;
+      if (AY>=RectTab.Bottom) then
+        L:= M+1
+      else
+      if (AY<RectTab.Top) then
+        R:= M-1
+      else
+      if (AX>=RectTab.Right) then
+        L:= M+1
+      else
+        R:= M-1;
+    end;
+  finally
+    FreeAndNil(VisTabs);
   end;
 end;
+
 
 procedure TATTabs.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: integer);
 var
