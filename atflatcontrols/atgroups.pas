@@ -540,7 +540,7 @@ begin
     for i:= 0 to FTabs.TabCount-1 do
     begin
       D:= FTabs.GetTabData(i);
-      if D<>nil then
+      if Assigned(D) and Assigned(D.TabObject) then
       begin
         Ctl:= D.TabObject as TWinControl;
         Ctl.Visible:= i=FTabs.TabIndex;
@@ -551,7 +551,7 @@ begin
   end;
 
   D:= FTabs.GetTabData(FTabs.TabIndex);
-  if D<>nil then
+  if Assigned(D) and Assigned(D.TabObject) then
   begin
     Ctl:= D.TabObject as TWinControl;
     if Ctl.Showing then
