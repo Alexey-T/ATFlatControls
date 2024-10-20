@@ -3781,22 +3781,22 @@ function TATTabs.DeleteTab(AIndex: integer;
   //
   procedure _ActivateRecentTab;
   var
-    Idx, i: integer;
+    NIndex, i: integer;
     Tick, TickMax: Int64;
   begin
     TickMax:= 0;
-    Idx:= -1;
+    NIndex:= -1;
     for i:= 0 to TabCount-1 do
     begin
       Tick:= GetTabTick(i);
       if Tick>TickMax then
       begin
         TickMax:= Tick;
-        Idx:= i;
+        NIndex:= i;
       end;
     end;
-    if Idx>=0 then
-      SetTabIndex(Idx)
+    if NIndex>=0 then
+      SetTabIndex(NIndex)
     else
       _ActivateRightTab;
   end;
