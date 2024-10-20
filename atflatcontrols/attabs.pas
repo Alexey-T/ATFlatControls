@@ -3796,7 +3796,12 @@ function TATTabs.DeleteTab(AIndex: integer;
       end;
     end;
     if NIndex>=0 then
-      SetTabIndex(NIndex)
+    begin
+      Dec(NIndex);
+      IncrementTabIndexUntilVisible(NIndex, 1);
+      if IsIndexOk(NIndex) then
+        SetTabIndex(NIndex);
+    end
     else
       _ActivateRightTab;
   end;
