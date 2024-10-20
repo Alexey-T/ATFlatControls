@@ -688,6 +688,7 @@ type
     function GetRectOfButton(AButton: TATTabButton): TRect;
     function GetRectOfButtonIndex(AIndex: integer; AtLeft: boolean): TRect;
     function GetScrollPageSize: integer;
+    procedure IncrementTabIndexUntilVisible(var AIndex: integer; AIncrement: integer);
     function IsDraggingAllowed: boolean;
     procedure SetOptButtonLayout(const AValue: string);
     procedure SetOptScalePercents(AValue: integer);
@@ -3731,21 +3732,51 @@ begin
     FOnTabMove(Self, -1, AIndex);
 end;
 
+procedure TATTabs.IncrementTabIndexUntilVisible(var AIndex: integer; AIncrement: integer);
+var
+  Data: TATTabData;
+begin
+  repeat
+    Inc(AIndex, AIncrement);
+    if not IsIndexOk(AIndex) then Break;
+    Data:= GetTabData(AIndex);
+    if Data=nil then Break;
+    if Data.TabVisible then Break;
+  until false;
+end;
+
 function TATTabs.DeleteTab(AIndex: integer;
   AAllowEvent, AWithCancelBtn: boolean;
   AAction: TATTabActionOnClose=aocDefault;
   AReason: TATTabDeletionReason=adrNone): boolean;
   //
   procedure _ActivateRightTab;
+  var
+    NIndex: integer = -1;
+    bDisableEvent: boolean = false;
   begin
     if FTabIndex>AIndex then
-      SetTabIndexEx(FTabIndex-1, true)
+    begin
+      NIndex:= FTabIndex;
+      IncrementTabIndexUntilVisible(NIndex, -1);
+      bDisableEvent:= true;
+    end
     else
     if (FTabIndex=AIndex) and (FTabIndex>0) and (FTabIndex>=TabCount) then
-      SetTabIndex(FTabIndex-1)
+    begin
+      NIndex:= FTabIndex;
+      IncrementTabIndexUntilVisible(NIndex, -1);
+    end
     else
     if FTabIndex=AIndex then
-      SetTabIndex(FTabIndex);
+    begin
+      NIndex:= FTabIndex-1;
+      IncrementTabIndexUntilVisible(NIndex, 1);
+    end
+    else
+      Exit;
+    if IsIndexOk(NIndex) then
+      SetTabIndexEx(NIndex, bDisableEvent);
   end;
   //
   procedure _ActivateRecentTab;
