@@ -738,7 +738,6 @@ type
     function GetTabData(AIndex: integer): TATTabData;
     function GetTabLastVisibleIndex: integer;
     function TabCount: integer;
-    function FindNearestVisibleTab(AIndex: integer): integer;
     property TabDeletionReason: TATTabDeletionReason read FTabDeletionReason;
     function AddTab(
       AIndex: integer;
@@ -3129,27 +3128,6 @@ begin
 end;
 
 
-function TATTabs.FindNearestVisibleTab(AIndex: integer): integer;
-var
-  D: TATTabData;
-  i: integer;
-begin
-  for i:= AIndex to TabCount-1 do
-  begin
-    D:= GetTabData(i);
-    if Assigned(D) and D.TabVisible then
-      Exit(i);
-  end;
-  for i:= AIndex-1 downto 0 do
-  begin
-    D:= GetTabData(i);
-    if Assigned(D) and D.TabVisible then
-      Exit(i);
-  end;
-  Result:= cTabIndexNone;
-end;
-
-
 function TATTabs.GetTabAt(AX, AY: integer; out APressedX: boolean;
   AForDragDrop: boolean=false): integer;
 var
@@ -3250,6 +3228,7 @@ begin
 
   //normal tab?
   VisTabs:= TStringList.Create;
+  VisTabs.Capacity:= NCount; //makes less mem reallocs
   for L:= 0 to NCount-1 do
   begin
     Data:= GetTabData(L);
@@ -4174,7 +4153,10 @@ end;
 function TATTabs.GetTabVisibleX(AIndex: integer; const D: TATTabData): boolean;
 begin
   if Width<FOptMinimalWidthForSides then
-    exit(false);
+  begin
+    Result:= false;
+    exit;
+  end;
 
   case FOptShowXButtons of
     atbxShowNone:
