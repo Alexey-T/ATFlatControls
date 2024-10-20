@@ -3282,7 +3282,7 @@ begin
               end;
             end;
           end;
-          Exit;
+          Break;
       end;
 
       if (AY>=RectTab.Bottom) then
