@@ -3938,10 +3938,16 @@ begin
     // tab or - if there are none - to the first
     if AIndex=TabIndex then
     begin
-      if IsIndexOk(AIndex+1) then
-        SetTabIndex(AIndex+1)
+      IncrementTabIndexUntilVisible(AIndex, 1);
+      if IsIndexOk(AIndex) then
+        SetTabIndex(AIndex)
       else
-        SetTabIndex(0);
+      begin
+        AIndex:= -1;
+        IncrementTabIndexUntilVisible(AIndex, 1);
+        if IsIndexOk(AIndex) then
+          SetTabIndex(AIndex);
+      end;
     end;
   end;
 end;
