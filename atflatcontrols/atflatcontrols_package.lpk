@@ -24,7 +24,7 @@
 - ATStatusbar
 and several simple controls."/>
     <License Value="MPL 2.0, LGPL"/>
-    <Version Major="2" Minor="2" Release="1"/>
+    <Version Major="2" Minor="3" Release="0"/>
     <Files Count="15">
       <Item1>
         <Filename Value="atbuttons.pas"/>
