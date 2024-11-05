@@ -688,7 +688,7 @@ end;
 
 function TATStatus.GetPanelRect(AIndex: integer): TRect;
 begin
-  if (AIndex>=0) and (AIndex<High(FPanelRects)) then
+  if (AIndex>=0) and (AIndex<=High(FPanelRects)) then
     Result:= FPanelRects[AIndex]
   else
     Result:= Rect(0, 0, 0, 0);
