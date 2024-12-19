@@ -12,12 +12,14 @@ unit ATButtons;
 interface
 
 uses
+  {$ifdef windows}
+  Windows, Messages,
+  {$endif}
   Classes, SysUtils, Graphics, Controls, Menus,
   Types, Math, Forms, ExtCtrls,
   {$ifdef FPC}
   LCLType,
   {$else}
-  Windows, Messages,
   System.UITypes, //solve H2443 Inline function 'CanvasLine' has not been expanded
   {$endif}
   ATFlatThemes,
@@ -137,6 +139,9 @@ type
     {$else}
     procedure DoMouseEnter; dynamic;
     procedure DoMouseLeave; dynamic;
+    {$endif}
+    {$ifdef windows}
+    procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
     {$endif}
 
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
@@ -1004,6 +1009,27 @@ begin
       Result:= FItems[AIndex];
   end;
 end;
+
+{$ifdef windows}
+procedure TATButton.WMEraseBkgnd(var Message: TWMEraseBkgnd);
+var
+  R: TRect;
+begin
+  //to avoid flickering with white on app startup
+  if Message.DC<>0 then
+  begin
+    Brush.Color:= Color;
+    R.Left:= 0;
+    R.Top:= 0;
+    R.Width:= Width;
+    R.Height:= Height;
+    Windows.FillRect(Message.DC, R, Brush.Reference.Handle);
+  end;
+
+  //to remove flickering on resize and mouse-over
+  Message.Result:= 1;
+end;
+{$endif}
 
 end.
 
