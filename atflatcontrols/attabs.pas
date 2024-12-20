@@ -986,7 +986,9 @@ uses
 const
   cSmoothScale = 5;
 var
-  cRect0: TRect;
+  cRect0: TRect = (Left: 0; Top: 0; Right: 0; Bottom: 0);
+var
+  ATTabsEraseBkgnd: boolean = true;
 
 procedure AddTabButton(var Buttons: TATTabButtons; Id: TATTabButton; Size: integer);
 begin
@@ -1558,6 +1560,8 @@ begin
   Canvas.Font.Color:= clRed;
   Canvas.TextOut(0, 0, IntToStr(FPaintCount));;
   {$endif}
+
+  ATTabsEraseBkgnd:= false;
 end;
 
 procedure _PaintMaybeCircle(C: TCanvas; X1, Y1, X2, Y2: integer);
@@ -3976,7 +3980,7 @@ var
   R: TRect;
 begin
   //to avoid flickering with white on app startup
-  if Message.DC<>0 then
+  if ATTabsEraseBkgnd and (Message.DC<>0) then
   begin
     Brush.Color:= ColorBg;
     R.Left:= 0;
@@ -5326,7 +5330,6 @@ end;
 
 
 initialization
-  cRect0:= Rect(0, 0, 0, 0);
 
   {$if defined(LCLQt5) or defined(LCLQt6) or defined(darwin)}
   ATTabsStretchDrawEnabled:= false;
