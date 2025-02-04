@@ -233,7 +233,7 @@ begin
   OldWidth:= C.Pen.Width;
 
   X:= (R.Left+R.Right) div 2;
-  C.Pen.Mode:= {$ifdef darwin} pmNot {$else} pmNotXor {$endif};
+  C.Pen.Mode:= {$if defined(LCLCocoa) or defined(LCLGtk3)} pmNot {$else} pmNotXor {$endif};
   C.Pen.Style:= psSolid;
   C.Pen.Color:= AColor;
   C.AntialiasingMode:= amOff;
