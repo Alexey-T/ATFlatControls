@@ -533,18 +533,22 @@ var
   OldPenWidth: integer;
   {$ifdef fpc}
   OldPenCap: TPenEndCap;
+  OldPenJoin: TPenJoinStyle;
   {$endif}
 begin
   OldPenWidth:= C.Pen.Width;
   {$ifdef fpc}
   OldPenCap:= C.Pen.EndCap;
+  OldPenJoin:= C.Pen.JoinStyle;
   {$endif}
 
   C.Brush.Color:= AColorBG;
   C.Pen.Color:= AColorBorder;
   C.Pen.Width:= APenWidth;
+
   {$ifdef fpc}
   C.Pen.EndCap:= pecFlat;
+  C.Pen.JoinStyle:= pjsMiter; //make rectangle edges sharp
   {$endif}
 
   C.Rectangle(ACenter.X-ASize, ACenter.Y-ASize, ACenter.X+ASize+1, ACenter.Y+ASize+1);
@@ -562,8 +566,10 @@ begin
   end;
 
   C.Pen.Width:= OldPenWidth;
+
   {$ifdef fpc}
   C.Pen.EndCap:= OldPenCap;
+  C.Pen.JoinStyle:= OldPenJoin;
   {$endif}
 end;
 
