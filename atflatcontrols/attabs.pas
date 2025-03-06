@@ -619,7 +619,6 @@ type
     FPic_Arrow_D_a: TATTabsPicture;
 
     FOnTabClick: TNotifyEvent;
-    FOnTabChanged: TNotifyEvent;
     FOnTabPlusClick: TNotifyEvent;
     FOnTabClickUserButton: TATTabClickUserButton;
     FOnTabClose: TATTabCloseEvent;
@@ -952,7 +951,6 @@ type
 
     //events
     property OnTabClick: TNotifyEvent read FOnTabClick write FOnTabClick;
-    property OnTabChanged: TNotifyEvent read FOnTabChanged write FOnTabChanged;
     property OnTabPlusClick: TNotifyEvent read FOnTabPlusClick write FOnTabPlusClick;
     property OnTabClickUserButton: TATTabClickUserButton read FOnTabClickUserButton write FOnTabClickUserButton;
     property OnTabClose: TATTabCloseEvent read FOnTabClose write FOnTabClose;
@@ -3925,9 +3923,6 @@ begin
     begin
       if Assigned(FOnTabClick) then
         FOnTabClick(Self);
-
-      if Assigned(FOnTabChanged) {and bTabChanged} then //do not test bTabChanged: on closing the active tab, bTabChanged=False
-        FOnTabChanged(Self);
     end;
   end;
 end;
