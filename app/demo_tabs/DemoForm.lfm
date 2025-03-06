@@ -11,21 +11,21 @@ object Form1: TForm1
   Font.Height = -13
   Font.Name = 'Default'
   Position = poScreenCenter
-  LCLVersion = '3.99.0.0'
+  LCLVersion = '4.99.0.0'
   OnCreate = FormCreate
   OnShow = FormShow
   object Label1: TLabel
     Left = 128
-    Height = 16
+    Height = 17
     Top = 512
-    Width = 325
+    Width = 326
     Caption = 'Note: enabled drag-drop from top tabs to bottom tabs'
   end
   object labStatus: TLabel
     Left = 128
-    Height = 16
+    Height = 17
     Top = 528
-    Width = 40
+    Width = 38
     Caption = 'Status:'
   end
   object btnAdd: TButton
@@ -75,7 +75,7 @@ object Form1: TForm1
   end
   object EditInfo: TEdit
     Left = 408
-    Height = 32
+    Height = 25
     Top = 448
     Width = 209
     TabOrder = 9
@@ -114,33 +114,33 @@ object Form1: TForm1
     Top = 104
     Width = 160
     Caption = 'bottom tabs'
-    ClientHeight = 95
-    ClientWidth = 158
+    ClientHeight = 90
+    ClientWidth = 156
     ParentBackground = False
     TabOrder = 1
     object chkNums_Bottom: TCheckBox
       Left = 6
-      Height = 23
+      Height = 21
       Top = 56
-      Width = 111
+      Width = 103
       Caption = 'show numbers'
       TabOrder = 2
       OnChange = chkNums_BottomChange
     end
     object chkVarSize_Bottom: TCheckBox
       Left = 6
-      Height = 23
+      Height = 21
       Top = 32
-      Width = 81
+      Width = 71
       Caption = 'var width'
       TabOrder = 1
       OnChange = chkVarSize_BottomChange
     end
     object chkMultiline_Bottom: TCheckBox
       Left = 6
-      Height = 23
+      Height = 21
       Top = 8
-      Width = 81
+      Width = 71
       Caption = 'multi-line'
       TabOrder = 0
       OnChange = chkMultiline_BottomChange
@@ -152,15 +152,15 @@ object Form1: TForm1
     Top = 104
     Width = 496
     Caption = 'top tabs'
-    ClientHeight = 287
-    ClientWidth = 494
+    ClientHeight = 282
+    ClientWidth = 492
     ParentBackground = False
     TabOrder = 0
     object chkShowPlus: TCheckBox
       Left = 8
-      Height = 23
+      Height = 21
       Top = 7
-      Width = 66
+      Width = 60
       Caption = '"+" tab'
       Checked = True
       State = cbChecked
@@ -169,26 +169,26 @@ object Form1: TForm1
     end
     object chkShowFullColor: TCheckBox
       Left = 83
-      Height = 23
+      Height = 21
       Top = 7
-      Width = 80
+      Width = 69
       Caption = 'color full'
       TabOrder = 1
       OnChange = chkShowFullColorChange
     end
     object Label4: TLabel
       Left = 344
-      Height = 16
+      Height = 17
       Top = 39
       Width = 50
       Caption = '"x" icons'
     end
     object comboShowX: TComboBox
       Left = 173
-      Height = 28
+      Height = 25
       Top = 36
       Width = 160
-      ItemHeight = 0
+      ItemHeight = 17
       Items.Strings = (
         'none'
         'all tabs'
@@ -202,18 +202,18 @@ object Form1: TForm1
     end
     object Label5: TLabel
       Left = 344
-      Height = 16
+      Height = 17
       Top = 68
-      Width = 80
+      Width = 77
       Caption = 'button layout'
     end
     object comboLayout: TComboBox
       Left = 173
-      Height = 28
+      Height = 25
       Top = 68
       Width = 160
       DropDownCount = 20
-      ItemHeight = 0
+      ItemHeight = 17
       Items.Strings = (
         ''
         ',v'
@@ -228,36 +228,36 @@ object Form1: TForm1
     end
     object chkShowFlat: TCheckBox
       Left = 8
-      Height = 23
+      Height = 21
       Top = 31
-      Width = 47
+      Width = 36
       Caption = 'flat'
       TabOrder = 2
       OnChange = chkShowFlatChange
     end
     object chkCenterCaption: TCheckBox
       Left = 8
-      Height = 23
+      Height = 21
       Top = 128
-      Width = 110
+      Width = 101
       Caption = 'center caption'
       TabOrder = 8
       OnChange = chkCenterCaptionChange
     end
     object Label6: TLabel
       Left = 344
-      Height = 16
+      Height = 17
       Top = 100
-      Width = 70
+      Width = 69
       Caption = 'icons layout'
     end
     object comboIconPos: TComboBox
       Left = 173
-      Height = 28
+      Height = 25
       Top = 100
       Width = 160
       DropDownCount = 20
-      ItemHeight = 0
+      ItemHeight = 17
       Items.Strings = (
         'icon lefter than text'
         'icon righter than text'
@@ -271,9 +271,9 @@ object Form1: TForm1
     end
     object chkVarSize: TCheckBox
       Left = 88
-      Height = 23
+      Height = 21
       Top = 80
-      Width = 81
+      Width = 71
       Caption = 'var width'
       Checked = True
       State = cbChecked
@@ -282,44 +282,44 @@ object Form1: TForm1
     end
     object chkMultiline: TCheckBox
       Left = 8
-      Height = 23
+      Height = 21
       Top = 80
-      Width = 81
+      Width = 71
       Caption = 'multi-line'
       TabOrder = 5
       OnChange = chkMultilineChange
     end
     object chkFill: TCheckBox
       Left = 8
-      Height = 23
+      Height = 21
       Top = 104
-      Width = 144
+      Width = 132
       Caption = 'fill entire tabs width'
       TabOrder = 7
       OnChange = chkFillChange
     end
     object chkNewNearCurrent: TCheckBox
       Left = 8
-      Height = 23
+      Height = 21
       Top = 152
-      Width = 147
+      Width = 139
       Caption = 'new tab near current'
       TabOrder = 9
     end
     object Label7: TLabel
       Left = 344
-      Height = 16
+      Height = 17
       Top = 132
-      Width = 132
+      Width = 130
       Caption = 'truncate long captions'
     end
     object comboTruncate: TComboBox
       Left = 173
-      Height = 28
+      Height = 25
       Top = 132
       Width = 160
       DropDownCount = 20
-      ItemHeight = 0
+      ItemHeight = 17
       Items.Strings = (
         'none'
         'dots - left'
@@ -332,9 +332,9 @@ object Form1: TForm1
     end
     object chkAngled: TCheckBox
       Left = 83
-      Height = 23
+      Height = 21
       Top = 31
-      Width = 67
+      Width = 58
       Caption = 'angled'
       Checked = True
       State = cbChecked
@@ -343,27 +343,27 @@ object Form1: TForm1
     end
     object comboThemes: TComboBox
       Left = 173
-      Height = 31
+      Height = 25
       Top = 0
       Width = 160
-      ItemHeight = 0
+      ItemHeight = 17
       Style = csDropDownList
       TabOrder = 10
       OnChange = comboThemesChange
     end
     object LabelThemes: TLabel
       Left = 344
-      Height = 16
+      Height = 17
       Top = 7
-      Width = 43
+      Width = 42
       Caption = 'themes'
     end
     object comboWheelMode: TComboBox
       Left = 173
-      Height = 28
+      Height = 25
       Top = 163
       Width = 160
-      ItemHeight = 0
+      ItemHeight = 17
       Items.Strings = (
         'ignore wheel'
         'wheel: scroll tabs'
@@ -377,21 +377,21 @@ object Form1: TForm1
     end
     object Label10: TLabel
       Left = 344
-      Height = 16
+      Height = 17
       Top = 169
       Width = 114
       Caption = 'mouse wheel mode'
     end
     object Label9: TLabel
       Left = 70
-      Height = 16
+      Height = 17
       Top = 184
-      Width = 80
+      Width = 78
       Caption = 'between tabs'
     end
     object edBetweenTabs: TSpinEdit
       Left = 8
-      Height = 32
+      Height = 25
       Top = 184
       Width = 56
       TabOrder = 16
@@ -399,14 +399,14 @@ object Form1: TForm1
     end
     object Label8: TLabel
       Left = 70
-      Height = 16
+      Height = 17
       Top = 208
-      Width = 72
+      Width = 70
       Caption = 'initial indent'
     end
     object edInitialSpace: TSpinEdit
       Left = 8
-      Height = 32
+      Height = 25
       Top = 208
       Width = 56
       TabOrder = 17
@@ -414,9 +414,9 @@ object Form1: TForm1
     end
     object Label3: TLabel
       Left = 216
-      Height = 16
+      Height = 17
       Top = 232
-      Width = 57
+      Width = 58
       Caption = 'scale in %'
     end
     object BarScale: TTrackBar
@@ -434,9 +434,9 @@ object Form1: TForm1
     end
     object chkRounded: TCheckBox
       Left = 8
-      Height = 23
+      Height = 21
       Top = 56
-      Width = 76
+      Width = 68
       Caption = 'rounded'
       Checked = True
       State = cbChecked
@@ -445,7 +445,7 @@ object Form1: TForm1
     end
     object edBeforeText: TSpinEdit
       Left = 8
-      Height = 32
+      Height = 25
       Top = 232
       Width = 56
       TabOrder = 19
@@ -453,14 +453,14 @@ object Form1: TForm1
     end
     object Label11: TLabel
       Left = 70
-      Height = 16
+      Height = 17
       Top = 236
-      Width = 67
+      Width = 64
       Caption = 'before text'
     end
     object edAfterText: TSpinEdit
       Left = 8
-      Height = 32
+      Height = 25
       Top = 256
       Width = 56
       TabOrder = 20
@@ -468,9 +468,9 @@ object Form1: TForm1
     end
     object Label12: TLabel
       Left = 70
-      Height = 16
+      Height = 17
       Top = 256
-      Width = 56
+      Width = 52
       Caption = 'after text'
     end
   end

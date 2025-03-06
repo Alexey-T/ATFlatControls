@@ -3890,13 +3890,13 @@ procedure TATTabs.SetTabIndexEx(AIndex: integer; ADisableEvent: boolean);
 //note: check "if AIndex=FTabIndex" must not be here, must be in outer funcs.
 //Sometimes SetTabIndex(TabIndex) is used in CudaText: do focus of clicked tab, and in DeleteTab.
 var
-  bCanChange, bDisableEvent, bTabChanged: boolean;
+  bCanChange, bDisableEvent{, bTabChanged}: boolean;
   PrevMousePos, NextMousePos: TPoint;
 begin
   if csLoading in ComponentState then
     FTabIndexLoaded:= AIndex;
   bDisableEvent:= (csLoading in ComponentState) or ADisableEvent;
-  bTabChanged:= AIndex<>FTabIndex;
+  //bTabChanged:= AIndex<>FTabIndex;
 
   if IsIndexOk(AIndex) then
   begin
@@ -3926,7 +3926,7 @@ begin
       if Assigned(FOnTabClick) then
         FOnTabClick(Self);
 
-      if Assigned(FOnTabChanged) and bTabChanged then
+      if Assigned(FOnTabChanged) {and bTabChanged} then //do not test bTabChanged: on closing the active tab, bTabChanged=False
         FOnTabChanged(Self);
     end;
   end;

@@ -119,6 +119,7 @@ type
       var ACanDrop: boolean);
     procedure TabMove(Sender: TObject; NFrom, NTo: Integer);
     procedure TabClick(Sender: TObject);
+    procedure TabChanged(Sender: TObject);
     procedure TabPlusClick(Sender: TObject);
     procedure Tab2PlusClick(Sender: TObject);
     procedure Tab3PlusClick(Sender: TObject);
@@ -164,6 +165,7 @@ begin
   t_top.ColorBg:= $a0e0a0;
   t_top.ColorFont:= $E0E0E0;
   t_top.OnTabClick:= TabClick;
+  t_top.OnTabChanged:= TabChanged;
   t_top.OnTabPlusClick:= TabPlusClick;
   t_top.OnTabChangeQuery:=TabChangeQuery;
   t_top.OnTabClose:= TabClose;
@@ -580,6 +582,11 @@ begin
   else
     EditInfo.Text:= '';
   LockEdit:= false;
+end;
+
+procedure TForm1.TabChanged(Sender: TObject);
+begin
+  if Random(0)=2 then ;
 end;
 
 procedure TForm1.TabPlusClick(Sender: TObject);
