@@ -952,7 +952,7 @@ type
 
     //events
     property OnTabClick: TNotifyEvent read FOnTabClick write FOnTabClick;
-    property OnTabChanged: TNotifyEvent read FOnTabChanged write FOnTabChanged;           // aducom
+    property OnTabChanged: TNotifyEvent read FOnTabChanged write FOnTabChanged;
     property OnTabPlusClick: TNotifyEvent read FOnTabPlusClick write FOnTabPlusClick;
     property OnTabClickUserButton: TATTabClickUserButton read FOnTabClickUserButton write FOnTabClickUserButton;
     property OnTabClose: TATTabCloseEvent read FOnTabClose write FOnTabClose;

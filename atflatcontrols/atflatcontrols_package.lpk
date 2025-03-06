@@ -12,6 +12,17 @@
         <IncludeFiles Value="res"/>
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
+      <CodeGeneration>
+        <Checks>
+          <RangeChecks Value="True"/>
+          <OverflowChecks Value="True"/>
+        </Checks>
+      </CodeGeneration>
+      <Linking>
+        <Debugging>
+          <DebugInfoType Value="dsDwarf2Set"/>
+        </Debugging>
+      </Linking>
     </CompilerOptions>
     <Description Value="Custom-drawn controls, used in CudaText:
 - ATTabs
@@ -24,7 +35,7 @@
 - ATStatusbar
 and several simple controls."/>
     <License Value="MPL 2.0, LGPL"/>
-    <Version Major="2" Minor="3" Release="0"/>
+    <Version Major="2" Minor="3"/>
     <Files Count="15">
       <Item1>
         <Filename Value="atbuttons.pas"/>
