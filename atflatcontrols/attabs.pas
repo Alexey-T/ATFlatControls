@@ -254,7 +254,7 @@ type
   TATTabCloseEvent = procedure (Sender: TObject; ATabIndex: integer;
     var ACanClose, ACanContinue: boolean) of object;
     //ACanClose: handler must set to True to allow closing of the current tab.
-    //ACanContinue: handler must set to True to allow closing of other tabs, for the mass closing request.
+    //ACanContinue: handler must set to True to allow closing of other tabs, for the mass closing request (e.g. "Close all tabs" / "Close other tabs").
   TATTabMenuEvent = procedure (Sender: TObject; var ACanShow: boolean) of object;
   TATTabDrawEvent = procedure (Sender: TObject;
     AElemType: TATTabElemType; ATabIndex: integer;
