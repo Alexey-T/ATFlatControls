@@ -135,12 +135,12 @@ type
     property TabColorOver: TColor read FTabColorOver write SetTabColorOver default clNone;
     property TabFontColor: TColor read FTabFontColor write SetTabFontColor default clNone;
     property TabModified: boolean read FTabModified write FTabModified default false;
-    property TabModified2: boolean read FTabModified2 write FTabModified2 default false;
-    property TabExtModified: boolean read FTabExtModified write FTabExtModified default false;
-    property TabExtModified2: boolean read FTabExtModified2 write FTabExtModified2 default false;
-    property TabExtDeleted: boolean read FTabExtDeleted write FTabExtDeleted default false;
-    property TabExtDeleted2: boolean read FTabExtDeleted2 write FTabExtDeleted2 default false;
-    property TabTwoDocuments: boolean read FTabTwoDocuments write FTabTwoDocuments default false;
+    property TabModified2: boolean read FTabModified2 write FTabModified2 default false; //For CudaText. Shows Modified-state for the paired editor, ie the 2nd editor embedded into the same ui-tab.
+    property TabExtModified: boolean read FTabExtModified write FTabExtModified default false; //For CudaText. Shows that tab's file was modified from external program.
+    property TabExtModified2: boolean read FTabExtModified2 write FTabExtModified2 default false; //For CudaText. Like TabExtModified but for the paired editor.
+    property TabExtDeleted: boolean read FTabExtDeleted write FTabExtDeleted default false; //For CudaText. Shows that tab's file was deleted from external program.
+    property TabExtDeleted2: boolean read FTabExtDeleted2 write FTabExtDeleted2 default false; //For CudaText. Like TabExtDeleted but for the paired editor.
+    property TabTwoDocuments: boolean read FTabTwoDocuments write FTabTwoDocuments default false; //For CudaText. Shows that tab contains 2 editor objects (main + paired).
     property TabImageIndex: TImageIndex read FTabImageIndex write SetTabImageIndex default -1;
     property TabFontStyle: TFontStyles read FTabFontStyle write FTabFontStyle default [];
     property TabPopupMenu: TPopupMenu read FTabPopupMenu write FTabPopupMenu;
@@ -253,6 +253,8 @@ type
   TATTabOverEvent = procedure (Sender: TObject; ATabIndex: integer) of object;
   TATTabCloseEvent = procedure (Sender: TObject; ATabIndex: integer;
     var ACanClose, ACanContinue: boolean) of object;
+    //ACanClose: handler must set to True to allow closing of the current tab.
+    //ACanContinue: handler must set to True to allow closing of other tabs, for the mass closing request.
   TATTabMenuEvent = procedure (Sender: TObject; var ACanShow: boolean) of object;
   TATTabDrawEvent = procedure (Sender: TObject;
     AElemType: TATTabElemType; ATabIndex: integer;
