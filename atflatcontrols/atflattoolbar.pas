@@ -104,6 +104,7 @@ begin
   Width:= 200;
   Height:= 20;
   Caption:= '';
+  Color:= clBtnFace;
   FImages:= nil;
   FVertical:= false;
   FButtonWidth:= 50;
