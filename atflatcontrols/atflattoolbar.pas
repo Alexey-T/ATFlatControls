@@ -514,7 +514,10 @@ begin
   //to avoid flickering with white on app startup
   if Message.DC<>0 then
   begin
-    Brush.Color:= Color;
+    if ParentColor and Assigned(Parent) then
+      Brush.Color:= Parent.GetColorResolvingParent
+    else
+      Brush.Color:= Color;
     R.Left:= 0;
     R.Top:= 0;
     R.Width:= Width;
