@@ -436,10 +436,12 @@ begin
   if AImageIndex>=0 then
   begin
     if b.Caption<>'' then
+    begin
       if Vertical then
         b.Kind:= abuTextIconVert
       else
-        b.Kind:= abuTextIconHorz
+        b.Kind:= abuTextIconHorz;
+    end
     else
       b.Kind:= abuIconOnly;
   end
