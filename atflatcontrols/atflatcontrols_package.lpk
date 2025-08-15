@@ -12,6 +12,11 @@
         <IncludeFiles Value="res"/>
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
+      <Parsing>
+        <SyntaxOptions>
+          <IncludeAssertionCode Value="True"/>
+        </SyntaxOptions>
+      </Parsing>
       <CodeGeneration>
         <Checks>
           <RangeChecks Value="True"/>

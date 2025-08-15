@@ -91,7 +91,7 @@ type
     FItems: TStringList;
     FItemsShort: TStringList;
     FItemIndex: integer;
-    FPopup: TPopupMenu;
+    FPopupChoices: TPopupMenu;
     FPadding: integer;
     FPaddingBig: integer;
     FTheme: PATFlatTheme;
@@ -974,10 +974,10 @@ var
   i: integer;
   P: TPoint;
 begin
-  if not Assigned(FPopup) then
-    FPopup:= TPopupMenu.Create(Self);
+  if not Assigned(FPopupChoices) then
+    FPopupChoices:= TPopupMenu.Create(Self);
 
-  FPopup.Items.Clear;
+  FPopupChoices.Items.Clear;
   for i:= 0 to FItems.Count-1 do
   begin
     mi:= TMenuItem.Create(Self);
@@ -988,11 +988,11 @@ begin
 
     mi.OnClick:= DoChoiceClick;
 
-    FPopup.Items.Add(mi);
+    FPopupChoices.Items.Add(mi);
   end;
 
   P:= ClientToScreen(Point(0, Height));
-  FPopup.PopUp(P.X, P.Y);
+  FPopupChoices.PopUp(P.X, P.Y);
 end;
 
 function TATButton.GetTextItem(AIndex: integer; const ADefault: string): string;
