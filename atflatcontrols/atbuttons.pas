@@ -91,6 +91,7 @@ type
     FItems: TStringList;
     FItemsShort: TStringList;
     FItemIndex: integer;
+    FPopupDropdown: TPopupMenu;
     FPopupChoices: TPopupMenu;
     FPadding: integer;
     FPaddingBig: integer;
@@ -159,6 +160,7 @@ type
     function CanFocus: boolean; override;
     function IsPressed: boolean;
     property IsMouseOver: boolean read FOver;
+    property PopupDropdown: TPopupMenu read FPopupDropdown write FPopupDropdown;
     property DataString: string read FDataString write FDataString;
     property DataString2: string read FDataString2 write FDataString2;
     property DataString3: string read FDataString3 write FDataString3;
@@ -335,11 +337,20 @@ begin
 end;
 
 procedure TATButton.Click;
+var
+  P: TPoint;
 begin
   if FKind=abuTextChoice then
   begin
     ShowChoiceMenu;
     exit
+  end;
+
+  if Assigned(FPopupDropdown) then
+  begin
+    P:= ClientToScreen(Point(0, Height));
+    FPopupDropdown.Popup(P.X, P.Y);
+    exit;
   end;
 
   inherited;

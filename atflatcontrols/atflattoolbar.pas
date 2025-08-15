@@ -31,7 +31,6 @@ type
     FThemed: boolean; //for use in CudaText
     FWrapable: boolean;
     FOnMouseMove: TMouseMoveEvent;
-    procedure PopupForDropdownClick(Sender: TObject);
     function GetButton(AIndex: integer): TATButton;
     procedure SetButtonWidth(AValue: integer);
     procedure SetVertical(AValue: boolean);
@@ -426,19 +425,13 @@ begin
   b.DataString:= ADataString;
   b.ShowHint:= true;
   b.Flat:= true;
-  b.PopupMenu:= AMenu;
+  b.PopupDropdown:= AMenu;
   b.Arrow:= true;
   if (b.Caption='') and (AImageIndex<0) then
     b.ArrowAlign:= taCenter
   else
     b.ArrowAlign:= taRightJustify;
-
-  {$ifdef FPC}
-  if not Assigned(ADropdownEvent) then
-    b.OnClick:= PopupForDropdownClick
-  else
-  {$endif}
-    b.OnClick:= ADropdownEvent;
+  b.OnClick:= ADropdownEvent;
 
   if AImageIndex>=0 then
   begin
@@ -493,18 +486,6 @@ begin
   else
     b.Kind:= abuSeparatorHorz;
   b.Enabled:= false;
-end;
-
-type TControlHack = class(TControl);
-
-procedure TATFlatToolbar.PopupForDropdownClick(Sender: TObject);
-var
-  C: TControl;
-  P: TPoint;
-begin
-  C:= Sender as TControl;
-  P:= C.ClientToScreen(Point(0, C.Height));
-  TControlHack(C).PopupMenu.PopUp(P.X, P.Y);
 end;
 
 {$ifdef windows}
