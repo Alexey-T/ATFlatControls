@@ -67,7 +67,8 @@ procedure CanvasArrowWrapped(C: TCanvas;
   AColorFont: TColor;
   ALengthScale: integer;
   AWidthScale: integer;
-  APointerScale: integer);
+  APointerScale: integer;
+  AWithInitialHorzPart: boolean);
 
 procedure CanvasPilcrowChar(C: TCanvas;
   const ARect: TRect;
@@ -468,7 +469,8 @@ procedure CanvasArrowWrapped(C: TCanvas;
   AColorFont: TColor;
   ALengthScale: integer;
   AWidthScale: integer;
-  APointerScale: integer);
+  APointerScale: integer;
+  AWithInitialHorzPart: boolean);
 var
   Len, W, X1, X2, Y1, Y2, Dx: integer;
 begin
@@ -482,8 +484,11 @@ begin
   Y1:= (ARect.Bottom+ARect.Top-Len) div 2;
   Y2:= Y1+Len-1;
 
-  //C.MoveTo(X1, Y1);
-  //C.LineTo(X2, Y1);
+  if AWithInitialHorzPart then
+  begin
+    C.MoveTo(X1, Y1);
+    C.LineTo(X2, Y1);
+  end;
   C.MoveTo(X2, Y1);
   C.LineTo(X2, Y2+1);
   C.MoveTo(X1, Y2);
