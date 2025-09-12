@@ -219,7 +219,7 @@ type
     procedure DoMouseLeave; dynamic;
     {$endif}
     {$ifdef windows}
-    procedure WMEraseBkgnd(var Message: TMessage); message WM_ERASEBKGND;
+    procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
     {$endif}
   published
     {$ifndef FPC}
@@ -601,10 +601,23 @@ begin
   Invalidate;
 end;
 
-//needed to remove flickering on resize and mouse-over
 {$ifdef windows}
-procedure TATScrollbar.WMEraseBkgnd(var Message: TMessage);
+procedure TATScrollbar.WMEraseBkgnd(var Message: TWMEraseBkgnd);
+var
+  R: TRect;
 begin
+  //to avoid flickering with white on app startup
+  if (Message.DC<>0) then
+  begin
+    Brush.Color:= ATScrollbarTheme.ColorBG;
+    R.Left:= 0;
+    R.Top:= 0;
+    R.Width:= Width;
+    R.Height:= Height;
+    Windows.FillRect(Message.DC, R, Brush.Reference.Handle);
+  end;
+
+  //to remove flickering on resize and mouse-over
   Message.Result:= 1;
 end;
 {$endif}
