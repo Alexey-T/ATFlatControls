@@ -172,7 +172,7 @@ type
     procedure MouseLeave; {$ifdef fpc}override;{$endif}
     procedure Click; override;
     {$ifdef windows}
-    procedure WMEraseBkgnd(var Message: TMessage); message WM_ERASEBKGND;
+    procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
     {$endif}
 
   published
@@ -830,9 +830,25 @@ begin
 end;
 
 {$ifdef windows}
-//needed to remove flickering on resize and mouse-over
-procedure TATStatus.WMEraseBkgnd(var Message: TMessage);
+procedure TATStatus.WMEraseBkgnd(var Message: TWMEraseBkgnd);
+var
+  R: TRect;
 begin
+  //to avoid flickering with white on app startup
+  if Message.DC<>0 then
+  begin
+    if ParentColor and Assigned(Parent) then
+      Brush.Color:= Parent.Brush.Color
+    else
+      Brush.Color:= Color;
+    R.Left:= 0;
+    R.Top:= 0;
+    R.Width:= Width;
+    R.Height:= Height;
+    Windows.FillRect(Message.DC, R, Brush.Reference.Handle);
+  end;
+
+  //to remove flickering on resize and mouse-over
   Message.Result:= 1;
 end;
 {$endif}
