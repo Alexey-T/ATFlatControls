@@ -250,6 +250,7 @@ type
   end;
 
 type
+  TATTabMenuPopupEvent = procedure(Sender: TPopupMenu) of object;
   TATTabOverEvent = procedure (Sender: TObject; ATabIndex: integer) of object;
   TATTabCloseEvent = procedure (Sender: TObject; ATabIndex: integer;
     var ACanClose, ACanContinue: boolean) of object;
@@ -630,6 +631,7 @@ type
     FOnTabEmpty: TNotifyEvent;
     FOnTabOver: TATTabOverEvent;
     FOnTabMove: TATTabMoveEvent;
+    FOnTabMenuPopup: TATTabMenuPopupEvent;
     FOnTabChangeQuery: TATTabChangeQueryEvent;
     FOnTabGetTick: TATTabGetTickEvent;
     FOnTabGetCloseAction: TATTabGetCloseActionEvent;
@@ -962,6 +964,7 @@ type
     property OnTabEmpty: TNotifyEvent read FOnTabEmpty write FOnTabEmpty;
     property OnTabOver: TATTabOverEvent read FOnTabOver write FOnTabOver;
     property OnTabMove: TATTabMoveEvent read FOnTabMove write FOnTabMove;
+    property OnTabMenuPopup: TATTabMenuPopupEvent read FOnTabMenuPopup write FOnTabMenuPopup;
     property OnTabChangeQuery: TATTabChangeQueryEvent read FOnTabChangeQuery write FOnTabChangeQuery;
     property OnTabGetTick: TATTabGetTickEvent read FOnTabGetTick write FOnTabGetTick;
     property OnTabGetCloseAction: TATTabGetCloseActionEvent read FOnTabGetCloseAction write FOnTabGetCloseAction;
@@ -4166,6 +4169,10 @@ begin
       FTabMenu.Items.Add(mi);
     end;
   end;
+
+  if Assigned(FOnTabMenuPopup) then
+    FOnTabMenuPopup(FTabMenu);
+
   P:= Point(FRectArrowDown.Left, FRectArrowDown.Bottom);
   P:= ClientToScreen(P);
   FTabMenu.Popup(P.X, P.Y);

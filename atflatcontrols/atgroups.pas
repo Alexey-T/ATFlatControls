@@ -238,10 +238,12 @@ type
     FOnEmpty: TNotifyEvent;
     FOnTabGetTick: TATTabGetTickEvent;
     FOnTabDblClick: TATTabDblClickEvent;
+    FOnTabMenuPopup: TATTabMenuPopupEvent;
     FPopupPages: TATPages;
     FPopupTabIndex: Integer;
     function GetImages: TImageList;
     procedure SetImages(AValue: TImageList);
+    procedure SetOnTabMenuPopup(AValue: TATTabMenuPopupEvent);
     procedure SetSplitterMinSize(AValue: integer);
     procedure SetSplitterResizeStyle(AValue: TResizeStyle);
     procedure SetSplitterColor(AValue: TColor);
@@ -342,6 +344,7 @@ type
     property OnTabMove: TATTabMoveEvent read FOnTabMove write FOnTabMove;
     property OnTabGetTick: TATTabGetTickEvent read FOnTabGetTick write FOnTabGetTick;
     property OnTabDblClick: TATTabDblClickEvent read FOnTabDblClick write FOnTabDblClick;
+    property OnTabMenuPopup: TATTabMenuPopupEvent read FOnTabMenuPopup write SetOnTabMenuPopup;
     property OnEmpty: TNotifyEvent read FOnEmpty write FOnEmpty;
   end;
 
@@ -2224,6 +2227,15 @@ var
 begin
   for i:= Low(TATGroupsNums) to High(TATGroupsNums) do
     Pages[i].Tabs.Images:= AValue;
+end;
+
+procedure TATGroups.SetOnTabMenuPopup(AValue: TATTabMenuPopupEvent);
+var
+  i: integer;
+begin
+  FOnTabMenuPopup:= AValue;
+  for i:= Low(TATGroupsNums) to High(TATGroupsNums) do
+    Pages[i].Tabs.OnTabMenuPopup:= AValue;
 end;
 
 procedure TATGroups.SetSplitterMinSize(AValue: integer);
