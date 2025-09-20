@@ -12,7 +12,7 @@ unit ATFlatThemes;
 interface
 
 uses
-  Classes, Graphics;
+  Classes, Graphics, Menus;
 
 type
   PATFlatTheme = ^TATFlatTheme;
@@ -86,6 +86,12 @@ type
 
 var
   ATFlatTheme: TATFlatTheme;
+
+type
+  TGlobalApplyPopupTheme = procedure(Sender: TPopupMenu);
+
+var
+  GlobalApplyPopupTheme: TGlobalApplyPopupTheme;
 
 implementation
 

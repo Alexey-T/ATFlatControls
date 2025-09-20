@@ -61,9 +61,6 @@ type
     );
 
 type
-  TATButtonDropdownEvent = procedure (Sender: TPopupMenu) of object;
-
-type
   { TATButton }
 
   TATButton = class(TCustomControl)
@@ -105,7 +102,6 @@ type
     FShowShortItems: boolean;
     FColorLine: TColor;
     FColorLine2: TColor;
-    FOnDropdownPopup: TATButtonDropdownEvent;
 
     {$ifndef FPC}
     procedure CMMouseEnter(var msg: TMessage);
@@ -219,7 +215,6 @@ type
     property OnDblClick;
     property OnResize;
     property OnContextPopup;
-    property OnDropdownPopup: TATButtonDropdownEvent read FOnDropdownPopup write FOnDropdownPopup;
     property OnMouseDown;
     property OnMouseUp;
     property OnMouseMove;
@@ -353,8 +348,8 @@ begin
 
   if Assigned(FPopupDropdown) then
   begin
-    if Assigned(FOnDropdownPopup) then
-      FOnDropdownPopup(FPopupDropdown);
+    if Assigned(GlobalApplyPopupTheme) then
+      GlobalApplyPopupTheme(FPopupDropdown);
 
     P:= ClientToScreen(Point(0, Height));
     FPopupDropdown.Popup(P.X, P.Y);
@@ -1010,8 +1005,8 @@ begin
     FPopupChoices.Items.Add(mi);
   end;
 
-  if Assigned(FOnDropdownPopup) then
-    FOnDropdownPopup(FPopupChoices);
+  if Assigned(GlobalApplyPopupTheme) then
+    GlobalApplyPopupTheme(FPopupChoices);
 
   P:= ClientToScreen(Point(0, Height));
   FPopupChoices.PopUp(P.X, P.Y);
