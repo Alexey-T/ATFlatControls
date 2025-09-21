@@ -96,14 +96,15 @@ type
     FClientHeight: integer;
     FShowX: TATListboxShowX;
     FMaxWidth: integer;
+    FRightClickMovesSelection: boolean;
+    FShowOsBarVert: boolean;
+    FShowOsBarHorz: boolean;
     FOnDrawItem: TATListboxDrawItemEvent;
     FOnCalcScrollWidth: TATListboxCalcWidth;
     FOnClickX: TNotifyEvent;
     FOnClickHeader: TATListboxClickHeaderEvent;
     FOnChangeSel: TNotifyEvent;
     FOnScroll: TNotifyEvent;
-    FShowOsBarVert: boolean;
-    FShowOsBarHorz: boolean;
     procedure SetShowOsBarVert(AValue: boolean);
     procedure SetShowOsBarHorz(AValue: boolean);
     property ShowOsBarVert: boolean read FShowOsBarVert write SetShowOsBarVert;
@@ -220,6 +221,7 @@ type
     property ParentFont;
     property ParentShowHint;
     property PopupMenu;
+    property RightClickMovesSelection: boolean read FRightClickMovesSelection write FRightClickMovesSelection default true;
     property ScrollStyleHorz: TATListboxScrollStyle read FScrollStyleHorz write FScrollStyleHorz default alssAuto;
     property ScrollStyleVert: TATListboxScrollStyle read FScrollStyleVert write FScrollStyleVert default alssShow;
     property ShowHint;
@@ -360,8 +362,8 @@ begin
   end;
   {$endif}
 
-  //must select item under mouse cursor
-  ItemIndex:= GetItemIndexAt(MousePos);
+  if FRightClickMovesSelection then
+    ItemIndex:= GetItemIndexAt(MousePos);
 
   inherited;
 end;
@@ -1057,6 +1059,7 @@ begin
   SetLength(FColumnSizes, 0);
   SetLength(FColumnWidths, 0);
   FShowX:= albsxNone;
+  FRightClickMovesSelection:= true;
 
   FBitmap:= Graphics.TBitmap.Create;
   BitmapResize(FBitmap, 800, 600);
@@ -1371,10 +1374,17 @@ begin
     FHotTrackIndex:= -1;
 end;
 
-procedure TATListbox.MouseDown(Button: TMouseButton; Shift: TShiftState;
-  X, Y: Integer);
+procedure TATListbox.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var
+  bSetIndex: boolean;
 begin
-  ItemIndex:= GetItemIndexAt(Point(X, Y));
+  bSetIndex:= true;
+  if (Button=mbRight) and (not FRightClickMovesSelection) then
+    bSetIndex:= false;
+
+  if bSetIndex then
+    ItemIndex:= GetItemIndexAt(Point(X, Y));
+
   inherited;
 end;
 
