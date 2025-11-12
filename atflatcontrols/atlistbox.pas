@@ -99,7 +99,7 @@ type
     FRightClickMovesSelection: boolean;
     FShowOsBarVert: boolean;
     FShowOsBarHorz: boolean;
-    FCharDisabled: char;
+    FDisablingChar: char;
     FOnDrawItem: TATListboxDrawItemEvent;
     FOnCalcScrollWidth: TATListboxCalcWidth;
     FOnClickX: TNotifyEvent;
@@ -196,7 +196,7 @@ type
     property HeaderText: string read FHeaderText write FHeaderText;
     property HeaderImages: TImageList read FHeaderImages write FHeaderImages;
     property HeaderImageIndexes: TATIntArray read FHeaderImageIndexes write FHeaderImageIndexes;
-    property CharDisabled: char read FCharDisabled write FCharDisabled;
+    property DisablingChar: char read FDisablingChar write FDisablingChar;
     {$ifdef FPC}
     function CanFocus: boolean; override;
     function CanSetFocus: boolean; override;
@@ -566,8 +566,8 @@ begin
     end;
 
     if bPaintX then
-      if (CharDisabled<>#0) and (Index>=0) and (Index<FList.Count) and
-          EndsStr(CharDisabled, FList[Index]) then
+      if (DisablingChar<>#0) and (Index>=0) and (Index<FList.Count) and
+          EndsStr(DisablingChar, FList[Index]) then
         bPaintX:= false;
 
     if bPaintX then
@@ -726,7 +726,7 @@ begin
   else
     SLine:= '('+IntToStr(AIndex)+')';
 
-  if (CharDisabled<>#0) and (SLine<>'') and (SLine[Length(SLine)]=CharDisabled) then
+  if (DisablingChar<>#0) and (SLine<>'') and (SLine[Length(SLine)]=DisablingChar) then
   begin
     SetLength(SLine, Length(SLine)-1);
     C.Brush.Color:= ColorToRGB(FTheme^.ColorBgListbox);
@@ -1074,7 +1074,7 @@ begin
   SetLength(FColumnWidths, 0);
   FShowX:= albsxNone;
   FRightClickMovesSelection:= true;
-  FCharDisabled:= #0;
+  FDisablingChar:= #0;
 
   FBitmap:= Graphics.TBitmap.Create;
   BitmapResize(FBitmap, 800, 600);
