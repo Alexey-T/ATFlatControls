@@ -225,7 +225,7 @@ type
     property PopupMenu;
     property RightClickMovesSelection: boolean read FRightClickMovesSelection write FRightClickMovesSelection default true;
     property ScrollStyleHorz: TATListboxScrollStyle read FScrollStyleHorz write FScrollStyleHorz default alssAuto;
-    property ScrollStyleVert: TATListboxScrollStyle read FScrollStyleVert write FScrollStyleVert default alssShow;
+    property ScrollStyleVert: TATListboxScrollStyle read FScrollStyleVert write FScrollStyleVert default alssAuto;
     property ShowHint;
     property ShowXMark: TATListboxShowX read FShowX write FShowX default albsxNone;
     property VirtualMode: boolean read FVirtualMode write FVirtualMode default true;
@@ -1061,7 +1061,7 @@ begin
   FItemHeight:= 17;
   FItemTop:= 0;
   FHotTrackIndex:= -1;
-  FScrollStyleVert:= alssShow;
+  FScrollStyleVert:= alssAuto;
   FScrollStyleHorz:= alssAuto;
   FScrollHorz:= 0;
   FIndentLeft:= 4;
