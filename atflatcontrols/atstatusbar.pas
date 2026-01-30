@@ -48,6 +48,7 @@ type
     FColorLine2: TColor;
     FFontName: string;
     FFontSize: integer;
+    FFontBold: boolean;
     FTag: Int64;
     FHotTrack: boolean;
     FCallback: string;
@@ -70,6 +71,7 @@ type
     property ColorLine2: TColor read FColorLine2 write FColorLine2 default clNone;
     property FontName: string read FFontName write FFontName;
     property FontSize: integer read FFontSize write FFontSize default 0;
+    property FontBold: boolean read FFontBold write FFontBold default false;
     property Tag: Int64 read FTag write FTag default 0;
     property HotTrack: boolean read FHotTrack write FHotTrack default false;
   end;
@@ -328,6 +330,11 @@ begin
     C.Font.Color:= ColorToRGB(D.ColorFont)
   else
     C.Font.Color:= ColorToRGB(Theme^.ColorFont);
+
+  if D.FontBold then
+    C.Font.Style:= [fsBold]
+  else
+    C.Font.Style:= [];
 
   C.Font.Quality:= Theme^.FontQuality;
 end;
