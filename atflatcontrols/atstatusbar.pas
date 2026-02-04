@@ -122,6 +122,7 @@ type
     FOnPanelDrawAfter: TATStatusDrawEvent;
 
     procedure DoPaintTo(C: TCanvas);
+    procedure DoPaintPanelSeparators(C: TCanvas; ARect: TRect);
     procedure DoPaintPanelTo(C: TCanvas; ARect: TRect; AData: TATStatusData; AMouseOver: boolean);
     function DoDrawBefore(AIndex: integer; ACanvas: TCanvas; const ARect: TRect): boolean;
     function DoDrawAfter(AIndex: integer; ACanvas: TCanvas; const ARect: TRect): boolean;
@@ -446,36 +447,6 @@ begin
       nil);
   end;
 
-  if FSeparatorString='' then
-  if FColorBorderR<>clNone then
-  begin
-    C.Pen.Color:= ColorToRGB(FColorBorderR);
-    C.MoveTo(ARect.Right, ARect.Top);
-    C.LineTo(ARect.Right, ARect.Bottom);
-  end;
-
-  if FSeparatorString='' then
-  if FColorBorderL<>clNone then
-  begin
-    C.Pen.Color:= ColorToRGB(FColorBorderL);
-    C.MoveTo(ARect.Left, ARect.Top);
-    C.LineTo(ARect.Left, ARect.Bottom);
-  end;
-
-  if FColorBorderU<>clNone then
-  begin
-    C.Pen.Color:= ColorToRGB(FColorBorderU);
-    C.MoveTo(ARect.Left, ARect.Top);
-    C.LineTo(ARect.Right, ARect.Top);
-  end;
-
-  if FColorBorderD<>clNone then
-  begin
-    C.Pen.Color:= ColorToRGB(FColorBorderD);
-    C.MoveTo(ARect.Left, ARect.Bottom-1);
-    C.LineTo(ARect.Right, ARect.Bottom-1);
-  end;  
-
   if AData.ColorLine<>clNone then
   begin
     C.Brush.Color:= AData.ColorLine;
@@ -650,6 +621,8 @@ begin
       DoDrawAfter(i, C, PanelRect);
     end;
 
+    DoPaintPanelSeparators(C, PanelRect);
+
     if FSeparatorString<>'' then
       if i>0 then
       begin
@@ -673,6 +646,39 @@ begin
     C.Pen.Color:= ColorToRGB(FColorBorderBottom);
     C.MoveTo(0, Height-1);
     C.LineTo(Width, Height-1);
+  end;
+end;
+
+procedure TATStatus.DoPaintPanelSeparators(C: TCanvas; ARect: TRect);
+begin
+  if FSeparatorString='' then
+    if FColorBorderR<>clNone then
+    begin
+      C.Pen.Color:= ColorToRGB(FColorBorderR);
+      C.MoveTo(ARect.Right, ARect.Top);
+      C.LineTo(ARect.Right, ARect.Bottom);
+    end;
+
+  if FSeparatorString='' then
+    if FColorBorderL<>clNone then
+    begin
+      C.Pen.Color:= ColorToRGB(FColorBorderL);
+      C.MoveTo(ARect.Left, ARect.Top);
+      C.LineTo(ARect.Left, ARect.Bottom);
+    end;
+
+  if FColorBorderU<>clNone then
+  begin
+    C.Pen.Color:= ColorToRGB(FColorBorderU);
+    C.MoveTo(ARect.Left, ARect.Top);
+    C.LineTo(ARect.Right, ARect.Top);
+  end;
+
+  if FColorBorderD<>clNone then
+  begin
+    C.Pen.Color:= ColorToRGB(FColorBorderD);
+    C.MoveTo(ARect.Left, ARect.Bottom-1);
+    C.LineTo(ARect.Right, ARect.Bottom-1);
   end;
 end;
 
