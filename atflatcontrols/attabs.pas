@@ -3445,6 +3445,7 @@ begin
 
       else
         begin
+          //fix https://github.com/Alexey-T/CudaText/discussions/6227
           if (OptShowXButtons=TATTabShowClose.atbxShowActive) and FMouseDownOnPassiveTab then
             exit;
 
