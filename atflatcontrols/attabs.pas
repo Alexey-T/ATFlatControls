@@ -436,6 +436,7 @@ type
     FMouseDownRightBtn: boolean;
     FMouseDragBegins: boolean;
     FMouseDownThenTabsScrolled: boolean;
+    FMouseDownOnPassiveTab: boolean;
 
     FColorBg: TColor; //color of background (visible at top and between tabs)
     FColorBorderActive: TColor; //color of 1px border of active tab
@@ -3365,6 +3366,7 @@ begin
   FMouseDownPnt:= Point(X, Y);
   FMouseDownButton:= Button;
   FMouseDownShift:= Shift;
+  FMouseDownOnPassiveTab:= false;
   FMouseDragBegins:= false;
 
   FTabIndexOver:= GetTabAt(X, Y, bOverX);
@@ -3373,7 +3375,10 @@ begin
     //activate tab only if not X clicked
     if not bOverX then
       //if TabIndex<>FTabIndexOver then //with this check, CudaText cannot focus active tab in passive tab-group
+      begin
+        FMouseDownOnPassiveTab:= TabIndex<>FTabIndexOver;
         TabIndex:= FTabIndexOver;
+      end;
 
   Invalidate;
 end;
@@ -3440,6 +3445,9 @@ begin
 
       else
         begin
+          if (OptShowXButtons=TATTabShowClose.atbxShowActive) and FMouseDownOnPassiveTab then
+            exit;
+
           D:= GetTabData(FTabIndexOver);
           if Assigned(D) and D.TabVisibleX then
           begin
