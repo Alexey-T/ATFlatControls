@@ -209,11 +209,13 @@ end;
 
 procedure CanvasInvertRect_ByPixels(C: TCanvas; const R: TRect; AColor: TColor);
 var
+  NValue: Longint;
   i, j: integer;
 begin
+  NValue:= not AColor and $ffffff;
   for j:= R.Top to R.Bottom-1 do
     for i:= R.Left to R.Right-1 do
-      C.Pixels[i, j]:= C.Pixels[i, j] xor (not AColor and $ffffff);
+      C.Pixels[i, j]:= C.Pixels[i, j] xor NValue;
 end;
 
 procedure CanvasInvertRect(C: TCanvas; const R: TRect; AColor: TColor);
@@ -274,6 +276,15 @@ var
   OldPenWidth: integer;
   OldBrushStyle: TBrushStyle;
 begin
+  if ATCanvasPrimitives_InvertByPixels then
+  begin
+    CanvasInvertRect_ByPixels(C, Rect(R.Left, R.Top, R.Right, R.Top+1), AColor);
+    CanvasInvertRect_ByPixels(C, Rect(R.Left, R.Top+1, R.Left+1, R.Bottom-1), AColor);
+    CanvasInvertRect_ByPixels(C, Rect(R.Right-1, R.Top+1, R.Right, R.Bottom-1), AColor);
+    CanvasInvertRect_ByPixels(C, Rect(R.Left, R.Bottom-1, R.Right, R.Bottom), AColor);
+    exit;
+  end;
+
   {$ifdef FPC}
   OldAntialias:= C.AntialiasingMode;
   {$endif}
