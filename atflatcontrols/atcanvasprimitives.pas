@@ -6,6 +6,9 @@ unit ATCanvasPrimitives;
 
 {$ifdef fpc}
   {$mode objfpc}{$H+}
+  {$ifdef LCLGtk3}
+    {$define invert_pixels}
+  {$endif}
 {$else}
   {$define invert_pixels}
 {$endif}
