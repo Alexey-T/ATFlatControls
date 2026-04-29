@@ -24,7 +24,7 @@ uses
   Windows,
   {$endif}
   Classes, Types, Graphics,
-  Controls, Messages, ImgList,
+  Controls, Messages, ImgList, ExtCtrls,
   {$ifdef FPC}
   InterfaceBase,
   LCLIntf,
@@ -386,7 +386,8 @@ const
   _InitOptActiveMarkSize = 4;
   _InitOptScrollMarkSizeX = 20;
   _InitOptScrollMarkSizeY = 3;
-  _InitOptScrollPagesizePercents = 20;
+  _InitOptScrollPagesizePercents = 10;
+  _InitOptScrollTimerInverval = 150;
   _InitOptDropMarkSize = 6;
   _InitOptActiveFontStyle = [fsUnderline];
   _InitOptActiveFontStyleUsed = false;
@@ -506,6 +507,7 @@ type
     FOptScrollMarkSizeX: integer;
     FOptScrollMarkSizeY: integer;
     FOptScrollPagesizePercents: integer;
+    FOptScrollTimerInverval: integer;
     FOptActiveVisibleOnResize: boolean;
 
     FOptPosition: TATTabPosition;
@@ -577,6 +579,8 @@ type
     FBitmapAngleL: TBitmap;
     FBitmapAngleR: TBitmap;
     FBitmapRound: TBitmap;
+    FTimerHorzScroll: TTimer;
+    FTimerHorzScrollToRight: boolean;
 
     FRectTabLast_Scrolled: TRect;
     FRectTabLast_NotScrolled: TRect;
@@ -709,6 +713,7 @@ type
       AIndex: integer; ACanvas: TCanvas; const ARect: TRect): boolean;
     procedure TabMenuClick(Sender: TObject);
     function GetTabWidth_Plus_Raw: integer; inline;
+    procedure TimerHorzScrollTick(Sender: TObject);
     procedure UpdateTabWidths;
     procedure UpdateTabRects(C: TCanvas);
     procedure UpdateTabRectsSpecial;
@@ -906,6 +911,7 @@ type
     property OptScrollMarkSizeX: integer read FOptScrollMarkSizeX write FOptScrollMarkSizeX default _InitOptScrollMarkSizeX;
     property OptScrollMarkSizeY: integer read FOptScrollMarkSizeY write FOptScrollMarkSizeY default _InitOptScrollMarkSizeY;
     property OptScrollPagesizePercents: integer read FOptScrollPagesizePercents write FOptScrollPagesizePercents default _InitOptScrollPagesizePercents;
+    property OptScrollTimerInverval: integer read FOptScrollTimerInverval write FOptScrollTimerInverval default _InitOptScrollTimerInverval;
     property OptDropMarkSize: integer read FOptDropMarkSize write FOptDropMarkSize default _InitOptDropMarkSize;
     property OptActiveVisibleOnResize: boolean read FOptActiveVisibleOnResize write FOptActiveVisibleOnResize default _InitOptActiveVisibleOnResize;
 
@@ -1423,6 +1429,7 @@ begin
   FOptScrollMarkSizeX:= _InitOptScrollMarkSizeX;
   FOptScrollMarkSizeY:= _InitOptScrollMarkSizeY;
   FOptScrollPagesizePercents:= _InitOptScrollPagesizePercents;
+  FOptScrollTimerInverval:= _InitOptScrollTimerInverval;
   FOptActiveVisibleOnResize:= _InitOptActiveVisibleOnResize;
   FOptDropMarkSize:= _InitOptDropMarkSize;
   FOptActiveFontStyle:= _InitOptActiveFontStyle;
@@ -3331,6 +3338,9 @@ begin
   FTabIndexDrop:= -1;
   FTabIndexDropOld:= -1;
 
+  if Assigned(FTimerHorzScroll) then
+    FTimerHorzScroll.Enabled:= false;
+
   if bDblClick then
   begin
     if Assigned(FOnTabDblClick) and (FTabIndexOver>=0) then
@@ -3380,6 +3390,24 @@ begin
         TabIndex:= FTabIndexOver;
       end;
 
+  case FTabIndexOver of
+    cTabIndexArrowScrollLeft,
+    cTabIndexArrowScrollRight:
+      begin
+        FTimerHorzScrollToRight:= FTabIndexOver=cTabIndexArrowScrollRight;
+        if not Assigned(FTimerHorzScroll) then
+        begin
+          FTimerHorzScroll:= TTimer.Create(Self);
+          FTimerHorzScroll.Enabled:= false;
+          FTimerHorzScroll.Interval:= FOptScrollTimerInverval;
+          FTimerHorzScroll.OnTimer:= TimerHorzScrollTick;
+        end;
+        TimerHorzScrollTick(nil);
+        FTimerHorzScroll.Enabled:= false;
+        FTimerHorzScroll.Enabled:= true;
+      end;
+  end;
+
   Invalidate;
 end;
 
@@ -3408,12 +3436,6 @@ begin
           Invalidate;
           ShowTabMenu;
         end;
-
-      cTabIndexArrowScrollLeft:
-        DoScrollLeft;
-
-      cTabIndexArrowScrollRight:
-        DoScrollRight;
 
       cTabIndexUser0:
         DoClickUser(0);
@@ -5337,6 +5359,14 @@ end;
 procedure TATTabs.UpdateTabTooltip;
 begin
   FTabIndexHintedPrev:= -1;
+end;
+
+procedure TATTabs.TimerHorzScrollTick(Sender: TObject);
+begin
+  if FTimerHorzScrollToRight then
+    DoScrollRight
+  else
+    DoScrollLeft;
 end;
 
 
