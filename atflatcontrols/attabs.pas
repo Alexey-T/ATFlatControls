@@ -3399,11 +3399,11 @@ begin
         begin
           FTimerScroll:= TTimer.Create(Self);
           FTimerScroll.Enabled:= false;
-          FTimerScroll.Interval:= FOptScrollTimerInverval;
           FTimerScroll.OnTimer:= TimerHorzScrollTick;
         end;
-        TimerHorzScrollTick(nil);
         FTimerScroll.Enabled:= false;
+        FTimerScroll.Interval:= FOptScrollTimerInverval;
+        TimerHorzScrollTick(nil);
         FTimerScroll.Enabled:= true;
       end;
   end;
