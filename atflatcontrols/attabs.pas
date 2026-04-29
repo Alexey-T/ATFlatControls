@@ -579,8 +579,8 @@ type
     FBitmapAngleL: TBitmap;
     FBitmapAngleR: TBitmap;
     FBitmapRound: TBitmap;
-    FTimerHorzScroll: TTimer;
-    FTimerHorzScrollToRight: boolean;
+    FTimerScroll: TTimer;
+    FTimerScrollToRight: boolean;
 
     FRectTabLast_Scrolled: TRect;
     FRectTabLast_NotScrolled: TRect;
@@ -3338,8 +3338,8 @@ begin
   FTabIndexDrop:= -1;
   FTabIndexDropOld:= -1;
 
-  if Assigned(FTimerHorzScroll) then
-    FTimerHorzScroll.Enabled:= false;
+  if Assigned(FTimerScroll) then
+    FTimerScroll.Enabled:= false;
 
   if bDblClick then
   begin
@@ -3394,17 +3394,17 @@ begin
     cTabIndexArrowScrollLeft,
     cTabIndexArrowScrollRight:
       begin
-        FTimerHorzScrollToRight:= FTabIndexOver=cTabIndexArrowScrollRight;
-        if not Assigned(FTimerHorzScroll) then
+        FTimerScrollToRight:= FTabIndexOver=cTabIndexArrowScrollRight;
+        if not Assigned(FTimerScroll) then
         begin
-          FTimerHorzScroll:= TTimer.Create(Self);
-          FTimerHorzScroll.Enabled:= false;
-          FTimerHorzScroll.Interval:= FOptScrollTimerInverval;
-          FTimerHorzScroll.OnTimer:= TimerHorzScrollTick;
+          FTimerScroll:= TTimer.Create(Self);
+          FTimerScroll.Enabled:= false;
+          FTimerScroll.Interval:= FOptScrollTimerInverval;
+          FTimerScroll.OnTimer:= TimerHorzScrollTick;
         end;
         TimerHorzScrollTick(nil);
-        FTimerHorzScroll.Enabled:= false;
-        FTimerHorzScroll.Enabled:= true;
+        FTimerScroll.Enabled:= false;
+        FTimerScroll.Enabled:= true;
       end;
   end;
 
@@ -5363,7 +5363,7 @@ end;
 
 procedure TATTabs.TimerHorzScrollTick(Sender: TObject);
 begin
-  if FTimerHorzScrollToRight then
+  if FTimerScrollToRight then
     DoScrollRight
   else
     DoScrollLeft;
