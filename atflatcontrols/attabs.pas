@@ -438,6 +438,7 @@ type
     FMouseDragBegins: boolean;
     FMouseDownThenTabsScrolled: boolean;
     FMouseDownOnPassiveTab: boolean;
+    FMouseDownOnTabCanBeDragged: boolean;
 
     FColorBg: TColor; //color of background (visible at top and between tabs)
     FColorBorderActive: TColor; //color of 1px border of active tab
@@ -3381,8 +3382,10 @@ begin
 
   FTabIndexOver:= GetTabAt(X, Y, bOverX);
 
+  FMouseDownOnTabCanBeDragged:= IsIndexOk(FTabIndexOver) and not bOverX;
+
   if Button=mbLeft then
-    //activate tab only if not X clicked
+  begin
     if not bOverX then
       //if TabIndex<>FTabIndexOver then //with this check, CudaText cannot focus active tab in passive tab-group
       begin
@@ -3390,22 +3393,23 @@ begin
         TabIndex:= FTabIndexOver;
       end;
 
-  case FTabIndexOver of
-    cTabIndexArrowScrollLeft,
-    cTabIndexArrowScrollRight:
-      begin
-        FTimerScrollToRight:= FTabIndexOver=cTabIndexArrowScrollRight;
-        if not Assigned(FTimerScroll) then
+    case FTabIndexOver of
+      cTabIndexArrowScrollLeft,
+      cTabIndexArrowScrollRight:
         begin
-          FTimerScroll:= TTimer.Create(Self);
+          FTimerScrollToRight:= FTabIndexOver=cTabIndexArrowScrollRight;
+          if not Assigned(FTimerScroll) then
+          begin
+            FTimerScroll:= TTimer.Create(Self);
+            FTimerScroll.Enabled:= false;
+            FTimerScroll.OnTimer:= TimerHorzScrollTick;
+          end;
           FTimerScroll.Enabled:= false;
-          FTimerScroll.OnTimer:= TimerHorzScrollTick;
+          FTimerScroll.Interval:= FOptScrollTimerInverval;
+          TimerHorzScrollTick(nil);
+          FTimerScroll.Enabled:= true;
         end;
-        FTimerScroll.Enabled:= false;
-        FTimerScroll.Interval:= FOptScrollTimerInverval;
-        TimerHorzScrollTick(nil);
-        FTimerScroll.Enabled:= true;
-      end;
+    end;
   end;
 
   Invalidate;
@@ -3541,7 +3545,11 @@ begin
 
   // LCL dragging with DragMode=automatic is started too early.
   // so use DragMode=manual and DragStart.
-  if OptMouseDragEnabled and FMouseDown and (FMouseDownButton=mbLeft) and not _IsDrag then
+  if OptMouseDragEnabled and
+     FMouseDown and
+     FMouseDownOnTabCanBeDragged and
+     (FMouseDownButton=mbLeft) and
+     not _IsDrag then
   begin
     BeginDrag(false, Mouse.DragThreshold);
     {$ifdef fpc}
