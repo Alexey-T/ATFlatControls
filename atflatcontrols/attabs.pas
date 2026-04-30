@@ -3333,6 +3333,7 @@ begin
   FMouseDown:= false;
   FMouseDownDbl:= false;
   FMouseDownRightBtn:= false;
+  FMouseDownOnTabCanBeDragged:= false;
   FMouseDragBegins:= false;
   Cursor:= crDefault;
   Screen.Cursor:= crDefault;
