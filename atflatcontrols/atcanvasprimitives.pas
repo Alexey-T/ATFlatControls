@@ -241,7 +241,7 @@ begin
   OldWidth:= C.Pen.Width;
 
   X:= (R.Left+R.Right) div 2;
-  C.Pen.Mode:= {$if defined(LCLCocoa)} pmNot {$else} pmNotXor {$endif};
+  C.Pen.Mode:= {$if defined(LCLCocoa)} pmNot {$else} pmXor {$endif};
   C.Pen.Style:= psSolid;
   C.Pen.Color:= AColor;
   C.AntialiasingMode:= amOff;
@@ -293,7 +293,7 @@ begin
   OldPenWidth:= C.Pen.Width;
   OldBrushStyle:= C.Brush.Style;
 
-  C.Pen.Mode:= {$ifdef darwin} pmNot {$else} pmNotXor {$endif};
+  C.Pen.Mode:= {$ifdef darwin} pmNot {$else} pmXor {$endif};
   C.Pen.Style:= psSolid;
   C.Pen.Color:= AColor;
   {$ifdef FPC}
