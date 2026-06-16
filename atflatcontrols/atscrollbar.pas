@@ -34,6 +34,7 @@ uses
   InterfaceBase,
   LCLIntf,
   LCLType,
+  LMessages,
   {$endif}
   Classes, Types, Graphics,
   Controls, ExtCtrls, Forms,
@@ -219,7 +220,11 @@ type
     procedure DoMouseLeave; dynamic;
     {$endif}
     {$ifdef windows}
-    procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
+      {$ifdef fpc}
+      procedure WMEraseBkgnd(var Message: TLMEraseBkgnd); message LM_ERASEBKGND;
+      {$else}
+      procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
+      {$endif}
     {$endif}
   published
     {$ifndef FPC}
@@ -602,7 +607,7 @@ begin
 end;
 
 {$ifdef windows}
-procedure TATScrollbar.WMEraseBkgnd(var Message: TWMEraseBkgnd);
+procedure TATScrollbar.WMEraseBkgnd(var Message: {$ifdef FPC}TLMEraseBkgnd{$else}TWMEraseBkgnd{$endif});
 var
   R: TRect;
 begin
