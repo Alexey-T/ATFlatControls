@@ -2286,28 +2286,32 @@ begin
     Result:= N;
 end;
 
+const
+  cPanelSizeMultiplier = 10000;
+  //100 is too small, gives problem (rounding to 100) when saving 'minimized' 2nd group with window width>2500
+
 procedure TATGroups.GetSizes(out APanelSize: TPoint; out APageSize: TATGroupsPoints);
 var
   i: integer;
 begin
   if (Width<2) or (Height<2) then
   begin
-    APanelSize.x:= 100;
-    APanelSize.y:= 100;
+    APanelSize.x:= cPanelSizeMultiplier;
+    APanelSize.y:= cPanelSizeMultiplier;
     for i in TATGroupsNums do
     begin
-      APageSize[i].x:= 100;
-      APageSize[i].y:= 100;
+      APageSize[i].x:= cPanelSizeMultiplier;
+      APageSize[i].y:= cPanelSizeMultiplier;
     end;
     exit
   end;
 
-  APanelSize.x:= _FixOdd(Panel1.Width * 100 div Width);
-  APanelSize.y:= _FixOdd(Panel1.Height * 100 div Height);
+  APanelSize.x:= _FixOdd(Panel1.Width * cPanelSizeMultiplier div Width);
+  APanelSize.y:= _FixOdd(Panel1.Height * cPanelSizeMultiplier div Height);
   for i in TATGroupsNums do
   begin
-    APageSize[i].x:= _FixOdd(Pages[i].Width * 100 div Width);
-    APageSize[i].y:= _FixOdd(Pages[i].Height * 100 div Height);
+    APageSize[i].x:= _FixOdd(Pages[i].Width * cPanelSizeMultiplier div Width);
+    APageSize[i].y:= _FixOdd(Pages[i].Height * cPanelSizeMultiplier div Height);
   end;
 end;
 
@@ -2317,12 +2321,12 @@ const
 var
   i: integer;
 begin
-  Panel1.Width := Min(cMaxSize, APanelSize.x * Width div 100);
-  Panel1.Height:= Min(cMaxSize, APanelSize.y * Height div 100);
+  Panel1.Width := Min(cMaxSize, APanelSize.x * Width div cPanelSizeMultiplier);
+  Panel1.Height:= Min(cMaxSize, APanelSize.y * Height div cPanelSizeMultiplier);
   for i in TATGroupsNums do
   begin
-    Pages[i].Width:= Min(cMaxSize, APageSize[i].x * Width div 100);
-    Pages[i].Height:= Min(cMaxSize, APageSize[i].y * Height div 100);
+    Pages[i].Width:= Min(cMaxSize, APageSize[i].x * Width div cPanelSizeMultiplier);
+    Pages[i].Height:= Min(cMaxSize, APageSize[i].y * Height div cPanelSizeMultiplier);
   end;
 end;
 
