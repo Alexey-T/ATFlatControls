@@ -201,9 +201,6 @@ type
   TATGroupsNums = 0..5;
 
 type
-  TATGroupsPoints = array[TATGroupsNums] of TPoint;
-
-type
   TATGroupsPopupEvent = procedure(Sender: TObject; APages: TATPages; ATabIndex: integer) of object;
 
 type
@@ -301,8 +298,6 @@ type
       AEnableEmpty: boolean; out AWrapped: boolean): Integer;
     function FindPages(APages: TATPages): Integer;
     procedure FindPositionOfControl(AObject: TObject; out APagesIndex, ATabIndex: Integer);
-    procedure GetSizes(out APanelSize: TPoint; out APageSize: TATGroupsPoints);
-    procedure SetSizes(const APanelSize: TPoint; const APageSize: TATGroupsPoints);
     //
     property PopupPages: TATPages read FPopupPages write FPopupPages;
     property PopupTabIndex: Integer read FPopupTabIndex write FPopupTabIndex;
@@ -2275,59 +2270,6 @@ end;
 procedure TATGroups.SplitterOnPaint(Sender: TObject);
 begin
   //empty to disable themed paint
-end;
-
-function _FixOdd(N: integer): integer; inline;
-//this is to fix shifting of splitter pos, if position is saved to config / restored later
-begin
-  if Odd(N) then
-    Result:= N+1
-  else
-    Result:= N;
-end;
-
-const
-  cPanelSizeMultiplier = 10000;
-  //100 is too small, gives problem (rounding to 100) when saving 'minimized' 2nd group with window width>2500
-
-procedure TATGroups.GetSizes(out APanelSize: TPoint; out APageSize: TATGroupsPoints);
-var
-  i: integer;
-begin
-  if (Width<2) or (Height<2) then
-  begin
-    APanelSize.x:= cPanelSizeMultiplier;
-    APanelSize.y:= cPanelSizeMultiplier;
-    for i in TATGroupsNums do
-    begin
-      APageSize[i].x:= cPanelSizeMultiplier;
-      APageSize[i].y:= cPanelSizeMultiplier;
-    end;
-    exit
-  end;
-
-  APanelSize.x:= _FixOdd(Panel1.Width * cPanelSizeMultiplier div Width);
-  APanelSize.y:= _FixOdd(Panel1.Height * cPanelSizeMultiplier div Height);
-  for i in TATGroupsNums do
-  begin
-    APageSize[i].x:= _FixOdd(Pages[i].Width * cPanelSizeMultiplier div Width);
-    APageSize[i].y:= _FixOdd(Pages[i].Height * cPanelSizeMultiplier div Height);
-  end;
-end;
-
-procedure TATGroups.SetSizes(const APanelSize: TPoint; const APageSize: TATGroupsPoints);
-const
-  cMaxSize = 8000; //to avoid SigFPE on Linux sometimes, when setting Height~~100K
-var
-  i: integer;
-begin
-  Panel1.Width := Min(cMaxSize, APanelSize.x * Width div cPanelSizeMultiplier);
-  Panel1.Height:= Min(cMaxSize, APanelSize.y * Height div cPanelSizeMultiplier);
-  for i in TATGroupsNums do
-  begin
-    Pages[i].Width:= Min(cMaxSize, APageSize[i].x * Width div cPanelSizeMultiplier);
-    Pages[i].Height:= Min(cMaxSize, APageSize[i].y * Height div cPanelSizeMultiplier);
-  end;
 end;
 
 end.
