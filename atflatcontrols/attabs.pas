@@ -252,6 +252,7 @@ type
 
 type
   TATTabOverEvent = procedure (Sender: TObject; ATabIndex: integer) of object;
+  TATTabAddedEvent = procedure (Sender: TObject; ATabIndex: integer) of object;
   TATTabCloseEvent = procedure (Sender: TObject; ATabIndex: integer;
     var ACanClose, ACanContinue: boolean) of object;
     //ACanClose: handler must set to True to allow closing of the current tab.

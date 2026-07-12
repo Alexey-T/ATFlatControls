@@ -38,6 +38,7 @@ type
     FOnTabFocus: TNotifyEvent;
     FOnTabClose: TATTabCloseEvent;
     FOnTabAdd: TNotifyEvent;
+    FOnTabAdded: TATTabAddedEvent;
     FOnTabEmpty: TNotifyEvent;
     FOnTabOver: TATTabOverEvent;
     FOnTabMove: TATTabMoveEvent;
@@ -70,6 +71,7 @@ type
     property OnTabFocus: TNotifyEvent read FOnTabFocus write FOnTabFocus;
     property OnTabClose: TATTabCloseEvent read FOnTabClose write SetOnTabClose;
     property OnTabAdd: TNotifyEvent read FOnTabAdd write SetOnTabAdd;
+    property OnTabAdded: TATTabAddedEvent read FOnTabAdded write FOnTabAdded;
     property OnTabEmpty: TNotifyEvent read FOnTabEmpty write FOnTabEmpty;
     property OnTabOver: TATTabOverEvent read FOnTabOver write FOnTabOver;
     property OnTabMove: TATTabMoveEvent read FOnTabMove write FOnTabMove;
@@ -238,7 +240,9 @@ type
     FPopupPages: TATPages;
     FPopupTabIndex: Integer;
     function GetImages: TImageList;
+    function GetOnTabAdded: TATTabAddedEvent;
     procedure SetImages(AValue: TImageList);
+    procedure SetOnTabAdded(AValue: TATTabAddedEvent);
     procedure SetSplitterMinSize(AValue: integer);
     procedure SetSplitterResizeStyle(AValue: TResizeStyle);
     procedure SetSplitterColor(AValue: TColor);
@@ -333,6 +337,7 @@ type
     property OnTabFocus: TNotifyEvent read FOnTabFocus write FOnTabFocus;
     property OnTabClose: TATTabCloseEvent read FOnTabClose write FOnTabClose;
     property OnTabAdd: TNotifyEvent read FOnTabAdd write FOnTabAdd;
+    property OnTabAdded: TATTabAddedEvent read GetOnTabAdded write SetOnTabAdded;
     property OnTabOver: TATTabOverEvent read FOnTabOver write FOnTabOver;
     property OnTabMove: TATTabMoveEvent read FOnTabMove write FOnTabMove;
     property OnTabGetTick: TATTabGetTickEvent read FOnTabGetTick write FOnTabGetTick;
@@ -475,6 +480,9 @@ begin
 
   if AndActivate then
     FTabs.TabIndex:= Result;
+
+  if Assigned(FOnTabAdded) then
+    FOnTabAdded(FTabs, Result);
 end;
 
 function TATPages.CloseTabsAll(AClosePinned: boolean): boolean;
@@ -2211,6 +2219,19 @@ end;
 function TATGroups.GetImages: TImageList;
 begin
   Result:= Pages1.Tabs.Images;
+end;
+
+function TATGroups.GetOnTabAdded: TATTabAddedEvent;
+begin
+  Result:= Pages1.OnTabAdded;
+end;
+
+procedure TATGroups.SetOnTabAdded(AValue: TATTabAddedEvent);
+var
+  i: integer;
+begin
+  for i:= Low(TATGroupsNums) to High(TATGroupsNums) do
+    Pages[i].OnTabAdded:= AValue;
 end;
 
 procedure TATGroups.SetImages(AValue: TImageList);
