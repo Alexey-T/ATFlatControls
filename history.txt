@@ -1,3 +1,6 @@
+2026.07.13
++ ATGroups: add OnTabAdded
+
 2023.10.11
 * ATGroups: add param AWrapped to PagesNextIndex()
  
