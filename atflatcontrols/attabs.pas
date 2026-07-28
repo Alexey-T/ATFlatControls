@@ -3710,6 +3710,8 @@ begin
   //auto-scroll tabs to right when width is shrinked
   if FScrollPos>0 then
     SetScrollPos(Min(FScrollPos, GetMaxScrollPos));
+
+  Invalidate;
 end;
 
 
