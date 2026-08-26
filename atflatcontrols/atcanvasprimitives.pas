@@ -116,6 +116,12 @@ var
 
 implementation
 
+{$ifdef LCLGtk3}
+uses
+  Gtk3Objects,
+  Cairo;
+{$endif}
+
 function CanvasFontSizeToPixels(AValue: integer): integer;
 begin
   Result:= AValue * 18 div 10 + 2;
@@ -218,6 +224,58 @@ begin
       C.Pixels[i, j]:= C.Pixels[i, j] xor NValue;
 end;
 
+{$ifdef LCLGtk3}
+procedure CanvasInvertRect(C: TCanvas; const R: TRect; AColor: TColor);
+var
+  cr: Pcairo_t;
+  rgb: LongInt;
+  cRed, cGreen, cBlue: Double;
+begin
+  if not Assigned(C) or (C.Handle = 0) then Exit;
+
+  cr := Cairo.pcairo_t(TGtk3DeviceContext(C.Handle).pcr);
+  if cr = nil then Exit;
+
+  rgb := ColorToRGB(AColor);
+  cRed   := (rgb and $FF) / 255;
+  cGreen := ((rgb shr 8) and $FF) / 255;
+  cBlue  := ((rgb shr 16) and $FF) / 255;
+
+  cairo_save(cr);
+  cairo_set_operator(cr, CAIRO_OPERATOR_DIFFERENCE);
+  cairo_set_source_rgb(cr, cRed, cGreen, cBlue);
+  cairo_rectangle(cr, R.Left, R.Top, R.Right - R.Left, R.Bottom - R.Top);
+  cairo_fill(cr);
+  cairo_restore(cr);
+end;
+
+procedure CanvasInvertRectEmptyInside(C: TCanvas; const R: TRect; AColor: TColor);
+var
+  cr: Pcairo_t;
+  rgb: LongInt;
+  cRed, cGreen, cBlue: Double;
+begin
+  if not Assigned(C) or (C.Handle = 0) then Exit;
+
+  cr := Cairo.Pcairo_t(TGtk3DeviceContext(C.Handle).pcr);
+  if cr = nil then Exit;
+
+  rgb := ColorToRGB(AColor);
+  cRed   := (rgb and $FF) / 255;
+  cGreen := ((rgb shr 8) and $FF) / 255;
+  cBlue  := ((rgb shr 16) and $FF) / 255;
+
+  cairo_save(cr);
+  cairo_set_operator(cr, CAIRO_OPERATOR_DIFFERENCE);
+  cairo_set_source_rgb(cr, cRed, cGreen, cBlue);
+  // offset 0.5 aligns line to grid
+  cairo_set_line_width(cr, 1.0);
+  cairo_rectangle(cr, R.Left + 0.5, R.Top + 0.5,
+                  R.Right - R.Left - 1, R.Bottom - R.Top - 1);
+  cairo_stroke(cr);
+  cairo_restore(cr);
+end;
+{$else}
 procedure CanvasInvertRect(C: TCanvas; const R: TRect; AColor: TColor);
 var
   X: integer;
@@ -313,6 +371,7 @@ begin
   {$endif}
   C.Rectangle(0, 0, 0, 0); //apply pen
 end;
+{$endif}
 
 procedure CanvasLine_Dotted(C: TCanvas; Color: TColor; X1, Y1, X2, Y2: integer);
 var
