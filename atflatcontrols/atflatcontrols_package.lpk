@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
-  <Package Version="5">
+  <Package Version="6">
     <PathDelim Value="\"/>
     <Name Value="atflatcontrols_package"/>
     <Type Value="RunAndDesignTime"/>
@@ -40,75 +40,74 @@
 - ATStatusbar
 and several simple controls."/>
     <License Value="MPL 2.0, LGPL"/>
-    <Version Major="2" Minor="3"/>
-    <Files Count="15">
-      <Item1>
+    <Version Major="2" Minor="3" Release="1"/>
+    <Files>
+      <Item>
         <Filename Value="atbuttons.pas"/>
         <UnitName Value="ATButtons"/>
-      </Item1>
-      <Item2>
+      </Item>
+      <Item>
         <Filename Value="atflatcontrols_register.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="atflatcontrols_register"/>
-      </Item2>
-      <Item3>
+      </Item>
+      <Item>
         <Filename Value="atlistbox.pas"/>
         <UnitName Value="ATListbox"/>
-      </Item3>
-      <Item4>
+      </Item>
+      <Item>
         <Filename Value="atlinklabel.pas"/>
         <UnitName Value="ATLinkLabel"/>
-      </Item4>
-      <Item5>
+      </Item>
+      <Item>
         <Filename Value="atflattoolbar.pas"/>
         <UnitName Value="ATFlatToolbar"/>
-      </Item5>
-      <Item6>
+      </Item>
+      <Item>
         <Filename Value="atpanelsimple.pas"/>
         <UnitName Value="ATPanelSimple"/>
-      </Item6>
-      <Item7>
+      </Item>
+      <Item>
         <Filename Value="atpanelcolor.pas"/>
         <UnitName Value="ATPanelColor"/>
-      </Item7>
-      <Item8>
+      </Item>
+      <Item>
         <Filename Value="atscrollbar.pas"/>
         <UnitName Value="ATScrollBar"/>
-      </Item8>
-      <Item9>
+      </Item>
+      <Item>
         <Filename Value="atstatusbar.pas"/>
         <UnitName Value="ATStatusBar"/>
-      </Item9>
-      <Item10>
+      </Item>
+      <Item>
         <Filename Value="atgauge.pas"/>
         <UnitName Value="ATGauge"/>
-      </Item10>
-      <Item11>
+      </Item>
+      <Item>
         <Filename Value="atflatthemes.pas"/>
         <UnitName Value="ATFlatThemes"/>
-      </Item11>
-      <Item12>
+      </Item>
+      <Item>
         <Filename Value="res\icons.lrs"/>
         <Type Value="LRS"/>
-      </Item12>
-      <Item13>
+      </Item>
+      <Item>
         <Filename Value="atgroups.pas"/>
         <UnitName Value="ATGroups"/>
-      </Item13>
-      <Item14>
+      </Item>
+      <Item>
         <Filename Value="attabs.pas"/>
         <UnitName Value="attabs"/>
-      </Item14>
-      <Item15>
+      </Item>
+      <Item>
         <Filename Value="atcanvasprimitives.pas"/>
         <UnitName Value="ATCanvasPrimitives"/>
-      </Item15>
+      </Item>
     </Files>
-    <CompatibilityMode Value="True"/>
-    <RequiredPkgs Count="1">
-      <Item1>
+    <RequiredPkgs>
+      <Item>
         <PackageName Value="LCL"/>
-      </Item1>
+      </Item>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>
