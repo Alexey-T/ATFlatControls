@@ -124,6 +124,8 @@ type
     FKind: TScrollBarKind;
     FIndentCorner: Integer;
     FTheme: PATScrollbarTheme;
+    FThemePainted: TATScrollbarTheme;
+    FThemePaintedInit: boolean;
 
     FPos: Int64;
     FMin: Int64;
@@ -187,6 +189,7 @@ type
     procedure DoScrollBy(const ADelta: Int64);
     function PosToCoord(const APos: Int64): Int64;
     function DoScale(AValue: integer): integer;
+    function IsThemeChangedForPaint: boolean;
 
     procedure TimerTimer(Sender: TObject);
     procedure SetKind(AValue: TScrollBarKind);
@@ -345,18 +348,50 @@ begin
 end;
 
 procedure TATScrollbar.Update;
+//fixes CudaText issue #6267: editor calls Update() on every its repaint
+//(typing, CJK IME, autocomplete), and unconditional Invalidate here caused
+//constant flickering of the whole bar on Windows (WM_ERASEBKGND fills BG,
+//then WM_PAINT draws everything again). Invalidate only when size or theme
+//is really changed; value changes are already invalidated in their setters
+var
+  NSize: integer;
 begin
+  NSize:= DoScale(FTheme^.InitialSize);
   if IsHorz then
-    Height:= DoScale(FTheme^.InitialSize)
+  begin
+    if Height<>NSize then
+    begin
+      Height:= NSize;
+      Invalidate;
+    end;
+  end
   else
-    Width:= DoScale(FTheme^.InitialSize);
+  begin
+    if Width<>NSize then
+    begin
+      Width:= NSize;
+      Invalidate;
+    end;
+  end;
 
-  Invalidate;
+  //theme could be changed at runtime (CudaText writes new colors to
+  //ATScrollbarTheme when user switches UI theme): invalidate once here,
+  //so new colors are painted on next paint pass
+  if IsThemeChangedForPaint then
+    Invalidate;
 end;
 
 function TATScrollbar.DoScale(AValue: integer): integer;
 begin
   Result:= AValue * FTheme^.ScalePercents div 100;
+end;
+
+function TATScrollbar.IsThemeChangedForPaint: boolean;
+//theme record has no managed fields, so record assignment copies the whole
+//memory incl. alignment padding, and CompareMem gives no false mismatches
+begin
+  Result:= (not FThemePaintedInit) or
+    (not CompareMem(@FThemePainted, FTheme, SizeOf(TATScrollbarTheme)));
 end;
 
 procedure TATScrollbar.Paint;
@@ -460,6 +495,10 @@ begin
   DoUpdateThumbRect;
   DoPaintBackAndThumb(C);
   DoPaintBackScrolling(C);
+
+  //snapshot of theme, to detect runtime theme changes in Update()
+  FThemePainted:= FTheme^;
+  FThemePaintedInit:= true;
 end;
 
 procedure TATScrollbar.DoPaintBackAndThumb(C: TCanvas);
@@ -1004,11 +1043,24 @@ begin
   begin
     FPos:= AValue;
 
-    {$IF Defined(LCLWin32)}
-    Repaint; //only Invalidate is not ok, it delays painting on big files
-    {$else}
-    Invalidate;
-    {$endif}
+    //fixes CudaText issue #6267: editor sets Position from UpdateScrollbars()
+    //on every repaint (typing, CJK IME, autocomplete), and sync Repaint here
+    //caused flicker: it painted the scrollbar nested inside editor's own
+    //paint cycle. Invalidate is enough for such programmatic updates.
+    //Sync Repaint is kept only for mouse interaction (dragging thumb,
+    //holding arrow/page-area): it gives instant feedback there, and fixes
+    //the old bug of 2019-09-13 "slow repainting on dragging thumb,
+    //on big files" (async painting was delayed by editor's heavy paints).
+    if FMouseDown then
+    begin
+      {$IF Defined(LCLWin32)}
+      Repaint;
+      {$else}
+      Invalidate;
+      {$endif}
+    end
+    else
+      Invalidate;
 
     if Assigned(FOnChange) then
       FOnChange(Self);
