@@ -187,9 +187,12 @@ type
     procedure DoUpdateCornerRect;
     procedure DoUpdatePosOnDrag(X, Y: Integer);
     procedure DoScrollBy(const ADelta: Int64);
+    function DoDrawEvent(AType: TATScrollbarElemType;
+      ACanvas: TCanvas; const ARect, ARect2: TRect): boolean;
     function PosToCoord(const APos: Int64): Int64;
     function DoScale(AValue: integer): integer;
     function IsThemeChangedForPaint: boolean;
+    function BetterPtInRect(R: TRect; P: TPoint): boolean;
 
     procedure TimerTimer(Sender: TObject);
     procedure SetKind(AValue: TScrollBarKind);
@@ -197,9 +200,8 @@ type
     procedure SetMin(const Value: Int64);
     procedure SetMax(const Value: Int64);
     procedure SetPageSize(const Value: Int64);
-    function DoDrawEvent(AType: TATScrollbarElemType;
-      ACanvas: TCanvas; const ARect, ARect2: TRect): boolean;
-    function BetterPtInRect(R: TRect; P: TPoint): boolean;
+    procedure SetIndentCorner(Value: Integer);
+
   public
     constructor Create(AOnwer: TComponent); override;
     destructor Destroy; override;
@@ -255,7 +257,7 @@ type
     property LargeChange: Int64 read FLargeChange write FLargeChange default 0;
     property PageSize: Int64 read FPageSize write SetPageSize default 20;
     property Kind: TScrollBarKind read FKind write SetKind default sbHorizontal;
-    property IndentCorner: Integer read FIndentCorner write FIndentCorner default 0;
+    property IndentCorner: Integer read FIndentCorner write SetIndentCorner default 0;
 
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
     property OnMouseDown;
@@ -1064,6 +1066,15 @@ begin
 
     if Assigned(FOnChange) then
       FOnChange(Self);
+  end;
+end;
+
+procedure TATScrollbar.SetIndentCorner(Value: Integer);
+begin
+  if FIndentCorner<>Value then
+  begin
+    FIndentCorner:= Value;
+    Invalidate;
   end;
 end;
 
