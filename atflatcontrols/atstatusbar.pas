@@ -175,6 +175,7 @@ type
     procedure MouseLeave; {$ifdef fpc}override;{$endif}
     procedure Click; override;
     {$ifdef windows}
+    procedure CreateParams(var Params: TCreateParams); override;
     procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
     {$endif}
 
@@ -843,6 +844,18 @@ begin
 end;
 
 {$ifdef windows}
+procedure TATStatus.CreateParams(var Params: TCreateParams);
+begin
+  inherited CreateParams(Params);
+  //fix CudaText issue #6267: themed scrollbar is custom-drawn and on win32 is
+  //not double-buffered (IsDoubleBufferedNeeded=false there), so each repaint
+  //shows a separate erase pass + paint pass = visible flash on every editor
+  //repaint (typing, IME, autocomplete show/hide). WS_EX_COMPOSITED makes
+  //Windows paint the whole control through an off-screen buffer, so a repaint
+  //of the bar never shows an intermediate (erase) frame.
+  Params.ExStyle:= Params.ExStyle or WS_EX_COMPOSITED;
+end;
+
 procedure TATStatus.WMEraseBkgnd(var Message: TWMEraseBkgnd);
 var
   R: TRect;
