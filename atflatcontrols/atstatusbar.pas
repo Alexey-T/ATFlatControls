@@ -116,6 +116,7 @@ type
     FSeparatorString: string;
     FOverflowLeft: boolean;
     FOverflowScrollX: integer;
+    FCompositedEnabled: boolean;
 
     FOnPanelClick: TATStatusClickEvent;
     FOnPanelDrawBefore: TATStatusDrawEvent;
@@ -175,7 +176,7 @@ type
     procedure MouseLeave; {$ifdef fpc}override;{$endif}
     procedure Click; override;
     {$ifdef windows}
-    procedure CreateParams(var Params: TCreateParams); override;
+    procedure EnableWinStyleComposited;
     procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
     {$endif}
 
@@ -304,6 +305,10 @@ end;
 
 procedure TATStatus.Paint;
 begin
+  {$ifdef windows}
+  EnableWinStyleComposited;
+  {$endif}
+
   if DoubleBuffered then
   begin
     if Assigned(FBitmap) then
@@ -844,16 +849,19 @@ begin
 end;
 
 {$ifdef windows}
-procedure TATStatus.CreateParams(var Params: TCreateParams);
+procedure TATStatus.EnableWinStyleComposited;
 begin
-  inherited CreateParams(Params);
-  //fix CudaText issue #6267: themed scrollbar is custom-drawn and on win32 is
-  //not double-buffered (IsDoubleBufferedNeeded=false there), so each repaint
-  //shows a separate erase pass + paint pass = visible flash on every editor
-  //repaint (typing, IME, autocomplete show/hide). WS_EX_COMPOSITED makes
-  //Windows paint the whole control through an off-screen buffer, so a repaint
-  //of the bar never shows an intermediate (erase) frame.
-  Params.ExStyle:= Params.ExStyle or WS_EX_COMPOSITED;
+  //fix CudaText issue #6267 regression: setting WS_EX_COMPOSITED in
+  //CreateParams made the redirected surface white before the first WM_PAINT
+  //(visible white flash on startup, dark theme + maximized window), same as
+  //TATButton. Enable the style lazily after the first correct Paint, so the
+  //startup frame is painted by the normal path, and all later repaints
+  //(typing, IME, autocomplete, editor scrolling) are flicker-free.
+  if FCompositedEnabled then exit;
+  FCompositedEnabled:= true;
+  if HandleAllocated then
+    SetWindowLongPtrW(Handle, GWL_EXSTYLE,
+      GetWindowLongPtrW(Handle, GWL_EXSTYLE) or WS_EX_COMPOSITED);
 end;
 
 procedure TATStatus.WMEraseBkgnd(var Message: TWMEraseBkgnd);

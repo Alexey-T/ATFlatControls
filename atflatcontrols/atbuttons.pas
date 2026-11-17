@@ -102,6 +102,7 @@ type
     FShowShortItems: boolean;
     FColorLine: TColor;
     FColorLine2: TColor;
+    FCompositedEnabled: boolean;
 
     {$ifndef FPC}
     procedure CMMouseEnter(var msg: TMessage);
@@ -142,7 +143,7 @@ type
     procedure DoMouseLeave; dynamic;
     {$endif}
     {$ifdef windows}
-    procedure CreateParams(var Params: TCreateParams); override;
+    procedure EnableWinStyleComposited;
     procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
     {$endif}
 
@@ -393,6 +394,10 @@ end;
 procedure TATButton.Paint;
 begin
   inherited;
+
+  {$ifdef windows}
+  EnableWinStyleComposited;
+  {$endif}
 
   //override value set by LCL scaling to make all buttons look the same
   Canvas.Font.PixelsPerInch:= Max(96, Screen.PixelsPerInch);
@@ -1029,16 +1034,21 @@ begin
 end;
 
 {$ifdef windows}
-procedure TATButton.CreateParams(var Params: TCreateParams);
+procedure TATButton.EnableWinStyleComposited;
 begin
-  inherited CreateParams(Params);
-  //fix CudaText issue #6267: themed scrollbar is custom-drawn and on win32 is
-  //not double-buffered (IsDoubleBufferedNeeded=false there), so each repaint
-  //shows a separate erase pass + paint pass = visible flash on every editor
-  //repaint (typing, IME, autocomplete show/hide). WS_EX_COMPOSITED makes
-  //Windows paint the whole control through an off-screen buffer, so a repaint
-  //of the bar never shows an intermediate (erase) frame.
-  Params.ExStyle:= Params.ExStyle or WS_EX_COMPOSITED;
+  //fix CudaText issue #6267 regression: setting WS_EX_COMPOSITED in
+  //CreateParams made Windows allocate the redirected (offscreen) surface
+  //WHITE before the first WM_PAINT, so app startup with dark theme +
+  //maximized window showed white rectangles over all toolbar/side buttons.
+  //Enabling the style lazily, only after the control has painted itself
+  //correctly once (Paint -> here), keeps the startup frame painted by the
+  //normal (non-composited) path and still removes flicker for all later
+  //repaints (typing, mouse-over, autocomplete, theme changes).
+  if FCompositedEnabled then exit;
+  FCompositedEnabled:= true;
+  if HandleAllocated then
+    SetWindowLongPtrW(Handle, GWL_EXSTYLE,
+      GetWindowLongPtrW(Handle, GWL_EXSTYLE) or WS_EX_COMPOSITED);
 end;
 
 procedure TATButton.WMEraseBkgnd(var Message: TWMEraseBkgnd);
