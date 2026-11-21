@@ -33,7 +33,6 @@ type
     FWrapable: boolean;
     FOnMouseMove: TMouseMoveEvent;
     function GetButton(AIndex: integer): TATButton;
-    procedure SetButtonWidth(AValue: integer);
     procedure SetVertical(AValue: boolean);
     procedure SetWrapable(AValue: boolean);
     procedure UpdateAnchors;
@@ -80,7 +79,6 @@ type
     {$ifdef FPC}
     property BorderSpacing;
     {$endif}
-    //property ButtonWidth: integer read FButtonWidth write SetButtonWidth default 50;
     property Color;
     property Enabled;
     property Visible;
@@ -132,7 +130,7 @@ begin
   if Assigned(Images) then
     ImgSize:= Images.Width;
 
-  FButtonWidth:= ImgSize+ATFlatTheme.GapForAutoSize;
+  FButtonWidth:= ImgSize+ATFlatTheme.DoScale(ATFlatTheme.GapForAutoSize);
 
   Canvas.Font.Name:= ATFlatTheme.FontName;
   Canvas.Font.Size:= ATFlatTheme.DoScaleFont(ATFlatTheme.FontSize);
@@ -143,10 +141,10 @@ begin
     btn:= Controls[i] as TATButton;
 
     if Vertical then
-      btn.Width:= ATFlatTheme.DoScale(FButtonWidth)
+      btn.Width:= FButtonWidth
     else
     if Assigned(FImages) then
-      btn.Height:= ATFlatTheme.DoScale(FButtonWidth);
+      btn.Height:= FButtonWidth;
 
     case btn.Kind of
       abuSeparatorVert:
@@ -209,6 +207,7 @@ begin
     //horz bar: can be wrappable
     //vert bar: cannot be wrappable
 
+    {
     if Vertical then
       if not (btn.Kind in [abuTextIconVert]) then
         btn.Height:= ATFlatTheme.DoScale(btn.Height);
@@ -219,6 +218,7 @@ begin
         btn.Width:= ATFlatTheme.DoScale(btn.Width);
       btn.Height:= ATFlatTheme.DoScale(FButtonWidth);
     end;
+    }
   end;
 
   //anchor buttons in row
@@ -343,18 +343,6 @@ begin
   if (AIndex>=0) and (AIndex<ControlCount) then
     if Controls[AIndex] is TATButton then
       Result:= Controls[AIndex] as TATButton;
-end;
-
-procedure TATFlatToolbar.SetButtonWidth(AValue: integer);
-begin
-  if FButtonWidth=AValue then Exit;
-  FButtonWidth:= AValue;
-
-  if Vertical then
-    Width:= ATFlatTheme.DoScale(AValue)
-  else
-  if not Wrapable then
-    Height:= ATFlatTheme.DoScale(AValue);
 end;
 
 procedure TATFlatToolbar.SetVertical(AValue: boolean);
