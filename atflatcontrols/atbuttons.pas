@@ -426,7 +426,7 @@ begin
   CurCaption:= Caption;
 
   if FArrow then
-    NSizeArrow:= Theme^.DoScale(4*Theme^.ArrowSize)
+    NSizeArrow:= Theme^.DoScale(Theme^.ArrowSize)*7 div 2
   else
     NSizeArrow:= 0;
 

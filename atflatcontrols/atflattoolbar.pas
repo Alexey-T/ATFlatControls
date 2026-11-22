@@ -198,9 +198,9 @@ begin
     if btn.Arrow then
     begin
       if not Vertical then
-        btn.Width:= btn.Width+4*ATFlatTheme.ArrowSize;
+        btn.Width:= btn.Width + ATFlatTheme.DoScale(ATFlatTheme.ArrowSize)*7 div 2;
       if Vertical and (btn.Caption='') and (btn.ImageIndex<0) then
-        btn.Height:= btn.Height+4*ATFlatTheme.ArrowSize;
+        btn.Height:= btn.Height + 4*ATFlatTheme.ArrowSize;
     end;
 
     //scale
